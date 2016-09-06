@@ -34,4 +34,10 @@ public class CumulusDataRetriever implements DataRetriever {
         RecordItemCollection ric = c.newRecordItemCollection(true);
 //        ric.
     }
+
+    @Override
+    public Record retrieveNextRecord() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
