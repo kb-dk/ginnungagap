@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<record>
+  <field name="Asset Access Date">
+    <value>Wed Oct 02 17:15:23 CEST 2013</value>
+  </field>
+  <field name="objectIdentifierValue">
+    <value>Uid:dk:kb:doms:2007-01/5d2c97d0-648f-11e1-b7b0-0017a4f603c1</value>
+  </field>
+  <field name="Sampling Rate [Hz]">
+    <value>44100</value>
+  </field>
+  <field name="preservationLevelValue">
+    <value>Aktiv bit bevaring</value>
+  </field>
+  <field name="pbcoreIdentifier">
+    <value>Besegling af cirklen -Nanna StoneChild</value>
+  </field>
+  <field name="BEXT Originator">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="essenceTrackDataRate">
+    <value>1411.0</value>
+  </field>
+  <field name="File Format Type">
+    <value>Audio</value>
+  </field>
+  <field name="pbcoreAssetDate">
+    <value>2011-09-10</value>
+  </field>
+  <field name="IPRD Product (Album)">
+    <value>Dansk Folkemindesamling/Moderne hekse i Danmark</value>
+  </field>
+  <field name="CHECKSUM_ORIGINAL_MASTER">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="objectIdentifierType">
+    <value>UUID</value>
+  </field>
+  <field name="ISRC Source ">
+    <value>Anne Mia Steno</value>
+  </field>
+  <field name="File Format Identifier">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="ID">
+    <value>639</value>
+  </field>
+  <field name="Udgiver rolle">
+    <value>Indsamler</value>
+  </field>
+  <field name="eventIdentifierType">
+    <value>Det Kongelige Biblioteks eventype</value>
+  </field>
+  <field name="Preservation_status">
+    <value>Langtidsbevaret</value>
+  </field>
+  <field name="instantiationChannelConfiguration">
+    <value>Stereo</value>
+  </field>
+  <field name="essenceTrackBitDepth">
+    <value>16</value>
+  </field>
+  <field name="eventType">
+    <value>1</value>
+  </field>
+  <field name="Undo">
+    <value>false</value>
+  </field>
+  <field name="ICMT Comments">
+    <value>Optaget udenfor i blæst. Optaget i Sverige, Skåne</value>
+  </field>
+  <field name="preservationLevelRationale">
+    <value>Pt. kun mulighed for bitbevaring af dette format</value>
+  </field>
+  <field name="Item Modification Date">
+    <value>Wed Oct 02 17:15:23 CEST 2013</value>
+  </field>
+  <field name="size">
+    <value>11748576</value>
+  </field>
+  <field name="instantiationPhysical">
+    <value>PCM: 44100 Hz, 16 bit, Stereo</value>
+  </field>
+  <field name="Thumbnail Rotation">
+    <value>0</value>
+  </field>
+  <field name="IART Artist">
+    <value>Nanna Bøge Bomholt</value>
+  </field>
+  <field name="Author">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="ICMS Commissioned">
+    <value>Dansk Folkemindesamling</value>
+  </field>
+  <field name="Block Align">
+    <value>4</value>
+  </field>
+  <field name="LastCmdInitiated">
+    <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@1d28d39</value>
+  </field>
+  <field name="objectCategory">
+    <value>File</value>
+  </field>
+  <field name="Production_Catalog">
+    <value>Multimedia DP</value>
+  </field>
+  <field name="Description">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="Asset Identifier">
+    <value>1330649072</value>
+  </field>
+  <field name="BEXT OriginatorReference">
+    <value>See Description for identifiers</value>
+  </field>
+  <field name="Mastertransferstatus">
+    <value>OK</value>
+  </field>
+  <field name="BEXT CodingHistory">
+    <value>Zoom H4->PCM, 44100, 16, Stereo->iZotope RX 2</value>
+  </field>
+  <field name="Asset Modification State Identifier">
+    <value>2012-02-29 01:11:53</value>
+  </field>
+  <field name="IENG Engineer">
+    <value>Anne Mia Steno, Emmerik Warburg</value>
+  </field>
+  <field name="År">
+    <value>2011-09-10</value>
+  </field>
+  <field name="Thumbnail Standard Deviation">
+    <value>24</value>
+  </field>
+  <field name="Generel materialebetegnelse">
+    <value>Lyd</value>
+  </field>
+  <field name="messageDigest">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="ARCHIVE_MD5">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="Opstilling">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="BEXT Version">
+    <value>0</value>
+  </field>
+  <field name="storageMedium">
+    <value>e-magasin</value>
+  </field>
+  <field name="CHECKSUM_DISPLAY_COPY">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="formatName">
+    <value>Wave Sound</value>
+  </field>
+  <field name="Volume Name">
+    <value>Sounds</value>
+  </field>
+  <field name="BEXT Description">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="essenceTrackSamplingRate">
+    <value>44100</value>
+  </field>
+  <field name="Published">
+    <value>false</value>
+  </field>
+  <field name="ICOP Copyright">
+    <value>Klausuleret indtil 2061-09-10</value>
+  </field>
+  <field name="INAM Name (Title)">
+    <value>Besegling af cirklen -Nanna StoneChild</value>
+  </field>
+  <field name="IARL Archival Location">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="Audio Codec Information">
+    <value>PCM</value>
+  </field>
+  <field name="agentIdentifierType">
+    <value>program</value>
+  </field>
+  <field name="Folder Name">
+    <value>DFSDIG\2012-02-08</value>
+  </field>
+  <field name="instantiationFileSize">
+    <value>11748576</value>
+  </field>
+  <field name="Channel Mode">
+    <value>Stereo</value>
+  </field>
+  <field name="preservationLevelRole">
+    <value>Krav</value>
+  </field>
+  <field name="compositionLevel">
+    <value>0</value>
+  </field>
+  <field name="File Resource Size">
+    <value>0</value>
+  </field>
+  <field name="Copyright">
+    <value>Dansk Folkemindesamling, Det Kongelige Bibliotek</value>
+  </field>
+  <field name="pbcoreDescription">
+    <value>Dansk Folkemindesamling/Moderne hekse i Danmark</value>
+  </field>
+  <field name="PublishedByVersion">
+    <value>Publication workflow of iteration 13. Class = dk.kb.doms.components.workflow.iteration13.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.6 $;Publish without QA version = $Revision: 1.8 $;productionRoot = /Multimedia;undoRoot = /archive_pool/undo/Sounds;publishNonArchivalRoot = /online_master_arkiv_m_2/non-archival/Sounds;productionRoot = /Multimedia;</value>
+  </field>
+  <field name="Cataloging User">
+    <value>pewa</value>
+  </field>
+  <field name="instantiationDigital">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="formatVersion">
+    <value>0</value>
+  </field>
+  <field name="Record Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="pbcorerightsSummary">
+    <value>Klausuleret indtil 2061-09-10</value>
+  </field>
+  <field name="Item Creation Date">
+    <value>Fri Mar 02 14:35:46 CET 2012</value>
+  </field>
+  <field name="messageDigestAlgorithm">
+    <value>MD5</value>
+  </field>
+  <field name="eventIdentifierValue">
+    <value>1</value>
+  </field>
+  <field name="GUID">
+    <value>Uid:dk:kb:doms:2007-01/5d2c97d0-648f-11e1-b7b0-0017a4f603c1</value>
+  </field>
+  <field name="Duration">
+    <value>66.5</value>
+  </field>
+  <field name="Catalog Name">
+    <value>Audio OM</value>
+  </field>
+  <field name="pbcorecreatorRole">
+    <value>Meddeler</value>
+  </field>
+  <field name="Asset Modification Date">
+    <value>Fri Mar 02 18:44:32 CET 2012</value>
+  </field>
+  <field name="Thumbnail Mean Value">
+    <value>234</value>
+  </field>
+  <field name="instantiationDate">
+    <value>2012-02-08</value>
+  </field>
+  <field name="ARCHIVE_FILENAME">
+    <value>KBDOMS-20120302175748-00086-dia-prod-dom-01.kb.dk.arc</value>
+  </field>
+  <field name="preservationLevelDateAssigned">
+    <value>20111119</value>
+  </field>
+  <field name="pbcorepublisherRole">
+    <value>Indsamler</value>
+  </field>
+  <field name="Unix File Identifier">
+    <value>2041272261</value>
+  </field>
+  <field name="Asset Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="LastCmdSucceeded">
+    <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@1d28d39</value>
+  </field>
+  <field name="File Data Size">
+    <value>11748576</value>
+  </field>
+  <field name="ICRD Creation date">
+    <value>2011-09-10</value>
+  </field>
+  <field name="BEXT OriginationDate">
+    <value>2012-02-08</value>
+  </field>
+  <field name="Bit Rate Audio [kbit/s]">
+    <value>1411.0</value>
+  </field>
+  <field name="Audio Sample Size [bits]">
+    <value>16</value>
+  </field>
+  <field name="essenceTrackDuration">
+    <value>66.5</value>
+  </field>
+  <field name="Server Name">
+    <value>dia-prod-dom-02.kb.dk</value>
+  </field>
+  <field name="PublicationDate">
+    <value>02-03-2012</value>
+  </field>
+  <field name="agentIdentifierValue">
+    <value>gatekeeper</value>
+  </field>
+  <field name="Document Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="IMED Medium">
+    <value>PCM: 44100 Hz, 16 bit, Stereo</value>
+  </field>
+  <field name="essenceTrackStandard">
+    <value>PCM</value>
+  </field>
+  <field name="Medvirkende rolle">
+    <value>Meddeler</value>
+  </field>
+  <field name="File Format">
+    <value>Wave Sound</value>
+  </field>
+  <field name="Asset Data Size (Long)">
+    <value>11748576</value>
+  </field>
+  <field name="Registrationstate">
+    <value>Færdigregistreret</value>
+  </field>
+  <field name="Asset Creation Date">
+    <value>Fri Mar 02 18:44:32 CET 2012</value>
+  </field>
+  <field name="pbcoreAssetType">
+    <value>Lyd</value>
+  </field>
+  <field name="Publication_catalog">
+    <value>Audio DP</value>
+  </field>
+</record>
