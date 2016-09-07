@@ -1,13 +1,10 @@
 package dk.kb.ginnungagap.cumulus;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.canto.cumulus.Catalog;
-import com.canto.cumulus.FieldDefinition;
-import com.canto.cumulus.GUID;
-import com.canto.cumulus.ItemCollection;
+import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
@@ -51,7 +48,7 @@ public class CumulusServer {
      * @param catalogName The name of the catalog.
      * @return The catalog.
      */
-    public Catalog getCatalog(String catalogName) {
+    protected Catalog getCatalog(String catalogName) {
         if(!catalogs.containsKey(catalogName)) {
             int catalogId = getServer().findCatalogID(catalogName);
             catalogs.put(catalogName, getServer().openCatalog(catalogId));            
@@ -59,24 +56,17 @@ public class CumulusServer {
         return catalogs.get(catalogName);
     }
     
-    
     /**
-     * Retrieve the map between the field name and the definition of the Cumulus fields of a given catalog. 
+     * Extracts the collection of record items from a given catalog limiting by the given query.
      * @param catalogName The name of the catalog.
-     * @return The field mapping between GUID and definition.
+     * @param query The query for finding the desired items.
+     * @return The collection of record items.
      */
-    public Map<String, FieldDefinition> getFieldMap(String catalogName) {
-        Map<String, FieldDefinition> res = new LinkedHashMap<String, FieldDefinition>();
+    public RecordItemCollection getItems(String catalogName, CumulusQuery query) {
         Catalog catalog = getCatalog(catalogName);
-        ItemCollection ic = catalog.getAllVocabulariesItemCollection();
-        for(FieldDefinition fd : ic.getLayout()) {
-            res.put(fd.getName(), fd);
-        }
-        
-        return res;
-    }
-    
-    public void gnu() {
-//        server.
+        RecordItemCollection recordCollection = catalog.newRecordItemCollection(true);
+        recordCollection.find(query.getQuery(), query.getFindFlags(), query.getCombineMode(),
+                query.getLocale());
+        return recordCollection;
     }
 }

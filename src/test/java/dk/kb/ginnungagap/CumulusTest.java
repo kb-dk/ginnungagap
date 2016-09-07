@@ -1,7 +1,7 @@
 package dk.kb.ginnungagap;
 
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
@@ -111,7 +110,7 @@ public class CumulusTest extends ExtendedTestCase {
                 
                 List<Field> m = fe.getFields(item);
                 File outputFile = new File(outputDir, item.getID() + ".xml");
-                printMapAsXml(m, new FileOutputStream(outputFile));
+                printFieldsAsXml(m, new FileOutputStream(outputFile));
                 System.err.println("Printed at: " + outputFile.getAbsolutePath());
             }
             
@@ -119,7 +118,7 @@ public class CumulusTest extends ExtendedTestCase {
         }
     }
     
-    public void printMapAsXml(List<Field> fields, OutputStream os) throws IOException {
+    public void printFieldsAsXml(List<Field> fields, OutputStream os) throws IOException {
         os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
         os.write("\n".getBytes());
         os.write("<record>\n".getBytes());

@@ -4,8 +4,6 @@ import java.io.InputStream;
 
 /**
  * 
- * @author jolf
- *
  */
 public class Record {
     

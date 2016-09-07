@@ -12,9 +12,9 @@ import java.io.File;
  */
 public class Configuration {
     
-    File xsltDir;
-    File xsdDir;
-    
+    BitmagConfiguration bitmagConf;
+    CumulusConfiguration cumulusConf;
+    TransformationConfiguration transformationConf;
     
     /**
      * 
