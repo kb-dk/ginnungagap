@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.bitrepository.common.utils.FileUtils;
@@ -26,6 +27,7 @@ import com.canto.cumulus.Server.CatalogInfo;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.Field;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 
 public class CumulusTest extends ExtendedTestCase {
@@ -33,7 +35,7 @@ public class CumulusTest extends ExtendedTestCase {
     File outputDir;
     CumulusServer server;
     
-    int MAX_NUMBER_OF_RECORDS = 100;
+    int MAX_NUMBER_OF_RECORDS = 1;
     
     @BeforeClass
     public void setup() {
@@ -107,8 +109,8 @@ public class CumulusTest extends ExtendedTestCase {
 //                }
 //                System.err.println();
                 
-                Map<String, String> m = fe.getFieldsAsStrings(item);
-                File outputFile = new File(outputDir, "Test-" + item.getID() + "-" + Math.random() + ".xml");
+                List<Field> m = fe.getFields(item);
+                File outputFile = new File(outputDir, item.getID() + ".xml");
                 printMapAsXml(m, new FileOutputStream(outputFile));
                 System.err.println("Printed at: " + outputFile.getAbsolutePath());
             }
@@ -117,14 +119,20 @@ public class CumulusTest extends ExtendedTestCase {
         }
     }
     
-    public void printMapAsXml(Map<String, String> map, OutputStream os) throws IOException {
+    public void printMapAsXml(List<Field> fields, OutputStream os) throws IOException {
         os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
         os.write("\n".getBytes());
         os.write("<record>\n".getBytes());
         
-        for(Map.Entry<String, String> entry : map.entrySet()) {
-            os.write(("  <field name=\"" + entry.getKey() + "\">\n").getBytes());
-            os.write(("    <value>" + entry.getValue() + "</value>\n").getBytes());
+        for(Field f : fields) {
+            os.write(("  <field name=\"" + f.getName() + "\" data-type=\"" + f.getType() + "\">\n").getBytes());
+            if(f.hasStringValue()) {
+                os.write(("    <value>" + f.getStringValue() + "</value>\n").getBytes());
+            } else if(f.hasByteValue()) {
+                os.write("    <value>".getBytes());
+                os.write(f.getByteValue());
+                os.write("</value>\n".getBytes());                
+            }
             os.write(("  </field>\n").getBytes());
         }
         os.write("</record>\n".getBytes());
