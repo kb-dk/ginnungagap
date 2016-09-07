@@ -5,6 +5,7 @@
 .settings/
 target/
 test-output/
+tempDir/
 
 
 # Mobile Tools for Java (J2ME)
