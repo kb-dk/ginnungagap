@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<record>
+  <field name="INAM Name (Title)" data-type="string">
+    <value>DFS MC GD-BP 1200 B</value>
+  </field>
+  <field name="pbcorecreatorRole" data-type="string">
+    <value>Meddeler</value>
+  </field>
+  <field name="IMED Medium" data-type="string">
+    <value>AGFA FERROCOLOR 90+6</value>
+  </field>
+  <field name="ICMS Commissioned" data-type="string">
+    <value>Dansk Folkemindesamling/Dansk Musik Informations Center</value>
+  </field>
+  <field name="LastCmdSucceeded" data-type="string">
+    <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@122e0b3</value>
+  </field>
+  <field name="År" data-type="string">
+    <value></value>
+  </field>
+  <field name="pbcoreAssetType" data-type="string">
+    <value>Lyd</value>
+  </field>
+  <field name="IENG Engineer" data-type="string">
+    <value>Emmerik Warburg</value>
+  </field>
+  <field name="File Format Identifier" data-type="string">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="Undo" data-type="boolean">
+    <value>false</value>
+  </field>
+  <field name="BEXT OriginationDate" data-type="string">
+    <value>2009-12-16</value>
+  </field>
+  <field name="Tracks" data-type="table">
+    <value></value>
+  </field>
+  <field name="Document Name" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="Channel Mode" data-type="string">
+    <value>Stereo</value>
+  </field>
+  <field name="Sampling Rate [Hz]" data-type="integer">
+    <value>96000</value>
+  </field>
+  <field name="essenceTrackDataRate" data-type="double">
+    <value>4608.0</value>
+  </field>
+  <field name="preservationLevelValue" data-type="enumerator">
+    <value>Aktiv bit bevaring</value>
+  </field>
+  <field name="objectCategory" data-type="enumerator">
+    <value>File</value>
+  </field>
+  <field name="Audio Sample Size [bits]" data-type="integer">
+    <value>24</value>
+  </field>
+  <field name="pbcorepublisherRole" data-type="string">
+    <value>Indsamler</value>
+  </field>
+  <field name="BEXT Originator" data-type="string">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="messageDigestAlgorithm" data-type="enumerator">
+    <value>MD5</value>
+  </field>
+  <field name="Generel materialebetegnelse" data-type="enumerator">
+    <value>Lyd</value>
+  </field>
+  <field name="pbcoreTitle" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="formatVersion" data-type="string">
+    <value>0</value>
+  </field>
+  <field name="ICOP Copyright" data-type="string">
+    <value>Klausuleret</value>
+  </field>
+  <field name="pbcoreAssetDate" data-type="string">
+    <value></value>
+  </field>
+  <field name="objectIdentifierType" data-type="enumerator">
+    <value>UUID</value>
+  </field>
+  <field name="agentIdentifierValue" data-type="enumerator">
+    <value>gatekeeper</value>
+  </field>
+  <field name="Mastertransferstatus" data-type="string">
+    <value>OK</value>
+  </field>
+  <field name="Publication_catalog" data-type="enumerator">
+    <value>Audio DP</value>
+  </field>
+  <field name="eventType" data-type="string">
+    <value>1</value>
+  </field>
+  <field name="Audio Codec Information" data-type="string">
+    <value>PCM</value>
+  </field>
+  <field name="Folder Name" data-type="string">
+    <value>DFSDIG\2009-12-16</value>
+  </field>
+  <field name="eventIdentifierType" data-type="enumerator">
+    <value>Det Kongelige Biblioteks eventype</value>
+  </field>
+  <field name="Server Name" data-type="string">
+    <value>dia-prod-dom-02.kb.dk</value>
+  </field>
+  <field name="Volume Name" data-type="string">
+    <value>Sounds</value>
+  </field>
+  <field name="Asset Name" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="Duration" data-type="double">
+    <value>2916.7891979166666</value>
+  </field>
+  <field name="Asset Data Size (Long)" data-type="long">
+    <value>1680088238</value>
+  </field>
+  <field name="BEXT Description" data-type="string">
+    <value>DFS MC GD-BP 1200 B</value>
+  </field>
+  <field name="agentIdentifierType" data-type="enumerator">
+    <value>program</value>
+  </field>
+  <field name="preservationLevelRole" data-type="enumerator">
+    <value>Krav</value>
+  </field>
+  <field name="Thumbnail" data-type="picture">
+    <value></value>
+  </field>
+  <field name="Cataloging User" data-type="string">
+    <value>pewa</value>
+  </field>
+  <field name="File Format" data-type="string">
+    <value>Wave Sound</value>
+  </field>
+  <field name="Categories" data-type="string">
+    <value>Vognhjulet</value>
+  </field>
+  <field name="Item Modification Date" data-type="date">
+    <value>Wed Aug 20 15:28:28 CEST 2014</value>
+  </field>
+  <field name="Item Creation Date" data-type="date">
+    <value>Wed Feb 08 10:58:57 CET 2012</value>
+  </field>
+  <field name="Record Name" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="Tracks-print" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="Thumbnail Rotation" data-type="enumerator">
+    <value>0</value>
+  </field>
+  <field name="Asset Modification Date" data-type="date">
+    <value>Wed Feb 08 11:29:30 CET 2012</value>
+  </field>
+  <field name="Asset Creation Date" data-type="date">
+    <value>Wed Feb 08 11:29:30 CET 2012</value>
+  </field>
+  <field name="File Resource Size" data-type="integer">
+    <value>0</value>
+  </field>
+  <field name="File Data Size" data-type="integer">
+    <value>1680088238</value>
+  </field>
+  <field name="Asset Access Date" data-type="date">
+    <value>Tue Aug 25 08:40:57 CEST 2015</value>
+  </field>
+  <field name="Asset Identifier" data-type="integer">
+    <value>1328660970</value>
+  </field>
+  <field name="Thumbnail Standard Deviation" data-type="integer">
+    <value>24</value>
+  </field>
+  <field name="Thumbnail Mean Value" data-type="integer">
+    <value>234</value>
+  </field>
+  <field name="Asset Modification State Identifier" data-type="string">
+    <value>2012-02-08 01:29:30</value>
+  </field>
+  <field name="Block Align" data-type="integer">
+    <value>6</value>
+  </field>
+  <field name="Titel" data-type="string">
+    <value>DFS_MC_GD-BP_1200_B.wav</value>
+  </field>
+  <field name="preservationLevelDateAssigned" data-type="string">
+    <value>20111119</value>
+  </field>
+  <field name="PublicationDate" data-type="string">
+    <value>08-02-2012</value>
+  </field>
+  <field name="messageDigest" data-type="string">
+    <value>77ad7deafde564b4eb20ac858407ec3d</value>
+  </field>
+  <field name="BEXT CodingHistory" data-type="string">
+    <value>JVC-3->Fireface800:01,02->MacPro->LogicPro</value>
+  </field>
+  <field name="pbcoreIdentifier" data-type="string">
+    <value>DFS MC GD-BP 1200 B</value>
+  </field>
+  <field name="QA_error" data-type="string">
+    <value></value>
+  </field>
+  <field name="IPRD Product (Album)" data-type="string">
+    <value>Dansk Folkemindesamling / Vognhjulet</value>
+  </field>
+  <field name="BEXT Version" data-type="string">
+    <value>0</value>
+  </field>
+  <field name="ISRC Source " data-type="string">
+    <value>Bent Pihl</value>
+  </field>
+  <field name="compositionLevel" data-type="string">
+    <value>0</value>
+  </field>
+  <field name="Bit Rate Audio [kbit/s]" data-type="double">
+    <value>4608.0</value>
+  </field>
+  <field name="BEXT OriginatorReference" data-type="string">
+    <value>See Description for identifiers</value>
+  </field>
+  <field name="essenceTrackBitDepth" data-type="integer">
+    <value>24</value>
+  </field>
+  <field name="LastCmdInitiated" data-type="string">
+    <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@122e0b3</value>
+  </field>
+  <field name="QA_status" data-type="string">
+    <value></value>
+  </field>
+  <field name="Medvirkende rolle" data-type="string">
+    <value>Meddeler</value>
+  </field>
+  <field name="Udgiver rolle" data-type="string">
+    <value>Indsamler</value>
+  </field>
+  <field name="storageMedium" data-type="enumerator">
+    <value>e-magasin</value>
+  </field>
+  <field name="size" data-type="integer">
+    <value>1680088238</value>
+  </field>
+  <field name="Production_Catalog" data-type="string">
+    <value>Multimedia DP</value>
+  </field>
+  <field name="IARL Archival Location" data-type="string">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="instantiationDigital" data-type="string">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="Copyright" data-type="enumerator">
+    <value>Dansk Folkemindesamling, Det Kongelige Bibliotek</value>
+  </field>
+  <field name="Unix File Identifier" data-type="integer">
+    <value>617319880</value>
+  </field>
+  <field name="Published" data-type="boolean">
+    <value>false</value>
+  </field>
+  <field name="instantiationDate" data-type="string">
+    <value>2009-12-16</value>
+  </field>
+  <field name="instantiationFileSize" data-type="long">
+    <value>1680088238</value>
+  </field>
+  <field name="instantiationPhysical" data-type="string">
+    <value>AGFA FERROCOLOR 90+6</value>
+  </field>
+  <field name="ICMT Comments" data-type="string">
+    <value>På bånd med Los Kjarkas II 1. Los Kjarkas. </value>
+  </field>
+  <field name="essenceTrackDuration" data-type="double">
+    <value>2916.7891979166666</value>
+  </field>
+  <field name="Materialebetegnelse" data-type="enumerator">
+    <value>Kassettebånd</value>
+  </field>
+  <field name="PublishedByVersion" data-type="string">
+    <value>Publication workflow of iteration 13. Class = dk.kb.doms.components.workflow.iteration13.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.6 $;Publish without QA version = $Revision: 1.8 $;productionRoot = /Multimedia;undoRoot = /archive_pool/undo/Sounds;publishNonArchivalRoot = /online_master_arkiv_m_2/non-archival/Sounds;productionRoot = /Multimedia;</value>
+  </field>
+  <field name="Registrationstate" data-type="enumerator">
+    <value>Færdigregistreret</value>
+  </field>
+  <field name="ARCHIVE_FILENAME" data-type="string">
+    <value>KBDOMS-20120209144621-00000-dia-prod-dom-01.kb.dk.arc</value>
+  </field>
+  <field name="GUID" data-type="string">
+    <value>Uid:dk:kb:doms:2007-01/4bde6970-523f-11e1-9888-0017a4f603c1</value>
+  </field>
+  <field name="Catalog Name" data-type="string">
+    <value>Audio OM</value>
+  </field>
+  <field name="ID" data-type="integer">
+    <value>540</value>
+  </field>
+  <field name="ICRD Creation date" data-type="string">
+    <value></value>
+  </field>
+  <field name="CHECKSUM_ORIGINAL_MASTER" data-type="string">
+    <value>77ad7deafde564b4eb20ac858407ec3d</value>
+  </field>
+  <field name="instantiationChannelConfiguration" data-type="string">
+    <value>Stereo</value>
+  </field>
+  <field name="Preservation_status" data-type="enumerator">
+    <value>Langtidsbevaret</value>
+  </field>
+  <field name="IKEY Keywords" data-type="string">
+    <value>Danmark, GD</value>
+  </field>
+  <field name="essenceTrackSamplingRate" data-type="integer">
+    <value>96000</value>
+  </field>
+  <field name="essenceTrackStandard" data-type="string">
+    <value>PCM</value>
+  </field>
+  <field name="preservationLevelRationale" data-type="enumerator">
+    <value>Pt. kun mulighed for bitbevaring af dette format</value>
+  </field>
+  <field name="CHECKSUM_DISPLAY_COPY" data-type="string">
+    <value>77ad7deafde564b4eb20ac858407ec3d</value>
+  </field>
+  <field name="pbcorerightsSummary" data-type="string">
+    <value>Klausuleret</value>
+  </field>
+  <field name="Sidst ændret af" data-type="string">
+    <value>pewa</value>
+  </field>
+  <field name="Genre" data-type="enumerator">
+    <value>Erindringer, Små genrer</value>
+  </field>
+  <field name="File Format Type" data-type="enumerator">
+    <value>Audio</value>
+  </field>
+  <field name="eventIdentifierValue" data-type="string">
+    <value>1</value>
+  </field>
+  <field name="pbcoreDescription" data-type="string">
+    <value>Dansk Folkemindesamling / Vognhjulet</value>
+  </field>
+  <field name="ISRF Source Form " data-type="string">
+    <value></value>
+  </field>
+  <field name="IART Artist" data-type="string">
+    <value>Irsk/skotsk jam. </value>
+  </field>
+  <field name="objectIdentifierValue" data-type="string">
+    <value>Uid:dk:kb:doms:2007-01/4bde6970-523f-11e1-9888-0017a4f603c1</value>
+  </field>
+  <field name="Opstilling" data-type="string">
+    <value>DFS MC GD-BP 1200 B</value>
+  </field>
+  <field name="formatName" data-type="string">
+    <value>Wave Sound</value>
+  </field>
+  <field name="ARCHIVE_MD5" data-type="string">
+    <value>77ad7deafde564b4eb20ac858407ec3d</value>
+  </field>
+</record>

@@ -1,0 +1,6 @@
+<xsd:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+        <xsd:import schemaLocation="Mets.xsd" namespace="http://www.loc.gov/METS/" />
+        <xsd:import schemaLocation="Mix.xsd" namespace="http://www.loc.gov/mix/v20" />
+        <xsd:import schemaLocation="Mods.xsd" namespace="http://www.loc.gov/mods/v3" />
+        <xsd:import schemaLocation="Premis.xsd" namespace="info:lc/xmlns/premis-v2" />
+</xsd:schema>

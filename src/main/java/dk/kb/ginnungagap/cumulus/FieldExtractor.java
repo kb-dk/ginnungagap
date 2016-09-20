@@ -1,9 +1,7 @@
 package dk.kb.ginnungagap.cumulus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,8 @@ import com.canto.cumulus.Layout;
  * TODO: make logging, etc.
  */
 public class FieldExtractor {
-    private final Logger log = LoggerFactory.getLogger(FieldExtractor.class);
+    /** The logger.*/
+    private final static Logger log = LoggerFactory.getLogger(FieldExtractor.class);
 
     /** The layout for this extractor.*/
     protected final Layout layout;
