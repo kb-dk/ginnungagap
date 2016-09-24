@@ -84,72 +84,10 @@
     </xsl:element>
   </xsl:template>
   
-  <xsl:template name="premis_event">
-    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}">
-      <!-- eventIdentifier -->
-      <xsl:call-template name="premis_event_identifier" />
-      
-      <!-- eventType -->
-      <xsl:call-template name="premis_event_eventtype" />
-      
-      <!-- date time -->
-      <xsl:call-template name="premis_event_datetime" />
-      
-      <!-- linkingAgentIdentifier -->
-      <xsl:call-template name="premis_event_linking_agent_identifier" />
-      
-      <!-- linkingObjectIdentifier -->
-      <xsl:call-template name="premis_event_linking_object_identifier" />
-    </premis:event>
-  </xsl:template>
-
-  <xsl:template name="premis_event_for_representation">
-    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}">
-      <!-- eventIdentifier -->
-      <xsl:call-template name="premis_event_identifier" />
-      <!-- eventType -->
-      <xsl:call-template name="premis_event_eventtype" />
-      <!-- date time -->
-      <xsl:call-template name="premis_event_datetime" />
-      <!-- linkingAgentIdentifier -->
-      <xsl:call-template name="premis_event_linking_agent_identifier" />
-    </premis:event>
-  </xsl:template>
-  
-  <xsl:template name="premis_rights">
-    <premis:rights xsi:schemaLocation="{$PREMIS_LOCATION}">
-      <xsl:element name="premis:rightsStatement">
-        <xsl:if test="field[@name='rightsStatementIdentifierValue']">
-          <!-- rightsStatementIdentifier -->
-          <xsl:element name="premis:rightsStatementIdentifier">
-            <xsl:element name="premis:rightsStatementIdentifierType">
-              <xsl:call-template name="premis_rights_identifier_type" />
-            </xsl:element>
-            <xsl:element name="premis:rightsStatementIdentifierValue">
-              <xsl:call-template name="premis_rights_identifier_value" />
-            </xsl:element>
-          </xsl:element>
-        
-          <!-- Either private or public, depending of 'Published' being true. -->
-          <xsl:element name="premis:rightsBasis">
-            <xsl:choose>
-              <xsl:when test="field[@name='Published']/value='true'">
-                <xsl:value-of select="'public'" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="'private'" />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:element>
-        </xsl:if>
-      </xsl:element>
-    </premis:rights>
-  </xsl:template>
-
   <xsl:template name="premis_object">
     <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:file</xsl:attribute>
-      <!-- START objectIdentifier -->
+      <!-- START 1.1 objectIdentifier -->
       <xsl:element name="premis:objectIdentifier">
         <xsl:element name="premis:objectIdentifierType">
           <xsl:call-template name="premis_object_identifier_type" />
@@ -158,30 +96,22 @@
           <xsl:call-template name="premis_object_identifier_value" />
         </xsl:element>
       </xsl:element>
-      <!-- END objectIdentifier -->
+      <!-- END 1.1 objectIdentifier -->
       
-      <!-- START preservation level -->
+      <!-- START 1.3 preservation level -->
       <xsl:call-template name="premis_preservation" />
-      <!-- END preservation level -->
+      <!-- END 1.3 preservation level -->
       
-      <!-- BEGIN SignificantProperties -->
-      <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForMix(field[@name='formatName']/value)">
-        <xsl:element name="premis:significantProperties">
-          <xsl:element name="premis:significantPropertiesExtension">
-            <xsl:call-template name="mix" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:if>
-      <!-- END SignificantProperties -->
-      
-      <!-- BEGIN ObjectCharacteristics -->
+      <!-- BEGIN 1.5 ObjectCharacteristics -->
       <xsl:element name="premis:objectCharacteristics">
+        <!-- 1.5.1 compositionLevel -->
         <xsl:element name="premis:compositionLevel">
           <xsl:if test="field[@name='compositionLevel']/value">
             <xsl:value-of select="field[@name='compositionLevel']/value" />
           </xsl:if>
         </xsl:element>
         
+        <!-- 1.5.2 messageDigest -->
         <xsl:if test="field[@name='messageDigest']">
           <xsl:element name="premis:fixity">
             <xsl:element name="premis:messageDigestAlgorithm">
@@ -200,7 +130,7 @@
           </xsl:element>
         </xsl:if>
         
-        <!-- size ||| File Data Size -->
+        <!-- 1.5.3 size-->
         <xsl:choose>
           <xsl:when test="field[@name='size']">
             <xsl:element name="premis:size">
@@ -214,6 +144,7 @@
           </xsl:when>
         </xsl:choose>
         
+        <!-- 1.5.4 format -->
         <xsl:choose>
           <xsl:when test="field[@name='formatName']/value">
             <xsl:element name="premis:format">
@@ -244,10 +175,17 @@
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
+        
+        <!-- 1.5.7 objectCharacteristicsExtension -->
+        <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForMix(field[@name='formatName']/value)">
+          <xsl:element name="premis:objectCharacteristicsExtension">
+            <xsl:call-template name="mix" />
+          </xsl:element>
+        </xsl:if>
       </xsl:element>
-      <!-- END ObjectCharacteristics -->
+      <!-- END 1.5 ObjectCharacteristics -->
       
-      <!-- START relationship -->
+      <!-- START 1.13 relationship -->
       <xsl:if test="field[@name='linkingIntellectualEntityIdentifierValue']">
         <xsl:element name="premis:relationship">
           <xsl:element name="premis:relationshipType">
@@ -268,7 +206,7 @@
       </xsl:if>
       <!-- END relationship -->
       
-      <!-- START linkingRightsStatementIdentifier -->
+      <!-- START 1.15 linkingRightsStatementIdentifier -->
       <xsl:if test="field[@name='rightsStatementIdentifierValue']">
         <xsl:element name="premis:linkingRightsStatementIdentifier">
           <xsl:element name="premis:linkingRightsStatementIdentifierType">
@@ -283,64 +221,116 @@
     </premis:object>
   </xsl:template>
   
-  <xsl:template name="premis_event_identifier">
-    <xsl:element name="premis:eventIdentifier">
-      <xsl:element name="premis:eventIdentifierType">
-        <xsl:call-template name="premis_event_identifier_type" />
-      </xsl:element>
-      <xsl:element name="premis:eventIdentifierValue">
+  <xsl:template name="premis_event">
+    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}">
+      <!-- eventIdentifier -->
+      <xsl:element name="premis:eventIdentifier">
+        <xsl:element name="premis:eventIdentifierType">
+          <xsl:call-template name="premis_event_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:eventIdentifierValue">
          <xsl:call-template name="premis_event_identifier_value" />
+        </xsl:element>
       </xsl:element>
-    </xsl:element>
+      
+      <!-- eventType -->
+      <xsl:element name="premis:eventType">
+        <xsl:choose>
+          <xsl:when test="field[@name='eventType']">
+            <xsl:value-of select="field[@name='eventType']/value" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'ingestion'" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+      
+      <!-- date time -->
+      <xsl:element name="premis:eventDateTime">
+        <xsl:choose>
+          <xsl:when test="field[@name='eventDateTime']">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                'EEE MMM dd HH:mm:ss z yyyy',field[@name='eventDateTime']/value)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+      
+      <!-- linkingAgentIdentifier -->
+      <xsl:element name="premis:linkingAgentIdentifier">
+        <xsl:element name="premis:linkingAgentIdentifierType">
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentType()" />
+        </xsl:element>
+        <xsl:element name="premis:linkingAgentIdentifierValue">
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentValue()" />
+        </xsl:element>
+      </xsl:element>
+      
+      <!-- linkingObjectIdentifier -->
+      <xsl:element name="premis:linkingObjectIdentifier">
+        <xsl:element name="premis:linkingObjectIdentifierType">
+          <xsl:call-template name="premis_object_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:linkingObjectIdentifierValue">
+          <xsl:call-template name="premis_object_identifier_value" />
+        </xsl:element>
+      </xsl:element>
+    </premis:event>
   </xsl:template>
   
-  <xsl:template name="premis_event_eventtype">
-    <xsl:element name="premis:eventType">
-      <xsl:choose>
-        <xsl:when test="field[@name='eventType']">
-          <xsl:value-of select="field[@name='eventType']/value" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="'ingestion'" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
-  </xsl:template>
-  
-  <xsl:template name="premis_event_datetime">
-    <xsl:element name="premis:eventDateTime">
-      <xsl:choose>
-        <xsl:when test="field[@name='eventDateTime']">
-          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyyy',field[@name='eventDateTime']/value)" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
-  </xsl:template>
-  
-  <xsl:template name="premis_event_linking_agent_identifier">
-    <xsl:element name="premis:linkingAgentIdentifier">
-      <xsl:element name="premis:linkingAgentIdentifierType">
-        <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentType()" />
+  <xsl:template name="premis_rights">
+    <premis:rights xsi:schemaLocation="{$PREMIS_LOCATION}">
+      <xsl:element name="premis:rightsStatement">
+        <!-- 4.1.1 rightsStatementIdentifier -->
+        <xsl:element name="premis:rightsStatementIdentifier">
+          <xsl:element name="premis:rightsStatementIdentifierType">
+            <xsl:call-template name="premis_rights_identifier_type" />
+          </xsl:element>
+          <xsl:element name="premis:rightsStatementIdentifierValue">
+            <xsl:call-template name="premis_rights_identifier_value" />
+          </xsl:element>
+        </xsl:element>
+        <!-- 4.1.2 Right Basis -->
+        <xsl:element name="premis:rightsBasis">
+          <xsl:value-of select="'Legal deposit'" />
+        </xsl:element>
+        <!-- 4.1.3 Copyright information -->
+        <xsl:element name="premis:copyrightInformation">
+          <xsl:element name="premis:copyrightStatus">
+            <xsl:value-of select="'copyrighted'" />
+          </xsl:element>
+          <xsl:element name="premis:copyrightJurisdiction">
+            <xsl:value-of select="'dk'" />
+          </xsl:element>
+          <xsl:element name="premis:copyrightNote">
+            <xsl:value-of select="'Expires 70 years after the death of the author'" />
+          </xsl:element>
+        </xsl:element>
+        <!-- 4.1.4 License information -->
+        <xsl:element name="premis:licenseInformation">
+          <xsl:element name="premis:licenseTerms">
+            <xsl:value-of select="'Creative Commons'" />
+          </xsl:element>
+        </xsl:element>
+        <!-- 4.1.5 Statute information -->
+        <xsl:element name="premis:statuteInformation">
+          <xsl:element name="premis:statuteJurisdiction">
+            <xsl:value-of select="'dk'" />
+          </xsl:element>
+          <xsl:element name="premis:statuteCitation">
+            <xsl:value-of select="'Legal deposit law - dk (anno XXXX)'" />
+          </xsl:element>
+        </xsl:element>
+        <!-- 4.1.7 Rights granted -->
+        <xsl:element name="premis:rightsGranted">
+          <xsl:element name="premis:act">
+            <xsl:value-of select="'Pligtafleveringsloven, anno 2016, §XXX, stk. YYY'" />
+          </xsl:element>
+        </xsl:element>
       </xsl:element>
-      <xsl:element name="premis:linkingAgentIdentifierValue">
-        <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentValue()" />
-      </xsl:element>
-    </xsl:element>
-  </xsl:template>
-  
-  <xsl:template name="premis_event_linking_object_identifier">
-    <xsl:element name="premis:linkingObjectIdentifier">
-      <xsl:element name="premis:linkingObjectIdentifierType">
-        <xsl:call-template name="premis_object_identifier_type" />
-      </xsl:element>
-      <xsl:element name="premis:linkingObjectIdentifierValue">
-        <xsl:call-template name="premis_object_identifier_value" />
-      </xsl:element>
-    </xsl:element>
+    </premis:rights>
   </xsl:template>
   
   <xsl:template name="premis_object_identifier_type">
@@ -376,6 +366,7 @@
   </xsl:template>
   
   <xsl:template name="premis_rights_identifier_value">
-    <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='rightsStatementIdentifierValue']/value)" />
+<!--     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='rightsStatementIdentifierValue']/value)" /> -->
+    <xsl:value-of select="'rightsStatementIdentifierValue'" />
   </xsl:template>  
 </xsl:stylesheet> 

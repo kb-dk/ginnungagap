@@ -22,9 +22,9 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
     @BeforeClass
     public void setup() {
         TestFileUtils.setup();
-//        xsltFile = new File("src/main/resources/scripts/xslt/transformToMets.xsl");
+        xsltFile = new File("src/main/resources/scripts/xslt/transformToMets.xsl");
 //        xsltFile = new File("src/main/resources/scripts/xslt/standaloneMods.xsl");
-        xsltFile = new File("src/main/resources/scripts/xslt/standalonePremis.xsl");
+//        xsltFile = new File("src/main/resources/scripts/xslt/standalonePremis.xsl");
         assertTrue(xsltFile.isFile());
     }
     
