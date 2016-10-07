@@ -1,7 +1,7 @@
 package dk.kb.ginnungagap.cumulus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +37,34 @@ public class FieldExtractor {
      * @param item The item to extract all fields for.
      * @return The collection of fields for the item. Fields with no value are ignored.
      */
-    public List<Field> getFields(Item item) {
-        List<Field> res = new ArrayList<Field>();
+    public Map<String, Field> getFields(Item item) {
+        Map<String, Field> res = new HashMap<String, Field>();
         for(FieldDefinition fd : layout) {
             Field f = getFieldValue(fd, item);
-            if(f != null ){
-                res.add(f);
+            if(f != null) {
+                res.put(f.getName(), f);
             }
         }
         return res;
     }
 
+    /**
+     * Extracts all the fields of the item according to the layout, and returns them as a mapping between
+     * the name of the field and the value (in string format).
+     * @param item The item to extract all fields for.
+     * @return The collection of fields for the item. Fields with no value are ignored.
+     */
+    public Map<String, String> getMap(Item item) {
+        Map<String, String> res = new HashMap<String, String>();
+        for(FieldDefinition fd : layout) {
+            StringField f = (StringField) getFieldValue(fd, item);
+            if(f != null) {
+                res.put(f.getName(), f.getStringValue());
+            }
+        }
+        return res;
+    }
+    
     /**
      * Extracts the value of a specific field from the given item.
      * @param fd The definition of the field.
@@ -63,48 +80,52 @@ public class FieldExtractor {
 
         switch(fd.getFieldType()) {
         case FieldTypes.FieldTypeBool:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     String.valueOf(item.getBooleanValue(fd.getFieldUID())));
         case FieldTypes.FieldTypeDate:
             // TOOD: figure out about how to format the date.
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getDateValue(fd.getFieldUID()).toString());
         case FieldTypes.FieldTypeDouble:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     String.valueOf(item.getDoubleValue(fd.getFieldUID())));
         case FieldTypes.FieldTypeEnum:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringEnumValue(fd.getFieldUID()).getDisplayString());
         case FieldTypes.FieldTypeInteger:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     String.valueOf(item.getIntValue(fd.getFieldUID())));
         case FieldTypes.FieldTypeLong:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     String.valueOf(item.getLongValue(fd.getFieldUID())));
         case FieldTypes.FieldTypeString:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringValue(fd.getFieldUID()));
         case FieldTypes.FieldTypeBinary:
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), 
-                    item.getBinaryValue(fd.getFieldUID()));
+            log.info("Currently does not handle field value for type" + getFieldTypeName(fd.getFieldType())
+            + ", an empty string returned.");
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), "");
         case FieldTypes.FieldTypeAudio:
             log.info("Currently does not handle field value for type" + getFieldTypeName(fd.getFieldType())
                     + ", an empty string returned.");
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()), "");
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), "");
         case FieldTypes.FieldTypePicture:
             log.info("Currently does not handle field value for type" + getFieldTypeName(fd.getFieldType())
                     + ", an empty string returned.");
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()),  "");
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()),  "");
         case FieldTypes.FieldTypeTable:
-            log.info("Currently does not handle field value for type" + getFieldTypeName(fd.getFieldType()) 
-                    + ", an empty string returned.");
-            return new Field(fd.getName(), getFieldTypeName(fd.getFieldType()),  "");
+            return new TableField(fd, getFieldTypeName(fd.getFieldType()),  item.getTableValue(fd.getFieldUID()));
         }
 
         log.warn("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
         return null;
     }
 
+    /**
+     * Retrieves the name of a given field type.
+     * @param fieldType The field type ordinal.
+     * @return the name of the field type.
+     */
     protected String getFieldTypeName(int fieldType) {
         switch(fieldType) {
         case FieldTypes.FieldTypeBool:

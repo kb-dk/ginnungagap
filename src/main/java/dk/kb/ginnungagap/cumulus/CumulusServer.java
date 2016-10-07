@@ -16,7 +16,7 @@ public class CumulusServer {
 
     /** The configuraiton for the Cumulus server. */
     protected final CumulusConfiguration configuration;
-    
+    /** Map between the catalog name and the catalog object.*/
     protected final Map<String, Catalog> catalogs = new HashMap<String, Catalog>();
     
     /** The cumulus server access point.*/

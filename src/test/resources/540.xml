@@ -295,6 +295,9 @@
   <field name="GUID" data-type="string">
     <value>Uid:dk:kb:doms:2007-01/4bde6970-523f-11e1-9888-0017a4f603c1</value>
   </field>
+  <field name="METADATA GUID" data-type="string">
+    <value>METADATA_GUID_PLACE_HOLDER</value>
+  </field>
   <field name="Catalog Name" data-type="string">
     <value>Audio OM</value>
   </field>
@@ -363,5 +366,14 @@
   </field>
   <field name="ARCHIVE_MD5" data-type="string">
     <value>77ad7deafde564b4eb20ac858407ec3d</value>
+  </field>
+  <field name="preservationLevelValue_BitSafety">
+    <value>bitSafetyVeryHigh</value>
+  </field>
+  <field name="preservationLevelValue_Logical">
+    <value>logicalStrategyMigration</value>
+  </field>
+  <field name="preservationLevelValue_Confidentiality">
+    <value>confidentialityLow</value>
   </field>
 </record>

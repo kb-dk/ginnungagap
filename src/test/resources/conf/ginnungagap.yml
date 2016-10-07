@@ -10,6 +10,6 @@ ginnungagap:
   transformation:
     xsd_dir: scripts/xsd
     xslt_dir: scripts/xslt
-    required_fields_file: conf/required_fields.yml
+    required_fields_file: src/test/resources/conf/required_fields.yml
     catalogs:
       - "Audio OM"

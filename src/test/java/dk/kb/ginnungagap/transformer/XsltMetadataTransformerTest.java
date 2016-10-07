@@ -34,8 +34,8 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testTransformation() throws Exception {
-        addDescription("Test the transformation of an Cumulus XML file.");
+    public void testTransformationWithMix() throws Exception {
+        addDescription("Test the transformation of an old Cumulus XML file with MIX metadata.");
 //        File xmlFile = new File("src/test/resources/540.xml");
         File xmlFile = new File("src/test/resources/Car_S-9090.tif.raw.xml");
         assertTrue(xmlFile.isFile());
@@ -46,7 +46,29 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         addStep("Transform the Cumulus XML", "METS");
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
         
-//        System.err.println(out.toString());
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+            fos.write(out.toByteArray());
+            fos.flush();
+        }
+        
+        addStep("Validate the METS", "");
+        transformer.validate(new FileInputStream(metadataFile));
+    }
+
+    @Test
+    public void testTransformationWithBext() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with BEXT metadata.");
+        File xmlFile = new File("src/test/resources/540.xml");
+//        File xmlFile = new File("src/test/resources/Car_S-9090.tif.raw.xml");
+        assertTrue(xmlFile.isFile());
+        XsltMetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+        
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        
+        addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
+        
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
         try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
             fos.write(out.toByteArray());

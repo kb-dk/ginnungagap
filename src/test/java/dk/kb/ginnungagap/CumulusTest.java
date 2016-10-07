@@ -10,7 +10,9 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.lf5.util.StreamUtils;
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
@@ -28,6 +30,7 @@ import dk.kb.ginnungagap.config.CumulusConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.Field;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
+import dk.kb.ginnungagap.record.CumulusRecord;
 
 public class CumulusTest extends ExtendedTestCase {
     
@@ -101,41 +104,15 @@ public class CumulusTest extends ExtendedTestCase {
             int i = 0;
             while(iri.hasNext() && (item = iri.next()) != null && i < MAX_NUMBER_OF_RECORDS) {
                 i++;
-//                System.err.println("Item: " + item.getID() + ", " + item.getItemIdentifier() +
-//                        ", " + item.getCatalogID() + ", " + item.getDisplayString());
-//                for(Map.Entry<String, String> entry : m.entrySet()) {
-//                    System.err.println(entry.getKey() + " -> " + entry.getValue());
-//                }
-//                System.err.println();
+                CumulusRecord cr = new CumulusRecord(fe, item);
+//                StreamUtils.copy(cr.getMetadata(), System.err);
+//                cr.getMetadata();
                 
-                List<Field> m = fe.getFields(item);
                 File outputFile = new File(outputDir, item.getID() + ".xml");
-                printFieldsAsXml(m, new FileOutputStream(outputFile));
-                System.err.println("Printed at: " + outputFile.getAbsolutePath());
+                StreamUtils.copy(cr.getMetadata(), new FileOutputStream(outputFile));
             }
             
             assertEquals(outputDir.list().length, i);
         }
-    }
-    
-    public void printFieldsAsXml(List<Field> fields, OutputStream os) throws IOException {
-        os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
-        os.write("\n".getBytes());
-        os.write("<record>\n".getBytes());
-        
-        for(Field f : fields) {
-            os.write(("  <field name=\"" + f.getName() + "\" data-type=\"" + f.getType() + "\">\n").getBytes());
-            if(f.hasStringValue()) {
-                os.write(("    <value>" + f.getStringValue() + "</value>\n").getBytes());
-            } else if(f.hasByteValue()) {
-                os.write("    <value>".getBytes());
-                os.write(f.getByteValue());
-                os.write("</value>\n".getBytes());                
-            }
-            os.write(("  </field>\n").getBytes());
-        }
-        os.write("</record>\n".getBytes());
-        
-        os.flush();
-    }
+    }    
 }

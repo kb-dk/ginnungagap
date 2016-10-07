@@ -7,18 +7,31 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dk.kb.yggdrasil.utils.YamlTools;
 
 public class ConfigurationTest extends ExtendedTestCase {
 
+    File confFile;
+    File requiredFieldsFile;
+    
+    @BeforeClass
+    public void setup() {
+        confFile = new File("src/test/resources/conf/ginnungagap.yml");
+        requiredFieldsFile = new File("src/test/resources/conf/required_fields.yml");
+    }
+    
     @Test
-    public void testConfiguration() throws Exception {
-        File confFile = new File("src/main/conf/ginnungagap.yml");
+    public void testReadingConfigurationFile() throws Exception {
         assertTrue(confFile.isFile());
-        LinkedHashMap<String, LinkedHashMap> map = YamlTools.loadYamlSettings(confFile);
-        printMap((LinkedHashMap<String, Object>) map.get("ginnungagap"), "  ");
+        assertTrue(requiredFieldsFile.isFile());
+        LinkedHashMap<String, LinkedHashMap> confMap = YamlTools.loadYamlSettings(confFile);
+        printMap((LinkedHashMap<String, Object>) confMap.get("ginnungagap"), "  ");
+        
+        LinkedHashMap<String, LinkedHashMap> rfMap = YamlTools.loadYamlSettings(requiredFieldsFile);
+        printMap((LinkedHashMap<String, Object>) rfMap.get("required_fields"), "  ");
     }
     
     protected void printMap(LinkedHashMap<String, Object> map, String prefix) {
@@ -31,5 +44,11 @@ public class ConfigurationTest extends ExtendedTestCase {
                 System.err.println(entry.getKey() + " : " + entry.getValue().getClass().getSimpleName() + " -> " + entry.getValue().toString());
             }
         }
+    }
+    
+    @Test
+    public void testConfiguration() throws Exception {
+        addDescription("Load the configuration");
+        
     }
 }

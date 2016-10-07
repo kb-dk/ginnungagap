@@ -1,13 +1,13 @@
 package dk.kb.ginnungagap.config;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.utils.YamlTools;
 
 /**
@@ -46,8 +46,6 @@ import dk.kb.yggdrasil.utils.YamlTools;
  */
 @SuppressWarnings("unchecked")
 public class Configuration {
-    /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(Configuration.class);
 
     /** Ginnungagap root element.*/
     private static final String CONF_GINNUNGAGAP = "ginnungagap";
@@ -85,16 +83,17 @@ public class Configuration {
     private static final boolean CUMULUS_WRITE_ACCESS = false;
     
     /** The configuration for the bitrepository.*/
-    BitmagConfiguration bitmagConf;
+    private final BitmagConfiguration bitmagConf;
     /** The configruation for accessing Cumulus.*/
-    CumulusConfiguration cumulusConf;
+    private final CumulusConfiguration cumulusConf;
     /** The configuration for the transformation.*/
-    TransformationConfiguration transformationConf;
+    private final TransformationConfiguration transformationConf;
     
     /**
      * Constructor.
      * @param confFile The file with the Ginnungagap configuration, in the described format.
      */
+    @SuppressWarnings("rawtypes")
     public Configuration(File confFile) {
         ArgumentCheck.checkExistsNormalFile(confFile, "File confFile");
         try {
@@ -108,10 +107,13 @@ public class Configuration {
                     "Configuration must contain the '" + CONF_CUMULUS + "' element.");
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_BITREPOSITORY), 
                     "Configuration must contain the '" + CONF_BITREPOSITORY+ "' element.");
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_TRANSFORMATION), 
+                    "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
+            
             
             this.bitmagConf = loadBitmagConf((Map<String, Object>) map.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) map.get(CONF_CUMULUS));
-//            this.transformationConf = loadTransformationConfiguration()
+            this.transformationConf = loadTransformationConfiguration((Map<String, Object>) map.get(CONF_TRANSFORMATION));
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'", 
                     e);
@@ -119,13 +121,19 @@ public class Configuration {
         }
     }
     
+    /**
+     * Loads the Bitmag configuration for the bitrepository.
+     * The elements are taken from the 'bitrepository' element in the configuration.
+     * @param map The map of the Bitrepository configuration.
+     * @return The configuration for the bitrepository.
+     */
     protected BitmagConfiguration loadBitmagConf(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_SETTINGS_DIR), 
-                "Missing Cumulus element '" + CONF_BITREPOSITORY_SETTINGS_DIR + "'");
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_SETTINGS_DIR + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_KEYFILE), 
-                "Missing Cumulus element '" + CONF_BITREPOSITORY_KEYFILE + "'");
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_KEYFILE + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_MAX_FAILING_PILLARS), 
-                "Missing Cumulus element '" + CONF_BITREPOSITORY_MAX_FAILING_PILLARS + "'");
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_MAX_FAILING_PILLARS + "'");
         
         File settingsDir = new File((String) map.get(CONF_BITREPOSITORY_SETTINGS_DIR));
         ArgumentCheck.checkExistsDirectory(settingsDir, "Directory " + settingsDir.getAbsolutePath());
@@ -142,7 +150,7 @@ public class Configuration {
     }
     
     /**
-     * Loads the Cumulus configuration from the 'cumulus' element in the configuration map.
+     * Loads the Cumulus configuration from the 'cumulus' element in the configuration.
      * @param map The map with the Cumulus configuration.
      * @return The configuration for the Cumulus server.
      */
@@ -156,6 +164,37 @@ public class Configuration {
         
         return new CumulusConfiguration(CUMULUS_WRITE_ACCESS, (String) map.get(CONF_CUMULUS_SERVER), 
                 (String) map.get(CONF_CUMULUS_USERNAME), (String) map.get(CONF_CUMULUS_PASSWORD));
+    }
+    
+    /**
+     * Loads the Transformation configuration from the 'transformation' element in the configuration.
+     * @param map The map with the transformation configuration.
+     * @return The configuration for performing the transformation.
+     * @throws YggdrasilException If loading the required fields file fails.
+     */
+    protected TransformationConfiguration loadTransformationConfiguration(Map<String, Object> map) throws YggdrasilException {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSD_DIR), 
+                "Missing Transformation element '" + CONF_TRANSFORMATION_XSD_DIR + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSLT_DIR), 
+                "Missing Transformation element '" + CONF_TRANSFORMATION_XSLT_DIR + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_CATALOGS), 
+                "Missing Transformation element '" + CONF_TRANSFORMATION_CATALOGS + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE), 
+                "Missing Transformation element '" + CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE + "'");
+        
+        File xsdDir = new File((String) map.get(CONF_TRANSFORMATION_XSD_DIR));
+        File xsltDir = new File((String) map.get(CONF_TRANSFORMATION_XSLT_DIR));
+        File requiredFieldsFile = new File((String) map.get(CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE));
+        
+        ArgumentCheck.checkExistsDirectory(xsdDir, "XSD dir");
+        ArgumentCheck.checkExistsDirectory(xsltDir, "XSLT dir");
+        ArgumentCheck.checkExistsNormalFile(requiredFieldsFile, "RequireFieldsFile");
+        
+        List<String> catalogs = Arrays.asList((String[]) map.get(CONF_TRANSFORMATION_CATALOGS));
+        
+        RequiredFields requiredFields = RequiredFields.loadRequiredFieldsFile(requiredFieldsFile);
+        
+        return new TransformationConfiguration(xsltDir, xsdDir, catalogs, requiredFields);
     }
     
     /** @return The configuration for the bitrepository.*/
@@ -172,5 +211,4 @@ public class Configuration {
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
     }
-    
 }

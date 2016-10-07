@@ -14,6 +14,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.metadata.Cleaner;
+import dk.kb.metadata.representation.MetaGuidResolver;
+import dk.kb.metadata.utils.CalendarUtils;
+import dk.kb.metadata.utils.ExceptionUtils;
+import dk.kb.metadata.utils.FileIdHandler;
+import dk.kb.metadata.utils.IdentifierManager;
+import dk.kb.metadata.utils.MdIdHandler;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.xslt.XmlEntityResolver;
 import dk.kb.yggdrasil.xslt.XmlErrorHandler;
@@ -52,6 +59,8 @@ public class XsltMetadataTransformer implements MetadataTransformer {
     @Override
     public void transformXmlMetadata(InputStream xmlFile, OutputStream out) {
         try {
+            Cleaner.cleanStuff();
+            
             XslUriResolver uriResolver = new XslUriResolver();
             XslErrorListener errorListener = new XslErrorListener();
 

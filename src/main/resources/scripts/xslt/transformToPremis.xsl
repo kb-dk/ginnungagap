@@ -11,6 +11,7 @@
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
   <xsl:include href="transformToMix.xsl"/>
+  <xsl:include href="transformToBext.xsl"/>
   
   <xsl:variable name="id" select="record/field[@name='objectIdentifierValue']/value"/>
   <xsl:variable name="PREMIS_LOCATION" select="'http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd'" />
@@ -182,6 +183,12 @@
             <xsl:call-template name="mix" />
           </xsl:element>
         </xsl:if>
+        <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForBext(field[@name='formatName']/value)">
+          <xsl:element name="premis:objectCharacteristicsExtension">
+            <xsl:call-template name="bext" />
+          </xsl:element>
+        </xsl:if>
+        
       </xsl:element>
       <!-- END 1.5 ObjectCharacteristics -->
       
@@ -204,7 +211,7 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-      <!-- END relationship -->
+      <!-- END 1.13 relationship -->
       
       <!-- START 1.15 linkingRightsStatementIdentifier -->
       <xsl:if test="field[@name='rightsStatementIdentifierValue']">
@@ -217,7 +224,7 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-      <!-- END linkingRightsStatementIdentifier -->
+      <!-- END 1.15 linkingRightsStatementIdentifier -->
     </premis:object>
   </xsl:template>
   

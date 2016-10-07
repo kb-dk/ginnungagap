@@ -13,8 +13,10 @@ public class TransformationConfiguration {
     protected final File xsltDir;
     /** The directory with XSD files.*/
     protected final File xsdDir;
+    /** The catalogs to go through.*/
+    protected final List<String> catalogs;
     /** The required fields from Cumulus for making the */
-    protected final List<String> requiredFields;
+    protected final RequiredFields requiredFields;
     
     /**
      * Constructor.
@@ -22,15 +24,21 @@ public class TransformationConfiguration {
      * @param xsdDir The directory with XSD files.
      * @param requiredFields The required fields.
      */
-    public TransformationConfiguration(File xsltDir, File xsdDir, Collection<String> requiredFields) {
+    public TransformationConfiguration(File xsltDir, File xsdDir, Collection<String> catalogs, 
+            RequiredFields requiredFields) {
         this.xsdDir = xsdDir;
         this.xsltDir = xsltDir;
-        this.requiredFields = new ArrayList<String>(requiredFields);
+        this.catalogs = new ArrayList<String>(catalogs);
+        this.requiredFields = requiredFields;
     }
     
     /** @return The required fields. */
-    public List<String> getRequiredFields() {
+    public RequiredFields getRequiredFields() {
         return requiredFields;
+    }
+    /** @return The catalogs. */
+    public List<String> getCatalogs() {
+        return catalogs;
     }
     /** @return The directory with the XSLT files.*/
     public File getXsltDir() {
