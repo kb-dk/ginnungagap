@@ -1,6 +1,3 @@
-sudo: required
-dist: precise
-group: legacy
 os: linux
 language: java
 jdk:

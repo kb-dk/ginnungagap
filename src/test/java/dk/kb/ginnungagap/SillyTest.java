@@ -16,6 +16,7 @@ public class SillyTest extends ExtendedTestCase {
     
     @Test(expectedExceptions = IllegalStateException.class)
     public void testFailure() throws Exception {
+        addDescription("Test throwing exceptions");
         throw new IllegalStateException("My hovercraft is full of eels");
     }
     
