@@ -784,16 +784,6 @@ public interface Constants {
         
         /** String constant for the field. */ 
         String RECORD_NAME = "Record Name";
-
-        /** String constant for the field. 
-         * @deprecated use RESOURCEPACKAGEID instead. */ 
-        String ARCHIVEFILENAME = "ARCHIVE_FILENAME";
-        
-        /** String constant for the field. 
-         * @deprecated 
-         */ 
-        String ARCHIVEMD5 = "ARCHIVE_MD5";
-        
         
         /** The intellectual entity identifier. */
         String INTELLECTUAL_ENTITY_IDENTIFIER = "linkingIntellectualEntityIdentifierValue";
@@ -853,12 +843,6 @@ public interface Constants {
          */
         String REGISTRATIONSTATE_NOT_READY_FOR_TRANSFER = "Under registrering";
 
-        /**
-         * The value for REGISTRATIONSTATE that means that the record is ready
-         * for publication.
-         */
-//        String REGISTRATIONSTATE_READY_FOR_TRANSFER = DanishLetters
-//                .decodeToUFT16("F(ae)rdigregistreret");
         /**
          * The value for PRESERVATION_STATUS that indicates that the record is
          * ready to be archived.
@@ -949,31 +933,13 @@ public interface Constants {
         String TRUE_AS_STRING = Boolean.toString(true);
 
     }
-    
-    /**
-     * This interface exposes various Long constants that are used in the
-     * workflow for e.g. timeout values.
-     */
-    interface LongConstants {
-        /** 
-         * The maximum time to process a record before alerting the
-         * operators. Expressed in milliseconds.
-         */
-//        long MAX_TIME_TO_PROCESS_A_RECORD_L = 
-//            PeriodsInMillis.hoursToMillisL(1);;
-        
-    }
 
     /**
      * This interface exposes various String constants that are used in the
      * workflow for constructing field values etc.
      */
     interface DateConstants {
-
         /** The date format used in PUBLICATION_DATE. */
-        @SuppressWarnings("PMD.SimpleDateFormatNeedsLocale")
-        // This one does not... It only uses the number symbols, so
-        // warning is not relevant.
         SimpleDateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat(
                 "dd-MM-yyyy");
 
@@ -984,33 +950,6 @@ public interface Constants {
      * in the QA and validation process.
      */
     interface ErrorMessages {
-
-        /**
-         * Error message from ValidateDestinationDODoesNotExist. Direction
-         * "publish", e.g. file already exists in masters file system.
-         */
-//        String DEST_DO_EXISTS_PUBLISH = DanishLetters
-//                .decodeToUFT16("Der er allerede publiceret et billede "
-//                        + "med det samme navn. Du m(aa) (ae)ndre "
-//                        + "navnet p(aa) billedet, og " + "pr(oe)ve igen.");
-
-        /**
-         * Error message from ValidateDestinationDODoesNotExist. Direction
-         * "undo", e.g. file already exists in prod file system.
-         */
-//        String DEST_DO_EXISTS_UNDO = DanishLetters
-//                .decodeToUFT16("Der er findes allerede et billede med det "
-//                        + "samme navn i produktionssystemet. Du m(aa) (ae)ndre "
-//                        + "navnet p(aa) billedet, og " + "pr(oe)ve igen.");
-
-        /**
-         * Error message from ValidateDOCanRead.
-         */
-//        String DO_NOT_READABLE = DanishLetters
-//                .decodeToUFT16("Filen kan ikke l(ae)ses. "
-//                        + "Hvis du ikke ved, "
-//                        + "hvordan du retter dette, bedes du kontakte "
-//                        + "IT's Servicedesk.");
 
         /**
          * Error message from ValidateDOCanWrite.
@@ -1032,16 +971,6 @@ public interface Constants {
                 + "denne, for at DOMS kan behandle den. ";
 
         /**
-         * Error message from ValidateDOIsFile.
-         */
-//        String DO_NOT_FILE = DanishLetters
-//                .decodeToUFT16("Filen findes ikke - det kan "
-//                        + "v(ae)re fordi "
-//                        + "den oprindeligt l(aa) p(aa) en CD, som "
-//                        + "du siden har taget ud, eller "
-//                        + "fordi der er rod i filesharing konfigurationerne");
-
-        /**
          * Error message from ValidateDOHasLegalPathName if sourceRoot set.
          */
         String ILLEGAL_PATH_NAME = "Filen skal ligge i folderen '%s' "
@@ -1052,115 +981,9 @@ public interface Constants {
                 + "Mellemrum, danske tegn, komma mm. er ikke tilladt.";
 
         /**
-         * Error message from ValidateDOHasLegalFileName.
-         */
-//        String ILLEGAL_FILE_NAME = DanishLetters
-//                .decodeToUFT16("Filnavnet m(aa) kun indeholde "
-//                        + "bogstaverne a-z, A-Z, tal, "
-//                        + "bindestreg og understregning, og kun et 'efternavn' "
-//                        + "(f.eks. '.tif'). Mellemrum, danske tegn, komma mm. "
-//                        + "er ikke tilladt.");
-
-        /**
          * Error message from ValidateFieldNotEmpty if sourceFieldName set.
          */
         String FIELD_NOT_EXISTS = "Feltet '%s' skal eksistere.";
-
-        /**
-         * Error message from ValidateFieldNotEmpty if sourceFieldName set.
-         */
-//        String FIELD_EMPTY = DanishLetters
-//                .decodeToUFT16("Feltet '%s' skal v(ae)re udfyldt");
-
-        /**
-         * The message to write in QA_ERROR when attempting undo on a record
-         * that refers to a (pyramidized) asset that can't be deleted.
-         */
-//        String PYRAMID_FILE_NOT_WRITABLE = DanishLetters
-//                .decodeToUFT16("Der kan ikke udf(oe)res"
-//                        + " 'undo' p(aa) denne post, "
-//                        + "da den pyramidiserede TIFF som den refererer til "
-//                        + "ikke kan slettes. Den skal manuelt " + "s(ae)ttes "
-//                        + "til at v(ae)re skrivbar for den UNIX bruger som "
-//                        + "'DOMS gatekeeper' k(oe)res "
-//                        + "som. Dette er normalt user 'gatekeeper' som skal "
-//                        + "tilh(oe)re user group 'cumulus'.");
-
-        /**
-         * The message for the user that indicates that the record could not be
-         * processed by Undo, due to not being published with the current
-         * version of the publish workflow.
-         */
-//        String WRONG_PUBLISH_VERSION = DanishLetters
-//                .decodeToUFT16("Denne post kunne ikke flyttes tilbage til "
-//                        + "produktion, "
-//                        + "da den blev publiceret med en gammel udgave af "
-//                        + "DOMS. "
-//                        + "Kontakt IT's Servicedesk for at f(aa) hj(ae)lp med "
-//                        + "at flytte posten tilbage til produktion.");
-
-        /**
-         * The message for the user that indicates that no undo file was found
-         * for the record that undo was attempted for.
-         */
-//        String DO_HAS_NO_UNDO = DanishLetters
-//                .decodeToUFT16(
-//                        "Det er ikke muligt at flytte denne post tilbage til "
-//                        + "aktiv redigering, da der ikke l(ae)ngere findes en "
-//                        + "kopi af den "
-//                        + "originale fil den refererer til. Dette skyldes "
-//                        + "normalt "
-//                        + "at den er fjernet som en del af almindelig "
-//                        + "oprydning, hvilket sker, "
-//                        + "hvis posten blev publiceret for l(ae)nge siden.");
-
-        /**
-         * Error message from ValidatePathIsDirectory if path does not exist.
-         */
-//        String PATH_DOES_NOT_EXIST = DanishLetters
-//                .decodeToUFT16("DOMS kan ikke komme i kontakt med stien '%s' "
-//                        + "lige nu. Kontakt "
-//                        + "den systemansvarlige for at f(aa) l(oe)st problemet."
-//                        );
-
-        /**
-         * Error message from validation if publish ready state changes after
-         * record is set in queue for processing.
-         */
-//        String RECORD_NO_LONGER_READY_FOR_TRANSFER = DanishLetters
-//                .decodeToUFT16("Denne post blev sat i k(oe) til overf(oe)rsel, "
-//                        + "men blev "
-//                        + "markeret som 'ikke klar' inden den blev overf(oe)rt."
-//                        + " Kontakt IT's Servicedesk for at f(aa) mere "
-//                        + "information om, hvad (aa)rsagen er.");
-
-        /**
-         * Added information for any validation error that is caused by a field
-         * having an unexpected value in ValidateFieldHasExpectedValue.
-         */
-//        String VALUE_NOT_EQUALS_EXPECTED_POSTFIX = DanishLetters
-//                .decodeToUFT16(
-//                        " (Forventet v(ae)rdi: '%s', faktisk v(ae)rdi '%s')");
-
-        /**
-         * Added information for any validation error that is caused by a field
-         * having an unexpected value in ValidateFieldHasExpectedValue.
-         */
-//        String VALUE_NOT_IN_EXPECTED_VALUES_POSTFIX = DanishLetters
-//                .decodeToUFT16(
-//                        " (Forventet v(ae)rdi en af disse: " 
-//                        + "'%s', faktisk v(ae)rdi '%s')");
-
-        /**
-         * Error message if the reserved file for the record has extension
-         * .xmp. Cumulus does not handle moving these assets correctly at
-         * the moment (version 7.5.2). See bug 1336 for more information.
-         */
-//        String DO_IS_XMP = DanishLetters
-//                .decodeToUFT16(
-//                        "Den tilknyttede fil er af typen XMP. Uheldigvis " 
-//                        + "kan DOMS ikke overf(oe)re denne type filer " 
-//                        + "korrekt endnu.");
 
         /**
          * Error message from ValidateUndoDOCanWrite.
@@ -1169,91 +992,5 @@ public interface Constants {
             "Undo filen kan ikke rettes. Hvis du ikke ved, "
             + "hvordan du retter dette, bedes du kontakte "
             + "IT's Servicedesk.";
-
-        /**
-         * Error message from ValidateUndoDOCanRead.
-         */
-//        String UNDO_DO_NOT_READABLE = DanishLetters
-//            .decodeToUFT16("Undo filen kan ikke l(ae)ses. "
-//                + "Hvis du ikke ved, "
-//                + "hvordan du retter dette, bedes du kontakte "
-//                + "IT's Servicedesk.");
-
-        /**
-         * Error message from validation if undo state changes after
-         * record is set in queue for undo.
-         */ 
-//        String RECORD_NO_LONGER_READY_FOR_UNDO = DanishLetters
-//                .decodeToUFT16("Denne post blev sat i k(oe) til " 
-//                    + "tilbagef(oe)rsel til produktion, men " 
-//                    + "markeringen blev fjernet inden den blev overf(oe)rt."
-//                    + " Kontakt IT's Servicedesk for at f(aa) mere "
-//                    + "information om, hvad (aa)rsagen er.");
-        
-        /**
-         * Added information for any validation error that is caused by a field
-         * having an undesired value in ValidateFieldDoesNotHaveExpectedValue.
-         */
-//        String VALUE_EQUALS_UNDESIRED = DanishLetters
-//            .decodeToUFT16(
-//                "Feltet %s m(aa) ikke have v(ae)rdien '%s'. Dette skyldes " 
-//                + "i langt de fleste tilf(ae)lde at en post har et QA "
-//                + "problem der ikke er rettet, eller er blevet " 
-//                + "beskadiget under behandling. Kontakt IT's Servicedesk " 
-//                + "for at f(aa) mere information om, hvad (aa)rsagen er.");
-
-        /**
-         * A message telling the user that the pyramidization workflow
-         * will only accept uncompressed TIFF files.
-         */
-//        String ONLY_UNCOMPRESSED_TIFF_FILES_ALLOWED = DanishLetters
-//            .decodeToUFT16(
-//                "DOMS kan indtil videre kun behandle ukomprimerede " 
-//                + "TIFF billeder. " 
-//                + "Gem billedet som ukomprimeret TIFF, og pr(oe)v igen."
-//            );
-
-        /**
-         * Error message telling user the published master (pyramid for QA 
-         * workflows) shows signs of having been modified.
-         */
-        // ToDo: Describe how to reset checksum if desired
-//        String CHECKSUM_DIFFERS_DISPLAY_COPY = DanishLetters.decodeToUFT16(
-//            "DOMS har fundet en afvigelse i checksum for den tilknyttede fil " 
-//            + "(display kopien). Det betyder denne fil er (ae)ndret siden " 
-//            + "publicering. Check venligst om dette er OK, og overvej " 
-//            + "om filen skal genetableres fra backup"); 
-        
-        /**
-         * Error message telling user the undo master (archive copy for 
-         * long-term preservation workflows) shows signs of having 
-         * been modified.
-         */
-        // ToDo: Describe how to reset checksum if desired
-//        String CHECKSUM_DIFFERS_ORIGINAL_MASTER = DanishLetters.decodeToUFT16(
-//            "DOMS har fundet en afvigelse i checksum for den gemte kopi af " 
-//            + "den originale master (undo/arkiveringskopien). Det betyder " 
-//            + "denne fil er (ae)ndret siden publicering. Check venligst " 
-//            + "om dette er OK, og overvej om filen skal genetableres fra " 
-//            + "backup");
-
-        /**
-         * Error message telling user the master file 
-         * has an unsupported fileformat.
-         */
-//        String WRONG_FILEFORMAT = DanishLetters.decodeToUFT16(
-//                "Denne master fil har ikke underst(oe)ttet"
-//                + " filformat");
-
-        /**
-         * Error message telling user the master file 
-         * use an unsupported bits per channel. 8/16 bits per channel 
-         * are supported.
-         */
-//        String UNSUPPORTED_BITS_PER_CHANNEL = DanishLetters.decodeToUFT16(
-//                "Denne master fil anvender et antal bits pr. kanal, der ikke "
-//                + " p.t. underst(oe)ttes af DOMS. 8 eller 16 bits per kanal "
-//                + " er i (oe)jeblikket underst(oe)ttet");
-
     }
 }

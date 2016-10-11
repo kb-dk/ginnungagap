@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.FieldDefinition;
 import com.canto.cumulus.FieldTypes;
+import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
 
@@ -154,5 +155,22 @@ public class FieldExtractor {
 
         // Should we throw an error/exception here?
         return "NOT DEFINED!!!";
+    }
+    
+    /**
+     * Extracts the GUID for the field with the given name.
+     * NOTE: If there is multiple fields with the name (ignore case), only the first found is returned.
+     * 
+     * @param fieldName The name of the field, whose GUID should be extracted.
+     * @return The GUID, or null if not found.
+     */
+    public GUID getFieldGUID(String fieldName) {
+        for(FieldDefinition fd : layout) {
+            if(fd.getName().equalsIgnoreCase(fieldName)) {
+                return fd.getFieldUID();
+            }
+        }
+        log.warn("Could not find field: " + fieldName);
+        return null;
     }
 }

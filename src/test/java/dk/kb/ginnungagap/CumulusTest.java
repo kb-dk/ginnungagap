@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.log4j.lf5.util.StreamUtils;
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -28,9 +29,9 @@ import com.canto.cumulus.Server.CatalogInfo;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.Field;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.record.CumulusRecord;
+import dk.kb.ginnungagap.testutils.TravisUtils;
 
 public class CumulusTest extends ExtendedTestCase {
     
@@ -41,6 +42,9 @@ public class CumulusTest extends ExtendedTestCase {
     
     @BeforeClass
     public void setup() {
+        if(TravisUtils.runningOnTravis()) {
+            throw new SkipException("Skipping this test");
+        }
         Cumulus.CumulusStart();
         outputDir = new File("tempDir");
         if(outputDir.exists()) {

@@ -1,5 +1,8 @@
 package dk.kb.ginnungagap.workflow;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.record.CumulusRecord;
 import dk.kb.ginnungagap.record.Record;
+import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.yggdrasil.bitmag.Bitrepository;
 import dk.kb.yggdrasil.warc.WarcWriterWrapper;
 
@@ -28,8 +32,8 @@ public class SimplePreservationWorkflow implements Workflow {
     private final TransformationConfiguration conf;
     /** The Cumulus server.*/
     private final CumulusServer server;
-    /** The Bitrepository client.*/
-    private final Bitrepository bitrepository;
+    /** The metadata transformer.*/
+    private final MetadataTransformer transformer;
     /** The warc writer.*/
 //    private final WarcWriterWrapper warcWriter;
     
@@ -39,12 +43,11 @@ public class SimplePreservationWorkflow implements Workflow {
      * @param server The Cumulus server.
      * @param bitrepository The client to the bitrepository.
      */
-    public SimplePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server, 
-            Bitrepository bitrepository) {
+    public SimplePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
+            MetadataTransformer transformer) {
         this.conf = transConf;
         this.server = server;
-        this.bitrepository = bitrepository;
-        
+        this.transformer = transformer;
 //        this.warcWriter = WarcWriterWrapper.getWriter(path, uuid);
 //        warcWriter.
     }
@@ -75,11 +78,21 @@ public class SimplePreservationWorkflow implements Workflow {
         }
     }
     
+    /**
+     * Preserves a given record.
+     * @param record 
+     */
     protected void preserverveRecord(Record record) {
         try {
             record.validateRequiredFields(conf.getRequiredFields());
-            // do other stuff.
+            File metadataFile = new File("tmp", record.getID());
+            try (OutputStream os = new FileOutputStream(metadataFile)) {
+                transformer.transformXmlMetadata(record.getMetadata(), os);
+            }
+            
+            
         } catch (Exception e) {
+            record.setPreservationFailed("Failed to preservatin record '" + record.getID() + ": \n" + e.getMessage());
             // Send failures back.
         }
     }

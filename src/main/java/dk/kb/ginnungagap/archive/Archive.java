@@ -1,5 +1,7 @@
 package dk.kb.ginnungagap.archive;
 
-public interface Archive {
+import java.io.File;
 
+public interface Archive {
+    public void uploadFile(File file, String collectionId);
 }

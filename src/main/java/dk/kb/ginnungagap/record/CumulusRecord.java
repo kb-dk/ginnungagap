@@ -18,6 +18,7 @@ import com.canto.cumulus.Item;
 import com.canto.cumulus.fieldvalue.AssetReference;
 
 import dk.kb.ginnungagap.config.RequiredFields;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.Field;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.cumulus.StringField;
@@ -50,19 +51,24 @@ public class CumulusRecord implements Record {
     }
     
     @Override
+    public String getID() {
+        // TODO: use a different identifier?
+        return Integer.toString(item.getID());
+    }
+
+    @Override
     public ByteArrayInputStream getMetadata() {
         StringBuffer sb = extractMetadataAsXML();
         return new ByteArrayInputStream(sb.toString().getBytes(Charset.defaultCharset()));
     }
 
     @Override
-    public InputStream getFile() {
+    public File getFile() {
         try {
             AssetReference reference = item.getAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE);
             
             Asset asset = reference.getAsset(ASSET_NOT_ALLOW_PROXY);
-            File reservedFile = asset.getAsFile();
-            return new FileInputStream(reservedFile);
+            return asset.getAsFile();
         } catch (Exception e) {
             throw new IllegalStateException("Cannot retrieve the file.", e);
         }
@@ -130,6 +136,52 @@ public class CumulusRecord implements Record {
                     + fieldsNotMeetingRequirements;
             log.warn(errMsg);
             throw new IllegalStateException(errMsg);
+        }
+    }
+
+    @Override
+    public void setPreservationFailed(String status) {
+        try {
+            GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
+            item.setStringValue(preservationStatusGuid, Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED);
+            GUID qaErrorGuid = fe.getFieldGUID(Constants.FieldNames.QA_ERROR);
+            item.setStringValue(qaErrorGuid, status);
+            item.save();
+        } catch (Exception e) {
+            log.error("Could not set preservation failure state for status '" + status + "'", e);
+        }
+    }
+
+    @Override
+    public void setPreservationFinished() {
+        try {
+            GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
+            item.setStringValue(preservationStatusGuid, Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED);
+            item.save();
+        } catch (Exception e) {
+            log.error("Could not set preservation complete", e);
+        }
+    }
+
+    @Override
+    public void setPreservationResourcePackage(String filename) {
+        try {
+            GUID representationPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.REPRESENTATIONPACKAGEID);
+            item.setStringValue(representationPackageIdGuid, filename);
+            item.save();
+        } catch (Exception e) {
+            log.error("Could not set the representation package id.", e);
+        }
+    }
+
+    @Override
+    public void setPreservationMetadataPackage(String filename) {
+        try {
+            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATAPACKAGEID);
+            item.setStringValue(metadataPackageIdGuid, filename);
+            item.save();
+        } catch (Exception e) {
+            log.error("Could not set the package id for the metadata.", e);
         }
     }
 }

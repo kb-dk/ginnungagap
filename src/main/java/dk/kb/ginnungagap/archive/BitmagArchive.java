@@ -1,5 +1,7 @@
 package dk.kb.ginnungagap.archive;
 
+import java.io.File;
+
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.yggdrasil.bitmag.Bitrepository;
 import dk.kb.yggdrasil.bitmag.BitrepositoryConfig;
@@ -19,5 +21,10 @@ public class BitmagArchive implements Archive {
         BitrepositoryConfig bitmagConf = new BitrepositoryConfig(conf.getSettingsDir(), conf.getPrivateKeyFile(),
                 conf.getMaxNumberOfFailingPillars(), conf.getComponentId());
         bitrepository = new Bitrepository(bitmagConf);
+    }
+
+    @Override
+    public void uploadFile(File file, String collectionId) {
+        bitrepository.uploadFile(file, collectionId);
     }
 }
