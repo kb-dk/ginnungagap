@@ -2,8 +2,6 @@ package dk.kb.ginnungagap.record;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +52,12 @@ public class CumulusRecord implements Record {
     public String getID() {
         // TODO: use a different identifier?
         return Integer.toString(item.getID());
+    }
+    
+    @Override
+    public String getFieldValue(String fieldname) {
+        GUID fieldGuid = fe.getFieldGUID(fieldname);
+        return item.getStringValue(fieldGuid);
     }
 
     @Override
@@ -183,5 +187,10 @@ public class CumulusRecord implements Record {
         } catch (Exception e) {
             log.error("Could not set the package id for the metadata.", e);
         }
+    }
+    
+    @Override
+    public String toString() {
+        return "[Record : " + getClass().getCanonicalName() + " -> " + getID() + "]";
     }
 }

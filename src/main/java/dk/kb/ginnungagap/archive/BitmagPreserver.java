@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.record.Record;
 
 /**
@@ -11,12 +16,14 @@ import dk.kb.ginnungagap.record.Record;
  * 
  */
 public class BitmagPreserver {
-    /** The maximum size of the WARC file, before sending it to the bitrepository and begining a new one.*/
-    public static final long MAX_FILE_SIZE = 1000000000L;
-    
+    /** The logger.*/
+    private final static Logger log = LoggerFactory.getLogger(BitmagPreserver.class);
+
     /** The archive, interface for the Bitrepository.
      * No other archive should be implemented.*/
     protected final Archive archive;
+    /** The configuration for the bitrepository.*/
+    protected final BitmagConfiguration bitmagConf;
     
     /** Mapping between active warc packers and their collection.*/
     protected final Map<String, WarcPacker> warcPackerForCollection;
@@ -25,9 +32,10 @@ public class BitmagPreserver {
      * Constructor.
      * @param archive The archive where the data should be sent.
      */
-    public BitmagPreserver(Archive archive) {
+    public BitmagPreserver(Archive archive, BitmagConfiguration bitmagConf) {
         this.archive = archive;
         this.warcPackerForCollection = new HashMap<String, WarcPacker>();
+        this.bitmagConf = bitmagConf;
     }
     
     /**
@@ -38,7 +46,7 @@ public class BitmagPreserver {
      */
     protected WarcPacker getWarcPacker(String collectionId) {
         if(!warcPackerForCollection.containsKey(collectionId)) {
-            warcPackerForCollection.put(collectionId, new WarcPacker());
+            warcPackerForCollection.put(collectionId, new WarcPacker(bitmagConf));
         }
         return warcPackerForCollection.get(collectionId);
     }
@@ -47,11 +55,12 @@ public class BitmagPreserver {
      * Pack a record along with its transformed metadata.
      * @param record The record to preserve.
      * @param metadataFile The transformed metadata for the record, which should also be preserved.
-     * @param collectionId The id of the collection.
      */
-    public void packRecord(Record record, File metadataFile, String collectionId) {
+    public void packRecord(Record record, File metadataFile) {
+        String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
         WarcPacker wp = getWarcPacker(collectionId);
         wp.packRecord(record, metadataFile);
+        checkConditions();
     }
     
     /**
@@ -60,16 +69,34 @@ public class BitmagPreserver {
      */
     public void checkConditions() {
         for(Map.Entry<String, WarcPacker> warc : warcPackerForCollection.entrySet()) {
-            if(warc.getValue().getSize() > MAX_FILE_SIZE) {
+            if(warc.getValue().getSize() > bitmagConf.getWarcFileSizeLimit()) {
                 String collectionId = warc.getKey();
-                WarcPacker wp = warc.getValue();
-                wp.close();
-                
-                archive.uploadFile(wp.getWarcFile(), collectionId);
-                wp.reportSucces();
-                
-                warcPackerForCollection.remove(collectionId);
+                uploadWarcFile(collectionId);
             }
         }
+    }
+    
+    /**
+     * Uploads all warc files to their given collection.
+     */
+    public void uploadAll() {
+        for(String collectionId : warcPackerForCollection.keySet()) {
+            uploadWarcFile(collectionId);
+        }
+    }
+    
+    /**
+     * Performs the upload of the warc file for the given collection.
+     * @param collectionId The id of the collection to upload to.
+     */
+    protected void uploadWarcFile(String collectionId) {
+        log.info("Uploading warc file for collection '" + collectionId + "'");
+        WarcPacker wp = warcPackerForCollection.get(collectionId);
+        wp.close();
+        
+        archive.uploadFile(wp.getWarcFile(), collectionId);
+        wp.reportSucces();
+        
+        warcPackerForCollection.remove(collectionId);        
     }
 }

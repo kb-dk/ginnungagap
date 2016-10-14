@@ -85,8 +85,8 @@ public class RequiredFields {
         ArgumentCheck.checkTrue(rootMap.containsKey(RFF_WRITABLE), "Reqiuired Fields File '" 
                 + requiredFieldsFile.getAbsolutePath() + "' must contain the element '" + RFF_WRITABLE+ "'.");
         
-        List<String> baseFields = Arrays.asList((String[]) rootMap.get(RFF_BASE));
-        List<String> wriableFields = Arrays.asList((String[]) rootMap.get(RFF_WRITABLE));
+        List<String> baseFields = (List<String>) rootMap.get(RFF_BASE);
+        List<String> wriableFields = (List<String>) rootMap.get(RFF_WRITABLE);
 
         return new RequiredFields(baseFields, wriableFields);
     }

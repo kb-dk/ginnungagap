@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.utils.YamlTools;
 
@@ -21,6 +22,8 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>settings_dir: $settings dir path</li>
  *       <li>keyfile: $keyfile path</li>
  *       <li>max_failing_pillars: $max_failing_pillars</li>
+ *       <li>warc_size_limit: $warc_size_limit</li>
+ *       <li>temp_dir: $temp_dir</li>
  *     </ul>
  *     <li>cumulus</li>
  *     <ul>
@@ -54,11 +57,15 @@ public class Configuration {
     private static final String CONF_BITREPOSITORY = "bitrepository";
     /** The bitrepository settings directory leaf-element.*/
     private static final String CONF_BITREPOSITORY_SETTINGS_DIR = "settings_dir";
-    /** The bitrepository settings directory leaf-element.*/
+    /** The bitrepository key file leaf-element.*/
     private static final String CONF_BITREPOSITORY_KEYFILE = "keyfile";
-    /** The bitrepository settings directory leaf-element.*/
+    /** The bitrepository max failing pillars leaf-element.*/
     private static final String CONF_BITREPOSITORY_MAX_FAILING_PILLARS = "max_failing_pillars";
-
+    /** The bitrepository warc size limit leaf-element.*/
+    private static final String CONF_BITREPOSITORY_WARC_SIZE_LIMIT = "warc_size_limit";
+    /** The bitrepository warc size limit leaf-element.*/
+    private static final String CONF_BITREPOSITORY_TEMP_DIR = "temp_dir";
+    
     /** Cumulus node-element.*/
     private static final String CONF_CUMULUS = "cumulus";
     /** The cumulus server url leaf-element.*/
@@ -110,10 +117,10 @@ public class Configuration {
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_TRANSFORMATION), 
                     "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
             
-            
-            this.bitmagConf = loadBitmagConf((Map<String, Object>) map.get(CONF_BITREPOSITORY));
-            this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) map.get(CONF_CUMULUS));
-            this.transformationConf = loadTransformationConfiguration((Map<String, Object>) map.get(CONF_TRANSFORMATION));
+            System.err.println(confMap.containsKey(CONF_BITREPOSITORY) + " -> " + confMap.get(CONF_BITREPOSITORY));
+            this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
+            this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
+            this.transformationConf = loadTransformationConfiguration((Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'", 
                     e);
@@ -134,6 +141,11 @@ public class Configuration {
                 "Missing Bitrepository element '" + CONF_BITREPOSITORY_KEYFILE + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_MAX_FAILING_PILLARS), 
                 "Missing Bitrepository element '" + CONF_BITREPOSITORY_MAX_FAILING_PILLARS + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_WARC_SIZE_LIMIT), 
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_WARC_SIZE_LIMIT + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_TEMP_DIR), 
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_TEMP_DIR + "'");
+        
         
         File settingsDir = new File((String) map.get(CONF_BITREPOSITORY_SETTINGS_DIR));
         ArgumentCheck.checkExistsDirectory(settingsDir, "Directory " + settingsDir.getAbsolutePath());
@@ -144,9 +156,13 @@ public class Configuration {
             keyFile = new File(keyfilePath);
         }
         
-        int maxFailingPillars = (int) map.get(CONF_BITREPOSITORY_KEYFILE);
+        int maxFailingPillars = (int) map.get(CONF_BITREPOSITORY_MAX_FAILING_PILLARS);
+        int warcSizeLimit = (int) map.get(CONF_BITREPOSITORY_WARC_SIZE_LIMIT);
         
-        return new BitmagConfiguration(settingsDir, keyFile, maxFailingPillars);
+        String tempDirPath = (String) map.get(CONF_BITREPOSITORY_TEMP_DIR);
+        File tempDir = FileUtils.getDirectory(tempDirPath);
+        
+        return new BitmagConfiguration(settingsDir, keyFile, maxFailingPillars, warcSizeLimit, tempDir);
     }
     
     /**
@@ -190,7 +206,7 @@ public class Configuration {
         ArgumentCheck.checkExistsDirectory(xsltDir, "XSLT dir");
         ArgumentCheck.checkExistsNormalFile(requiredFieldsFile, "RequireFieldsFile");
         
-        List<String> catalogs = Arrays.asList((String[]) map.get(CONF_TRANSFORMATION_CATALOGS));
+        List<String> catalogs = (List<String>) map.get(CONF_TRANSFORMATION_CATALOGS);
         
         RequiredFields requiredFields = RequiredFields.loadRequiredFieldsFile(requiredFieldsFile);
         

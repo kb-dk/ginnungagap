@@ -6,7 +6,8 @@ import java.io.InputStream;
 import dk.kb.ginnungagap.config.RequiredFields;
 
 /**
- * Record 
+ * Record.
+ * API accessing the data in the Cumulus record.
  */
 public interface Record {
     /**
@@ -24,6 +25,16 @@ public interface Record {
      * @return The identifier for this record.
      */
     String getID();
+    
+    /**
+     * Extracts the value of the field with the given name.
+     * If multiple fields have the given field name, then only the value of one of the fields are returned.
+     * The result is in String format.
+     * @param fieldGuid The name for the field. 
+     * @return The string value of the field.
+     */
+    String getFieldValue(String fieldname);
+    
     /**
      * Validates the record against the given required fields.
      * @param fields The required fields validate against.

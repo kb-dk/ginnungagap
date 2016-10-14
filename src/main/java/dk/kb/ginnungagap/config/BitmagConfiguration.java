@@ -17,18 +17,27 @@ public class BitmagConfiguration {
     protected final int maxNumberOfFailingPillars;
     /** The id which this component will use when communication on queues of the bitrepository.*/
     protected final String componentId;
+    /** The limit to the size of the warc files.*/
+    protected final int warcFileSizeLimit;
+    /** The temporary directory where the warc-files are placed before they are sent to the archive.*/
+    protected final File tempDir;
 
     /**
      * Constructor.
      * @param settingsDir The directory with bitrepository settings files.
      * @param privateKeyFile The private key file.
      * @param maxFailingPillars The maximum number of failing pillars.
+     * @param warcFileSizeLimit The size limit of the warc files.
+     * @param tempDir The temporary directory for warc files.
      */
-    public BitmagConfiguration(File settingsDir, File privateKeyFile, int maxFailingPillars) {
+    public BitmagConfiguration(File settingsDir, File privateKeyFile, int maxFailingPillars, int warcFileSizeLimit,
+            File tempDir) {
         this.settingsDir = settingsDir;
         this.privateKeyFile = privateKeyFile;
         this.maxNumberOfFailingPillars = maxFailingPillars;
         this.componentId = generateComponentID();
+        this.warcFileSizeLimit = warcFileSizeLimit;
+        this.tempDir = tempDir;
     }
     
     /** @return The settings directory.*/
@@ -46,6 +55,14 @@ public class BitmagConfiguration {
     /** @return The id which this component will use when communication on queues of the bitrepository.*/
     public String getComponentId() {
         return componentId;
+    }
+    /** @return The limit to the size of the warc files.*/
+    public int getWarcFileSizeLimit() {
+        return warcFileSizeLimit;
+    }
+    /** @return The temporary directory where the warc-files are placed before they are sent to the archive.*/
+    public File getTempDir() {
+        return tempDir;
     }
     
     /**

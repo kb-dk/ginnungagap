@@ -3,17 +3,21 @@ package dk.kb.ginnungagap.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.jwat.common.ContentType;
 import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 
+import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.record.Record;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
 import dk.kb.yggdrasil.warc.WarcWriterWrapper;
+import dk.kb.yggdrasil.warc.YggdrasilWarcConstants;
 
 /**
  * Packages the warc files.
@@ -28,15 +32,27 @@ public class WarcPacker {
     protected final WarcWriterWrapper warcWrapper;
     /** The records which has been packaged in the warc file.*/
     protected final List<Record> packagedRecords;
+    
+    protected final BitmagConfiguration bitmagConf;
 
     /**
      * Constructor.
      */
-    public WarcPacker() {
-        this.warcWrapper = new WarcWriterWrapper();
+    public WarcPacker(BitmagConfiguration conf) {
+        this.bitmagConf = conf;
         this.packagedRecords = new ArrayList<Record>();
-        // TODO make warc info?
-//        warcWrapper.
+        
+        try {
+            this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
+            // TODO make warc info?
+            Digest digestor = new Digest("SHA-1");
+            String warcInfoPayload = YggdrasilWarcConstants.getWarcInfoPayload();
+            byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes("UTF-8");
+            warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                    digestor.getDigestOfBytes(warcInfoPayloadBytes));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
+        }
     }
     
     /**

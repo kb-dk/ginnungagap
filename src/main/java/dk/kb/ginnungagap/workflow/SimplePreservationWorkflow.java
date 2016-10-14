@@ -3,7 +3,6 @@ package dk.kb.ginnungagap.workflow;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 
+import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
@@ -18,8 +18,6 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.record.CumulusRecord;
 import dk.kb.ginnungagap.record.Record;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
-import dk.kb.yggdrasil.warc.WarcWriterWrapper;
 
 /**
  * Simple workflow for preserving Cumulus items.
@@ -34,6 +32,8 @@ public class SimplePreservationWorkflow implements Workflow {
     private final CumulusServer server;
     /** The metadata transformer.*/
     private final MetadataTransformer transformer;
+    
+    private final BitmagPreserver preserver;
     /** The warc writer.*/
 //    private final WarcWriterWrapper warcWriter;
     
@@ -44,10 +44,11 @@ public class SimplePreservationWorkflow implements Workflow {
      * @param bitrepository The client to the bitrepository.
      */
     public SimplePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
-            MetadataTransformer transformer) {
+            MetadataTransformer transformer, BitmagPreserver preserver) {
         this.conf = transConf;
         this.server = server;
         this.transformer = transformer;
+        this.preserver = preserver;
 //        this.warcWriter = WarcWriterWrapper.getWriter(path, uuid);
 //        warcWriter.
     }
@@ -90,8 +91,9 @@ public class SimplePreservationWorkflow implements Workflow {
                 transformer.transformXmlMetadata(record.getMetadata(), os);
             }
             
-            
+            preserver.packRecord(record, metadataFile);
         } catch (Exception e) {
+            log.warn("Preserving the record '" + record + "' failed.", e);
             record.setPreservationFailed("Failed to preservatin record '" + record.getID() + ": \n" + e.getMessage());
             // Send failures back.
         }
