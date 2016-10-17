@@ -28,9 +28,9 @@ import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server.CatalogInfo;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
-import dk.kb.ginnungagap.record.CumulusRecord;
 import dk.kb.ginnungagap.testutils.TravisUtils;
 
 public class CumulusTest extends ExtendedTestCase {

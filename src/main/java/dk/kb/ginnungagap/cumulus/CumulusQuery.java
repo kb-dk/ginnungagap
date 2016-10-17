@@ -72,7 +72,7 @@ public class CumulusQuery {
      * @param catalogName The name of the catalog.
      * @return The Cumulus query.
      */
-    public static CumulusQuery getArchiveQuery(String catalogName) {
+    public static CumulusQuery getPreservationQuery(String catalogName) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s"),

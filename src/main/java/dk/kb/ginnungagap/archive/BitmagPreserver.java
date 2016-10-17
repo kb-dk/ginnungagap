@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.record.Record;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
@@ -56,7 +56,7 @@ public class BitmagPreserver {
      * @param record The record to preserve.
      * @param metadataFile The transformed metadata for the record, which should also be preserved.
      */
-    public void packRecord(Record record, File metadataFile) {
+    public void packRecord(CumulusRecord record, File metadataFile) {
         String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
         WarcPacker wp = getWarcPacker(collectionId);
         wp.packRecord(record, metadataFile);

@@ -1,13 +1,16 @@
 package dk.kb.ginnungagap.archive;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 
@@ -18,7 +21,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.TestBitmagConfiguration;
-import dk.kb.ginnungagap.record.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class BitmagPreserverTest extends ExtendedTestCase {

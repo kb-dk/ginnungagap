@@ -3,7 +3,6 @@ package dk.kb.ginnungagap.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +12,7 @@ import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.record.Record;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
 import dk.kb.yggdrasil.warc.WarcWriterWrapper;
@@ -31,7 +30,7 @@ public class WarcPacker {
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
     /** The records which has been packaged in the warc file.*/
-    protected final List<Record> packagedRecords;
+    protected final List<CumulusRecord> packagedRecords;
     
     protected final BitmagConfiguration bitmagConf;
 
@@ -40,7 +39,7 @@ public class WarcPacker {
      */
     public WarcPacker(BitmagConfiguration conf) {
         this.bitmagConf = conf;
-        this.packagedRecords = new ArrayList<Record>();
+        this.packagedRecords = new ArrayList<CumulusRecord>();
         
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
@@ -60,7 +59,7 @@ public class WarcPacker {
      * @param record The record from Cumulus.
      * @param metadataFile The file with the transformed metadata.
      */
-    public synchronized void packRecord(Record record, File metadataFile) {
+    public synchronized void packRecord(CumulusRecord record, File metadataFile) {
         ContentType contentType = getContentType(record);
         String uuid = getUUID(record);
         Uri resourceUUID = packResource(record.getFile(), contentType, uuid);
@@ -132,17 +131,17 @@ public class WarcPacker {
      * Should only be called after the warc packer has been closed and send to the archive.
      */
     public void reportSucces() {
-        for(Record r : packagedRecords) {
+        for(CumulusRecord r : packagedRecords) {
             r.setPreservationFinished();
         }
     }
     
-    protected ContentType getContentType(Record record) {
+    protected ContentType getContentType(CumulusRecord record) {
         // TODO this part!
         return ContentType.parseContentType("application/binary");
     }
     
-    protected String getUUID(Record record) {
+    protected String getUUID(CumulusRecord record) {
         // TODO this part!!
         return "" + record.getID();
     }

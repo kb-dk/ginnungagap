@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.record;
+package dk.kb.ginnungagap.cumulus;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,28 +16,31 @@ import com.canto.cumulus.Item;
 import com.canto.cumulus.fieldvalue.AssetReference;
 
 import dk.kb.ginnungagap.config.RequiredFields;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.Field;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
-import dk.kb.ginnungagap.cumulus.StringField;
-import dk.kb.ginnungagap.cumulus.TableField;
 import dk.kb.ginnungagap.cumulus.TableField.Row;
 
 /**
  * Record from Cumulus.
+ * The Cumulus records are extracted from the Cumulus Server using a Cumulus Query.
+ * 
+ * The Cumulus server extracts a RecordItemCollection, which both is a collection of RecordItems and
+ * contains the field layout (used for creating the FieldExtractor).
+ * Each RecordItem is used with the FieldExtractor for the RecordItemCollection to create one 
+ * CumulusRecord (this class).
+ * 
+ * Basically this class contains helper methods and extractor for the Item delivered by Cumulus.
  */
-public class CumulusRecord implements Record {
+public class CumulusRecord {
     /** The logger.*/
     private final static Logger log = LoggerFactory.getLogger(CumulusRecord.class);
 
     /** Constant for not allowing assert to be extracted from proxy.*/
     private static final boolean ASSET_NOT_ALLOW_PROXY = false;
-    
+
     /** The field extractor.*/
     private final FieldExtractor fe;
     /** The Cumulus record item.*/
     private final Item item;
-    
+
     /**
      * Constructor.
      * @param fe The field extractor.
@@ -47,30 +50,45 @@ public class CumulusRecord implements Record {
         this.fe = fe;
         this.item = item;
     }
-    
-    @Override
+
+    /**
+     * @return The identifier for this record.
+     */
     public String getID() {
         // TODO: use a different identifier?
-        return Integer.toString(item.getID());
+        return getFieldValue(Constants.FieldNames.GUID);
+//        return Integer.toString(item.getID());
     }
-    
-    @Override
+
+    /**
+     * Extracts the value of the field with the given name.
+     * If multiple fields have the given field name, then only the value of one of the fields are returned.
+     * The result is in String format.
+     * @param fieldGuid The name for the field. 
+     * @return The string value of the field.
+     */
     public String getFieldValue(String fieldname) {
         GUID fieldGuid = fe.getFieldGUID(fieldname);
         return item.getStringValue(fieldGuid);
     }
 
-    @Override
+    /**
+     * Retrieves the metadata as an input stream.
+     * @return The input stream with the metadata.
+     */
     public ByteArrayInputStream getMetadata() {
         StringBuffer sb = extractMetadataAsXML();
         return new ByteArrayInputStream(sb.toString().getBytes(Charset.defaultCharset()));
     }
 
-    @Override
+    /**
+     * Retrieves the content file.
+     * @return The content file.
+     */
     public File getFile() {
         try {
             AssetReference reference = item.getAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE);
-            
+
             Asset asset = reference.getAsset(ASSET_NOT_ALLOW_PROXY);
             return asset.getAsFile();
         } catch (Exception e) {
@@ -85,12 +103,12 @@ public class CumulusRecord implements Record {
      */
     protected StringBuffer extractMetadataAsXML() {
         Map<String, Field> fields = fe.getFields(item);
-        
+
         StringBuffer res = new StringBuffer();
         res.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         res.append("\n");
         res.append("<record>\n");
-        
+
         for(Field f : fields.values()) {
             if(!f.isEmpty()) {
                 res.append("  <field name=\"" + f.getName() + "\" data-type=\"" + f.getType() + "\">\n");
@@ -118,10 +136,14 @@ public class CumulusRecord implements Record {
         return res;
     }
 
-    @Override
+    /**
+     * Validates the record against the given required fields.
+     * @param fields The required fields validate against.
+     * @throws IllegalStateException If any of the requirements are not met.
+     */
     public void validateRequiredFields(RequiredFields requiredFields) {
         List<String> fieldsNotMeetingRequirements = new ArrayList<String>();
-        
+
         Map<String, Field> fields = fe.getFields(item);
         for(String field : requiredFields.getBaseFields()) {
             if(!fields.containsKey(field) || fields.get(field).isEmpty()) {
@@ -134,7 +156,7 @@ public class CumulusRecord implements Record {
                 fieldsNotMeetingRequirements.add(field);
             }
         }
-        
+
         if(!fieldsNotMeetingRequirements.isEmpty()) {
             String errMsg = "The following fields does not live up to the requirements: " 
                     + fieldsNotMeetingRequirements;
@@ -143,7 +165,10 @@ public class CumulusRecord implements Record {
         }
     }
 
-    @Override
+    /**
+     * Sets the preservation status to failure.
+     * @param qaError The error message for the failure state.
+     */
     public void setPreservationFailed(String status) {
         try {
             GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
@@ -156,7 +181,9 @@ public class CumulusRecord implements Record {
         }
     }
 
-    @Override
+    /**
+     * Sets the preservation status to successfully finished.
+     */
     public void setPreservationFinished() {
         try {
             GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
@@ -167,7 +194,10 @@ public class CumulusRecord implements Record {
         }
     }
 
-    @Override
+    /**
+     * Sets the value for the preservation package for the resource.
+     * @param filename The name of the file containing the resource (content file).
+     */
     public void setPreservationResourcePackage(String filename) {
         try {
             GUID representationPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.REPRESENTATIONPACKAGEID);
@@ -178,7 +208,10 @@ public class CumulusRecord implements Record {
         }
     }
 
-    @Override
+    /**
+     * Sets the value for the preservation package for the metadata.
+     * @param filename The name of the file containing the metadata.
+     */
     public void setPreservationMetadataPackage(String filename) {
         try {
             GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATAPACKAGEID);
@@ -188,7 +221,7 @@ public class CumulusRecord implements Record {
             log.error("Could not set the package id for the metadata.", e);
         }
     }
-    
+
     @Override
     public String toString() {
         return "[Record : " + getClass().getCanonicalName() + " -> " + getID() + "]";

@@ -13,14 +13,18 @@ import com.canto.cumulus.RecordItemCollection;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
-import dk.kb.ginnungagap.record.CumulusRecord;
-import dk.kb.ginnungagap.record.Record;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 
 /**
  * Simple workflow for preserving Cumulus items.
+ * 
+ * It extracts the record from Cumulus, which match the preservation query.
+ * Each Cumulus record will first be validated against its required fields, 
+ * then all the metadata fields are extracted and transformed.
+ * And finally the asset (content file) and transformed metadata will be packaged and sent to the bitrepository.
  */
 public class SimplePreservationWorkflow implements Workflow {
     /** The logger.*/
@@ -32,16 +36,15 @@ public class SimplePreservationWorkflow implements Workflow {
     private final CumulusServer server;
     /** The metadata transformer.*/
     private final MetadataTransformer transformer;
-    
+    /** The bitrepository preserver.*/
     private final BitmagPreserver preserver;
-    /** The warc writer.*/
-//    private final WarcWriterWrapper warcWriter;
     
     /**
      * Constructor.
      * @param transConf The configuration for the transformation
-     * @param server The Cumulus server.
-     * @param bitrepository The client to the bitrepository.
+     * @param server The Cumulus server where the Cumulus records are extracted.
+     * @param transformer The metadata transformer for transforming the metadata.
+     * @param preserver the bitrepository preserver, for packaging and preserving the records.
      */
     public SimplePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
             MetadataTransformer transformer, BitmagPreserver preserver) {
@@ -49,8 +52,6 @@ public class SimplePreservationWorkflow implements Workflow {
         this.server = server;
         this.transformer = transformer;
         this.preserver = preserver;
-//        this.warcWriter = WarcWriterWrapper.getWriter(path, uuid);
-//        warcWriter.
     }
     
     /**
@@ -64,26 +65,26 @@ public class SimplePreservationWorkflow implements Workflow {
     }
     
     /**
-     * 
-     * @param catalogName
+     * Run the extraction on a given catalog, and preserve each Cumulus record.
+     * @param catalogName The name of the catalog.
      */
     protected void runOnCatalog(String catalogName) {
-        CumulusQuery query = CumulusQuery.getArchiveQuery(catalogName);
+        CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
         
         RecordItemCollection items = server.getItems(catalogName, query);
         FieldExtractor fe = new FieldExtractor(items.getLayout());
         for(Item item : items) {
             log.debug("Initiating preservation on '" + item.getDisplayString() + "'");
-            Record record = new CumulusRecord(fe, item);
+            CumulusRecord record = new CumulusRecord(fe, item);
             preserverveRecord(record);
         }
     }
     
     /**
      * Preserves a given record.
-     * @param record 
+     * @param record The given Cumulus record to preserve.
      */
-    protected void preserverveRecord(Record record) {
+    protected void preserverveRecord(CumulusRecord record) {
         try {
             record.validateRequiredFields(conf.getRequiredFields());
             File metadataFile = new File("tmp", record.getID());
@@ -98,19 +99,4 @@ public class SimplePreservationWorkflow implements Workflow {
             // Send failures back.
         }
     }
-    
-    
-    /**
-     * Check the conditions, and upload if any of them has been met.
-     */
-    public synchronized void verifyConditions() {
-//        if(warcWriter != null) {
-//            if(warcWriter.getWarcFileSize() > context.getConfig().getWarcSizeLimit()) {
-//                logger.info("Finished packaging WARC file. Uploading and cleaning up.");
-//                uploadWarcFile();
-//                cleanUp();
-//            }
-//        }
-    }
-//    protected WarcWriter get
 }
