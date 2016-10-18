@@ -10,38 +10,37 @@
 	<fileSets>
 		<!-- Move scripts and transforms dir into assembly -->
 		<fileSet>
-			<directory>${project.basedir}/src/main/scripts</directory>
-			<includes>
-				<include>*.sh</include>
-			</includes>
+			<directory>${project.basedir}/src/main/resources/bin</directory>
 			<lineEnding>lf</lineEnding>
 			<outputDirectory>/bin/</outputDirectory>
 			<fileMode>0755</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
-			<directory>${project.basedir}/src/main/scripts</directory>
+			<directory>${project.basedir}/src/main/conf</directory>
 			<includes>
-				<include>*.cmd</include>
+				<include>*.yml</include>
 			</includes>
-			<lineEnding>crlf</lineEnding>
-			<outputDirectory>/bin/</outputDirectory>
-			<fileMode>0755</fileMode>
+			<lineEnding>lf</lineEnding>
+			<outputDirectory>/conf/</outputDirectory>
+			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
-			<directory>${project.basedir}/src/main/scripts</directory>
-			<excludes>
-				<exclude>*.sh</exclude>
-				<exclude>*.cmd</exclude>
-			</excludes>
+			<directory>${project.basedir}/src/main/resources/scripts/xsd</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/bin/</outputDirectory>
-			<fileMode>0755</fileMode>
+			<outputDirectory>/conf/xsd/</outputDirectory>
+			<fileMode>0744</fileMode>
+			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/src/main/resources/scripts/xslt</directory>
+			<lineEnding>lf</lineEnding>
+			<outputDirectory>/conf/xslt/</outputDirectory>
+			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<!-- Move licenses into assembly -->
-<!--
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources</directory>
 			<includes>
@@ -49,7 +48,6 @@
 			</includes>
 			<outputDirectory>/licenses/</outputDirectory>
 		</fileSet>
--->
 		<!-- Move src dir, config dir and pom.xml into assembly -->
 		<!-- Move src dir and all top level files into assembly -->
 		<!-- exclude usual suspects -->

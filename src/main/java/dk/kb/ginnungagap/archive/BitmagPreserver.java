@@ -21,7 +21,7 @@ public class BitmagPreserver {
 
     /** The archive, interface for the Bitrepository.
      * No other archive should be implemented.*/
-    protected final Archive archive;
+    protected final BitmagArchive archive;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
     
@@ -32,7 +32,7 @@ public class BitmagPreserver {
      * Constructor.
      * @param archive The archive where the data should be sent.
      */
-    public BitmagPreserver(Archive archive, BitmagConfiguration bitmagConf) {
+    public BitmagPreserver(BitmagArchive archive, BitmagConfiguration bitmagConf) {
         this.archive = archive;
         this.warcPackerForCollection = new HashMap<String, WarcPacker>();
         this.bitmagConf = bitmagConf;

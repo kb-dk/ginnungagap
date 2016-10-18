@@ -9,7 +9,7 @@ import dk.kb.yggdrasil.bitmag.BitrepositoryConfig;
 /**
  * Bitrepository archive.
  */
-public class BitmagArchive implements Archive {
+public class BitmagArchive {
     /** The bitrepository client from Yggdrasil.*/
     protected Bitrepository bitrepository;
     
@@ -23,7 +23,9 @@ public class BitmagArchive implements Archive {
         bitrepository = new Bitrepository(bitmagConf);
     }
 
-    @Override
+    /**
+     * Uploads the file to the bitrepository.
+     */
     public void uploadFile(File file, String collectionId) {
         bitrepository.uploadFile(file, collectionId);
     }

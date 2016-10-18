@@ -1,7 +1,6 @@
 package dk.kb.ginnungagap.config;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +85,9 @@ public class Configuration {
     /** Transformation catalogs array leaf-element.*/
     private static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
 
-    /** TODO: should be 'true', when used properly.*/
-    private static final boolean CUMULUS_WRITE_ACCESS = false;
+    /** Whether Cumulus should have write access.
+     * TODO: should be 'true', when used properly.*/
+    private static final boolean CUMULUS_WRITE_ACCESS = true;
     
     /** The configuration for the bitrepository.*/
     private final BitmagConfiguration bitmagConf;

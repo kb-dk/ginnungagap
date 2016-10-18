@@ -1,16 +1,12 @@
-package dk.kb.ginnungagap;
+package dk.kb.ginnungagap.cumulus;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.lf5.util.StreamUtils;
 import org.bitrepository.common.utils.FileUtils;
@@ -94,7 +90,7 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
     
-    @Test
+    @Test(enabled = true)
     public void testPrintingToXml() throws Exception {
         String catalogName = "Audio OM";
         int catalogId = server.getServer().findCatalogID(catalogName);

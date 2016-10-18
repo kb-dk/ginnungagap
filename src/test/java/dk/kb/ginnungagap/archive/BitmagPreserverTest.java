@@ -56,7 +56,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     @Test
     public void testInitialConditions() throws Exception {
         addDescription("Test the initial conditions of the bitmag preserver.");
-        Archive archive = mock(Archive.class);
+        BitmagArchive archive = mock(BitmagArchive.class);
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
         assertTrue(preserver.warcPackerForCollection.isEmpty());
         preserver.checkConditions();
@@ -65,7 +65,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     @Test
     public void testPreservingRecord() throws Exception {
         addDescription("Test preserving a record, which is too small for automatic upload");
-        Archive archive = mock(Archive.class);
+        BitmagArchive archive = mock(BitmagArchive.class);
         
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);
@@ -103,7 +103,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     @Test
     public void testPreservingRecordWithUpload() throws Exception {
         addDescription("Test preserving a record which is large enough for automatic upload.");
-        Archive archive = mock(Archive.class);
+        BitmagArchive archive = mock(BitmagArchive.class);
         
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);

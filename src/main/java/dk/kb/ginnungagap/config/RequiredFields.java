@@ -2,7 +2,6 @@ package dk.kb.ginnungagap.config;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,8 +11,12 @@ import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.utils.YamlTools;
 
 /**
- * The fields required for a Cumulus record to be preserved.
- * Currently simply just a list of fields.
+ * The fields required for a Cumulus record to be preserved.<br/>
+ * Currently supports two types of fields:
+ * <ul>
+ *   <li>Fields with must be present and having content</li>
+ *   <li>Field which must exist and writable (though not required to contain.</li>
+ * </ul>
  * 
  * The required fields file must be structured in the following way:
  * <ul>
