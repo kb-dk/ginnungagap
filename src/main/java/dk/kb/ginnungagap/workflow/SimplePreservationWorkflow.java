@@ -28,7 +28,7 @@ import dk.kb.ginnungagap.transformation.MetadataTransformer;
  */
 public class SimplePreservationWorkflow implements Workflow {
     /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(SimplePreservationWorkflow.class);
+    private static final Logger log = LoggerFactory.getLogger(SimplePreservationWorkflow.class);
 
     /** Transformation configuration for the metadata.*/
     private final TransformationConfiguration conf;

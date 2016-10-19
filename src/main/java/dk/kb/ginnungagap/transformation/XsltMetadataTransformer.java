@@ -1,12 +1,9 @@
 package dk.kb.ginnungagap.transformation;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerConfigurationException;
@@ -14,13 +11,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.utils.StringUtils;
 import dk.kb.metadata.Cleaner;
-import dk.kb.metadata.representation.MetaGuidResolver;
-import dk.kb.metadata.utils.CalendarUtils;
-import dk.kb.metadata.utils.ExceptionUtils;
-import dk.kb.metadata.utils.FileIdHandler;
-import dk.kb.metadata.utils.IdentifierManager;
-import dk.kb.metadata.utils.MdIdHandler;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.xslt.XmlEntityResolver;
 import dk.kb.yggdrasil.xslt.XmlErrorHandler;
@@ -38,7 +30,7 @@ public class XsltMetadataTransformer implements MetadataTransformer {
     protected final File xsltFile;
     /** The XSL transformer.*/
     protected final XslTransformer xslTransformer;
-    /** */
+    /** The xml validator.*/
     protected final XmlValidator xmlValidator;
 
     /**
@@ -60,13 +52,13 @@ public class XsltMetadataTransformer implements MetadataTransformer {
     public void transformXmlMetadata(InputStream xmlFile, OutputStream out) {
         try {
             Cleaner.cleanStuff();
-            
+
             XslUriResolver uriResolver = new XslUriResolver();
             XslErrorListener errorListener = new XslErrorListener();
 
             Source source = new StreamSource(xmlFile);
             byte[] bytes = xslTransformer.transform(source, uriResolver, errorListener);
-            
+
             if(errorListener.hasErrors()) {
                 throw new IllegalStateException("Failed transformation: fatal errors: " + errorListener.fatalErrors 
                         + ", and other errors: " + errorListener.errors + ", and warnings: " + errorListener.warnings);
@@ -80,33 +72,25 @@ public class XsltMetadataTransformer implements MetadataTransformer {
             throw new IllegalStateException("Could not deliver the transformed metadata to the output stream.", e);
         }
     }
-    
+
     /**
      * Validates a metadata file.
-     * @param metadataFile The file to validate.
+     * @param metadata The inputstream with the metadata to validate.
      * @throws YggdrasilException If it fails to validate.
      */
     public void validate(InputStream metadata) throws YggdrasilException {
-            XmlEntityResolver entityResolver = null;
-            XmlErrorHandler errorHandler = new XmlErrorHandler();
-            XmlValidationResult validationResult = new XmlValidationResult();
+        XmlEntityResolver entityResolver = null;
+        XmlErrorHandler errorHandler = new XmlErrorHandler();
+        XmlValidationResult validationResult = new XmlValidationResult();
 
-            boolean res = xmlValidator.testDefinedValidity(metadata, entityResolver, errorHandler, validationResult);
-            
-            if(!res) {
-                throw new IllegalStateException("Failed validation: \nfatal errors: " + listToString(errorHandler.fatalErrors) 
-                        + "\n other errors: " + listToString(errorHandler.errors) + " \nwarnings: " + listToString(errorHandler.warnings));
-            }
-    }
-    
-    private String listToString(List<String> list) {
-        if(list == null || list.isEmpty()) {
-            return "[]";
+        boolean res = xmlValidator.testDefinedValidity(metadata, entityResolver, errorHandler, validationResult);
+
+        if(!res) {
+            String fatalErrors = StringUtils.listToString(errorHandler.fatalErrors, "\n");
+            String errors = StringUtils.listToString(errorHandler.errors, "\n");
+            String warnings = StringUtils.listToString(errorHandler.warnings, "\n");
+            throw new IllegalStateException("Failed validation: \nfatal errors: " + fatalErrors
+                    + "\n other errors: " + errors + " \nwarnings: " + warnings);
         }
-        StringBuilder res = new StringBuilder();
-        for(String s : list) {
-            res.append(s + "\n");
-        }
-        return res.toString();
     }
 }

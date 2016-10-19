@@ -4,6 +4,7 @@ import dk.kb.metadata.utils.OrderedMap;
 
 /**
  * The resolver of metadata guids.
+ * TODO: figure out whether this is used any more!
  */
 public final class MetaGuidResolver {
 	/** Private constructor for this Utility class.*/
@@ -17,7 +18,7 @@ public final class MetaGuidResolver {
     
     /**
      * Sets the guids for the given 
-     * @param guids
+     * @param guids The map of guids.
      */
     public static void setGuidMap(OrderedMap guids) {
     	fileidGuid = guids;

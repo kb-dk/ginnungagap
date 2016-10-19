@@ -25,7 +25,7 @@ public class BitmagConfiguration {
     /**
      * Constructor.
      * @param settingsDir The directory with bitrepository settings files.
-     * @param privateKeyFile The private key file.
+     * @param privateKeyFile The private key file. This may be null, if no key-file is used.
      * @param maxFailingPillars The maximum number of failing pillars.
      * @param warcFileSizeLimit The size limit of the warc files.
      * @param tempDir The temporary directory for warc files.

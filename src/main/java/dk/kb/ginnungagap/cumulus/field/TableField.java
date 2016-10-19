@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.cumulus;
+package dk.kb.ginnungagap.cumulus.field;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import com.canto.cumulus.FieldDefinition;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.ItemCollection;
 
+import dk.kb.ginnungagap.cumulus.FieldExtractor;
+
 /**
  * A Cumulus Table.
  */
@@ -18,10 +20,12 @@ public class TableField extends Field{
     
     /**
      * Constructor.
+     * @param fieldDefinition The definition of the field.
+     * @param fieldType The type of field.
      * @param itemCollection The item collection of the contructor.
      */
-    public TableField(FieldDefinition fd, String fieldType, ItemCollection itemCollection) {
-        super(fd, fieldType);
+    public TableField(FieldDefinition fieldDefinition, String fieldType, ItemCollection itemCollection) {
+        super(fieldDefinition, fieldType);
         this.rows = new ArrayList<Row>();
         FieldExtractor fe = new FieldExtractor(itemCollection.getLayout());
         for(Item i : itemCollection) {

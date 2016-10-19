@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.cumulus;
+package dk.kb.ginnungagap.cumulus.field;
 
 import com.canto.cumulus.FieldDefinition;
 
@@ -12,12 +12,12 @@ public class StringField extends Field {
     
     /**
      * Constructor, for a string value.
-     * @param name The name of the field.
+     * @param fieldDefinition The definition of the field.
      * @param fieldType The type of field.
      * @param value The string value of the field.
      */
-    public StringField(FieldDefinition fd, String fieldType, String value) {
-        super(fd, fieldType);
+    public StringField(FieldDefinition fieldDefinition, String fieldType, String value) {
+        super(fieldDefinition, fieldType);
         this.stringValue = value;
     }
     

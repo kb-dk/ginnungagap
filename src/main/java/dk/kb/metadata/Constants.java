@@ -10,6 +10,7 @@ public class Constants {
     public static final String AGENT_ID = "kbDkMdGen";
     
     /**
+     * TODO: rename?
      * @return The name of the entire API.
      */
     public static String getAPI() {
@@ -17,6 +18,7 @@ public class Constants {
     }
     
     /**
+     * TODO rename?
      * @return The name of the agent for the API.
      */
     public static String getAPIAgent() {
@@ -24,6 +26,7 @@ public class Constants {
     }
     
     /**
+     * TODO is this still our profile? Should be perhaps make a new one?
      * @return The current version METS profile.
      */
     public static String getProfileURL() {

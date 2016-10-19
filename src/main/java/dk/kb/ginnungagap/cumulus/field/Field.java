@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.cumulus;
+package dk.kb.ginnungagap.cumulus.field;
 
 import com.canto.cumulus.FieldDefinition;
 
@@ -14,11 +14,11 @@ public abstract class Field {
     
     /**
      * Constructor, for a string value.
-     * @param name The name of the field.
+     * @param fieldDefinition The name of the field.
      * @param fieldType The type of field.
      */
-    public Field(FieldDefinition fd, String fieldType) {
-        this.definition = fd;
+    public Field(FieldDefinition fieldDefinition, String fieldType) {
+        this.definition = fieldDefinition;
         this.type = fieldType; 
     }
     

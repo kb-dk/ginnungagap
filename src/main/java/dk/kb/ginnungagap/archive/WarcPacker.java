@@ -23,19 +23,20 @@ import dk.kb.yggdrasil.warc.YggdrasilWarcConstants;
  */
 public class WarcPacker {
     /** The digest algorithm.*/
-    public final static String DIGEST_ALGORITHM = "SHA-1";
+    public static final String DIGEST_ALGORITHM = "SHA-1";
     /** The content type for the metadata. */
-    public final static String METADATA_CONTENT_TYPE = "text/xml";
+    public static final String METADATA_CONTENT_TYPE = "text/xml";
 
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
     /** The records which has been packaged in the warc file.*/
     protected final List<CumulusRecord> packagedRecords;
-    
+    /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
 
     /**
      * Constructor.
+     * @param conf Configuration for the bitrepository.
      */
     public WarcPacker(BitmagConfiguration conf) {
         this.bitmagConf = conf;
@@ -70,7 +71,8 @@ public class WarcPacker {
     
     /**
      * Packages a metadata file.
-     * @param metadataFile The file with the metadata. The name of the file must be the same as the UUID of the metadata record.
+     * @param metadataFile The file with the metadata. The name of the file must be the same 
+     * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
     protected Uri packResource(File resourceFile, ContentType contentType, String uuid) {
@@ -87,14 +89,17 @@ public class WarcPacker {
     
     /**
      * Packages a metadata file.
-     * @param metadataFile The file with the metadata. The name of the file must be the same as the UUID of the metadata record.
+     * @param metadataFile The file with the metadata. The name of the file must be the same 
+     * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
     protected void packMetadata(File metadataFile, Uri resourceUUID) {
         try (InputStream in = new FileInputStream(metadataFile)) {
             Digest digestor = new Digest(DIGEST_ALGORITHM);
             WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
-            warcWrapper.writeMetadataRecord(in, metadataFile.length(), ContentType.parseContentType(METADATA_CONTENT_TYPE), resourceUUID, blockDigest, metadataFile.getName());
+            warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
+                    ContentType.parseContentType(METADATA_CONTENT_TYPE), resourceUUID, blockDigest, 
+                    metadataFile.getName());
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
@@ -133,6 +138,16 @@ public class WarcPacker {
     public void reportSucces() {
         for(CumulusRecord r : packagedRecords) {
             r.setPreservationFinished();
+        }
+    }
+    
+    /**
+     * Report back to Cumulus, that the preservation failed for all records.
+     * @param reason The message regarding the reason for the failure.
+     */
+    public void reportFailure(String reason) {
+        for(CumulusRecord r : packagedRecords) {
+            r.setPreservationFailed(reason);
         }
     }
     

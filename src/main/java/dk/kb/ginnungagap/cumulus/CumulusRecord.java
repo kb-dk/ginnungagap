@@ -16,7 +16,10 @@ import com.canto.cumulus.Item;
 import com.canto.cumulus.fieldvalue.AssetReference;
 
 import dk.kb.ginnungagap.config.RequiredFields;
-import dk.kb.ginnungagap.cumulus.TableField.Row;
+import dk.kb.ginnungagap.cumulus.field.Field;
+import dk.kb.ginnungagap.cumulus.field.StringField;
+import dk.kb.ginnungagap.cumulus.field.TableField;
+import dk.kb.ginnungagap.cumulus.field.TableField.Row;
 
 /**
  * Record from Cumulus.
@@ -31,7 +34,7 @@ import dk.kb.ginnungagap.cumulus.TableField.Row;
  */
 public class CumulusRecord {
     /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(CumulusRecord.class);
+    private static final Logger log = LoggerFactory.getLogger(CumulusRecord.class);
 
     /** Constant for not allowing assert to be extracted from proxy.*/
     private static final boolean ASSET_NOT_ALLOW_PROXY = false;
@@ -64,7 +67,7 @@ public class CumulusRecord {
      * Extracts the value of the field with the given name.
      * If multiple fields have the given field name, then only the value of one of the fields are returned.
      * The result is in String format.
-     * @param fieldGuid The name for the field. 
+     * @param fieldname The name for the field. 
      * @return The string value of the field.
      */
     public String getFieldValue(String fieldname) {
@@ -138,7 +141,7 @@ public class CumulusRecord {
 
     /**
      * Validates the record against the given required fields.
-     * @param fields The required fields validate against.
+     * @param requiredFields The required fields validate against.
      * @throws IllegalStateException If any of the requirements are not met.
      */
     public void validateRequiredFields(RequiredFields requiredFields) {
@@ -167,7 +170,7 @@ public class CumulusRecord {
 
     /**
      * Sets the preservation status to failure.
-     * @param qaError The error message for the failure state.
+     * @param status The error message for the failure state.
      */
     public void setPreservationFailed(String status) {
         try {
@@ -200,7 +203,8 @@ public class CumulusRecord {
      */
     public void setPreservationResourcePackage(String filename) {
         try {
-            GUID representationPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.REPRESENTATIONPACKAGEID);
+            GUID representationPackageIdGuid = fe.getFieldGUID(
+                    Constants.PreservationFieldNames.REPRESENTATIONPACKAGEID);
             item.setStringValue(representationPackageIdGuid, filename);
             item.save();
         } catch (Exception e) {

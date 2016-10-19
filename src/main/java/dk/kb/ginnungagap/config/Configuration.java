@@ -50,51 +50,51 @@ import dk.kb.yggdrasil.utils.YamlTools;
 public class Configuration {
 
     /** Ginnungagap root element.*/
-    private static final String CONF_GINNUNGAGAP = "ginnungagap";
+    protected static final String CONF_GINNUNGAGAP = "ginnungagap";
     
     /** The bitrepository node-element.*/
-    private static final String CONF_BITREPOSITORY = "bitrepository";
+    protected static final String CONF_BITREPOSITORY = "bitrepository";
     /** The bitrepository settings directory leaf-element.*/
-    private static final String CONF_BITREPOSITORY_SETTINGS_DIR = "settings_dir";
+    protected static final String CONF_BITREPOSITORY_SETTINGS_DIR = "settings_dir";
     /** The bitrepository key file leaf-element.*/
-    private static final String CONF_BITREPOSITORY_KEYFILE = "keyfile";
+    protected static final String CONF_BITREPOSITORY_KEYFILE = "keyfile";
     /** The bitrepository max failing pillars leaf-element.*/
-    private static final String CONF_BITREPOSITORY_MAX_FAILING_PILLARS = "max_failing_pillars";
+    protected static final String CONF_BITREPOSITORY_MAX_FAILING_PILLARS = "max_failing_pillars";
     /** The bitrepository warc size limit leaf-element.*/
-    private static final String CONF_BITREPOSITORY_WARC_SIZE_LIMIT = "warc_size_limit";
+    protected static final String CONF_BITREPOSITORY_WARC_SIZE_LIMIT = "warc_size_limit";
     /** The bitrepository warc size limit leaf-element.*/
-    private static final String CONF_BITREPOSITORY_TEMP_DIR = "temp_dir";
+    protected static final String CONF_BITREPOSITORY_TEMP_DIR = "temp_dir";
     
     /** Cumulus node-element.*/
-    private static final String CONF_CUMULUS = "cumulus";
+    protected static final String CONF_CUMULUS = "cumulus";
     /** The cumulus server url leaf-element.*/
-    private static final String CONF_CUMULUS_SERVER = "server_url";
+    protected static final String CONF_CUMULUS_SERVER = "server_url";
     /** The cumulus server username leaf-element.*/
-    private static final String CONF_CUMULUS_USERNAME = "username";
+    protected static final String CONF_CUMULUS_USERNAME = "username";
     /** The cumulus server password leaf-element.*/
-    private static final String CONF_CUMULUS_PASSWORD = "password";
+    protected static final String CONF_CUMULUS_PASSWORD = "password";
     
     /** Transformation node-element.*/
-    private static final String CONF_TRANSFORMATION = "transformation";
+    protected static final String CONF_TRANSFORMATION = "transformation";
     /** Transformation XSD directory leaf-element.*/
-    private static final String CONF_TRANSFORMATION_XSD_DIR = "xsd_dir";
+    protected static final String CONF_TRANSFORMATION_XSD_DIR = "xsd_dir";
     /** Transformation XSLT directory leaf-element.*/
-    private static final String CONF_TRANSFORMATION_XSLT_DIR = "xslt_dir";
+    protected static final String CONF_TRANSFORMATION_XSLT_DIR = "xslt_dir";
     /** Transformation required fields file leaf-element.*/
-    private static final String CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE = "required_fields_file";
+    protected static final String CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE = "required_fields_file";
     /** Transformation catalogs array leaf-element.*/
-    private static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
+    protected static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
 
     /** Whether Cumulus should have write access.
      * TODO: should be 'true', when used properly.*/
-    private static final boolean CUMULUS_WRITE_ACCESS = true;
+    protected static final boolean CUMULUS_WRITE_ACCESS = true;
     
     /** The configuration for the bitrepository.*/
-    private final BitmagConfiguration bitmagConf;
+    protected final BitmagConfiguration bitmagConf;
     /** The configruation for accessing Cumulus.*/
-    private final CumulusConfiguration cumulusConf;
+    protected final CumulusConfiguration cumulusConf;
     /** The configuration for the transformation.*/
-    private final TransformationConfiguration transformationConf;
+    protected final TransformationConfiguration transformationConf;
     
     /**
      * Constructor.
@@ -117,12 +117,12 @@ public class Configuration {
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_TRANSFORMATION), 
                     "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
             
-            System.err.println(confMap.containsKey(CONF_BITREPOSITORY) + " -> " + confMap.get(CONF_BITREPOSITORY));
             this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
-            this.transformationConf = loadTransformationConfiguration((Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
+            this.transformationConf = loadTransformationConfiguration(
+                    (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
         } catch (Exception e) {
-            throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'", 
+            throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
             
         }
@@ -188,7 +188,8 @@ public class Configuration {
      * @return The configuration for performing the transformation.
      * @throws YggdrasilException If loading the required fields file fails.
      */
-    protected TransformationConfiguration loadTransformationConfiguration(Map<String, Object> map) throws YggdrasilException {
+    protected TransformationConfiguration loadTransformationConfiguration(Map<String, Object> map) 
+            throws YggdrasilException {
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSD_DIR), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_XSD_DIR + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSLT_DIR), 

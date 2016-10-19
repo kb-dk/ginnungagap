@@ -16,29 +16,54 @@ public final class AgentSelector {
 	/** Private constructor for this Utility class.*/
 	private AgentSelector() {}
 
+	/** The KB agent.*/
     private static final String KB_AGENT = "kbDk";
+    /** The ingest agent.*/
     private static final String KB_INGEST = "kbDkDomsBmIngest";
+    /** The metadata generator.*/
     private static final String KB_METADATA_GENERATOR = "kbDkMdGen";
     
     // The different names for the agents for the departments.
+    /** Deprecated department abbr. */
     private static final String KB_DEP_DFS = "kbDkDfs";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_KULT = "kbDkKult";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_DB = "kbDkDb";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_PLG = "kbDkPlg";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_KOB = "kbDkKob";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_BEV = "kbDkBev";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_KAT = "kbDkKat";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_HA = "kbDkHa";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_OJA = "kbDkOja";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_MTA = "kbDkMta";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_DCM = "kbDkDcm";
+    /** Deprecated department abbr. */
     private static final String KB_DEP_FRSK = "kbDkFrsk";
-    
+
+    /** Current department abbr.*/
+    private static final String KB_DEP_NSA = "kbDkNSA";
+    /** Current department abbr.*/
+    private static final String KB_DEP_NSA1 = "kbDkNSA1";
+    /** Current department abbr.*/
+    private static final String KB_DEP_NSA2 = "kbDkNSA2";
+
     /** The list of all possible agent names currently defined.*/
     public static final Set<String> AGENT_NAMES = new HashSet<String>(Arrays.asList(
             KB_AGENT,
             KB_INGEST,
             KB_METADATA_GENERATOR,
+            KB_DEP_NSA,
+            KB_DEP_NSA1,
+            KB_DEP_NSA2,
             KB_DEP_DFS,
             KB_DEP_KULT,
             KB_DEP_DB,
@@ -53,8 +78,11 @@ public final class AgentSelector {
             KB_DEP_FRSK));
     
     // The different types of agents.
+    /** Internal agent. */
     private static final String KB_TYPE_INTERNAL = "kbDkInternal";
+    /** Personal agent.*/
     private static final String KB_TYPE_PERSONEL = "kbDkPersonel";
+    /** Department agent.*/
     private static final String KB_TYPE_DEPARTMENT = "kbDkDepartment";
     
     /** The list of all possible agent types currently defined.*/
@@ -145,30 +173,37 @@ public final class AgentSelector {
     	KB_INGEST_VERSION = "(" + s + ")";
     }
 
+    /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {
     	return KB_TYPE_INTERNAL;
     }
     
+    /** @return The KB agent name.*/
     public static String getKbAgentValue() {
     	return getKbAgent();
     }
 
+    /** @return Agent type for the metadata generator agent.*/
     public static String getMdGenAgentType() {
     	return KB_TYPE_INTERNAL;
     }
     
+    /** @return The metadata generator agent.*/
     public static String getMdGenAgentValue() {
     	return getMdGen() + " (v. " + Constants.VERSION + ") ";
     }
 
+    /** @return Agent type for the ingest agent.*/
     public static String getIngestAgentType() {
     	return KB_TYPE_INTERNAL;
     }
     
+    /** @return The ingest agent.*/
     public static String getIngestAgentValue() {
     	return getIngestAgent() + " " + KB_INGEST_VERSION;
     }
     
+    /** @return Agent type for the department agent.*/
     public static String getDepartmentAgentType() {
     	return KB_TYPE_DEPARTMENT;
     }

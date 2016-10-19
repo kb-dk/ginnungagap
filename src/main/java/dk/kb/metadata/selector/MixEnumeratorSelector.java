@@ -53,14 +53,23 @@ public final class MixEnumeratorSelector {
             7*              Right side  Bottom       (Flipped)          normal, image flipped, rotated ccw 90°
             8               Left side   Bottom                          normal, rotated cw 90°
 */
+    /** 1               Top         Left side                       normal* */
     private static final String ORIENTATION_NORMAL = "normal*";
+    /** 2*              Top         Right side   (Flipped)          normal, image flipped */
     private static final String ORIENTATION_FLIPPED = "normal, image flipped";
+    /** 3               Bottom      Right side                      normal, rotated 180° */
     private static final String ORIENTATION_ROTATED_180 = "normal, rotated 180°";
+    /** 4*              Bottom      Left side    (Flipped)          normal, image flipped, rotated 180° */
     private static final String ORIENTATION_FLIPPED_ROTATED_180 = "normal, image flipped, rotated 180°";
+    /** 5*              Left side   Top          (Flipped)          normal, image flipped, rotated cw 90° */
     private static final String ORIENTATION_FLIPPED_ROTATED_CW_90 = "normal, image flipped, rotated cw 90°";
+    /** 6               Right side  Top                             normal, rotated ccw 90° */
     private static final String ORIENTATION_ROTATED_CCW_90 = "normal, rotated ccw 90°";
+    /** 7*              Right side  Bottom       (Flipped)          normal, image flipped, rotated ccw 90° */
     private static final String ORIENTATION_FLIPPED_ROTATED_CCW_90 = "normal, image flipped, rotated ccw 90°";
+    /** 8               Left side   Bottom                          normal, rotated cw 90° */
     private static final String ORIENTATION_ROTATED_90 = "normal, rotated cw 90°";
+    /** Only alternative value! */
     private static final String ORIENTATION_UNKNOWN = "unknown";
     
     /** The collection of possible values for the orientation.*/
@@ -105,13 +114,18 @@ public final class MixEnumeratorSelector {
         throw res;
     }
     
+    /** Metering mode value: Average */
     private static String METERING_MODE_AVERAGE = "Average";
+    /** Metering mode value: Center weighted average */
     private static String METERING_MODE_CENTER_WEIGHTED_AVERAGE = "Center weighted average";
+    /** Metering mode value: Spot */
     private static String METERING_MODE_SPOT = "Spot";
+    /** Metering mode value: Multispot */
     private static String METERING_MODE_MULTISPOT = "Multispot";
+    /** Metering mode value: Pattern */
     private static String METERING_MODE_PATTERN = "Pattern";
+    /** Metering mode value: Partial */
     private static String METERING_MODE_PARTIAL = "Partial";
-    
     
     /** The collection of possible values for the field 'mix:meteringMode'.*/
     private static Set<String> METERING_MODE_RESTRICTION = new HashSet<String>(Arrays.asList(METERING_MODE_AVERAGE, 

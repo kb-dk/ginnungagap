@@ -22,6 +22,7 @@ public class TransformationConfiguration {
      * Constructor.
      * @param xsltDir The directory with XSLT files.
      * @param xsdDir The directory with XSD files.
+     * @param catalogs The Cumulus catalogs to transform. TODO: is this a good location for this setting?
      * @param requiredFields The required fields.
      */
     public TransformationConfiguration(File xsltDir, File xsdDir, Collection<String> catalogs, 

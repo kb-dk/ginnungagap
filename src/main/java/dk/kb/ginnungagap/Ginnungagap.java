@@ -2,8 +2,10 @@ package dk.kb.ginnungagap;
 
 import java.io.File;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagArchive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
+import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
@@ -13,12 +15,17 @@ import dk.kb.ginnungagap.workflow.SimplePreservationWorkflow;
 /**
  * Class for instantiating the Ginnungagap workflow.
  * 
+ * Only argument required is the path to the configuration directory. It only have to be the relative path.
+ * It can either be given through the environment variable, GINNUNGAGAP_CONF_DIR,
+ * or given as commandline argument to the main class. 
+ * If both arguments are given, then the commandline is used.
+ * 
  * Will exit if any of the required files are missing.
  * And will throw exception if something is wrong configured wrongly (or if there is bugs in the code :-P ).
  * 
  * TODO: make scheduler.
  */
-public class ginnungagap {
+public class Ginnungagap {
 
     /**
      * Main method. 
@@ -27,16 +34,23 @@ public class ginnungagap {
      */
     public static void main(String[] args) {
         // How do you instantiate the primordial void ??
+        
+        String confPath;
         if(args.length < 1) {
-            System.err.println("Missing argument with configuration file.");
-            System.exit(-1);
+            confPath = System.getenv("GINNUNGAGAP_CONF_PATH");
+            if(confPath == null || confPath.isEmpty()) {
+                System.err.println("Missing argument with configuration file.");
+                System.exit(-1);
+            }
+        } else {
+            confPath = args[0];
         }
         if(args.length > 2) {
             System.out.println("Only handles one argument; the configuration file. "
                     + "All the other arguments are ignored!");
         }
         
-        File confFile = new File(args[0]);
+        File confFile = new File(confPath);
         if(!confFile.isFile()) {
             System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
             System.exit(-1);
@@ -51,7 +65,9 @@ public class ginnungagap {
         
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
-        BitmagArchive archive = new BitmagArchive(conf.getBitmagConf());
+//        Archive archive = new BitmagArchive(conf.getBitmagConf());
+        // TODO: test with BitmagArchive
+        Archive archive = new LocalArchive();
         BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
         
         SimplePreservationWorkflow workflow = new SimplePreservationWorkflow(conf.getTransformationConf(), 

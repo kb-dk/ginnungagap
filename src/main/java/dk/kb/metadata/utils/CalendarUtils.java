@@ -35,7 +35,8 @@ public final class CalendarUtils {
         	gc.setTime(date);
             return factory.newXMLGregorianCalendar(gc);
         } catch (Exception e) {
-            IllegalStateException res = new IllegalStateException("Could not create XML date for the date '" + date + "'.", e);
+            IllegalStateException res = new IllegalStateException("Could not create XML date for the date '" 
+                    + date + "'.", e);
             ExceptionUtils.insertException(res);
             throw res;
         }
@@ -65,8 +66,8 @@ public final class CalendarUtils {
                 Date date2 = formater2.parse(dateString);
                 return getXmlGregorianCalendar(date2).toString();
             } catch (ParseException e2) {
-                IllegalStateException res = new IllegalStateException("Can neither parse date '" + dateString + "' in format '" + format + "'. " 
-                        + "Caught exceptions: " + e + " , " + e2, e2);
+                IllegalStateException res = new IllegalStateException("Can neither parse date '" + dateString 
+                        + "' in format '" + format + "'. " + "Caught exceptions: " + e + " , " + e2, e2);
                 ExceptionUtils.insertException(res);
                 throw res;
             }

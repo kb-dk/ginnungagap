@@ -17,11 +17,11 @@ import dk.kb.ginnungagap.cumulus.CumulusRecord;
  */
 public class BitmagPreserver {
     /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(BitmagPreserver.class);
+    private static final Logger log = LoggerFactory.getLogger(BitmagPreserver.class);
 
     /** The archive, interface for the Bitrepository.
      * No other archive should be implemented.*/
-    protected final BitmagArchive archive;
+    protected final Archive archive;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
     
@@ -31,8 +31,9 @@ public class BitmagPreserver {
     /**
      * Constructor.
      * @param archive The archive where the data should be sent.
+     * @param bitmagConf Configuration for the bitrepository.
      */
-    public BitmagPreserver(BitmagArchive archive, BitmagConfiguration bitmagConf) {
+    public BitmagPreserver(Archive archive, BitmagConfiguration bitmagConf) {
         this.archive = archive;
         this.warcPackerForCollection = new HashMap<String, WarcPacker>();
         this.bitmagConf = bitmagConf;
@@ -94,9 +95,12 @@ public class BitmagPreserver {
         WarcPacker wp = warcPackerForCollection.get(collectionId);
         wp.close();
         
-        archive.uploadFile(wp.getWarcFile(), collectionId);
-        wp.reportSucces();
-        
-        warcPackerForCollection.remove(collectionId);        
+        boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
+        if(uploadSucces) {
+            wp.reportSucces();
+            warcPackerForCollection.remove(collectionId);
+        } else {
+            wp.reportFailure("Could not upload the file to the archive.");
+        }
     }
 }

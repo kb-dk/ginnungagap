@@ -12,6 +12,10 @@ import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
 
+import dk.kb.ginnungagap.cumulus.field.Field;
+import dk.kb.ginnungagap.cumulus.field.StringField;
+import dk.kb.ginnungagap.cumulus.field.TableField;
+
 /**
  * Class for extracting the values of all the fields of an item according to the layout.
  * 
@@ -19,7 +23,7 @@ import com.canto.cumulus.Layout;
  */
 public class FieldExtractor {
     /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(FieldExtractor.class);
+    private static final Logger log = LoggerFactory.getLogger(FieldExtractor.class);
 
     /** The layout for this extractor.*/
     protected final Layout layout;

@@ -16,15 +16,16 @@ ${assembly.home.env.name}=`dirname "$PRG"`/..
 ${assembly.home.env.name}=`cd "${assembly.home.env.name.ref}" && pwd`
 
 if [ -z "${assembly.config.env.name.ref}" ] ; then
-  ${assembly.config.env.name}="${assembly.home.env.name.ref}/config"
+  ${assembly.config.env.name}="${assembly.home.env.name.ref}/conf/ginnungagap.yml"
 fi
 
 # CP must contain a colon-separated list of resources used.
-CP=${assembly.home.env.name.ref}/:${assembly.home.env.name.ref}/config/
+CP=${assembly.home.env.name.ref}/:${assembly.home.env.name.ref}/conf/
 for i in `ls ${assembly.home.env.name.ref}/lib/*.jar`
 do
   CP=${CP}:${i}
 done
+CP=${CP}:/usr/local/Cumulus_Java_SDK/CumulusJC.jar
 #echo $CP
 if [ -z "${JAVA_OPTS}" ]; then
   JAVA_OPTS="-Xms256m -Xmx2048m"
@@ -32,4 +33,4 @@ fi
 
 cd ${assembly.home.env.name.ref}
 
-"${JAVA}" ${JAVA_OPTS} -D${assembly.home.env.name}="${assembly.home.env.name.ref}" -D${assembly.config.env.name}="${assembly.config.env.name.ref}" -D${assembly.runningmode.env.name}="${assembly.runningmode.env.name.ref}" -cp "$CP" ${assembly.main.class.name} "$@" &
+"${JAVA}" ${JAVA_OPTS} -D${assembly.home.env.name}="${assembly.home.env.name.ref}" -D${assembly.config.env.name}="${assembly.config.env.name.ref}" -cp "$CP" ${assembly.main.class.name} "$@" &

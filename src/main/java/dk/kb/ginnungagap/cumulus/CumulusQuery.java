@@ -22,7 +22,7 @@ public class CumulusQuery {
     protected final CombineMode combineMode;
     /** The locale. Defaults to null.*/
     protected Locale locale;
-    
+
     /**
      * Constructor. 
      * Automatically sets the locale to null.
@@ -39,34 +39,34 @@ public class CumulusQuery {
         this.combineMode = combineMode;
         this.locale = null;
     }
-    
+
     /** @return The query string. */
     public String getQuery() {
         return query;
     }
-    
+
     /** @return The enum set of flags for the query. */
     public EnumSet<FindFlag> getFindFlags() {
         return findFlags;
     }
-    
+
     /** @return The combine mode.*/
     public CombineMode getCombineMode() {
         return combineMode;
     }
-    
+
     /** @return The locale. This can be null.*/
     public Locale getLocale() {
         return locale;
     }
-    
+
     /**
      * @param locale The new value for the locale.
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
-    
+
     /**
      * The default query for extracting preservation ready items from a given catalog.
      * @param catalogName The name of the catalog.
@@ -80,8 +80,7 @@ public class CumulusQuery {
                 Constants.FieldValues.
                 PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
                 Constants.FieldNames.PRODUCTION_CATALOG,
-                catalogName
-                );
+                catalogName);
         EnumSet<FindFlag> findFlags = EnumSet.of(
                 FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
                 FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    

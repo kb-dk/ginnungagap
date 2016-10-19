@@ -1,5 +1,8 @@
 package dk.kb.ginnungagap.config;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
@@ -12,9 +15,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.yggdrasil.utils.YamlTools;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ConfigurationTest extends ExtendedTestCase {
 
     File confFile;
@@ -75,6 +80,43 @@ public class ConfigurationTest extends ExtendedTestCase {
     public void testConfiguration() throws Exception {
         addDescription("Load the configuration");
         Configuration conf = new Configuration(confFile);
+        assertNotNull(conf.getBitmagConf());
+        assertNotNull(conf.getBitmagConf().getComponentId());
+        assertNotNull(conf.getBitmagConf().getMaxNumberOfFailingPillars());
+        assertNull(conf.getBitmagConf().getPrivateKeyFile());
+        assertNotNull(conf.getBitmagConf().getSettingsDir());
+        assertNotNull(conf.getBitmagConf().getTempDir());
+        assertNotNull(conf.getBitmagConf().getWarcFileSizeLimit());
+
+        assertNotNull(conf.getCumulusConf());
+        assertNotNull(conf.getCumulusConf().getServerUrl());
+        assertNotNull(conf.getCumulusConf().getUserName());
+        assertNotNull(conf.getCumulusConf().getUserPassword());
+        assertNotNull(conf.getCumulusConf().getWriteAccess());
+
+        assertNotNull(conf.getTransformationConf());
+        assertNotNull(conf.getTransformationConf().getCatalogs());
+        assertNotNull(conf.getTransformationConf().getXsdDir());
+        assertNotNull(conf.getTransformationConf().getXsltDir());
+        assertNotNull(conf.getTransformationConf().getRequiredFields());
+        assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
+        assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
+    }
+    
+    @Test(expectedExceptions = ArgumentCheck.class)
+    public void testConfigurationFailure() throws Exception {
+        addDescription("Load a missing file as configuration.");
+        new Configuration(new File("src/test/resources/test-resource.txt"));
+    }
+    
+    @Test
+    public void testLoadingBitmagConfigurationWithKeyFile() throws Exception {
+        addDescription("Test loading the bitmag configuration with the key file.");
+        Configuration conf = new Configuration(confFile);
         
+        Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFile).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
+        map.put(Configuration.CONF_BITREPOSITORY_KEYFILE, requiredFieldsFile.getPath());
+        BitmagConfiguration bc = conf.loadBitmagConf(map);
+        assertEquals(bc.getPrivateKeyFile(), requiredFieldsFile);
     }
 }

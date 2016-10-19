@@ -72,8 +72,8 @@ public class RequiredFields {
     
     /**
      * Creates a RequiredFields from a file.
-     * @param requiredFieldsFile
-     * @return
+     * @param requiredFieldsFile The YAML file with the required fields in the format description atop the class.
+     * @return The RequiredFields instantiated based on the file.
      * @throws YggdrasilException If loading the required fields file fails.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })

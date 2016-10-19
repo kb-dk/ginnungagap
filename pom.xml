@@ -16,6 +16,11 @@
     <slf4j.version>1.7.21</slf4j.version>
     <logback.version>1.1.7</logback.version>
     <jwat.version>1.0.4</jwat.version>
+    <assembly.home.env.name>GINNUNGAGAP_HOME</assembly.home.env.name>
+    <assembly.home.env.name.ref>${GINNUNGAGAP_HOME}</assembly.home.env.name.ref>
+    <assembly.config.env.name>GINNUNGAGAP_CONF_DIR</assembly.config.env.name>
+    <assembly.config.env.name.ref>${GINNUNGAGAP_CONF_DIR}</assembly.config.env.name.ref>
+    <assembly.main.class.name>dk.kb.ginnungagap.Ginnungagap</assembly.main.class.name>
   </properties>
 
   <dependencies>

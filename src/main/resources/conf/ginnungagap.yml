@@ -3,13 +3,15 @@ ginnungagap:
     settings_dir: conf/bitrepository
     keyfile: conf/client.pem
     max_failing_pillars: 1
+    warc_size_limit: 1000000000
+    temp_dir: tempDir/warcs
   cumulus:
     server_url: cumulus-core-test-01.kb.dk
     username: audio-adm
     password: ''
   transformation:
-    xsd_dir: scripts/xsd
-    xslt_dir: scripts/xslt
+    xsd_dir: conf/xsd
+    xslt_dir: conf/xslt
     required_fields_file: conf/required_fields.yml
     catalogs:
       - "Audio OM"

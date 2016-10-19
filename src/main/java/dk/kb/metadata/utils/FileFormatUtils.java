@@ -9,9 +9,9 @@ import java.util.List;
 public class FileFormatUtils {
 
 	/** The file format name for Tiff images. */
-	private static String FILE_FORMAT_TIFF = "TIFF Image";
+	private static final String FILE_FORMAT_TIFF = "TIFF Image";
     /** The file format name for Wave sound. */
-    private static String FILE_FORMAT_WAVE = "Wave Sound";
+    private static final String FILE_FORMAT_WAVE = "Wave Sound";
     
 	/** The list of file formats for the MIX metadata schema. */
 	private static List<String> formatsForMix = Arrays.asList(

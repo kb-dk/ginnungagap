@@ -8,6 +8,7 @@ import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 
 /**
  * Wrapper for accessing the Cumulus server.
@@ -18,31 +19,41 @@ public class CumulusServer {
     protected final CumulusConfiguration configuration;
     /** Map between the catalog name and the catalog object.*/
     protected final Map<String, Catalog> catalogs = new HashMap<String, Catalog>();
-    
+
     /** The cumulus server access point.*/
     protected Server server;
-    
+
     /** 
      * Constructor.
      * @param configuration The configuration for Cumulus.
      */
     public CumulusServer(CumulusConfiguration configuration) {
+        ArgumentCheck.checkNotNull(configuration, "CumulusConfiguration configuration");
         this.configuration = configuration;
         try {
             this.server = Server.openConnection(configuration.getWriteAccess(), configuration.getServerUrl(), 
                     configuration.getUserName(), configuration.getUserPassword());
         } catch (Exception e) {
-            throw new IllegalStateException("", e);
+            throw new IllegalStateException("Could not connect to server '" + configuration.getServerUrl() + "'", e);
         }
     }
-    
+
     /**
      * @return The Cumulus server.
      */
     public Server getServer() {
+        if(!server.isAlive()) {
+            try {
+                server = Server.openConnection(configuration.getWriteAccess(), configuration.getServerUrl(), 
+                        configuration.getUserName(), configuration.getUserPassword());
+            } catch (Exception e) {
+                throw new IllegalStateException("Connection to Cumulus server '" + configuration.getServerUrl() 
+                        + "' is no longer alive, and we cannot create a new one.", e);
+            }
+        }
         return server;
     }
-    
+
     /**
      * Retrieve the catalog for a given catalog name.
      * @param catalogName The name of the catalog.
@@ -55,7 +66,7 @@ public class CumulusServer {
         }
         return catalogs.get(catalogName);
     }
-    
+
     /**
      * Extracts the collection of record items from a given catalog limiting by the given query.
      * @param catalogName The name of the catalog.

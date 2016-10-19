@@ -29,6 +29,20 @@ public class ArgumentCheck extends RuntimeException {
     }
 
     /**
+     * Check if an Object argument is null.
+     *
+     * @param val  the value to check
+     * @param name the name and type of the value being checked.
+     * @throws ArgumentCheck if test fails
+     */
+    public static void checkNotNull(Object val, String name) {
+        if (val == null) {
+            throw new ArgumentCheck("The value of the variable '" + name
+                    + "' must not be null.");
+        }
+    }
+
+    /**
      * Check if a String argument is null or the empty string.
      *
      * @param val  the value to check
@@ -57,20 +71,6 @@ public class ArgumentCheck extends RuntimeException {
         if (val.length == 0) {
             throw new ArgumentCheck("The value of the variable '" + name
                     + "' must not be string.");
-        }
-    }
-
-    /**
-     * Check if an Object argument is null.
-     *
-     * @param val  the value to check
-     * @param name the name and type of the value being checked.
-     * @throws ArgumentCheck if test fails
-     */
-    public static void checkNotNull(Object val, String name) {
-        if (val == null) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must not be null.");
         }
     }
 

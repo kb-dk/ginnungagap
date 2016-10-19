@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Utility class for exceptions.
+ */
 public class ExceptionUtils {
 
+    /** The list of exceptions.*/
 	private static List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
 	
 	/**
