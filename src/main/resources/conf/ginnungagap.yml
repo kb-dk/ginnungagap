@@ -13,5 +13,7 @@ ginnungagap:
     xsd_dir: conf/xsd
     xslt_dir: conf/xslt
     required_fields_file: conf/required_fields.yml
+    metadata_temp_dir: tempDir/metadata
     catalogs:
-      - "Audio OM"
+#      - "Audio OM"
+      - "Conservation OM"

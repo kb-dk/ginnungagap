@@ -3,16 +3,22 @@ package dk.kb.ginnungagap.cumulus;
 import java.util.EnumSet;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.StringUtils;
+import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 
 /**
  * Class for encapsulating the query for locating specific items in Cumulus.
  */
 public class CumulusQuery {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(PreservationWorkflow.class);
 
     /** The query.*/
     protected final String query;
@@ -38,6 +44,9 @@ public class CumulusQuery {
         this.findFlags = findFlags;
         this.combineMode = combineMode;
         this.locale = null;
+        
+        log.debug("Instantiated Cumulus query '" + query + "' with flags, '" + findFlags + "' and combine-mode: '" 
+                + combineMode.name() + "'");
     }
 
     /** @return The query string. */
@@ -79,7 +88,7 @@ public class CumulusQuery {
                 Constants.FieldNames.PRESERVATION_STATUS,
                 Constants.FieldValues.
                 PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
-                Constants.FieldNames.PRODUCTION_CATALOG,
+                Constants.FieldNames.CATALOG_NAME,
                 catalogName);
         EnumSet<FindFlag> findFlags = EnumSet.of(
                 FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 

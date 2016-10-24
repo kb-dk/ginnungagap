@@ -803,10 +803,9 @@ public interface Constants {
         String REPRESENTATIONPACKAGEID = "REPRESENTATION PACKAGE ID";
         
         /** the ID of the collection which the object should belong to. */
-        String COLLECTIONID = "BITREPOSITORY COLLECTION ID";
+//        String COLLECTIONID = "BITREPOSITORY COLLECTION ID"; // TODO: Why was it this value previously? And why has it changed?
+        String COLLECTIONID = "KB Samling";
     }
-
-    
     
     /**
      * This interface exposes various constant String values used in field

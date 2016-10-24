@@ -4,7 +4,7 @@
 
   <groupId>dk.kb</groupId>
   <artifactId>ginnungagap</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>ginnungagap</name>
@@ -18,8 +18,8 @@
     <jwat.version>1.0.4</jwat.version>
     <assembly.home.env.name>GINNUNGAGAP_HOME</assembly.home.env.name>
     <assembly.home.env.name.ref>${GINNUNGAGAP_HOME}</assembly.home.env.name.ref>
-    <assembly.config.env.name>GINNUNGAGAP_CONF_DIR</assembly.config.env.name>
-    <assembly.config.env.name.ref>${GINNUNGAGAP_CONF_DIR}</assembly.config.env.name.ref>
+    <assembly.conf.env.file>GINNUNGAGAP_CONF_FILE</assembly.conf.env.file>
+    <assembly.conf.env.file.ref>${GINNUNGAGAP_CONF_FILE}</assembly.conf.env.file.ref>
     <assembly.main.class.name>dk.kb.ginnungagap.Ginnungagap</assembly.main.class.name>
   </properties>
 
@@ -201,6 +201,19 @@
           </execution>
         </executions>
       </plugin>      
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>fully.qualified.MainClass</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>

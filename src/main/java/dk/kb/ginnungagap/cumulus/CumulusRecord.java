@@ -20,6 +20,7 @@ import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.cumulus.field.StringField;
 import dk.kb.ginnungagap.cumulus.field.TableField;
 import dk.kb.ginnungagap.cumulus.field.TableField.Row;
+import dk.kb.ginnungagap.utils.StringUtils;
 
 /**
  * Record from Cumulus.
@@ -145,26 +146,28 @@ public class CumulusRecord {
      * @throws IllegalStateException If any of the requirements are not met.
      */
     public void validateRequiredFields(RequiredFields requiredFields) {
-        List<String> fieldsNotMeetingRequirements = new ArrayList<String>();
+        List<String> fieldsNotMeetingRequirementsErrors = new ArrayList<String>();
 
         Map<String, Field> fields = fe.getFields(item);
         for(String field : requiredFields.getBaseFields()) {
             if(!fields.containsKey(field) || fields.get(field).isEmpty()) {
-                fieldsNotMeetingRequirements.add(field);
+                fieldsNotMeetingRequirementsErrors.add("The field '" + field 
+                        + "' did not exist or did not contain any data.");
             }
         }
 
         for(String field : requiredFields.getWritableFields()) {
             if(!fields.containsKey(field) || !fields.get(field).isFieldEditable()) {
-                fieldsNotMeetingRequirements.add(field);
+                fieldsNotMeetingRequirementsErrors.add("The field '" + field 
+                        + "' did not exist or was not writable.");
             }
         }
 
-        if(!fieldsNotMeetingRequirements.isEmpty()) {
-            String errMsg = "The following fields does not live up to the requirements: " 
-                    + fieldsNotMeetingRequirements;
-            log.warn(errMsg);
-            throw new IllegalStateException(errMsg);
+        if(!fieldsNotMeetingRequirementsErrors.isEmpty()) {
+            log.warn("The following field(s) did not live up to the requirements: \n" 
+                    + StringUtils.listToString(fieldsNotMeetingRequirementsErrors, "\n"));
+            throw new IllegalStateException("Required fields failure, " + fieldsNotMeetingRequirementsErrors.size() 
+                    + " field(s) did not live up to their requirements.");
         }
     }
 
@@ -186,11 +189,14 @@ public class CumulusRecord {
 
     /**
      * Sets the preservation status to successfully finished.
+     * Also removes any existing error messages.
      */
     public void setPreservationFinished() {
         try {
             GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
             item.setStringValue(preservationStatusGuid, Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED);
+            GUID qaErrorGuid = fe.getFieldGUID(Constants.FieldNames.QA_ERROR);
+            item.setStringValue(qaErrorGuid, "");
             item.save();
         } catch (Exception e) {
             log.error("Could not set preservation complete", e);

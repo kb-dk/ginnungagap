@@ -2,10 +2,10 @@ required_fields:
   base:
     - GUID
     - KB Samling
+    - ARCHIVE_MD5
   writable:
     - Preservation_status
     - QA_error
-    - ARCHIVE_MD5
     - METADATA GUID
     - METADATA PACKAGE ID
     - RESOURCE PACKAGE ID

@@ -13,9 +13,11 @@ public class TransformationConfiguration {
     protected final File xsltDir;
     /** The directory with XSD files.*/
     protected final File xsdDir;
+    /** The temporary directory, where the metadata files are stored.*/
+    protected final File metadataTempDir;
     /** The catalogs to go through.*/
     protected final List<String> catalogs;
-    /** The required fields from Cumulus for making the */
+    /** The required fields from Cumulus for making the transformation.*/
     protected final RequiredFields requiredFields;
     
     /**
@@ -23,13 +25,15 @@ public class TransformationConfiguration {
      * @param xsltDir The directory with XSLT files.
      * @param xsdDir The directory with XSD files.
      * @param catalogs The Cumulus catalogs to transform. TODO: is this a good location for this setting?
+     * @param metadataTempDir The temporary directory, where the metadata files are stored.
      * @param requiredFields The required fields.
      */
-    public TransformationConfiguration(File xsltDir, File xsdDir, Collection<String> catalogs, 
+    public TransformationConfiguration(File xsltDir, File xsdDir, File metadataTempDir, Collection<String> catalogs, 
             RequiredFields requiredFields) {
         this.xsdDir = xsdDir;
         this.xsltDir = xsltDir;
         this.catalogs = new ArrayList<String>(catalogs);
+        this.metadataTempDir = metadataTempDir;
         this.requiredFields = requiredFields;
     }
     
@@ -49,4 +53,9 @@ public class TransformationConfiguration {
     public File getXsdDir() {
         return xsdDir;
     }
+    /** @return The temporary directory, where the metadata files are stored.*/
+    public File getMetadataTempDir() {
+        return metadataTempDir;
+    }
+
 }

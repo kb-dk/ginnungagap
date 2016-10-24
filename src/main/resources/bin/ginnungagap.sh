@@ -15,8 +15,8 @@ ${assembly.home.env.name}=`dirname "$PRG"`/..
 # make it fully qualified
 ${assembly.home.env.name}=`cd "${assembly.home.env.name.ref}" && pwd`
 
-if [ -z "${assembly.config.env.name.ref}" ] ; then
-  ${assembly.config.env.name}="${assembly.home.env.name.ref}/conf/ginnungagap.yml"
+if [ -z "${assembly.conf.env.file.ref}" ] ; then
+  ${assembly.conf.env.file}="${assembly.home.env.name.ref}/conf/ginnungagap.yml"
 fi
 
 # CP must contain a colon-separated list of resources used.
@@ -33,4 +33,4 @@ fi
 
 cd ${assembly.home.env.name.ref}
 
-"${JAVA}" ${JAVA_OPTS} -D${assembly.home.env.name}="${assembly.home.env.name.ref}" -D${assembly.config.env.name}="${assembly.config.env.name.ref}" -cp "$CP" ${assembly.main.class.name} "$@" &
+"${JAVA}" ${JAVA_OPTS} -D${assembly.home.env.name}="${assembly.home.env.name.ref}" -D${assembly.conf.env.file}="${assembly.conf.env.file.ref}" -cp "$CP" ${assembly.main.class.name} "$@"

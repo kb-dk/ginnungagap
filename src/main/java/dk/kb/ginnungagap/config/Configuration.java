@@ -35,6 +35,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>xsd_dir: $xsd_dir</li>
  *       <li>xslt_dir: $xslt_dir</li>
  *       <li>required_fields_file: $required_fields_file</li>
+ *       <li>metadata_temp_dir: $metadata_temp_dir</li>
  *       <li>catalogs: <br/>- $catalog 1<br/>- $catalog 2<br/>- ...</li>
  *     </ul>
  *   </ul>
@@ -82,6 +83,8 @@ public class Configuration {
     protected static final String CONF_TRANSFORMATION_XSLT_DIR = "xslt_dir";
     /** Transformation required fields file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE = "required_fields_file";
+    /** Transformation metadata temp file leaf-element.*/
+    protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
     /** Transformation catalogs array leaf-element.*/
     protected static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
 
@@ -196,22 +199,26 @@ public class Configuration {
                 "Missing Transformation element '" + CONF_TRANSFORMATION_XSLT_DIR + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_CATALOGS), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_CATALOGS + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_METADATA_TEMP_FILE), 
+                "Missing Transformation element '" + CONF_TRANSFORMATION_METADATA_TEMP_FILE + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE + "'");
         
         File xsdDir = new File((String) map.get(CONF_TRANSFORMATION_XSD_DIR));
         File xsltDir = new File((String) map.get(CONF_TRANSFORMATION_XSLT_DIR));
+        File metadataTempDir = FileUtils.getDirectory((String) map.get(CONF_TRANSFORMATION_METADATA_TEMP_FILE));
         File requiredFieldsFile = new File((String) map.get(CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE));
         
         ArgumentCheck.checkExistsDirectory(xsdDir, "XSD dir");
         ArgumentCheck.checkExistsDirectory(xsltDir, "XSLT dir");
+        ArgumentCheck.checkExistsDirectory(metadataTempDir, "Metadata temporary dir");
         ArgumentCheck.checkExistsNormalFile(requiredFieldsFile, "RequireFieldsFile");
         
         List<String> catalogs = (List<String>) map.get(CONF_TRANSFORMATION_CATALOGS);
         
         RequiredFields requiredFields = RequiredFields.loadRequiredFieldsFile(requiredFieldsFile);
         
-        return new TransformationConfiguration(xsltDir, xsdDir, catalogs, requiredFields);
+        return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, catalogs, requiredFields);
     }
     
     /** @return The configuration for the bitrepository.*/

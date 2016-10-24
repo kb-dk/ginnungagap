@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.workflow;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,9 @@ import dk.kb.ginnungagap.transformation.MetadataTransformer;
  * then all the metadata fields are extracted and transformed.
  * And finally the asset (content file) and transformed metadata will be packaged and sent to the bitrepository.
  */
-public class SimplePreservationWorkflow implements Workflow {
+public class PreservationWorkflow implements Workflow {
     /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(SimplePreservationWorkflow.class);
+    private static final Logger log = LoggerFactory.getLogger(PreservationWorkflow.class);
 
     /** Transformation configuration for the metadata.*/
     private final TransformationConfiguration conf;
@@ -46,7 +47,7 @@ public class SimplePreservationWorkflow implements Workflow {
      * @param transformer The metadata transformer for transforming the metadata.
      * @param preserver the bitrepository preserver, for packaging and preserving the records.
      */
-    public SimplePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
+    public PreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
             MetadataTransformer transformer, BitmagPreserver preserver) {
         this.conf = transConf;
         this.server = server;
@@ -72,6 +73,8 @@ public class SimplePreservationWorkflow implements Workflow {
         CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
         
         RecordItemCollection items = server.getItems(catalogName, query);
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
+        
         FieldExtractor fe = new FieldExtractor(items.getLayout());
         for(Item item : items) {
             log.debug("Initiating preservation on '" + item.getDisplayString() + "'");
@@ -87,7 +90,8 @@ public class SimplePreservationWorkflow implements Workflow {
     protected void preserverveRecord(CumulusRecord record) {
         try {
             record.validateRequiredFields(conf.getRequiredFields());
-            File metadataFile = new File("tmp", record.getID());
+            String metadataUUID = UUID.randomUUID().toString();
+            File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
             try (OutputStream os = new FileOutputStream(metadataFile)) {
                 transformer.transformXmlMetadata(record.getMetadata(), os);
             }
@@ -97,6 +101,7 @@ public class SimplePreservationWorkflow implements Workflow {
             log.warn("Preserving the record '" + record + "' failed.", e);
             record.setPreservationFailed("Failed to preservatin record '" + record.getID() + ": \n" + e.getMessage());
             // Send failures back.
+            throw new IllegalStateException("Do not continue, when failure", e);
         }
     }
 }

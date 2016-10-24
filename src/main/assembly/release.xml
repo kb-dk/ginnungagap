@@ -20,9 +20,20 @@
 			<directory>${project.basedir}/src/main/resources/conf</directory>
 			<includes>
 				<include>*.yml</include>
+				<include>*.xml</include>
 			</includes>
 			<lineEnding>lf</lineEnding>
 			<outputDirectory>/conf/</outputDirectory>
+			<fileMode>0744</fileMode>
+			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/src/main/resources/conf</directory>
+			<includes>
+				<include>*.xml</include>
+			</includes>
+			<lineEnding>lf</lineEnding>
+			<outputDirectory>/conf/bitrepository</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
