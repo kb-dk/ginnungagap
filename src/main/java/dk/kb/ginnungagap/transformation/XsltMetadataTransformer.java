@@ -78,19 +78,23 @@ public class XsltMetadataTransformer implements MetadataTransformer {
      * @param metadata The inputstream with the metadata to validate.
      * @throws YggdrasilException If it fails to validate.
      */
-    public void validate(InputStream metadata) throws YggdrasilException {
+    public void validate(InputStream metadata) throws IOException {
         XmlEntityResolver entityResolver = null;
         XmlErrorHandler errorHandler = new XmlErrorHandler();
         XmlValidationResult validationResult = new XmlValidationResult();
 
-        boolean res = xmlValidator.testDefinedValidity(metadata, entityResolver, errorHandler, validationResult);
+        try {
+            boolean res = xmlValidator.testDefinedValidity(metadata, entityResolver, errorHandler, validationResult);
 
-        if(!res) {
-            String fatalErrors = StringUtils.listToString(errorHandler.fatalErrors, "\n");
-            String errors = StringUtils.listToString(errorHandler.errors, "\n");
-            String warnings = StringUtils.listToString(errorHandler.warnings, "\n");
-            throw new IllegalStateException("Failed validation: \nfatal errors: " + fatalErrors
-                    + "\n other errors: " + errors + " \nwarnings: " + warnings);
+            if(!res) {
+                String fatalErrors = StringUtils.listToString(errorHandler.fatalErrors, "\n");
+                String errors = StringUtils.listToString(errorHandler.errors, "\n");
+                String warnings = StringUtils.listToString(errorHandler.warnings, "\n");
+                throw new IllegalStateException("Failed validation: \nfatal errors: " + fatalErrors
+                        + "\n other errors: " + errors + " \nwarnings: " + warnings);
+            }
+        } catch (YggdrasilException e) {
+            throw new IOException("Could not validate the metadata.", e);
         }
     }
 }

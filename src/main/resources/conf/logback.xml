@@ -9,7 +9,7 @@
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${YGGDRASIL_HOME}/logs/yggdrasil.log</file>
+    <file>${GINNUNGAGAP_HOME}/logs/ginnungagap.log</file>
     <encoder>
       <pattern>%date{ISO8601} [%thread] %-5level %logger{64} - %msg%n</pattern>
     </encoder>

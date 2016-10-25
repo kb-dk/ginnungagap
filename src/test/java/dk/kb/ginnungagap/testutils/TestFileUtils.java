@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bitrepository.common.utils.FileUtils;
 
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.config.TestConfiguration;
 
 public class TestFileUtils {
 
@@ -41,7 +42,7 @@ public class TestFileUtils {
         return res;
     }
     
-    public static Configuration createTempConf() {
+    public static TestConfiguration createTempConf() {
         File confDir = FileUtils.retrieveSubDirectory(tempDir, "conf");
         for(File f : new File("src/test/resources/conf/").listFiles()) {
             FileUtils.copyFile(f, new File(confDir, f.getName()));
@@ -52,6 +53,6 @@ public class TestFileUtils {
         FileUtils.retrieveSubDirectory(scriptDir, "xsd");
         FileUtils.retrieveSubDirectory(scriptDir, "xslt");
 
-        return new Configuration(new File(confDir, "ginnungagap.yml"));
+        return new TestConfiguration(new File(confDir, "ginnungagap.yml"));
     }
 }

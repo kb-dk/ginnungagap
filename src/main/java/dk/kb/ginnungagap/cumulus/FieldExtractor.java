@@ -158,6 +158,7 @@ public class FieldExtractor {
         }
 
         // Should we throw an error/exception here?
+        log.warn("Cannot understand the field type '" + fieldType + "'. It does not seem to be defined!");
         return "NOT DEFINED!!!";
     }
     

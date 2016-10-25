@@ -1,7 +1,9 @@
 package dk.kb.ginnungagap.workflow;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -90,11 +92,7 @@ public class PreservationWorkflow implements Workflow {
     protected void preserverveRecord(CumulusRecord record) {
         try {
             record.validateRequiredFields(conf.getRequiredFields());
-            String metadataUUID = UUID.randomUUID().toString();
-            File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
-            try (OutputStream os = new FileOutputStream(metadataFile)) {
-                transformer.transformXmlMetadata(record.getMetadata(), os);
-            }
+            File metadataFile = transformAndValidateMetadata(record);
             
             preserver.packRecord(record, metadataFile);
         } catch (Exception e) {
@@ -103,5 +101,25 @@ public class PreservationWorkflow implements Workflow {
             // Send failures back.
             throw new IllegalStateException("Do not continue, when failure", e);
         }
+    }
+    
+    /**
+     * Transforms and validates the metadata from the Cumulus record.
+     * 
+     * @param record The record with the metadata to transform and validate.
+     * @return The file containing the transformed metadata.
+     * @throws IOException If an error occurs when reading or writing the metadata.
+     */
+    protected File transformAndValidateMetadata(CumulusRecord record) throws IOException {
+        String metadataUUID = UUID.randomUUID().toString();
+        File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
+        try (OutputStream os = new FileOutputStream(metadataFile)) {
+            transformer.transformXmlMetadata(record.getMetadata(), os);
+            os.flush();
+        }
+        
+        transformer.validate(new FileInputStream(metadataFile));
+        
+        return metadataFile;
     }
 }

@@ -10,14 +10,12 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 import org.apache.log4j.lf5.util.StreamUtils;
-import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.canto.cumulus.Catalog;
 import com.canto.cumulus.Cumulus;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.ItemCollection;
@@ -27,9 +25,6 @@ import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
 
@@ -38,7 +33,7 @@ public class CumulusTest extends ExtendedTestCase {
     File outputDir;
     CumulusServer server;
 
-    int MAX_NUMBER_OF_RECORDS = 5;
+    int MAX_NUMBER_OF_RECORDS = 1;
 
     @BeforeClass
     public void setup() {
@@ -49,7 +44,7 @@ public class CumulusTest extends ExtendedTestCase {
         TestFileUtils.setup();
         outputDir = TestFileUtils.getTempDir();
 
-        CumulusConfiguration conf = new CumulusConfiguration(false, "cumulus-core-test-01.kb.dk", "audio-adm", "");
+        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", "audio-adm", "");
         server = new CumulusServer(conf);
     }
 
@@ -111,8 +106,8 @@ public class CumulusTest extends ExtendedTestCase {
         while(iri.hasNext() && (item = iri.next()) != null && i < MAX_NUMBER_OF_RECORDS) {
             i++;
             CumulusRecord cr = new CumulusRecord(fe, item);
-            //                StreamUtils.copy(cr.getMetadata(), System.err);
-            //                cr.getMetadata();
+            cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
+//            cr.setPreservationFinished();
 
             File outputFile = new File(outputDir, item.getID() + ".xml");
             StreamUtils.copy(cr.getMetadata(), new FileOutputStream(outputFile));

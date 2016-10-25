@@ -14,6 +14,7 @@ import com.canto.cumulus.Asset;
 import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.fieldvalue.AssetReference;
+import com.canto.cumulus.fieldvalue.StringEnumFieldValue;
 
 import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.cumulus.field.Field;
@@ -178,7 +179,10 @@ public class CumulusRecord {
     public void setPreservationFailed(String status) {
         try {
             GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
-            item.setStringValue(preservationStatusGuid, Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED);
+            StringEnumFieldValue enumValue = item.getStringEnumValue(preservationStatusGuid);
+            enumValue.setFromDisplayString(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED);
+            item.setStringEnumValue(preservationStatusGuid, enumValue);
+            
             GUID qaErrorGuid = fe.getFieldGUID(Constants.FieldNames.QA_ERROR);
             item.setStringValue(qaErrorGuid, status);
             item.save();
@@ -194,7 +198,10 @@ public class CumulusRecord {
     public void setPreservationFinished() {
         try {
             GUID preservationStatusGuid = fe.getFieldGUID(Constants.FieldNames.PRESERVATION_STATUS);
-            item.setStringValue(preservationStatusGuid, Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED);
+            StringEnumFieldValue enumValue = item.getStringEnumValue(preservationStatusGuid);
+            enumValue.setFromDisplayString(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED);
+            item.setStringEnumValue(preservationStatusGuid, enumValue);
+
             GUID qaErrorGuid = fe.getFieldGUID(Constants.FieldNames.QA_ERROR);
             item.setStringValue(qaErrorGuid, "");
             item.save();
