@@ -137,6 +137,8 @@ public class WarcPacker {
      */
     public void reportSucces() {
         for(CumulusRecord r : packagedRecords) {
+            r.setPreservationResourcePackage(warcWrapper.getWarcFileId());
+            r.setPreservationMetadataPackage(warcWrapper.getWarcFileId());
             r.setPreservationFinished();
         }
     }

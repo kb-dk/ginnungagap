@@ -799,8 +799,8 @@ public interface Constants {
         String RESOURCEPACKAGEID = "RESOURCE PACKAGE ID"; 
         /** The package id for the metadata (METS) */
         String METADATAPACKAGEID = "METADATA PACKAGE ID"; 
-        /** The package id for the representation METADATA. */
-        String REPRESENTATIONPACKAGEID = "REPRESENTATION PACKAGE ID";
+        /** The package id for the representation METADATA. NOTE: this is no longer used!*/
+//        String REPRESENTATIONPACKAGEID = "REPRESENTATION PACKAGE ID";
         
         /** the ID of the collection which the object should belong to. */
 //        String COLLECTIONID = "BITREPOSITORY COLLECTION ID"; // TODO: Why was it this value previously? And why has it changed?

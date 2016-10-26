@@ -216,12 +216,13 @@ public class CumulusRecord {
      */
     public void setPreservationResourcePackage(String filename) {
         try {
-            GUID representationPackageIdGuid = fe.getFieldGUID(
-                    Constants.PreservationFieldNames.REPRESENTATIONPACKAGEID);
+            GUID representationPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
             item.setStringValue(representationPackageIdGuid, filename);
             item.save();
         } catch (Exception e) {
-            log.error("Could not set the representation package id.", e);
+            String errMsg = "Could not set the representation package id.";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
         }
     }
 
@@ -235,7 +236,9 @@ public class CumulusRecord {
             item.setStringValue(metadataPackageIdGuid, filename);
             item.save();
         } catch (Exception e) {
-            log.error("Could not set the package id for the metadata.", e);
+            String errMsg = "Could not set the package id for the metadata.";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
         }
     }
 

@@ -8,7 +8,9 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
  * Utility class for dealings with Strings.
  */
 public class StringUtils {
-
+    /** The result of an empty string.*/
+    protected static final String EMPTY_LIST = "[]";
+    
     /**
      * Replaces all spaces with tabs.
      * @param s The string to have its spaces replaced by tabs.
@@ -27,7 +29,7 @@ public class StringUtils {
      */
     public static String listToString(List<String> list, String separator) {
         if(list == null || list.isEmpty()) {
-            return "[]";
+            return EMPTY_LIST;
         }
         StringBuilder res = new StringBuilder();
         for(String s : list) {

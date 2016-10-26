@@ -175,7 +175,7 @@ public class FieldExtractor {
                 return fd.getFieldUID();
             }
         }
-        log.warn("Could not find field: " + fieldName);
-        return null;
+        
+        throw new IllegalStateException("Could not find field: " + fieldName); 
     }
 }

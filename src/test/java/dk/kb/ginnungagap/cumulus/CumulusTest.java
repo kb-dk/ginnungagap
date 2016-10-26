@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
+import com.canto.cumulus.FieldDefinition;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.ItemCollection;
 import com.canto.cumulus.RecordItemCollection;
@@ -100,12 +101,17 @@ public class CumulusTest extends ExtendedTestCase {
 
         // Try with resource, to ensure closing it.
         FieldExtractor fe = new FieldExtractor(items.getLayout());
+        for(FieldDefinition fd : items.getLayout()) {
+            System.err.println(fd.getName() + " -> " + fd.getFieldUID().toString());
+        }
         Iterator<Item> iri = items.iterator();
         Item item;
         int i = 0;
         while(iri.hasNext() && (item = iri.next()) != null && i < MAX_NUMBER_OF_RECORDS) {
             i++;
             CumulusRecord cr = new CumulusRecord(fe, item);
+            cr.setPreservationMetadataPackage("Metadata Package");
+            cr.setPreservationResourcePackage("Resource Package");
             cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
 //            cr.setPreservationFinished();
 
