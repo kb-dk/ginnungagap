@@ -3,6 +3,14 @@ Ginnungagap appears as the primordial void in the Norse creation...
 TODO: Figure out whether this really is a suitable name for the longterm preservation component for Cumulus
 
 
+Prerequisite
+--------------------------
+This requires [Yggdrasil](https://github.com/Det-Kongelige-Bibliotek/Yggdrasil).
+* git clone https://github.com/Det-Kongelige-Bibliotek/Yggdrasil.git
+* cd Yggdrasil
+* mvn clean install
+
+
 
 Installing Cumulus libraries to Linux
 --------------------------
