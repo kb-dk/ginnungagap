@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,10 @@ public class CumulusRecord {
     /** The Cumulus record item.*/
     private final Item item;
 
+    /** The guid for the metadata record. It is created and stored the first time it is needed.
+     * @see */
+    private String metadataGuid;
+    
     /**
      * Constructor.
      * @param fe The field extractor.
@@ -61,8 +66,11 @@ public class CumulusRecord {
      */
     public String getID() {
         // TODO: use a different identifier?
-        return getFieldValue(Constants.FieldNames.GUID);
-//        return Integer.toString(item.getID());
+        String res = getFieldValue(Constants.FieldNames.GUID);
+        if(res.contains("/")) {
+            res = res.substring(res.indexOf("/"), res.length()-1);
+        }
+        return res;
     }
 
     /**
@@ -70,7 +78,7 @@ public class CumulusRecord {
      * If multiple fields have the given field name, then only the value of one of the fields are returned.
      * The result is in String format.
      * @param fieldname The name for the field. 
-     * @return The string value of the field.
+     * @return The string value of the field. 
      */
     public String getFieldValue(String fieldname) {
         GUID fieldGuid = fe.getFieldGUID(fieldname);
@@ -242,8 +250,31 @@ public class CumulusRecord {
         }
     }
 
+    /**
+     * Retrieves the value for the metadata guid.
+     * The first time this method is called, then the guid is created and written back to Cumulus.
+     * All following calls of the method returns the guid created in the initial call.
+     * @return The metadata guid for this cumulus record.
+     */
+    public String getMetadataGUID() {
+        if(metadataGuid == null) {
+            metadataGuid = UUID.randomUUID().toString();
+            try {
+                GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATA_GUID);
+                item.setStringValue(metadataPackageIdGuid, metadataGuid);
+                item.save();
+            } catch (Exception e) {
+                String errMsg = "Could not set the package id for the metadata.";
+                log.error(errMsg, e);
+                throw new IllegalStateException(errMsg, e);
+            }            
+        }
+
+        return metadataGuid;
+    }
+
     @Override
     public String toString() {
-        return "[Record : " + getClass().getCanonicalName() + " -> " + getID() + "]";
+        return "[CumulusRecord : " + getClass().getCanonicalName() + " -> " + getID() + "]";
     }
 }

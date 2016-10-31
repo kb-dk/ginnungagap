@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.archive;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -50,7 +51,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     
     @AfterClass
     public void tearDown() throws Exception {
-        TestFileUtils.tearDown();
+//        TestFileUtils.tearDown();
     }
     
     @Test
@@ -104,6 +105,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     public void testPreservingRecordWithUpload() throws Exception {
         addDescription("Test preserving a record which is large enough for automatic upload.");
         BitmagArchive archive = mock(BitmagArchive.class);
+        when(archive.uploadFile(any(File.class), anyString())).thenReturn(true);
         
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);
@@ -139,6 +141,31 @@ public class BitmagPreserverTest extends ExtendedTestCase {
 
         verify(archive).uploadFile(eq(warcFile), eq(collectionId));
         verifyNoMoreInteractions(archive);        
+    }
+    
+    @Test
+    public void testPreservingRecordWithUploadFailure() throws Exception {
+        addDescription("Test preserving a record which is large enough for automatic upload.");
+        BitmagArchive archive = mock(BitmagArchive.class);
+        when(archive.uploadFile(any(File.class), anyString())).thenReturn(false);
+        
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(record.getFieldValue(anyString())).thenReturn(collectionId);
+        when(record.getFile()).thenReturn(resourceFile);
+        when(record.getID()).thenReturn(recordId);
+        
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+
+        addStep("Pack the record and the default metadata", 
+                "Should be placed in the WARC file, but the warc file should not be uploaded yet (not large enough)");
+        preserver.packRecord(record, metadataFile);
+        File warcFile = preserver.getWarcPacker(collectionId).getWarcFile();
+        preserver.uploadAll();
+        
+        assertTrue(preserver.warcPackerForCollection.isEmpty());
+        assertTrue(warcFile.isFile(), "Should not remove the warc-file when failure.");
+        
+        verify(archive).uploadFile(any(File.class), anyString());
     }
     
     protected String createString(int minSize) {

@@ -98,9 +98,11 @@ public class BitmagPreserver {
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
         if(uploadSucces) {
             wp.reportSucces();
-            warcPackerForCollection.remove(collectionId);
         } else {
+            log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "
+                    + "Keeping it in temp dir: '" + bitmagConf.getTempDir().getAbsolutePath() + "'");
             wp.reportFailure("Could not upload the file to the archive.");
         }
+        warcPackerForCollection.remove(collectionId);
     }
 }

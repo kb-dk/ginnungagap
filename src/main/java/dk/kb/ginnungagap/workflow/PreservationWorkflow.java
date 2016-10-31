@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +110,7 @@ public class PreservationWorkflow implements Workflow {
      * @throws IOException If an error occurs when reading or writing the metadata.
      */
     protected File transformAndValidateMetadata(CumulusRecord record) throws IOException {
-        String metadataUUID = UUID.randomUUID().toString();
+        String metadataUUID = record.getMetadataGUID();
         File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             transformer.transformXmlMetadata(record.getMetadata(), os);

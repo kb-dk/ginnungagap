@@ -9,9 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
 import static org.testng.Assert.fail;
-import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 import java.io.InputStream;
@@ -19,7 +17,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -108,15 +105,40 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         Item item = mock(Item.class);
         Layout layout = mock(Layout.class);
         
+        FieldDefinition guidField = mock(FieldDefinition.class);
+        GUID guidGuid = mock(GUID.class);
+        FieldDefinition metadataGuidField = mock(FieldDefinition.class);
+        GUID metadataGuidGuid = mock(GUID.class);
+        FieldDefinition preservationStatusField = mock(FieldDefinition.class);
+        GUID preservationStatusGuid = mock(GUID.class);
+        
         addStep("Mock the methods", "");
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
-        
+
+        when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
+        when(guidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(guidField.getFieldUID()).thenReturn(guidGuid);
+
+        when(preservationStatusField.getName()).thenReturn(Constants.FieldNames.PRESERVATION_STATUS);
+        when(preservationStatusField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(preservationStatusField.getFieldUID()).thenReturn(preservationStatusGuid);
+
+        when(metadataGuidField.getName()).thenReturn(Constants.PreservationFieldNames.METADATA_GUID);
+        when(metadataGuidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(metadataGuidField.getFieldUID()).thenReturn(metadataGuidGuid);
+
         when(recordItemCollection.iterator()).thenReturn(Arrays.asList(item).iterator());
         when(recordItemCollection.getLayout()).thenReturn(layout);
         when(recordItemCollection.getItemCount()).thenReturn(1);
         
-        when(layout.iterator()).thenReturn(new ArrayList<FieldDefinition>().iterator());
+        when(item.getStringValue(any(GUID.class))).thenReturn("cumulus-guid");
         
+        when(layout.iterator()).thenAnswer(new Answer<Iterator<FieldDefinition>>() {
+            @Override
+            public Iterator<FieldDefinition> answer(InvocationOnMock invocation) throws Throwable {
+                return Arrays.asList(guidField, metadataGuidField, preservationStatusField).iterator();
+            }
+        });        
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);
         pw.runOnCatalog(catalogName);
         
@@ -172,6 +194,8 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         });
         when(recordItemCollection.getLayout()).thenReturn(layout);
         when(recordItemCollection.getItemCount()).thenReturn(1);
+        
+        when(item.getStringValue(eq(guidGuid))).thenReturn("cumulus-guid");
         
         when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
         when(guidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
@@ -232,24 +256,24 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(item).save();
         verifyNoMoreInteractions(item);
         
-        verify(layout, times(5)).iterator();
+        verify(layout, times(6)).iterator();
         verifyNoMoreInteractions(layout);
 
-        verify(guidField, times(5)).getName();
+        verify(guidField, times(6)).getName();
         verify(guidField, times(4)).getFieldUID();
         verify(guidField, times(2)).getFieldType();
         verifyNoMoreInteractions(guidField);
         
         verifyZeroInteractions(guidGuid);
         
-        verify(preservationStatusField, times(3)).getName();
+        verify(preservationStatusField, times(4)).getName();
         verify(preservationStatusField, times(3)).getFieldUID();
         verify(preservationStatusField, times(2)).getFieldType();
         verifyNoMoreInteractions(preservationStatusField);
         
         verifyZeroInteractions(preservationStatusGuid);
 
-        verify(qaErrorField, times(2)).getName();
+        verify(qaErrorField, times(3)).getName();
         verify(qaErrorField, times(3)).getFieldUID();
         verify(qaErrorField, times(2)).getFieldType();
         verifyNoMoreInteractions(qaErrorField);
