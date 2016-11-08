@@ -4,14 +4,14 @@ package dk.kb.metadata.utils;
  * Utility class for String operations.
  */
 public final class StringUtils {
-	/** Private constructor for this utility class.*/
-	private StringUtils() {}
+    /** Private constructor for this utility class.*/
+    private StringUtils() {}
 
-	/**
-	 * Validates whether it is possible to split on a comma, ','.
-	 * @param line The line to validate.
-	 * @return Whether the line contains a ','.
-	 */
+    /**
+     * Validates whether it is possible to split on a comma, ','.
+     * @param line The line to validate.
+     * @return Whether the line contains a ','.
+     */
     public static boolean splitableOnComma(String line) {
         return line.contains(", ");
     }
@@ -32,11 +32,11 @@ public final class StringUtils {
         return split[elementIndex];
     }
 
-	/**
-	 * Validates whether it is possible to split on a slash, '/'.
-	 * @param line The line to validate.
-	 * @return Whether the line contains a '/'.
-	 */
+    /**
+     * Validates whether it is possible to split on a slash, '/'.
+     * @param line The line to validate.
+     * @return Whether the line contains a '/'.
+     */
     public static boolean splitableOnSlash(String line) {
         return line.contains("/");
     }
@@ -66,11 +66,11 @@ public final class StringUtils {
      * @return The calculated fraction. Or the line argument, if it is not a fraction.
      */
     public static String calculateFraction(String line) {
-    	if(!splitableOnSlash(line)) {
-    		return line;
-    	}
+        if(!splitableOnSlash(line)) {
+            return line;
+        }
         String[] split = line.split("/");
-        
+
         float nominator = Float.parseFloat(split[0]);
         float denominator = Float.parseFloat(split[1]);
 
@@ -87,51 +87,51 @@ public final class StringUtils {
 
         return "" + d.intValue();
     }
-    
+
     /**
-     * Changes the string into 'UpperCamelCase'.
-     * @param s The string to make into upper camel case.
+     * Changes the strings into 'UpperCamelCase', no matter their current case.
+     * @param words The array of strings to make into upper camel case.
      * @return The upper camel case of the string.
      */
     public static String encodeAsUpperCamelCase(String ... words) {
-    	StringBuilder res = new StringBuilder();
-    	for(String word : words) {
-    		String lowerCase = word.toLowerCase();
-    		Character startCharacter = Character.toUpperCase(lowerCase.charAt(0));
-    		
-    		res.append(startCharacter.toString() + lowerCase.substring(1));
-    	}
-    	return res.toString();
+        StringBuilder res = new StringBuilder();
+        for(String word : words) {
+            String lowerCase = word.toLowerCase();
+            Character startCharacter = Character.toUpperCase(lowerCase.charAt(0));
+
+            res.append(startCharacter.toString() + lowerCase.substring(1));
+        }
+        return res.toString();
     }
-    
+
     /**
      * Retrieves the integer nominator of a float in string-format.
      * @param value The fraction value to retrieve the integer nominator for.
      * @return The nominator for the fraction.
      */
     public static String retrieveNominatorAsInteger(String value) {
-    	String[] split = value.split("[.]");
-    	if(split.length == 1) {
-    		return split[0];
-    	} else {
-    		return split[0] + split[1];
-    	}
+        String[] split = value.split("[.]");
+        if(split.length == 1) {
+            return split[0];
+        } else {
+            return split[0] + split[1];
+        }
     }
-    
+
     /**
      * Retrieves the integer denominator of a float in string-format.
      * @param value The fraction value to retrieve the integer denominator for.
      * @return The denominator for the fraction.
      */
     public static String retrieveDenominatorAsInteger(String value) {
-    	String[] split = value.split("[.]");
-    	if(split.length == 1) {
-    		return "1";
-    	}
-    	String res = "1";
-    	for(int i = 0; i < split[1].length(); i++) {
-    		res += "0";
-    	}
-    	return res;
+        String[] split = value.split("[.]");
+        if(split.length == 1) {
+            return "1";
+        }
+        String res = "1";
+        for(int i = 0; i < split[1].length(); i++) {
+            res += "0";
+        }
+        return res;
     }
 }

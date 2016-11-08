@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.cumulus;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class CumulusRecord {
      */
     public ByteArrayInputStream getMetadata() {
         StringBuffer sb = extractMetadataAsXML();
-        return new ByteArrayInputStream(sb.toString().getBytes(Charset.defaultCharset()));
+        return new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     /**

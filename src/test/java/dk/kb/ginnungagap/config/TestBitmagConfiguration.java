@@ -7,8 +7,8 @@ public class TestBitmagConfiguration extends BitmagConfiguration {
     public Integer testWarcFileSizeLimit;
     
     public TestBitmagConfiguration(File settingsDir, File privateKeyFile, int maxFailingPillars, int warcFileSizeLimit,
-            File tempDir) {
-        super(settingsDir, privateKeyFile, maxFailingPillars, warcFileSizeLimit, tempDir);
+            File tempDir, String algorithm) {
+        super(settingsDir, privateKeyFile, maxFailingPillars, warcFileSizeLimit, tempDir, algorithm);
     }
 
     public void setWarcFileSizeLimit(int limit) {

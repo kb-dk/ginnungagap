@@ -30,7 +30,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         testFile = new File(TestFileUtils.getTempDir(), origTestFile.getName());
         FileUtils.copyFile(origTestFile, testFile);
         
-        conf = new BitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 10000000, TestFileUtils.getTempDir());
+        conf = new BitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 10000000, TestFileUtils.getTempDir(), "SHA-1");
     }
     
     @AfterClass

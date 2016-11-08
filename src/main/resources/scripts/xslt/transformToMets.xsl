@@ -225,22 +225,22 @@
           </xsl:element>
         </xsl:element>
         <!-- ADD PREMIS:RIGHTS -->
-        <xsl:element name="mets:rightsMD">
-          <xsl:attribute name="CREATED">
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-          </xsl:attribute>
-          <xsl:attribute name="ID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-RIGHTS-ID)" />
-          </xsl:attribute>
-          <xsl:element name="mets:mdWrap">
-            <xsl:attribute name="MDTYPE">
-              <xsl:value-of select="'PREMIS:RIGHTS'" />
-            </xsl:attribute>
-            <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_rights" />
-            </xsl:element>
-          </xsl:element>
-        </xsl:element>
+<!--         <xsl:element name="mets:rightsMD"> -->
+<!--           <xsl:attribute name="CREATED"> -->
+<!--             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" /> -->
+<!--           </xsl:attribute> -->
+<!--           <xsl:attribute name="ID"> -->
+<!--             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-RIGHTS-ID)" /> -->
+<!--           </xsl:attribute> -->
+<!--           <xsl:element name="mets:mdWrap"> -->
+<!--             <xsl:attribute name="MDTYPE"> -->
+<!--               <xsl:value-of select="'PREMIS:RIGHTS'" /> -->
+<!--             </xsl:attribute> -->
+<!--             <xsl:element name="mets:xmlData"> -->
+<!--               <xsl:call-template name="premis_rights" /> -->
+<!--             </xsl:element> -->
+<!--           </xsl:element> -->
+<!--         </xsl:element> -->
         <!-- ADD PREMIS -->
 <!--         <xsl:element name="mets:digiprovMD"> -->
 <!--           <xsl:attribute name="CREATED"> -->

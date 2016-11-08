@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +23,6 @@ import dk.kb.yggdrasil.warc.YggdrasilWarcConstants;
  * Packages the warc files.
  */
 public class WarcPacker {
-    /** The digest algorithm.*/
-    public static final String DIGEST_ALGORITHM = "SHA-1";
     /** The content type for the metadata. */
     public static final String METADATA_CONTENT_TYPE = "text/xml";
 
@@ -45,9 +44,9 @@ public class WarcPacker {
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             // TODO make warc info?
-            Digest digestor = new Digest("SHA-1");
+            Digest digestor = new Digest(conf.getAlgorithm());
             String warcInfoPayload = YggdrasilWarcConstants.getWarcInfoPayload();
-            byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes("UTF-8");
+            byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes(StandardCharsets.UTF_8);
             warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
                     digestor.getDigestOfBytes(warcInfoPayloadBytes));
         } catch (Exception e) {
@@ -70,14 +69,14 @@ public class WarcPacker {
     }
     
     /**
-     * Packages a metadata file.
+     * Packages a file in a WARC-resource.
      * @param metadataFile The file with the metadata. The name of the file must be the same 
      * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
     protected Uri packResource(File resourceFile, ContentType contentType, String uuid) {
         try (InputStream in = new FileInputStream(resourceFile)) {
-            Digest digestor = new Digest(DIGEST_ALGORITHM);
+            Digest digestor = new Digest(bitmagConf.getAlgorithm());
             WarcDigest blockDigest = digestor.getDigestOfFile(resourceFile);
             Uri res = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
             // TODO log this!
@@ -95,7 +94,7 @@ public class WarcPacker {
      */
     protected void packMetadata(File metadataFile, Uri resourceUUID) {
         try (InputStream in = new FileInputStream(metadataFile)) {
-            Digest digestor = new Digest(DIGEST_ALGORITHM);
+            Digest digestor = new Digest(bitmagConf.getAlgorithm());
             WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
             warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
                     ContentType.parseContentType(METADATA_CONTENT_TYPE), resourceUUID, blockDigest, 

@@ -11,10 +11,10 @@ import java.util.UUID;
  * The manager for the identifiers.
  */
 public final class IdentifierManager {
-	/** Private constructor for this utility class.*/
-	private IdentifierManager() {}
+    /** Private constructor for this utility class.*/
+    private IdentifierManager() {}
 
-	/** The mapping between the different file ids and their event identifiers.*/
+    /** The mapping between the different file ids and their event identifiers.*/
     private static Map<String, String> eventIdentifierMap = new HashMap<String, String>();
 
     /**
@@ -24,14 +24,14 @@ public final class IdentifierManager {
      * @return The event identifier corresponding to the fileId.
      */
     public static String getEventIdentifier(String fileId) {
-    	String uuid = eventIdentifierMap.get(fileId);
+        String uuid = eventIdentifierMap.get(fileId);
         if(uuid == null) {
-        	uuid = UUID.randomUUID().toString();
+            uuid = UUID.randomUUID().toString();
             eventIdentifierMap.put(fileId, uuid);
         }
         return uuid;
     }
-    
+
     /**
      * Cleanup data after use (should be called after each transformation).
      */

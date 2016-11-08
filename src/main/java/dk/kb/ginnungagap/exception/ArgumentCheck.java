@@ -75,7 +75,7 @@ public class ArgumentCheck extends RuntimeException {
     }
 
     /**
-     * Check if an int argument is less than 0.
+     * Check if an int argument is less than or equals to 0.
      *
      * @param num argument to check
      * @param name the name and type of the value being checked.
@@ -147,7 +147,7 @@ public class ArgumentCheck extends RuntimeException {
 
     /**
      * Check that some condition on input parameters is true and throw an
-     * ArgumentNotValid if it is false.
+     * ArgumentCheck if it is false.
      * @param b the condition to check
      * @param s the error message to be reported
      * @throws ArgumentCheck if b is false

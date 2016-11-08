@@ -38,12 +38,6 @@
             <xsl:value-of select="field[@name='BEXT OriginatorReference']/value" />
           </xsl:element>
         </xsl:if>
-        <!-- Optional BEXT field 'OriginatorReference' -->
-        <xsl:if test="field[@name='BEXT OriginatorReference']">
-          <xsl:element name="bext:OriginatorReference">
-            <xsl:value-of select="field[@name='BEXT OriginatorReference']/value" />
-          </xsl:element>
-        </xsl:if>
         <!-- Optional BEXT field 'Version' -->
         <xsl:if test="field[@name='BEXT Version']">
           <xsl:element name="bext:Version">
@@ -59,7 +53,7 @@
         <!-- Optional LIST INFO field 'IARL' -->
         <xsl:if test="field[@name='IARL Archival Location']">
           <xsl:element name="bext:IARL">
-            <xsl:value-of select="field[@name='BEXT Originator']/value" />
+            <xsl:value-of select="field[@name='IARL Archival Location']/value" />
           </xsl:element>
         </xsl:if>
         <!-- Optional LIST INFO field 'IART' -->

@@ -38,7 +38,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     @BeforeClass
     public void setup() throws Exception {
         TestFileUtils.setup();
-        bitmagConf = new TestBitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 100000, TestFileUtils.getTempDir());
+        bitmagConf = new TestBitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 100000, TestFileUtils.getTempDir(), "SHA-1");
         
         File origMetadataFile = new File("src/test/resources/test-mets.xml");
         metadataFile = new File(TestFileUtils.getTempDir(), origMetadataFile.getName());

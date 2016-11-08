@@ -5,6 +5,7 @@ ginnungagap:
     max_failing_pillars: 1
     warc_size_limit: 1000000000
     temp_dir: tempDir/warcs
+    algorithm: SHA-1
   cumulus:
     server_url: cumulus-core-test-01.kb.dk
     username: audio-adm

@@ -15,10 +15,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 public final class CalendarUtils {
     /** Private constructor to prevent instantiation of utility class. */
     private CalendarUtils() {}
-    
+
     /** A single instance of the DatatypeFactory to prevent overlap from recreating it too often.*/
     private static DatatypeFactory factory = null;
-    
+
     /**
      * Turns a date into a XMLGregorianCalendar.
      * 
@@ -27,12 +27,12 @@ public final class CalendarUtils {
      */
     public static XMLGregorianCalendar getXmlGregorianCalendar(Date date) {
         try {
-        	if(factory == null) {
-        		factory = DatatypeFactory.newInstance();
-        	}
-        	
-        	GregorianCalendar gc = new GregorianCalendar();
-        	gc.setTime(date);
+            if(factory == null) {
+                factory = DatatypeFactory.newInstance();
+            }
+
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(date);
             return factory.newXMLGregorianCalendar(gc);
         } catch (Exception e) {
             IllegalStateException res = new IllegalStateException("Could not create XML date for the date '" 
@@ -41,14 +41,14 @@ public final class CalendarUtils {
             throw res;
         }
     }
-    
+
     /**
      * @return The current date in the XML date format.
      */
     public static String getCurrentDate() {
         return getXmlGregorianCalendar(new Date()).toString();
     }
-    
+
     /**
      * Retrieves the a date in the XML format, which needs to be transformed from another given format.
      * @param format The format of the given date.

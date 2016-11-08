@@ -38,7 +38,7 @@ public class FieldExtractor {
 
     /**
      * Extracts all the fields of the item according to the layout, and returns them as a mapping between
-     * the name of the field and the value (in string format).
+     * the name of the field and the field.
      * @param item The item to extract all fields for.
      * @return The collection of fields for the item. Fields with no value are ignored.
      */

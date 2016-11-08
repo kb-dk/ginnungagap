@@ -15,17 +15,17 @@ import dk.kb.metadata.utils.ExceptionUtils;
  * cannot be found within their enumerator.
  */
 public final class MixEnumeratorSelector {
-	/** Private constructor for this Utility class.*/
-	private MixEnumeratorSelector() {}
+    /** Private constructor for this Utility class.*/
+    private MixEnumeratorSelector() {}
 
-	/** The collection of possible EXIF versions accepted by the MIX standard.*/
-	public static Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
-	
-	/**
-	 * Extracts a exif version based on the value of a Cumulus field.
-	 * @param cumulusExifVersion The value from the Cumulus field.
-	 * @return The value from the Cumulus field, which are to be extracted as a exif version.
-	 */
+    /** The collection of possible EXIF versions accepted by the MIX standard.*/
+    public static Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
+
+    /**
+     * Extracts a exif version based on the value of a Cumulus field.
+     * @param cumulusExifVersion The value from the Cumulus field.
+     * @return The value from the Cumulus field, which are to be extracted as a exif version.
+     */
     public static String exifVersion(String cumulusExifVersion) {
         String simple = cumulusExifVersion.replaceAll("\\D", "");
 
@@ -40,8 +40,8 @@ public final class MixEnumeratorSelector {
         ExceptionUtils.insertException(res);
         throw res;
     }
-    
-/*
+
+    /*
     // Taken from http://www.impulseadventure.com/photo/exif-orientation.html
     EXIF Orientation Value  Row #0 is:  Column #0 is:                   MIX
             1               Top         Left side                       normal*
@@ -52,7 +52,7 @@ public final class MixEnumeratorSelector {
             6               Right side  Top                             normal, rotated ccw 90°
             7*              Right side  Bottom       (Flipped)          normal, image flipped, rotated ccw 90°
             8               Left side   Bottom                          normal, rotated cw 90°
-*/
+     */
     /** 1               Top         Left side                       normal* */
     private static final String ORIENTATION_NORMAL = "normal*";
     /** 2*              Top         Right side   (Flipped)          normal, image flipped */
@@ -71,7 +71,7 @@ public final class MixEnumeratorSelector {
     private static final String ORIENTATION_ROTATED_90 = "normal, rotated cw 90°";
     /** Only alternative value! */
     private static final String ORIENTATION_UNKNOWN = "unknown";
-    
+
     /** The collection of possible values for the orientation.*/
     private static final Set<String> ORIENTATIONS = new HashSet<String>(Arrays.asList(ORIENTATION_NORMAL, 
             ORIENTATION_FLIPPED, ORIENTATION_ROTATED_180, ORIENTATION_FLIPPED_ROTATED_180, 
@@ -85,10 +85,10 @@ public final class MixEnumeratorSelector {
      * @return The orientation, either directly or the corresponding value.
      */
     public static String orientation(String orientation) {
-    	if(ORIENTATIONS.contains(orientation.toLowerCase())) {
-    		return orientation;
-    	}
-    	
+        if(ORIENTATIONS.contains(orientation.toLowerCase())) {
+            return orientation;
+        }
+
         if(orientation.equalsIgnoreCase("top left") || orientation.equals("1")) {
             return ORIENTATION_NORMAL;
         } else if(orientation.equalsIgnoreCase("top right") || orientation.equals("2")) {
@@ -106,14 +106,14 @@ public final class MixEnumeratorSelector {
         } else if(orientation.equalsIgnoreCase("left bottom") || orientation.equals("8")) {
             return ORIENTATION_ROTATED_90;
         }
-        
+
         IllegalStateException res = new IllegalStateException("The orientation '" + orientation 
                 + "' is invalid for the MIX restrictions: '" 
-        		+ ORIENTATIONS + "'");
+                + ORIENTATIONS + "'");
         ExceptionUtils.insertException(res);
         throw res;
     }
-    
+
     /** Metering mode value: Average */
     private static String METERING_MODE_AVERAGE = "Average";
     /** Metering mode value: Center weighted average */
@@ -126,11 +126,11 @@ public final class MixEnumeratorSelector {
     private static String METERING_MODE_PATTERN = "Pattern";
     /** Metering mode value: Partial */
     private static String METERING_MODE_PARTIAL = "Partial";
-    
+
     /** The collection of possible values for the field 'mix:meteringMode'.*/
     private static Set<String> METERING_MODE_RESTRICTION = new HashSet<String>(Arrays.asList(METERING_MODE_AVERAGE, 
-    		METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, METERING_MODE_MULTISPOT, METERING_MODE_PATTERN, 
-    		METERING_MODE_PARTIAL));
+            METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, METERING_MODE_MULTISPOT, METERING_MODE_PATTERN, 
+            METERING_MODE_PARTIAL));
 
     /**
      * Figures out whether the MeteringMode field is valid.
@@ -140,13 +140,13 @@ public final class MixEnumeratorSelector {
      * @return Whether it is valid or not.
      */
     public static Boolean validMeteringMode(String meteringMode) {
-    	if(meteringMode == null || meteringMode.isEmpty() || meteringMode.equals("0")) {
-    		return false;
-    	}
-    	
-    	return true;
+        if(meteringMode == null || meteringMode.isEmpty() || meteringMode.equals("0")) {
+            return false;
+        }
+
+        return true;
     }
-    
+
     /**
      * Retrieves the values for the field 'mix:meteringMode'.
      * Maps the following from EXIF, if it is not the MIX values:
@@ -166,19 +166,19 @@ public final class MixEnumeratorSelector {
                 return restriction;
             }
         }
-        
+
         try {
-        	Integer i = Integer.parseInt(meteringMode);
-        	switch (i) {
-        	case 1: return METERING_MODE_AVERAGE;
-        	case 2: return METERING_MODE_CENTER_WEIGHTED_AVERAGE;
-        	case 3: return METERING_MODE_SPOT;
-        	case 4: return METERING_MODE_MULTISPOT;
-        	case 5: return METERING_MODE_PATTERN;
-        	case 6: return METERING_MODE_PARTIAL;
-        	}
+            Integer i = Integer.parseInt(meteringMode);
+            switch (i) {
+            case 1: return METERING_MODE_AVERAGE;
+            case 2: return METERING_MODE_CENTER_WEIGHTED_AVERAGE;
+            case 3: return METERING_MODE_SPOT;
+            case 4: return METERING_MODE_MULTISPOT;
+            case 5: return METERING_MODE_PATTERN;
+            case 6: return METERING_MODE_PARTIAL;
+            }
         } catch (NumberFormatException e) {
-        	// Not a valid number, thus throw the exception in next line.
+            // Not a valid number, thus throw the exception in next line.
         }
 
         IllegalStateException res = new IllegalStateException("Could not convert the meteringMode '" + meteringMode + "' into any "
@@ -186,7 +186,7 @@ public final class MixEnumeratorSelector {
         ExceptionUtils.insertException(res);
         throw res;
     }
-    
+
     /**
      * Removes the potential suffix of the colorSpace value.
      * E.g. the value 'RGB Color' would become just 'RGB'.
@@ -194,9 +194,9 @@ public final class MixEnumeratorSelector {
      * @return The colorSpace.
      */
     public static String colorSpace(String colorSpace) {
-    	if(colorSpace.contains(" Color")) {
-    		return colorSpace.substring(0,  colorSpace.indexOf(" "));
-    	}
-    	return colorSpace;
+        if(colorSpace.contains(" Color")) {
+            return colorSpace.substring(0,  colorSpace.indexOf(" "));
+        }
+        return colorSpace;
     }
 }

@@ -287,59 +287,6 @@
     </premis:event>
   </xsl:template>
   
-  <xsl:template name="premis_rights">
-    <premis:rights xsi:schemaLocation="{$PREMIS_LOCATION}">
-      <xsl:element name="premis:rightsStatement">
-        <!-- 4.1.1 rightsStatementIdentifier -->
-        <xsl:element name="premis:rightsStatementIdentifier">
-          <xsl:element name="premis:rightsStatementIdentifierType">
-            <xsl:call-template name="premis_rights_identifier_type" />
-          </xsl:element>
-          <xsl:element name="premis:rightsStatementIdentifierValue">
-            <xsl:call-template name="premis_rights_identifier_value" />
-          </xsl:element>
-        </xsl:element>
-        <!-- 4.1.2 Right Basis -->
-        <xsl:element name="premis:rightsBasis">
-          <xsl:value-of select="'Legal deposit'" />
-        </xsl:element>
-        <!-- 4.1.3 Copyright information -->
-        <xsl:element name="premis:copyrightInformation">
-          <xsl:element name="premis:copyrightStatus">
-            <xsl:value-of select="'copyrighted'" />
-          </xsl:element>
-          <xsl:element name="premis:copyrightJurisdiction">
-            <xsl:value-of select="'dk'" />
-          </xsl:element>
-          <xsl:element name="premis:copyrightNote">
-            <xsl:value-of select="'Expires 70 years after the death of the author'" />
-          </xsl:element>
-        </xsl:element>
-        <!-- 4.1.4 License information -->
-        <xsl:element name="premis:licenseInformation">
-          <xsl:element name="premis:licenseTerms">
-            <xsl:value-of select="'Creative Commons'" />
-          </xsl:element>
-        </xsl:element>
-        <!-- 4.1.5 Statute information -->
-        <xsl:element name="premis:statuteInformation">
-          <xsl:element name="premis:statuteJurisdiction">
-            <xsl:value-of select="'dk'" />
-          </xsl:element>
-          <xsl:element name="premis:statuteCitation">
-            <xsl:value-of select="'Legal deposit law - dk (anno XXXX)'" />
-          </xsl:element>
-        </xsl:element>
-        <!-- 4.1.7 Rights granted -->
-        <xsl:element name="premis:rightsGranted">
-          <xsl:element name="premis:act">
-            <xsl:value-of select="'Pligtafleveringsloven, anno 2016, §XXX, stk. YYY'" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </premis:rights>
-  </xsl:template>
-  
   <xsl:template name="premis_object_identifier_type">
     <xsl:value-of select="'UUID'" />
   </xsl:template>

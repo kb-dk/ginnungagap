@@ -15,6 +15,7 @@ import dk.kb.yggdrasil.bitmag.BitrepositoryConfig;
 public class BitmagArchive implements Archive {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(BitmagArchive.class);
+    
     /** The bitrepository client from Yggdrasil.*/
     protected Bitrepository bitrepository;
     

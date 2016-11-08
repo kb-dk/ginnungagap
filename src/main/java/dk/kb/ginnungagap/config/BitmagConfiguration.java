@@ -21,6 +21,8 @@ public class BitmagConfiguration {
     protected final int warcFileSizeLimit;
     /** The temporary directory where the warc-files are placed before they are sent to the archive.*/
     protected final File tempDir;
+    /** The algorithm for packaging the warc-records.*/
+    protected final String algorithm;
 
     /**
      * Constructor.
@@ -29,15 +31,17 @@ public class BitmagConfiguration {
      * @param maxFailingPillars The maximum number of failing pillars.
      * @param warcFileSizeLimit The size limit of the warc files.
      * @param tempDir The temporary directory for warc files.
+     * @param algorithm The algorithm for the packaging of the warc-records.
      */
     public BitmagConfiguration(File settingsDir, File privateKeyFile, int maxFailingPillars, int warcFileSizeLimit,
-            File tempDir) {
+            File tempDir, String algorithm) {
         this.settingsDir = settingsDir;
         this.privateKeyFile = privateKeyFile;
         this.maxNumberOfFailingPillars = maxFailingPillars;
         this.componentId = generateComponentID();
         this.warcFileSizeLimit = warcFileSizeLimit;
         this.tempDir = tempDir;
+        this.algorithm = algorithm;
     }
     
     /** @return The settings directory.*/
@@ -64,6 +68,11 @@ public class BitmagConfiguration {
     public File getTempDir() {
         return tempDir;
     }
+    /** @return The algorithm for packaging the warc-records.*/
+    public String getAlgorithm() {
+        return algorithm;
+    }
+
     
     /**
      * Generates a component id, which includes the hostname and a random UUID.

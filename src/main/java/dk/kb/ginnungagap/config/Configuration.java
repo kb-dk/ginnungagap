@@ -1,6 +1,8 @@
 package dk.kb.ginnungagap.config;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>max_failing_pillars: $max_failing_pillars</li>
  *       <li>warc_size_limit: $warc_size_limit</li>
  *       <li>temp_dir: $temp_dir</li>
+ *       <li>algorithm: $algorithm</li>
  *     </ul>
  *     <li>cumulus</li>
  *     <ul>
@@ -63,8 +66,10 @@ public class Configuration {
     protected static final String CONF_BITREPOSITORY_MAX_FAILING_PILLARS = "max_failing_pillars";
     /** The bitrepository warc size limit leaf-element.*/
     protected static final String CONF_BITREPOSITORY_WARC_SIZE_LIMIT = "warc_size_limit";
-    /** The bitrepository warc size limit leaf-element.*/
+    /** The bitrepository temporary directory leaf-element.*/
     protected static final String CONF_BITREPOSITORY_TEMP_DIR = "temp_dir";
+    /** The bitrepository algorithm leaf-element.*/
+    protected static final String CONF_BITREPOSITORY_ALGORITHM = "algorithm";
     
     /** Cumulus node-element.*/
     protected static final String CONF_CUMULUS = "cumulus";
@@ -148,7 +153,8 @@ public class Configuration {
                 "Missing Bitrepository element '" + CONF_BITREPOSITORY_WARC_SIZE_LIMIT + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_TEMP_DIR), 
                 "Missing Bitrepository element '" + CONF_BITREPOSITORY_TEMP_DIR + "'");
-        
+        ArgumentCheck.checkTrue(map.containsKey(CONF_BITREPOSITORY_ALGORITHM), 
+                "Missing Bitrepository element '" + CONF_BITREPOSITORY_ALGORITHM + "'");
         
         File settingsDir = new File((String) map.get(CONF_BITREPOSITORY_SETTINGS_DIR));
         ArgumentCheck.checkExistsDirectory(settingsDir, "Directory " + settingsDir.getAbsolutePath());
@@ -164,8 +170,14 @@ public class Configuration {
         
         String tempDirPath = (String) map.get(CONF_BITREPOSITORY_TEMP_DIR);
         File tempDir = FileUtils.getDirectory(tempDirPath);
+        String algorithm = (String) map.get(CONF_BITREPOSITORY_ALGORITHM);
+        try {
+            MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new ArgumentCheck("The algorithm '" + algorithm + "' is not supported.", e);
+        }
         
-        return new BitmagConfiguration(settingsDir, keyFile, maxFailingPillars, warcSizeLimit, tempDir);
+        return new BitmagConfiguration(settingsDir, keyFile, maxFailingPillars, warcSizeLimit, tempDir, algorithm);
     }
     
     /**
