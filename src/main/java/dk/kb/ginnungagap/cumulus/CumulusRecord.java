@@ -2,7 +2,6 @@ package dk.kb.ginnungagap.cumulus;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,10 +173,11 @@ public class CumulusRecord {
         }
 
         if(!fieldsNotMeetingRequirementsErrors.isEmpty()) {
-            log.warn("The following field(s) did not live up to the requirements: \n" 
-                    + StringUtils.listToString(fieldsNotMeetingRequirementsErrors, "\n"));
+            String errMsg = "The following field(s) did not live up to the requirements: \n" 
+                    + StringUtils.listToString(fieldsNotMeetingRequirementsErrors, "\n");
+            log.warn(errMsg);
             throw new IllegalStateException("Required fields failure, " + fieldsNotMeetingRequirementsErrors.size() 
-                    + " field(s) did not live up to their requirements.");
+                    + " field(s) did not live up to their requirements.\n" + errMsg);
         }
     }
 

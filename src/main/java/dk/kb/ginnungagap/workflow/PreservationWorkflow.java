@@ -98,7 +98,7 @@ public class PreservationWorkflow implements Workflow {
             log.warn("Preserving the record '" + record + "' failed.", e);
             record.setPreservationFailed("Failed to preservatin record '" + record.getID() + ": \n" + e.getMessage());
             // Send failures back.
-            throw new IllegalStateException("Do not continue, when failure", e);
+//            throw new IllegalStateException("Do not continue, when failure", e);
         }
     }
     
