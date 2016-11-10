@@ -8,7 +8,7 @@ Prerequisite
 This requires [Yggdrasil](https://github.com/Det-Kongelige-Bibliotek/Yggdrasil).
 * git clone https://github.com/Det-Kongelige-Bibliotek/Yggdrasil.git
 * cd Yggdrasil
-* mvn clean install
+* mvn clean -Dmaven.test.skip=true install
 
 
 
@@ -19,7 +19,7 @@ Installing Cumulus libraries to Linux
 
 * Unzip it, and run the installer (remember sudo)
 
-* Fix the rights of the installation directory (`/usr/local/Cumulus_Java_SDK`)
+* Fix the rights of the installation directory (`/usr/local/Cumulus_Java_SDK`) and if it isn't done automatically the JAR file (`/usr/local/Cumulus_Java_SDK/CumulusJC.jar`)
   * `chmod +xr` to read and execute access for your user
 
 * Make your machine load and use the libraries

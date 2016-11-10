@@ -177,6 +177,22 @@
           </xsl:otherwise>
         </xsl:choose>
         
+        <!-- 1.5.5 creatingApplication -->
+        <xsl:if test="field[@name='creatingTool'] or field[@name='Software']">
+          <xsl:element name="premis:creatingApplication">
+            <xsl:element name="premis:creatingApplicationName">
+              <xsl:choose>
+                <xsl:when test="field[@name='creatingTool']">
+                  <xsl:value-of select="field[@name='creatingTool']" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="field[@name='Software']" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
+        
         <!-- 1.5.7 objectCharacteristicsExtension -->
         <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForMix(field[@name='formatName']/value)">
           <xsl:element name="premis:objectCharacteristicsExtension">

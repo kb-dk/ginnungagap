@@ -157,19 +157,23 @@ public class CumulusRecord {
     public void validateRequiredFields(RequiredFields requiredFields) {
         List<String> fieldsNotMeetingRequirementsErrors = new ArrayList<String>();
 
-        Map<String, Field> fields = fe.getFields(item);
+        Map<String, Field> fields = fe.getAllFields(item);
         for(String field : requiredFields.getBaseFields()) {
-            if(!fields.containsKey(field) || fields.get(field).isEmpty()) {
+            if(!fields.containsKey(field)) {
                 fieldsNotMeetingRequirementsErrors.add("The field '" + field 
-                        + "' did not exist or did not contain any data.");
+                        + "' does not exist.");                
+            } else if(fields.get(field).isEmpty()) {
+                fieldsNotMeetingRequirementsErrors.add("The field '" + field 
+                        + "' does not contain any data.");
             }
         }
 
         for(String field : requiredFields.getWritableFields()) {
-            if(!fields.containsKey(field) || !fields.get(field).isFieldEditable()) {
+            if(!fields.containsKey(field)) {
                 fieldsNotMeetingRequirementsErrors.add("The field '" + field 
-                        + "' did not exist or was not writable.");
+                        + "' does not exist.");                                
             }
+            // Do not check for value, and do not check 'editable' - since it only refers to editablity in the GUI.
         }
 
         if(!fieldsNotMeetingRequirementsErrors.isEmpty()) {

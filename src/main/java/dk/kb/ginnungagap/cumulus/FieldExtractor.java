@@ -12,6 +12,7 @@ import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
 
+import dk.kb.ginnungagap.cumulus.field.EmptyField;
 import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.cumulus.field.StringField;
 import dk.kb.ginnungagap.cumulus.field.TableField;
@@ -37,15 +38,37 @@ public class FieldExtractor {
     }
 
     /**
-     * Extracts all the fields of the item according to the layout, and returns them as a mapping between
+     * Extracts the fields of the item according to the layout, and returns them as a mapping between
      * the name of the field and the field.
-     * @param item The item to extract all fields for.
-     * @return The collection of fields for the item. Fields with no value are ignored.
+     * It might not be all the fields, which are extracted. Only the ones containing a value.
+     * @param item The item to extract the fields for.
+     * @return The map of fields for the item. Fields with no value are ignored.
      */
     public Map<String, Field> getFields(Item item) {
+        return getFields(item, true);
+    }
+    
+    /**
+     * Extracts all the fields of the item according to the layout, and returns them as a mapping between
+     * the name of the field and the field.
+     * This extracts all the fields, also the ones which are empty (thus returned as an EmptyField).
+     * @param item The item to extracts all the fields for.
+     * @return The map of all the fields for the item, including the empty-valued fields.
+     */
+    public Map<String, Field> getAllFields(Item item) {
+        return getFields(item, false);
+    }
+    
+    /**
+     * Extracts the fields for the item.
+     * @param item The item to extract the fields from.
+     * @param ignoreEmptyFields Whether or not to ignore empty fields.
+     * @return Map between field-name and the field.
+     */
+    protected Map<String, Field> getFields(Item item, boolean ignoreEmptyFields) {
         Map<String, Field> res = new HashMap<String, Field>();
         for(FieldDefinition fd : layout) {
-            Field f = getFieldValue(fd, item);
+            Field f = getFieldValue(fd, item, ignoreEmptyFields);
             if(f != null) {
                 res.put(f.getName(), f);
             }
@@ -62,7 +85,7 @@ public class FieldExtractor {
     public Map<String, String> getMap(Item item) {
         Map<String, String> res = new HashMap<String, String>();
         for(FieldDefinition fd : layout) {
-            StringField f = (StringField) getFieldValue(fd, item);
+            StringField f = (StringField) getFieldValue(fd, item, true);
             if(f != null) {
                 res.put(f.getName(), f.getStringValue());
             }
@@ -77,10 +100,14 @@ public class FieldExtractor {
      * @return The string value of the field. If the field is not natively string, then it is
      * converted into a string.
      */
-    protected Field getFieldValue(FieldDefinition fd, Item item) {
+    protected Field getFieldValue(FieldDefinition fd, Item item, boolean ignoreEmptyFields) {
         if(!item.hasValue(fd.getFieldUID())) {
             log.trace("No element at uid " + fd.getFieldUID());
-            return null;
+            if(ignoreEmptyFields) {
+                return null;
+            } else {
+                return new EmptyField(fd, getFieldTypeName(fd.getFieldType()));
+            }
         }
 
         switch(fd.getFieldType()) {

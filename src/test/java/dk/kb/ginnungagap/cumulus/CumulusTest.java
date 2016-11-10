@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.lf5.util.StreamUtils;
 import org.jaccept.structure.ExtendedTestCase;
@@ -26,6 +27,7 @@ import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
+import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
 
@@ -45,7 +47,7 @@ public class CumulusTest extends ExtendedTestCase {
         TestFileUtils.setup();
         outputDir = TestFileUtils.getTempDir();
 
-        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", "audio-adm", "");
+        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", "bevaring", "????????");
         server = new CumulusServer(conf);
     }
 
@@ -86,9 +88,9 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testPrintingToXml() throws Exception {
-        String catalogName = "Conservation OM";
+        String catalogName = "Conservation";
 //        int catalogId = server.getServer().findCatalogID(catalogName);
 //        Catalog catalog = server.getServer().openCatalog(catalogId);
 
@@ -109,10 +111,15 @@ public class CumulusTest extends ExtendedTestCase {
         int i = 0;
         while(iri.hasNext() && (item = iri.next()) != null && i < MAX_NUMBER_OF_RECORDS) {
             i++;
+            
+            Map<String, Field> map = fe.getAllFields(item);
+            System.err.println("Has QA_error: " + map.containsKey("QA_error"));
+            System.err.println("Is QA_error writable: " + map.get("QA_error").isFieldEditable());
+            
             CumulusRecord cr = new CumulusRecord(fe, item);
-            cr.setPreservationMetadataPackage("Metadata Package");
-            cr.setPreservationResourcePackage("Resource Package");
-            cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
+//            cr.setPreservationMetadataPackage("Metadata Package");
+//            cr.setPreservationResourcePackage("Resource Package");
+//            cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
 //            cr.setPreservationFinished();
 
             File outputFile = new File(outputDir, item.getID() + ".xml");
