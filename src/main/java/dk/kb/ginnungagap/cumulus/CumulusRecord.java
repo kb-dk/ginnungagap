@@ -278,6 +278,23 @@ public class CumulusRecord {
         return metadataGuid;
     }
 
+    /**
+     * Sets the value for the archive md5 checksum.
+     * This must be the checksum of the resource record in the packaged WARC file. 
+     * @param checksum The checksum of the resource record in the packaged WARC file.
+     */
+    public void setArchiveMD5Checksum(String checksum) {
+        try {
+            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.ARCHIVE_MD5);
+            item.setStringValue(metadataPackageIdGuid, checksum);
+            item.save();
+        } catch (Exception e) {
+            String errMsg = "Could not set the package id for the metadata.";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
+        }
+    }
+    
     @Override
     public String toString() {
         return "[CumulusRecord : " + getClass().getCanonicalName() + " -> " + getID() + "]";

@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.jwat.common.ContentType;
 import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
@@ -23,6 +25,9 @@ import dk.kb.yggdrasil.warc.YggdrasilWarcConstants;
  * Packages the warc files.
  */
 public class WarcPacker {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(WarcPacker.class);
+
     /** The content type for the metadata. */
     public static final String METADATA_CONTENT_TYPE = "text/xml";
 
@@ -40,7 +45,7 @@ public class WarcPacker {
     public WarcPacker(BitmagConfiguration conf) {
         this.bitmagConf = conf;
         this.packagedRecords = new ArrayList<CumulusRecord>();
-        
+
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             // TODO make warc info?
@@ -53,7 +58,7 @@ public class WarcPacker {
             throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
         }
     }
-    
+
     /**
      * Pack a record into the Warc file.
      * @param record The record from Cumulus.
@@ -62,30 +67,67 @@ public class WarcPacker {
     public synchronized void packRecord(CumulusRecord record, File metadataFile) {
         ContentType contentType = getContentType(record);
         String uuid = getUUID(record);
-        Uri resourceUUID = packResource(record.getFile(), contentType, uuid);
+        File resourceFile = record.getFile();
+        WarcDigest blockDigest = calculateChecksumAndReportMD5ToCumulusRecord(resourceFile, record);
+
+        Uri resourceUUID = packResource(resourceFile, blockDigest, contentType, uuid);
         packMetadata(metadataFile, resourceUUID);
 
         packagedRecords.add(record);
     }
     
     /**
+     * Calculates the MD5 checksum for the file and reports it back to the CumulusRecord.
+     * If the WARC-record must have a checksum calculated  with another algorithm, then 
+     * that checksum is calculated and returned.
+     * @param file The file to calculate the checksum for.
+     * @param record The Cumulus record to report the MD5 checksum back to.
+     * @return The checksum of the file calculated according to the checksum algorithm from the configuration.
+     */
+    protected WarcDigest calculateChecksumAndReportMD5ToCumulusRecord(File file, CumulusRecord record) {
+        WarcDigest md5Digest = calculageChecksum(file, "MD5");
+        record.setArchiveMD5Checksum(md5Digest.digestString);
+        
+        if(bitmagConf.getAlgorithm().equals("MD5")) {
+            return md5Digest;
+        } else {
+            return  calculageChecksum(file, bitmagConf.getAlgorithm());        
+        }
+    }
+
+    /**
+     * Calculate the checksum for the file with the given checksum algorithm.
+     * @param file The file to calculate the checksum upon.
+     * @param algorithm The algorithm for the checksum.
+     * @return The checksum-digest of the file, ready to be used in a WARC-record.
+     */
+    protected WarcDigest calculageChecksum(File file, String algorithm) {
+        try {
+            Digest digestor = new Digest(algorithm);
+            return digestor.getDigestOfFile(file);
+        } catch (YggdrasilException e) {
+            throw new IllegalStateException("", e);
+        }
+
+    }
+
+    /**
      * Packages a file in a WARC-resource.
      * @param metadataFile The file with the metadata. The name of the file must be the same 
      * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
-    protected Uri packResource(File resourceFile, ContentType contentType, String uuid) {
+    protected Uri packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, String uuid) {
         try (InputStream in = new FileInputStream(resourceFile)) {
-            Digest digestor = new Digest(bitmagConf.getAlgorithm());
-            WarcDigest blockDigest = digestor.getDigestOfFile(resourceFile);
             Uri res = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
-            // TODO log this!
+            log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the record received "
+                    + "the URI:" + res + "'");
             return res;
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
     }
-    
+
     /**
      * Packages a metadata file.
      * @param metadataFile The file with the metadata. The name of the file must be the same 
@@ -103,21 +145,21 @@ public class WarcPacker {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
     }
-    
+
     /**
      * @return The current size of the warc file.
      */
     public long getSize() {
         return warcWrapper.getWarcFileSize();
     }
-    
+
     /**
      * @return The warc file with the data.
      */
     public File getWarcFile() {
         return warcWrapper.getWarcFile();
     }
-    
+
     /**
      * Close this warc packer, thus closing any streams and files.
      * This should be called before accessing the file and sending it to the archive.
@@ -129,7 +171,7 @@ public class WarcPacker {
             throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
         }
     }
-    
+
     /**
      * Reports back to Cumulus, that the preservation was successful for all records.
      * Should only be called after the warc packer has been closed and send to the archive.
@@ -141,7 +183,7 @@ public class WarcPacker {
             r.setPreservationFinished();
         }
     }
-    
+
     /**
      * Report back to Cumulus, that the preservation failed for all records.
      * @param reason The message regarding the reason for the failure.
@@ -151,14 +193,13 @@ public class WarcPacker {
             r.setPreservationFailed(reason);
         }
     }
-    
+
     protected ContentType getContentType(CumulusRecord record) {
         // TODO this part!
         return ContentType.parseContentType("application/binary");
     }
-    
+
     protected String getUUID(CumulusRecord record) {
-        // TODO this part!!
-        return "" + record.getID();
+        return "urn:uuid:" + record.getID();
     }
 }

@@ -16,5 +16,5 @@ ginnungagap:
     required_fields_file: conf/required_fields.yml
     metadata_temp_dir: tempDir/metadata
     catalogs:
-#      - "Audio OM"
-      - "Conservation OM"
+#      - "Audio"
+      - "Conservation"

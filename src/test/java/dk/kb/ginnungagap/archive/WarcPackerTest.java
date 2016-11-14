@@ -10,12 +10,14 @@ import org.apache.commons.io.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.common.ContentType;
 import org.jwat.common.Uri;
+import org.jwat.warc.WarcDigest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.yggdrasil.warc.Digest;
 
 public class WarcPackerTest extends ExtendedTestCase {
 
@@ -43,7 +45,9 @@ public class WarcPackerTest extends ExtendedTestCase {
         addDescription("Test succes case");
         
         WarcPacker wp = new WarcPacker(conf);
-        Uri uri = wp.packResource(testFile, ContentType.parseContentType("application/octetstream"), UUID.randomUUID().toString());
+        Digest digestor = new Digest(conf.getAlgorithm());
+        WarcDigest wd = digestor.getDigestOfFile(testFile);
+        Uri uri = wp.packResource(testFile, wd, ContentType.parseContentType("application/octetstream"), UUID.randomUUID().toString());
         wp.packMetadata(testFile, uri);
         
         assertTrue(wp.getSize() > 0);
@@ -76,7 +80,9 @@ public class WarcPackerTest extends ExtendedTestCase {
         addDescription("Test failure to write a missing file as resource");
         
         WarcPacker wp = new WarcPacker(conf);
-        wp.packResource(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), ContentType.parseContentType("application/octetstream"), "THIS IS THE UUID");
+        Digest digestor = new Digest(conf.getAlgorithm());
+        WarcDigest wd = digestor.getDigestOfFile(testFile);
+        wp.packResource(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), wd, ContentType.parseContentType("application/octetstream"), "THIS IS THE UUID");
     }
     
     @Test(expectedExceptions = IllegalStateException.class, enabled = false)

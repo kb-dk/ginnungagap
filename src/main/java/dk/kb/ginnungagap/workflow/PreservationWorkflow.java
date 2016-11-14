@@ -62,7 +62,13 @@ public class PreservationWorkflow implements Workflow {
     public void run() {
         for(String catalogName : conf.getCatalogs()) {
             log.debug("Run '" + this.getClass().getName() + "' on catalog: " + catalogName);
-            runOnCatalog(catalogName);
+            
+            try {
+                runOnCatalog(catalogName);
+            } catch (RuntimeException e) {
+                log.error("Cannot handle the catalog '" + catalogName + "'. It might not exist, "
+                        + "or it might be lacking rights, or be corrupt", e);
+            }
         }
     }
     
@@ -78,9 +84,14 @@ public class PreservationWorkflow implements Workflow {
         
         FieldExtractor fe = new FieldExtractor(items.getLayout());
         for(Item item : items) {
-            log.debug("Initiating preservation on '" + item.getDisplayString() + "'");
-            CumulusRecord record = new CumulusRecord(fe, item);
-            preserverveRecord(record);
+            try {
+                log.debug("Initiating preservation on '" + item.getDisplayString() + "'");
+                CumulusRecord record = new CumulusRecord(fe, item);
+                preserverveRecord(record);
+            } catch (RuntimeException e) {
+                log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID() 
+                        + "'. Something must be seriously wrong with that item!!!\n Trying to handle next item.", e);
+            }
         }
     }
     

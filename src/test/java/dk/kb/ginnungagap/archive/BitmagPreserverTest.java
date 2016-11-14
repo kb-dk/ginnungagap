@@ -90,6 +90,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(record, times(1)).getFile();
         verify(record, times(1)).getFieldValue(anyString());
         verify(record, times(1)).getID();
+        verify(record, times(1)).setArchiveMD5Checksum(anyString());
         verifyNoMoreInteractions(record);
         
         verifyZeroInteractions(archive);
@@ -131,6 +132,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(record, times(1)).getFile();
         verify(record, times(1)).getFieldValue(anyString());
         verify(record, times(1)).getID();
+        verify(record, times(1)).setArchiveMD5Checksum(anyString());
         verifyNoMoreInteractions(record);
         
         verifyZeroInteractions(archive);

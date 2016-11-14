@@ -2,7 +2,7 @@ required_fields:
   base:
     - GUID
     - KB Samling
-    - ARCHIVE_MD5
+    - CHECKSUM_ORGINAL_MASTER 
   writable:
     - Preservation_status
     - QA_error
