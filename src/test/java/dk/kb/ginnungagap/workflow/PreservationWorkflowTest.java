@@ -9,9 +9,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -24,14 +24,17 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.canto.cumulus.Asset;
 import com.canto.cumulus.FieldDefinition;
 import com.canto.cumulus.FieldTypes;
 import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
 import com.canto.cumulus.RecordItemCollection;
+import com.canto.cumulus.fieldvalue.AssetReference;
 import com.canto.cumulus.fieldvalue.StringEnumFieldValue;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
@@ -46,16 +49,22 @@ import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
 public class PreservationWorkflowTest extends ExtendedTestCase {
 
     TestConfiguration conf;
+    File contentFile;
     
     @BeforeClass
-    public void setup() {
+    public void setup() throws IOException {
         TestFileUtils.setup();
         conf = TestFileUtils.createTempConf();
     }
     
+    @BeforeMethod
+    public void setupMethod() throws IOException {
+        contentFile = TestFileUtils.createFileWithContent("This is the content");        
+    }
+    
     @AfterClass
     public void tearDown() {
-//        TestFileUtils.tearDown();
+        TestFileUtils.tearDown();
     }
     
     @Test
@@ -105,16 +114,30 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         Item item = mock(Item.class);
         Layout layout = mock(Layout.class);
         
+        FieldDefinition masterChecksumField = mock(FieldDefinition.class);
+        GUID masterChecksumGuid = mock(GUID.class);
+        FieldDefinition relatedIdentifierField = mock(FieldDefinition.class);
+        GUID relatedIdentifierGuid = mock(GUID.class);
         FieldDefinition guidField = mock(FieldDefinition.class);
         GUID guidGuid = mock(GUID.class);
         FieldDefinition metadataGuidField = mock(FieldDefinition.class);
         GUID metadataGuidGuid = mock(GUID.class);
         FieldDefinition preservationStatusField = mock(FieldDefinition.class);
         GUID preservationStatusGuid = mock(GUID.class);
+        AssetReference assetReference = mock(AssetReference.class);
+        Asset asset = mock(Asset.class);
         
         addStep("Mock the methods", "");
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
 
+        when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
+        when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(masterChecksumField.getFieldUID()).thenReturn(masterChecksumGuid);
+        
+        when(relatedIdentifierField.getName()).thenReturn(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+        when(relatedIdentifierField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(relatedIdentifierField.getFieldUID()).thenReturn(relatedIdentifierGuid);
+        
         when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
         when(guidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
         when(guidField.getFieldUID()).thenReturn(guidGuid);
@@ -131,12 +154,16 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(recordItemCollection.getLayout()).thenReturn(layout);
         when(recordItemCollection.getItemCount()).thenReturn(1);
         
+        when(assetReference.getAsset(any(Boolean.class))).thenReturn(asset);
+        when(asset.getAsFile()).thenReturn(contentFile);
+        
         when(item.getStringValue(any(GUID.class))).thenReturn("cumulus-guid");
+        when(item.getAssetReferenceValue(any(GUID.class))).thenReturn(assetReference);
         
         when(layout.iterator()).thenAnswer(new Answer<Iterator<FieldDefinition>>() {
             @Override
             public Iterator<FieldDefinition> answer(InvocationOnMock invocation) throws Throwable {
-                return Arrays.asList(guidField, metadataGuidField, preservationStatusField).iterator();
+                return Arrays.asList(guidField, metadataGuidField, preservationStatusField, masterChecksumField, relatedIdentifierField).iterator();
             }
         });        
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);
@@ -175,12 +202,21 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         Item item = mock(Item.class);
         Layout layout = mock(Layout.class);
 
+        FieldDefinition masterChecksumField = mock(FieldDefinition.class);
+        GUID masterChecksumGuid = mock(GUID.class);
+        FieldDefinition relatedIdentifierField = mock(FieldDefinition.class);
+        GUID relatedIdentifierGuid = mock(GUID.class);
         FieldDefinition guidField = mock(FieldDefinition.class);
         GUID guidGuid = mock(GUID.class);
         FieldDefinition preservationStatusField = mock(FieldDefinition.class);
         GUID preservationStatusGuid = mock(GUID.class);
         FieldDefinition qaErrorField = mock(FieldDefinition.class);
         GUID qaErrorGuid = mock(GUID.class);
+        FieldDefinition metadataGuidField = mock(FieldDefinition.class);
+        GUID metadataGuidGuid = mock(GUID.class);
+
+        AssetReference assetReference = mock(AssetReference.class);
+        Asset asset = mock(Asset.class);
 
         addStep("Mock the methods", "");
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
@@ -195,7 +231,23 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(recordItemCollection.getLayout()).thenReturn(layout);
         when(recordItemCollection.getItemCount()).thenReturn(1);
         
-        when(item.getStringValue(eq(guidGuid))).thenReturn("cumulus-guid");
+        when(assetReference.getAsset(any(Boolean.class))).thenReturn(asset);
+        when(asset.getAsFile()).thenReturn(contentFile);
+        
+        when(item.getStringValue(any(GUID.class))).thenReturn("cumulus-guid");
+        when(item.getAssetReferenceValue(any(GUID.class))).thenReturn(assetReference);
+
+        when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
+        when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(masterChecksumField.getFieldUID()).thenReturn(masterChecksumGuid);
+        
+        when(relatedIdentifierField.getName()).thenReturn(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+        when(relatedIdentifierField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(relatedIdentifierField.getFieldUID()).thenReturn(relatedIdentifierGuid);
+        
+        when(metadataGuidField.getName()).thenReturn(Constants.PreservationFieldNames.METADATA_GUID);
+        when(metadataGuidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(metadataGuidField.getFieldUID()).thenReturn(metadataGuidGuid);
         
         when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
         when(guidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
@@ -212,7 +264,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(layout.iterator()).thenAnswer(new Answer<Iterator<FieldDefinition>>() {
             @Override
             public Iterator<FieldDefinition> answer(InvocationOnMock invocation) throws Throwable {
-                return Arrays.asList(guidField, preservationStatusField, qaErrorField).iterator();
+                return Arrays.asList(guidField, preservationStatusField, qaErrorField, masterChecksumField, metadataGuidField, relatedIdentifierField).iterator();
             }
         });
         
@@ -249,35 +301,45 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
 
         verify(item).getStringEnumValue(any(GUID.class));
         verify(item).setStringEnumValue(any(GUID.class), any(StringEnumFieldValue.class));
-        verify(item).setStringValue(any(GUID.class), anyString());
+        verify(item, times(3)).setStringValue(any(GUID.class), anyString());
         verify(item).getDisplayString();
-        verify(item, times(5)).getStringValue(any(GUID.class));
-        verify(item, times(3)).hasValue(any(GUID.class));
-        verify(item).save();
+        verify(item, times(8)).getStringValue(any(GUID.class));
+        verify(item, times(3)).save();
+        verify(item).getAssetReferenceValue(any(GUID.class));
+        verify(item, times(7)).hasValue(any(GUID.class));
         verifyNoMoreInteractions(item);
         
-        verify(layout, times(6)).iterator();
+        verify(layout, times(8)).iterator();
         verifyNoMoreInteractions(layout);
 
-        verify(guidField, times(6)).getName();
+        verify(guidField, times(8)).getName();
         verify(guidField, times(4)).getFieldUID();
         verify(guidField, times(2)).getFieldType();
         verifyNoMoreInteractions(guidField);
         
-        verifyZeroInteractions(guidGuid);
-        
-        verify(preservationStatusField, times(4)).getName();
+        verify(preservationStatusField, times(6)).getName();
         verify(preservationStatusField, times(3)).getFieldUID();
         verify(preservationStatusField, times(2)).getFieldType();
         verifyNoMoreInteractions(preservationStatusField);
         
-        verifyZeroInteractions(preservationStatusGuid);
-
-        verify(qaErrorField, times(3)).getName();
+        verify(qaErrorField, times(5)).getName();
         verify(qaErrorField, times(3)).getFieldUID();
         verify(qaErrorField, times(2)).getFieldType();
         verifyNoMoreInteractions(qaErrorField);
-
-        verifyZeroInteractions(qaErrorGuid);
+        
+        verify(masterChecksumField, times(4)).getName();
+        verify(masterChecksumField, times(3)).getFieldUID();
+        verify(masterChecksumField, times(2)).getFieldType();
+        verifyNoMoreInteractions(masterChecksumField);
+        
+        verify(metadataGuidField, times(3)).getName();
+        verify(metadataGuidField, times(3)).getFieldUID();
+        verify(metadataGuidField, times(2)).getFieldType();
+        verifyNoMoreInteractions(metadataGuidField);
+        
+        verify(relatedIdentifierField, times(2)).getName();
+        verify(relatedIdentifierField, times(3)).getFieldUID();
+        verify(relatedIdentifierField, times(2)).getFieldType();
+        verifyNoMoreInteractions(relatedIdentifierField);
     }
 }

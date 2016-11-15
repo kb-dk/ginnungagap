@@ -2,14 +2,23 @@ package dk.kb.ginnungagap;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.canto.cumulus.Cumulus;
+import com.canto.cumulus.Item;
+import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagArchive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.cumulus.CumulusQuery;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
@@ -26,8 +35,18 @@ import dk.kb.ginnungagap.workflow.PreservationWorkflow;
  * And will throw exception if something is wrong configured wrongly (or if there is bugs in the code :-P ).
  * 
  * TODO: make scheduler.
+ * 
+ * Receives the following arguments:
+ * 1. Configuration file.
+ * 2. Archive - must be local (default) or bitmag
+ * 3. retrieve only file (default: no)
+ * 
+ * e.g.
+ * dk.kb.ginningagap.Ginnungagap conf/ginnungagap.yml local
  */
 public class Ginnungagap {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(Ginnungagap.class);
 
     /**
      * Main method. 
@@ -47,8 +66,18 @@ public class Ginnungagap {
         } else {
             confPath = args[0];
         }
+        String archiveType = "local";
+        boolean fileOnly = false;
         if(args.length > 2) {
-            System.out.println("Only handles one argument; the configuration file. "
+            archiveType = args[1];
+        }
+        if(args.length > 3) {
+            if(args[2].startsWith("y") || args[2].startsWith("Y")) {
+                fileOnly = true;
+            }
+        }
+        if(args.length > 4) {
+            System.out.println("Maximum 3 arguments; the configuration file, archive-type, file-only. "
                     + "All the other arguments are ignored!");
         }
 
@@ -69,23 +98,64 @@ public class Ginnungagap {
 
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
-            MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
             //        Archive archive = new BitmagArchive(conf.getBitmagConf());
             // TODO: test with BitmagArchive
-            Archive archive = new LocalArchive();
-            BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
-
-            PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), 
-                    cumulusServer, transformer, preserver);
+            Archive archive;
+            if(archiveType.equalsIgnoreCase("local")) {
+            archive = new LocalArchive();
+            } else {
+                archive = new BitmagArchive(conf.getBitmagConf());
+            }
             
-            System.out.println("Starting workflow");
-            workflow.run();
+            if(fileOnly) {
+                extractFilesOnly(cumulusServer, conf);
+            } else {
+                MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+                BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
-            preserver.uploadAll();
+                PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), 
+                        cumulusServer, transformer, preserver);
 
+                System.out.println("Starting workflow");
+                workflow.run();
+
+                preserver.uploadAll();
+            }
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
+        }
+    }
+    
+    /**
+     * Extracts only the Cumulus objects as files. 
+     * Does not do any kind of transformation or preservation.
+     * @param server The cumulus server.
+     * @param conf The configuration.
+     */
+    protected static void extractFilesOnly(CumulusServer server, Configuration conf) {
+        for(String catalogName : conf.getTransformationConf().getCatalogs()) {
+            log.info("Extracting files for catalog '" + catalogName + "'.");
+            CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
+            RecordItemCollection items = server.getItems(catalogName, query);
+            
+            log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
+            FieldExtractor fe = new FieldExtractor(items.getLayout());
+            for(Item item : items) {
+                try {
+                    CumulusRecord record = new CumulusRecord(fe, item);
+                    File cumulusFile = record.getFile();
+                    File outputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
+                            cumulusFile.getName());
+                    FileUtils.copyFile(cumulusFile, outputFile);
+                    
+                    record.getMetadata(new File(conf.getTransformationConf().getMetadataTempDir(), 
+                            cumulusFile.getName() + "_fields.xml"));
+                } catch (Exception e) {
+                    log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID()
+                            + "'. ", e);
+                }
+            }
         }
     }
 }

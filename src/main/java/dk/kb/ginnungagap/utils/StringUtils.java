@@ -2,6 +2,8 @@ package dk.kb.ginnungagap.utils;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
 /**
@@ -39,4 +41,16 @@ public class StringUtils {
         return res.toString();
     }
 
+    /**
+     * XML encoding a string.
+     * Replaces all the illegal characters with encoded ones.
+     * 
+     * Uses apache commons-lang utility class.
+     * 
+     * @param s The string to encode.
+     * @return The encoded string.
+     */
+    public static String xmlEncode(String s) {
+        return StringEscapeUtils.escapeXml(s);
+    }
 }

@@ -5,6 +5,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -27,27 +28,40 @@ import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
 
 import dk.kb.ginnungagap.config.CumulusConfiguration;
-import dk.kb.ginnungagap.cumulus.field.Field;
+import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
+import dk.kb.yggdrasil.utils.YamlTools;
 
 public class CumulusTest extends ExtendedTestCase {
 
     File outputDir;
     CumulusServer server;
 
-    int MAX_NUMBER_OF_RECORDS = 1;
+    int MAX_NUMBER_OF_RECORDS = 1000;
+    String passwordFilePath = System.getenv("HOME") + "/cumulus-password.yml";
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @BeforeClass
-    public void setup() {
+    public void setup() throws Exception {
         if(TravisUtils.runningOnTravis()) {
             throw new SkipException("Skipping this test");
+        }
+        File passwordFile = new File(passwordFilePath);
+        if(!passwordFile.isFile()) {
+            throw new SkipException("Cannot connect to Cumulus without the password-file: " + passwordFilePath);
         }
         Cumulus.CumulusStart();
         TestFileUtils.setup();
         outputDir = TestFileUtils.getTempDir();
 
-        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", "bevaring", "????????");
+        Map cumulusFileContent = YamlTools.loadYamlSettings(passwordFile);
+        Map<String, String> cumulusLogin = (Map<String, String>) cumulusFileContent;
+
+        String username = cumulusLogin.get("login");
+        String password = cumulusLogin.get("password");
+        
+        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", username, password);
         server = new CumulusServer(conf);
     }
 
@@ -87,24 +101,26 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Table name: " + ic.getTableName());
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
-
-    @Test(enabled = false)
+    
+    @Test(enabled = true)
     public void testPrintingToXml() throws Exception {
         String catalogName = "Conservation";
 //        int catalogId = server.getServer().findCatalogID(catalogName);
 //        Catalog catalog = server.getServer().openCatalog(catalogId);
 
-        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
+        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED
                 + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
         EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
 
         RecordItemCollection items = server.getItems(catalogName, new CumulusQuery(query, flags, CombineMode.FIND_NEW));
         System.err.println("Number of items: " + items.getItemCount());
 
+        RequiredFields rf = new RequiredFields(Arrays.asList("CHECKSUM_ORIGINAL_MASTER"), Arrays.asList("Preservation_status"));
+        
         // Try with resource, to ensure closing it.
         FieldExtractor fe = new FieldExtractor(items.getLayout());
         for(FieldDefinition fd : items.getLayout()) {
-            System.err.println(fd.getName() + " -> " + fd.getFieldUID().toString());
+//            System.err.println(fd.getName() + " -> " + fd.getFieldUID().toString());
         }
         Iterator<Item> iri = items.iterator();
         Item item;
@@ -112,18 +128,20 @@ public class CumulusTest extends ExtendedTestCase {
         while(iri.hasNext() && (item = iri.next()) != null && i < MAX_NUMBER_OF_RECORDS) {
             i++;
             
-            Map<String, Field> map = fe.getAllFields(item);
-            System.err.println("Has QA_error: " + map.containsKey("QA_error"));
-            System.err.println("Is QA_error writable: " + map.get("QA_error").isFieldEditable());
+//            Map<String, Field> map = fe.getAllFields(item);
+//            System.err.println("Has QA_error: " + map.containsKey("QA_error"));
+//            System.err.println("Is QA_error writable: " + map.get("QA_error").isFieldEditable());
             
             CumulusRecord cr = new CumulusRecord(fe, item);
+//            cr.validateRequiredFields(rf);
 //            cr.setPreservationMetadataPackage("Metadata Package");
 //            cr.setPreservationResourcePackage("Resource Package");
 //            cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
 //            cr.setPreservationFinished();
 
             File outputFile = new File(outputDir, item.getID() + ".xml");
-            StreamUtils.copy(cr.getMetadata(), new FileOutputStream(outputFile));
+            cr.getMetadata(outputFile);
+//            StreamUtils.copy(cr.getMetadata(new File(outputDir, item.getID() + "_fields.xml")), new FileOutputStream(outputFile));
         }
 
         assertEquals(outputDir.list().length, i);

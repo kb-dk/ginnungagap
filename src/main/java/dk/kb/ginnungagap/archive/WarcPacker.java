@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
 import dk.kb.yggdrasil.warc.WarcWriterWrapper;
@@ -66,51 +67,15 @@ public class WarcPacker {
      */
     public synchronized void packRecord(CumulusRecord record, File metadataFile) {
         ContentType contentType = getContentType(record);
-        String uuid = getUUID(record);
         File resourceFile = record.getFile();
-        WarcDigest blockDigest = calculateChecksumAndReportMD5ToCumulusRecord(resourceFile, record);
+        WarcDigest blockDigest = ChecksumUtils.calculateChecksum(resourceFile, bitmagConf.getAlgorithm());
 
-        Uri resourceUUID = packResource(resourceFile, blockDigest, contentType, uuid);
+        Uri resourceUUID = packResource(resourceFile, blockDigest, contentType, record.getUUID());
         packMetadata(metadataFile, resourceUUID);
 
         packagedRecords.add(record);
     }
     
-    /**
-     * Calculates the MD5 checksum for the file and reports it back to the CumulusRecord.
-     * If the WARC-record must have a checksum calculated  with another algorithm, then 
-     * that checksum is calculated and returned.
-     * @param file The file to calculate the checksum for.
-     * @param record The Cumulus record to report the MD5 checksum back to.
-     * @return The checksum of the file calculated according to the checksum algorithm from the configuration.
-     */
-    protected WarcDigest calculateChecksumAndReportMD5ToCumulusRecord(File file, CumulusRecord record) {
-        WarcDigest md5Digest = calculageChecksum(file, "MD5");
-        record.setArchiveMD5Checksum(md5Digest.digestString);
-        
-        if(bitmagConf.getAlgorithm().equals("MD5")) {
-            return md5Digest;
-        } else {
-            return  calculageChecksum(file, bitmagConf.getAlgorithm());        
-        }
-    }
-
-    /**
-     * Calculate the checksum for the file with the given checksum algorithm.
-     * @param file The file to calculate the checksum upon.
-     * @param algorithm The algorithm for the checksum.
-     * @return The checksum-digest of the file, ready to be used in a WARC-record.
-     */
-    protected WarcDigest calculageChecksum(File file, String algorithm) {
-        try {
-            Digest digestor = new Digest(algorithm);
-            return digestor.getDigestOfFile(file);
-        } catch (YggdrasilException e) {
-            throw new IllegalStateException("", e);
-        }
-
-    }
-
     /**
      * Packages a file in a WARC-resource.
      * @param metadataFile The file with the metadata. The name of the file must be the same 
@@ -194,12 +159,13 @@ public class WarcPacker {
         }
     }
 
+    /**
+     * Retrieve the content type for the Cumulus record.
+     * @param record The record.
+     * @return The content type.
+     */
     protected ContentType getContentType(CumulusRecord record) {
         // TODO this part!
         return ContentType.parseContentType("application/binary");
-    }
-
-    protected String getUUID(CumulusRecord record) {
-        return "urn:uuid:" + record.getID();
     }
 }

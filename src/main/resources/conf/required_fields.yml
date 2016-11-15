@@ -2,10 +2,14 @@ required_fields:
   base:
     - GUID
     - KB Samling
-    - CHECKSUM_ORGINAL_MASTER 
+    - preservationLevelValue_Confidentiality
+    - preservationLevelValue_Logical
+    - preservationLevelValue_BitSafety
   writable:
+#    - CHECKSUM_ORGINAL_MASTER 
     - Preservation_status
     - QA_error
     - METADATA GUID
     - METADATA PACKAGE ID
     - RESOURCE PACKAGE ID
+    - relatedObjectIdentifierValue_intellectualEntity

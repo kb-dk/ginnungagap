@@ -156,6 +156,9 @@ public interface Constants {
          * Name of the field containing the checksum of the display copy.
          */
         String CHECKSUM_DISPLAY_COPY = "CHECKSUM_DISPLAY_COPY";
+        
+        /** Name of the field containing the related object identifier value for the intellectual entity.*/
+        String RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY = "relatedObjectIdentifierValue_intellectualEntity";
     }
            
         
@@ -599,7 +602,6 @@ public interface Constants {
         String CATALOG_NAME = "Catalog Name";
         
         /** String constant for the field. */ 
-        @SuppressWarnings("PMD.ShortVariable")
         // This happens to be the name of the field that this
         // constant codifies the String for.
         String ID = "ID";
@@ -841,6 +843,12 @@ public interface Constants {
          * ready for publication yet.
          */
         String REGISTRATIONSTATE_NOT_READY_FOR_TRANSFER = "Under registrering";
+
+        /**
+         * The value for REGISTRATIONSTATE that means that the record is not
+         * ready for publication yet.
+         */
+        String REGISTRATIONSTATE_FINISHED = "Færdigregistreret";
 
         /**
          * The value for PRESERVATION_STATUS that indicates that the record is

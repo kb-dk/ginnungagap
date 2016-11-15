@@ -71,7 +71,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);
         when(record.getFile()).thenReturn(resourceFile);
-        when(record.getID()).thenReturn(recordId);
+        when(record.getUUID()).thenReturn(recordId);
 
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
 
@@ -89,8 +89,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         
         verify(record, times(1)).getFile();
         verify(record, times(1)).getFieldValue(anyString());
-        verify(record, times(1)).getID();
-        verify(record, times(1)).setArchiveMD5Checksum(anyString());
+        verify(record, times(1)).getUUID();
         verifyNoMoreInteractions(record);
         
         verifyZeroInteractions(archive);
@@ -111,7 +110,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);
         when(record.getFile()).thenReturn(resourceFile);
-        when(record.getID()).thenReturn(recordId);
+        when(record.getUUID()).thenReturn(recordId);
         
         bitmagConf.setWarcFileSizeLimit(3000);
 
@@ -131,8 +130,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         
         verify(record, times(1)).getFile();
         verify(record, times(1)).getFieldValue(anyString());
-        verify(record, times(1)).getID();
-        verify(record, times(1)).setArchiveMD5Checksum(anyString());
+        verify(record, times(1)).getUUID();
         verifyNoMoreInteractions(record);
         
         verifyZeroInteractions(archive);
@@ -154,7 +152,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(anyString())).thenReturn(collectionId);
         when(record.getFile()).thenReturn(resourceFile);
-        when(record.getID()).thenReturn(recordId);
+        when(record.getUUID()).thenReturn(recordId);
         
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
 

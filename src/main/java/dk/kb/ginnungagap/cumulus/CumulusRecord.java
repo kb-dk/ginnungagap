@@ -1,15 +1,28 @@
 package dk.kb.ginnungagap.cumulus;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.canto.cumulus.Asset;
 import com.canto.cumulus.GUID;
@@ -22,6 +35,7 @@ import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.cumulus.field.StringField;
 import dk.kb.ginnungagap.cumulus.field.TableField;
 import dk.kb.ginnungagap.cumulus.field.TableField.Row;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.StringUtils;
 
 /**
@@ -40,16 +54,16 @@ public class CumulusRecord {
     private static final Logger log = LoggerFactory.getLogger(CumulusRecord.class);
 
     /** Constant for not allowing assert to be extracted from proxy.*/
-    private static final boolean ASSET_NOT_ALLOW_PROXY = false;
+    protected static final boolean ASSET_NOT_ALLOW_PROXY = false;
 
     /** The field extractor.*/
-    private final FieldExtractor fe;
+    protected final FieldExtractor fe;
     /** The Cumulus record item.*/
-    private final Item item;
+    protected final Item item;
 
     /** The guid for the metadata record. It is created and stored the first time it is needed.
      * @see */
-    private String metadataGuid;
+    protected String metadataGuid;
     
     /**
      * Constructor.
@@ -60,15 +74,22 @@ public class CumulusRecord {
         this.fe = fe;
         this.item = item;
     }
+    
+    /**
+     * Initializes the fields, which must be initialized 
+     */
+    public void initFields() {
+        initChecksumField();
+        initRelatedIntellectualEntityObjectIdentifier();
+    }
 
     /**
      * @return The identifier for this record.
      */
-    public String getID() {
-        // TODO: use a different identifier?
+    public String getUUID() {
         String res = getFieldValue(Constants.FieldNames.GUID);
         if(res.contains("/")) {
-            res = res.substring(res.indexOf("/"), res.length()-1);
+            res = res.substring(res.indexOf("/")+1, res.length());
         }
         return res;
     }
@@ -89,9 +110,15 @@ public class CumulusRecord {
      * Retrieves the metadata as an input stream.
      * @return The input stream with the metadata.
      */
-    public ByteArrayInputStream getMetadata() {
-        StringBuffer sb = extractMetadataAsXML();
-        return new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
+    public InputStream getMetadata(File cumulusFieldMetadataFile) {
+        try {
+            writeMetadataFile(cumulusFieldMetadataFile);
+            return new FileInputStream(cumulusFieldMetadataFile);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not extract metadata file.", e);
+        }
+//        StringBuffer sb = extractMetadataAsXML();
+//        return new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -108,45 +135,61 @@ public class CumulusRecord {
             throw new IllegalStateException("Cannot retrieve the file.", e);
         }
     }
-
-    /**
-     * Transforms the metadata fields for the record into XML.
-     * The fields with no values are ignored.
-     * @return A StringBuffer with the XML of the metadata.
-     */
-    protected StringBuffer extractMetadataAsXML() {
+    
+    protected void writeMetadataFile(File cumulusFieldFile) throws ParserConfigurationException, TransformerException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+        Element rootElement = doc.createElement("record");
+        doc.appendChild(rootElement);
+        
         Map<String, Field> fields = fe.getFields(item);
-
-        StringBuffer res = new StringBuffer();
-        res.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        res.append("\n");
-        res.append("<record>\n");
 
         for(Field f : fields.values()) {
             if(!f.isEmpty()) {
-                res.append("  <field name=\"" + f.getName() + "\" data-type=\"" + f.getType() + "\">\n");
+                Element field = doc.createElement("field");
+                rootElement.appendChild(field);
+                field.setAttribute("data-type", f.getType());
+                field.setAttribute("name", f.getName());
+                
                 if(f instanceof StringField) {
                     StringField sf = (StringField) f;
-                    res.append("    <value>" + sf.getStringValue() + "</value>\n");
+                    Element value = doc.createElement("value");
+                    field.appendChild(value);
+                    value.appendChild(doc.createTextNode(StringUtils.xmlEncode(sf.getStringValue())));
                 } else if(f instanceof TableField) {
+                    Element table = doc.createElement("table");
+                    field.appendChild(table);
+                    
                     TableField tf = (TableField) f;
-                    res.append("    <table>\n");
                     for(Row r : tf.getRows()) {
-                        res.append("      <row>\n");
+                        Element row = doc.createElement("row");
+                        table.appendChild(row);
+                        
                         for(Map.Entry<String, String> element : r.getElements().entrySet()) {
-                            res.append("        <field name=\"" + element.getKey() + "\" data-type=\"" 
-                                    + element.getValue() + "\">\n");
+                            Element coloumn = doc.createElement("field");
+                            row.appendChild(coloumn);
+                            
+                            Element value = doc.createElement("value");
+                            coloumn.appendChild(value);
+                            value.setAttribute("name", element.getKey());
+                            value.appendChild(doc.createTextNode(StringUtils.xmlEncode(element.getValue())));
                         }
-                        res.append("      </row>\n");
                     }
-                    res.append("    <table>\n");
                 }
-                res.append("  </field>\n");
             }
         }
-        res.append("</record>\n");
+        
+        // write the content into xml file
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-        return res;
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(cumulusFieldFile);
+
+        transformer.transform(source, result);
     }
 
     /**
@@ -185,6 +228,42 @@ public class CumulusRecord {
         }
     }
 
+    /**
+     * Sets the value for the archive md5 checksum.
+     * This must be the checksum of the resource record in the packaged WARC file. 
+     * @param checksum The checksum of the resource record in the packaged WARC file.
+     */
+    public void initChecksumField() {
+        WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
+        try {
+            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
+            item.setStringValue(metadataPackageIdGuid, md5Digest.digestString);
+            item.save();
+        } catch (Exception e) {
+            String errMsg = "Could not set the checksum for the file.";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
+        }
+    }
+    
+    public void initRelatedIntellectualEntityObjectIdentifier() {
+        try {
+            GUID relatedIntellectualEntityGuid = fe.getFieldGUID(
+                    Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+            if(item.hasValue(relatedIntellectualEntityGuid)) {
+                log.debug("Already has a value for the related intellectual object");
+            } else {
+                item.setStringValue(relatedIntellectualEntityGuid, UUID.randomUUID().toString());
+                item.save();
+            }
+        } catch (Exception e) {
+            String errMsg = "Could not set or retrieve the related object identifier value.";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
+        }
+        
+    }
+    
     /**
      * Sets the preservation status to failure.
      * @param status The error message for the failure state.
@@ -278,25 +357,8 @@ public class CumulusRecord {
         return metadataGuid;
     }
 
-    /**
-     * Sets the value for the archive md5 checksum.
-     * This must be the checksum of the resource record in the packaged WARC file. 
-     * @param checksum The checksum of the resource record in the packaged WARC file.
-     */
-    public void setArchiveMD5Checksum(String checksum) {
-        try {
-            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.ARCHIVE_MD5);
-            item.setStringValue(metadataPackageIdGuid, checksum);
-            item.save();
-        } catch (Exception e) {
-            String errMsg = "Could not set the package id for the metadata.";
-            log.error(errMsg, e);
-            throw new IllegalStateException(errMsg, e);
-        }
-    }
-    
     @Override
     public String toString() {
-        return "[CumulusRecord : " + getClass().getCanonicalName() + " -> " + getID() + "]";
+        return "[CumulusRecord : " + getClass().getCanonicalName() + " -> " + getUUID() + "]";
     }
 }

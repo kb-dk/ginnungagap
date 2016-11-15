@@ -101,13 +101,14 @@ public class PreservationWorkflow implements Workflow {
      */
     protected void preserverveRecord(CumulusRecord record) {
         try {
+            record.initFields();
             record.validateRequiredFields(conf.getRequiredFields());
             File metadataFile = transformAndValidateMetadata(record);
             
             preserver.packRecord(record, metadataFile);
         } catch (Exception e) {
             log.warn("Preserving the record '" + record + "' failed.", e);
-            record.setPreservationFailed("Failed to preservatin record '" + record.getID() + ": \n" + e.getMessage());
+            record.setPreservationFailed("Failed to preservatin record '" + record.getUUID() + ": \n" + e.getMessage());
             // Send failures back.
 //            throw new IllegalStateException("Do not continue, when failure", e);
         }
@@ -124,7 +125,8 @@ public class PreservationWorkflow implements Workflow {
         String metadataUUID = record.getMetadataGUID();
         File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
-            transformer.transformXmlMetadata(record.getMetadata(), os);
+            File cumulusMetadataFile = new File(conf.getMetadataTempDir(), metadataUUID + "_raw.xml");
+            transformer.transformXmlMetadata(record.getMetadata(cumulusMetadataFile), os);
             os.flush();
         }
         
