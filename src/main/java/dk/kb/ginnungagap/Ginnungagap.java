@@ -48,12 +48,17 @@ public class Ginnungagap {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(Ginnungagap.class);
 
+    /** Archive parameter for the local archive.*/
+    public static final String ARCHIVE_LOCAL = "local";
+    /** Archive parameter for the bitrepository archive.*/
+    public static final String ARCHIVE_BITMAG = "bitmag";
+    
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
      * One argument is required; the configuration file, and any other arguments will be ignored.
      */
-    public static void main(String[] args) {
+    public static void main(String ... args) {
         // How do you instantiate the primordial void ??
 
         String confPath;
@@ -66,10 +71,15 @@ public class Ginnungagap {
         } else {
             confPath = args[0];
         }
-        String archiveType = "local";
+        String archiveType = ARCHIVE_LOCAL;
         boolean fileOnly = false;
-        if(args.length > 2) {
+        if(args.length > 1) {
             archiveType = args[1];
+            if(!archiveType.equalsIgnoreCase(ARCHIVE_LOCAL) && !archiveType.equalsIgnoreCase(ARCHIVE_BITMAG)) {
+                System.err.println("Unable to comply with archive type '" + archiveType + "'. Only accepts '"
+                        + ARCHIVE_LOCAL + "' or '" + ARCHIVE_BITMAG + "'.");
+                System.exit(-1);
+            }
         }
         if(args.length > 3) {
             if(args[2].startsWith("y") || args[2].startsWith("Y")) {
@@ -94,19 +104,18 @@ public class Ginnungagap {
             System.exit(-1);
         }
 
+        Archive archive;
+        if(archiveType.equalsIgnoreCase(ARCHIVE_LOCAL)) {
+            log.debug("Archiving locally");
+            archive = new LocalArchive();
+        } else {
+            archive = new BitmagArchive(conf.getBitmagConf());
+            log.debug("Using Bitrepository as archive");
+        }
+        
         Cumulus.CumulusStart();
-
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
-            //        Archive archive = new BitmagArchive(conf.getBitmagConf());
-            // TODO: test with BitmagArchive
-            Archive archive;
-            if(archiveType.equalsIgnoreCase("local")) {
-            archive = new LocalArchive();
-            } else {
-                archive = new BitmagArchive(conf.getBitmagConf());
-            }
-            
             if(fileOnly) {
                 extractFilesOnly(cumulusServer, conf);
             } else {
@@ -124,6 +133,7 @@ public class Ginnungagap {
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
+            archive.shutdown();
         }
     }
     

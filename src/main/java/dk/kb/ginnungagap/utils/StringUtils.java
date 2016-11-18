@@ -45,12 +45,17 @@ public class StringUtils {
      * XML encoding a string.
      * Replaces all the illegal characters with encoded ones.
      * 
-     * Uses apache commons-lang utility class.
+     * FIXME:
+     * Tried to use apache commons-lang utility class,
+     * but it seems to replace danish characters with odd HTML tags.
      * 
      * @param s The string to encode.
      * @return The encoded string.
      */
     public static String xmlEncode(String s) {
-        return StringEscapeUtils.escapeXml(s);
+        s = s.replace("<", "&lt;");
+        s = s.replace(">", "&gt;");
+        return s;
+//        return StringEscapeUtils.escapeXml(s);
     }
 }

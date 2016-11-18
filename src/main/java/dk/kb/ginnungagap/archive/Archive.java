@@ -17,4 +17,9 @@ public interface Archive {
      * @return Whether or not it was successful.
      */
     boolean uploadFile(File file, String collectionId);
+    
+    /**
+     * Shutdown the archive, or any connections required for accessing the archive.
+     */
+    void shutdown();
 }

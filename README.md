@@ -11,6 +11,17 @@ This requires [Yggdrasil](https://github.com/Det-Kongelige-Bibliotek/Yggdrasil).
 * mvn clean -Dmaven.test.skip=true install
 
 
+Testing against Cumulus
+--------------------------
+The current tests against Cumulus required a password-file in the home folder of your linux-user: ${HOME}/cumulus-password.yml
+
+It must be a YAML file in the format: 
+login: $username
+password: $password
+(where you have replace $username and $password with your actual login credentials).
+
+If such a file does not exist, then the cumulus tests are ignored. 
+
 
 Installing Cumulus libraries to Linux
 --------------------------

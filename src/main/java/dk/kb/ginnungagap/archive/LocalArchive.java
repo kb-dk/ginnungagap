@@ -26,4 +26,9 @@ public class LocalArchive implements Archive {
         
         return file.renameTo(toFile);
     }
+
+    @Override
+    public void shutdown() {
+        // Do nothing!!!
+    }
 }

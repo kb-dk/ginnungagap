@@ -35,16 +35,16 @@
       <xsl:element name="pbcore:pbcoreTitle">
         <xsl:value-of select="field[@name='pbcoreTitle']/value" />
       </xsl:element>
+      <!-- pbcore subject -->
+      <xsl:for-each select="field[@name='pbcoreSubject']/value">
+        <xsl:element name="pbcore:pbcoreSubject">
+          <xsl:value-of select="." />
+        </xsl:element>
+      </xsl:for-each>
       <!-- pbcore description (required) -->
       <xsl:element name="pbcore:pbcoreDescription">
         <xsl:value-of select="field[@name='pbcoreDescription']/value" />
       </xsl:element>
-      <!-- pbcore subject -->
-      <xsl:if test="field[@name='pbcoreSubject']">
-        <xsl:element name="pbcore:pbcoreSubject">
-          <xsl:value-of select="field[@name='pbcoreSubject']/value" />
-        </xsl:element>
-      </xsl:if>
       <!-- pbcore genre -->
       <xsl:if test="field[@name='pbcoreGenre']">
         <xsl:element name="pbcore:pbcoreGenre">

@@ -66,7 +66,7 @@
       <!-- mods:location -->
       <xsl:call-template name="mods_location" />
       <!-- mods:name -->
-      <xsl:call-template name="mods_name" />
+<!--       <xsl:call-template name="mods_name" /> -->
       <!-- mods:note -->
       <xsl:call-template name="mods_note" />
       <!-- mods:originInfo -->
@@ -1174,6 +1174,9 @@
         </xsl:for-each>
         <xsl:element name="mods:role">
           <xsl:element name="mods:roleTerm">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'text'" />
+            </xsl:attribute>
             <xsl:choose>
               <xsl:when test="field[@name='Medvirkende rolle']">
                 <xsl:value-of select="field[@name='Medvirkende rolle']/value" />
@@ -1182,9 +1185,6 @@
                 <xsl:value-of select="'Medvirkende'" />
               </xsl:otherwise>
             </xsl:choose>
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
           </xsl:element>
         </xsl:element>
       </xsl:element>

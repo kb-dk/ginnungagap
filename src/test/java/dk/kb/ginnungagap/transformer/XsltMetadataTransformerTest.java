@@ -78,4 +78,27 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         addStep("Validate the METS", "");
         transformer.validate(new FileInputStream(metadataFile));
     }
+    
+    @Test
+    public void testTransformationWithTracks() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with tracks and BEXT metadata.");
+        File xmlFile = new File("src/test/resources/audio_example_1345.xml");
+//        File xmlFile = new File("src/test/resources/Car_S-9090.tif.raw.xml");
+        assertTrue(xmlFile.isFile());
+        XsltMetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+        
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+        
+        addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+        
+//        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+//            fos.write(out.toByteArray());
+//            fos.flush();
+//        }
+        
+        addStep("Validate the METS", "");
+        transformer.validate(new FileInputStream(metadataFile));
+    }
 }

@@ -40,4 +40,10 @@ public class BitmagArchive implements Archive {
         }
         return success;
     }
+
+    @Override
+    public void shutdown() {
+        log.debug("Shutting down the bitrepository client and access to the messagebus.");
+        bitrepository.shutdown();
+    }
 }

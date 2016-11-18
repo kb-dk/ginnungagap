@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?><record>
+    <field data-type="date" name="Asset Access Date">
+        <value>Wed Oct 02 17:16:59 CEST 2013</value>
+    </field>
+    <field data-type="integer" name="Sampling Rate [Hz]">
+        <value>96000</value>
+    </field>
+    <field data-type="string" name="pbcoreIdentifier">
+        <value>DFS MC GD-BP 0172 B</value>
+    </field>
+    <field data-type="string" name="BEXT Originator">
+        <value>DK, KB: DFS</value>
+    </field>
+    <field data-type="double" name="essenceTrackDataRate">
+        <value>4608.0</value>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Audio</value>
+    </field>
+    <field data-type="string" name="pbcoreAssetDate">
+        <value>1980-10-17</value>
+    </field>
+    <field data-type="string" name="IPRD Product (Album)">
+        <value>Dansk Folkemindesamling: Vognhjulet</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>5c8b6e186c877fcf74dda6d20d28f196</value>
+    </field>
+    <field data-type="enumerator" name="objectIdentifierType">
+        <value>UUID</value>
+    </field>
+    <field data-type="string" name="ISRC Source ">
+        <value>Bent Pihl</value>
+    </field>
+    <field data-type="string" name="File Format Identifier">
+        <value>audio/x-wav</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>1345</value>
+    </field>
+    <field data-type="string" name="Udgiver rolle">
+        <value>Indsamler</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Langtidsbevaret</value>
+    </field>
+    <field data-type="string" name="instantiationChannelConfiguration">
+        <value>Stereo</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Vognhjulet</value>
+    </field>
+    <field data-type="integer" name="essenceTrackBitDepth">
+        <value>24</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Mon Nov 07 13:55:58 CET 2016</value>
+    </field>
+    <field data-type="string" name="instantiationPhysical">
+        <value>Musiccassette GPM 8000 C90 LOW NOISE</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="IART Artist">
+        <value>Græshopperne</value>
+    </field>
+    <field data-type="string" name="Lokalitet">
+        <value>Danmark, København, Thorsgade 67, Vognhjulet</value>
+    </field>
+    <field data-type="string" name="ICMS Commissioned">
+        <value>Dansk Folkemindesamling/ Dansk Musik Informations Center</value>
+    </field>
+    <field data-type="integer" name="Block Align">
+        <value>6</value>
+    </field>
+    <field data-type="string" name="LastCmdInitiated">
+        <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@2bb9f2</value>
+    </field>
+    <field data-type="enumerator" name="objectCategory">
+        <value>File</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Multimedia DP</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1332377121</value>
+    </field>
+    <field data-type="string" name="BEXT OriginatorReference">
+        <value>See Description for identifiers</value>
+    </field>
+    <field data-type="string" name="Mastertransferstatus">
+        <value>OK</value>
+    </field>
+    <field data-type="string" name="BEXT CodingHistory">
+        <value>JVC (3) cassette deck TR-R472 nr. 159C0593-&amp;gt;A/D converter RME OctaMicII,5,6-&amp;gt;RME Fireface800;17,18-&amp;gt;Computer MAC PRO MacIntosh G5 2X3 GHz Dual-Core Intel Xeon. Memory: 3 GB 667 MHZ DDR2 FB-DIMM-&amp;gt;OSX.10.6-&amp;gt;Logic Pro 9.1.3</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2012-02-21 01:30:41</value>
+    </field>
+    <field data-type="string" name="pbcorePublisher">
+        <value>Pihl, Bent (), fotograf/lydmand, Vognhjulet</value>
+    </field>
+    <field data-type="string" name="IENG Engineer">
+        <value>Emmerik Warburg</value>
+    </field>
+    <field data-type="string" name="År">
+        <value>1980-10-17</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>24</value>
+    </field>
+    <field data-type="string" name="Dato ikke efter">
+        <value>1980-10-17</value>
+    </field>
+    <field data-type="enumerator" name="Generel materialebetegnelse">
+        <value>Lyd</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_Repository">
+        <value>e-magasin</value>
+    </field>
+    <field data-type="string" name="ARCHIVE_MD5">
+        <value>5c8b6e186c877fcf74dda6d20d28f196</value>
+    </field>
+    <field data-type="string" name="Opstilling">
+        <value>DFS MC GD-BP 0172 B</value>
+    </field>
+    <field data-type="string" name="BEXT Version">
+        <value>0</value>
+    </field>
+    <field data-type="table" name="Tracks">
+        <table>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>1</value>
+                </field>
+                <field name="Track titel">
+                    <value>Cora is gone</value>
+                </field>
+                <field name="ID">
+                    <value>317</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>2</value>
+                </field>
+                <field name="Track titel">
+                    <value>Between 40 and 65</value>
+                </field>
+                <field name="ID">
+                    <value>318</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>3</value>
+                </field>
+                <field name="Track titel">
+                    <value>The old home place</value>
+                </field>
+                <field name="ID">
+                    <value>319</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>4</value>
+                </field>
+                <field name="Track titel">
+                    <value>Dark Waters</value>
+                </field>
+                <field name="ID">
+                    <value>320</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Instrumental</value>
+                </field>
+                <field name="Nr">
+                    <value>5</value>
+                </field>
+                <field name="Track titel">
+                    <value>Dixie Hoedown</value>
+                </field>
+                <field name="ID">
+                    <value>321</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>6</value>
+                </field>
+                <field name="Track titel">
+                    <value>Footprints in the snow</value>
+                </field>
+                <field name="ID">
+                    <value>322</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>7</value>
+                </field>
+                <field name="Track titel">
+                    <value>The Baptism Of Jesse Taylor</value>
+                </field>
+                <field name="ID">
+                    <value>323</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>8</value>
+                </field>
+                <field name="Track titel">
+                    <value>Why don't you tell me so</value>
+                </field>
+                <field name="ID">
+                    <value>324</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Instrumental</value>
+                </field>
+                <field name="Nr">
+                    <value>9</value>
+                </field>
+                <field name="Track titel">
+                    <value>Banjo signal</value>
+                </field>
+                <field name="ID">
+                    <value>325</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>10</value>
+                </field>
+                <field name="Track titel">
+                    <value>Keep on the Sunny side</value>
+                </field>
+                <field name="ID">
+                    <value>326</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>autoharper</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>11</value>
+                </field>
+                <field name="Track titel">
+                    <value>Your friends and your home</value>
+                </field>
+                <field name="ID">
+                    <value>327</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>12</value>
+                </field>
+                <field name="Track titel">
+                    <value>I'll never see my home again</value>
+                </field>
+                <field name="ID">
+                    <value>328</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>13</value>
+                </field>
+                <field name="Track titel">
+                    <value>No longer a sweetheart of mine</value>
+                </field>
+                <field name="ID">
+                    <value>329</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Sang</value>
+                </field>
+                <field name="Nr">
+                    <value>14</value>
+                </field>
+                <field name="Track titel">
+                    <value>Help me make it through the night</value>
+                </field>
+                <field name="ID">
+                    <value>330</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+            <row>
+                <field name="Host Item ID">
+                    <value>1345</value>
+                </field>
+                <field name="Track medvirkende">
+                    <value>Græshopperne</value>
+                </field>
+                <field name="Type">
+                    <value>Instrumental</value>
+                </field>
+                <field name="Nr">
+                    <value>15</value>
+                </field>
+                <field name="Track titel">
+                    <value>Black Mountain Rag</value>
+                </field>
+                <field name="ID">
+                    <value>331</value>
+                </field>
+                <field name="Instrument(er)">
+                    <value>banjoer (femstrengede)</value>
+                    <value>guitarer</value>
+                    <value>mandoliner</value>
+                    <value>violiner</value>
+                    <value>kontrabasser</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="string" name="Samling">
+        <value>Dansk Folkemindesamling: Vognhjulet</value>
+    </field>
+    <field data-type="string" name="Tracks-print">
+        <value>Græshopperne</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_DISPLAY_COPY">
+        <value>5c8b6e186c877fcf74dda6d20d28f196</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>Wave Sound</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>Sounds</value>
+    </field>
+    <field data-type="string" name="Dato ikke før">
+        <value>1980-10-17</value>
+    </field>
+    <field data-type="string" name="BEXT Description">
+        <value>DFS MC GD-BP 0172 B</value>
+    </field>
+    <field data-type="string" name="Registrationdate">
+        <value>20120606</value>
+    </field>
+    <field data-type="integer" name="essenceTrackSamplingRate">
+        <value>96000</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>true</value>
+    </field>
+    <field data-type="string" name="ICOP Copyright">
+        <value>Klausuleret</value>
+    </field>
+    <field data-type="enumerator" name="Genre">
+        <value>Melodi og instrumental, Sang (Tekster)</value>
+    </field>
+    <field data-type="string" name="INAM Name (Title)">
+        <value>DFS MC GD-BP 0172 B</value>
+    </field>
+    <field data-type="string" name="IARL Archival Location">
+        <value>DK, KB: DFS</value>
+    </field>
+    <field data-type="string" name="IKEY Keywords">
+        <value>Danmark, GD</value>
+    </field>
+    <field data-type="string" name="Audio Codec Information">
+        <value>PCM</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>DFSDIG\2011-02-21</value>
+    </field>
+    <field data-type="long" name="instantiationFileSize">
+        <value>1564570136</value>
+    </field>
+    <field data-type="string" name="pbcoreContributor">
+        <value>Græshopperne, () orkester, []</value>
+    </field>
+    <field data-type="string" name="pbcoreSubject">
+        <value>Danmark</value>
+        <value>København</value>
+        <value>Vognhjulet</value>
+        <value>Top 0003</value>
+        <value>Bluegrass</value>
+        <value>Amerikansk folkemusik</value>
+    </field>
+    <field data-type="string" name="Channel Mode">
+        <value>Stereo</value>
+    </field>
+    <field data-type="string" name="compositionLevel">
+        <value>0</value>
+    </field>
+    <field data-type="integer" name="File Resource Size">
+        <value>0</value>
+    </field>
+    <field data-type="enumerator" name="Copyright">
+        <value>Dansk Folkemindesamling, Det Kongelige Bibliotek</value>
+    </field>
+    <field data-type="string" name="Sidst ændret af">
+        <value>pewa</value>
+    </field>
+    <field data-type="string" name="Medvirkende">
+        <value>Græshopperne, () orkester, []</value>
+    </field>
+    <field data-type="string" name="pbcoreDescription">
+        <value>Dansk Folkemindesamling: Vognhjulet</value>
+    </field>
+    <field data-type="enumerator" name="Materialebetegnelse">
+        <value>Kassettebånd</value>
+    </field>
+    <field data-type="string" name="PublishedByVersion">
+        <value>Publication workflow of iteration 13. Class = dk.kb.doms.components.workflow.iteration13.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.6 $;Publish without QA version = $Revision: 1.8 $;productionRoot = /Multimedia;undoRoot = /archive_pool/undo/Sounds;publishNonArchivalRoot = /online_master_arkiv_m_2/non-archival/Sounds;productionRoot = /Multimedia;</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>pewa</value>
+    </field>
+    <field data-type="string" name="instantiationDigital">
+        <value>audio/x-wav</value>
+    </field>
+    <field data-type="string" name="formatVersion">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>DFS_MC_GD-BP_0172_B.wav</value>
+    </field>
+    <field data-type="string" name="pbcorerightsSummary">
+        <value>Klausuleret</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Thu Mar 22 08:48:26 CET 2012</value>
+    </field>
+    <field data-type="enumerator" name="messageDigestAlgorithm">
+        <value>MD5</value>
+    </field>
+    <field data-type="string" name="Topografinr">
+        <value>0003</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>Uid:dk:kb:doms:2007-01/3870dc70-7403-11e1-bf98-0017a4f603c1</value>
+    </field>
+    <field data-type="double" name="Duration">
+        <value>2716.2369791666665</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Audio OM</value>
+    </field>
+    <field data-type="string" name="pbcorecreatorRole">
+        <value>Meddeler</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Thu Mar 22 10:45:21 CET 2012</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>234</value>
+    </field>
+    <field data-type="string" name="pbcoreTitle">
+        <value>Græshopperne</value>
+    </field>
+    <field data-type="string" name="Titel">
+        <value>Græshopperne</value>
+    </field>
+    <field data-type="string" name="instantiationDate">
+        <value>2011-02-21</value>
+    </field>
+    <field data-type="string" name="ARCHIVE_FILENAME">
+        <value>KBDOMS-20120322103424-00088-dia-prod-dom-01.kb.dk.arc</value>
+    </field>
+    <field data-type="string" name="preservationLevelDateAssigned">
+        <value>20111119</value>
+    </field>
+    <field data-type="string" name="pbcorepublisherRole">
+        <value>Indsamler</value>
+    </field>
+    <field data-type="integer" name="Unix File Identifier">
+        <value>587361596</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>DFS_MC_GD-BP_0172_B.wav</value>
+    </field>
+    <field data-type="string" name="Udgiver">
+        <value>Pihl, Bent (), fotograf/lydmand, Vognhjulet</value>
+    </field>
+    <field data-type="string" name="Keywords">
+        <value>Danmark</value>
+        <value>København</value>
+        <value>Vognhjulet</value>
+        <value>Top 0003</value>
+        <value>Bluegrass</value>
+        <value>Amerikansk folkemusik</value>
+    </field>
+    <field data-type="string" name="LastCmdSucceeded">
+        <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@2bb9f2</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>1564570136</value>
+    </field>
+    <field data-type="string" name="ICRD Creation date">
+        <value>1980-10-17</value>
+    </field>
+    <field data-type="string" name="BEXT OriginationDate">
+        <value>2011-02-21</value>
+    </field>
+    <field data-type="double" name="Bit Rate Audio [kbit/s]">
+        <value>4608.0</value>
+    </field>
+    <field data-type="integer" name="Audio Sample Size [bits]">
+        <value>24</value>
+    </field>
+    <field data-type="double" name="essenceTrackDuration">
+        <value>2716.2369791666665</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>dia-prod-dom-02.kb.dk</value>
+    </field>
+    <field data-type="string" name="PublicationDate">
+        <value>22-03-2012</value>
+    </field>
+    <field data-type="string" name="Document Name">
+        <value>DFS_MC_GD-BP_0172_B.wav</value>
+    </field>
+    <field data-type="string" name="IMED Medium">
+        <value>Musiccassette GPM 8000 C90 LOW NOISE</value>
+    </field>
+    <field data-type="string" name="essenceTrackStandard">
+        <value>PCM</value>
+    </field>
+    <field data-type="string" name="Sprog">
+        <value>en, da</value>
+    </field>
+    <field data-type="string" name="Medvirkende rolle">
+        <value>Udøver</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>Wave Sound</value>
+    </field>
+    <field data-type="long" name="Asset Data Size (Long)">
+        <value>1564570136</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Thu Mar 22 10:45:21 CET 2012</value>
+    </field>
+    <field data-type="string" name="pbcoreAssetType">
+        <value>Lyd</value>
+    </field>
+    <field data-type="enumerator" name="Publication_catalog">
+        <value>Audio DP</value>
+    </field>
+    <field data-type="enumerator" name="Audio - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>METADATA GUID PLACEHOLDER</value>
+    </field>
+  <field name="preservationLevelValue_BitSafety">
+    <value>bitSafetyVeryHigh</value>
+  </field>
+  <field name="preservationLevelValue_Logical">
+    <value>logicalStrategyMigration</value>
+  </field>
+  <field name="preservationLevelValue_Confidentiality">
+    <value>confidentialityLow</value>
+  </field>
+</record>

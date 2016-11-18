@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.cumulus;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,9 +155,11 @@ public class CumulusRecord {
                 
                 if(f instanceof StringField) {
                     StringField sf = (StringField) f;
-                    Element value = doc.createElement("value");
-                    field.appendChild(value);
-                    value.appendChild(doc.createTextNode(StringUtils.xmlEncode(sf.getStringValue())));
+                    for(String v : getValues(sf.getStringValue())) {
+                        Element value = doc.createElement("value");
+                        field.appendChild(value);
+                        value.appendChild(doc.createTextNode(v));
+                    }
                 } else if(f instanceof TableField) {
                     Element table = doc.createElement("table");
                     field.appendChild(table);
@@ -169,11 +172,13 @@ public class CumulusRecord {
                         for(Map.Entry<String, String> element : r.getElements().entrySet()) {
                             Element coloumn = doc.createElement("field");
                             row.appendChild(coloumn);
+                            coloumn.setAttribute("name", element.getKey());
                             
-                            Element value = doc.createElement("value");
-                            coloumn.appendChild(value);
-                            value.setAttribute("name", element.getKey());
-                            value.appendChild(doc.createTextNode(StringUtils.xmlEncode(element.getValue())));
+                            for(String v : getValues(element.getValue())) {
+                                Element value = doc.createElement("value");
+                                coloumn.appendChild(value);
+                                value.appendChild(doc.createTextNode(v));
+                            }
                         }
                     }
                 }
@@ -190,6 +195,16 @@ public class CumulusRecord {
         StreamResult result = new StreamResult(cumulusFieldFile);
 
         transformer.transform(source, result);
+    }
+    
+    /**
+     * The given value is formatted and split into lines.
+     * @param value
+     * @return
+     */
+    protected String[] getValues(String value) {
+        String encodedValue = StringUtils.xmlEncode(value);
+        return encodedValue.split("\n");
     }
 
     /**

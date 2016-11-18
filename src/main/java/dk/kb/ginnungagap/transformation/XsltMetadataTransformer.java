@@ -59,13 +59,13 @@ public class XsltMetadataTransformer implements MetadataTransformer {
             Source source = new StreamSource(xmlFile);
             byte[] bytes = xslTransformer.transform(source, uriResolver, errorListener);
 
+            out.write(bytes);
+            out.flush();
+            
             if(errorListener.hasErrors()) {
                 throw new IllegalStateException("Failed transformation: fatal errors: " + errorListener.fatalErrors 
                         + ", and other errors: " + errorListener.errors + ", and warnings: " + errorListener.warnings);
             }
-
-            out.write(bytes);
-            out.flush();
         } catch (TransformerException e) {
             throw new IllegalStateException("Could not perform the transformation of the metadata", e);
         } catch (IOException e) {

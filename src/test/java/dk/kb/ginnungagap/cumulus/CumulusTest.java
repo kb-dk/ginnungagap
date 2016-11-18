@@ -104,11 +104,14 @@ public class CumulusTest extends ExtendedTestCase {
     
     @Test(enabled = true)
     public void testPrintingToXml() throws Exception {
-        String catalogName = "Conservation";
+        String catalogName = "Audio OM";
 //        int catalogId = server.getServer().findCatalogID(catalogName);
 //        Catalog catalog = server.getServer().openCatalog(catalogId);
 
-        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED
+//        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
+//                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
+        
+        String query = "GUID\tcontains\t3870dc70-7403-11e1-bf98-0017a4f603c1"
                 + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
         EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
 
