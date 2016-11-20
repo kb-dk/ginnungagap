@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- 
+     This is a metadata schema for the tracks of an audio recording at The Royal Library of Denmark.
+
+     It is currently in beta format
+-->
+<xsd:schema targetNamespace="http://id.kb.dk/tracks.html" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xsd:element name="tracks">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" minOccurs="0" name="track">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="Nr" maxOccurs="1" minOccurs="1" type="xsd:string" />
+              <xsd:element name="ID" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Type" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Begyndelsestid" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Varighed" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Start_linie" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_medvirkende" maxOccurs="unbounded" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_ophav" maxOccurs="unbounded" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_titel" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_undertitel" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_alternativ_titel" maxOccurs="unbounded" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_original_titel" maxOccurs="1" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Track_noter" maxOccurs="unbounded" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Instrumenter" maxOccurs="unbounded" minOccurs="0" type="xsd:string" />
+              <xsd:element name="Antal_versioner" maxOccurs="1" minOccurs="0" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

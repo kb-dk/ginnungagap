@@ -9,6 +9,7 @@
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:premis="http://www.loc.gov/premis/v3"
     xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html"
+    xmlns:tracks="http://id.kb.dk/tracks.html"
     
     extension-element-prefixes="java">
 
@@ -17,11 +18,13 @@
   <xsl:include href="transformToMods.xsl"/>
   <xsl:include href="transformToPbCore.xsl"/>
   <xsl:include href="transformToPremis.xsl"/>
+  <xsl:include href="transformToTracks.xsl"/>
  
   <xsl:variable name="FILE_GUID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />
   
   <xsl:variable name="MODS-ID" select="'Mods'" />
   <xsl:variable name="PBCORE-DESCRIPTION-ID" select="'PBCoreDescription'" />
+  <xsl:variable name="TRACKS-ID" select="'PBCoreDescription'" />
   <xsl:variable name="MODS-RIGHTS-ID" select="'ModsRights'" />
   <xsl:variable name="PREMIS-ID" select="'Premis'" />
   <xsl:variable name="PBCORE-INSTANTIATION-ID" select="'PBCoreInstantiation'" />
@@ -141,7 +144,7 @@
           </xsl:element>
         </xsl:element>
       </xsl:element>
-        <!-- Add PBCore descriptive metadata, if format allows -->
+      <!-- Add PBCore descriptive metadata, if format allows -->
       <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForPbCore(field[@name='formatName']/value)">
         <xsl:element name="mets:dmdSec">
           <xsl:attribute name="CREATED">
@@ -160,6 +163,29 @@
             <!-- Handle the different cases of METS documents. -->
             <xsl:element name="mets:xmlData">
               <xsl:call-template name="pbcore_description" />      
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:if>
+      <!-- Add Tracks descriptive metadata, if format allows -->
+      <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForPbCore(field[@name='formatName']/value)">
+        <xsl:element name="mets:dmdSec">
+          <xsl:attribute name="CREATED">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:attribute>    
+          <xsl:attribute name="ID">
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($TRACKS-ID)" />
+          </xsl:attribute>
+          <xsl:element name="mets:mdWrap">
+            <xsl:attribute name="MDTYPE">
+              <xsl:value-of select="'OTHER'" />
+            </xsl:attribute>
+            <xsl:attribute name="OTHERMDTYPE">
+              <xsl:value-of select="'TRACKS'" />
+            </xsl:attribute>
+            <!-- Handle the different cases of METS documents. -->
+            <xsl:element name="mets:xmlData">
+              <xsl:call-template name="tracks" />      
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -306,7 +332,7 @@
         
         <xsl:element name="mets:div">
           <xsl:attribute name="DMDID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID, ',', $TRACKS-ID))" />
           </xsl:attribute>
           <xsl:attribute name="ADMID">
             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID))" />

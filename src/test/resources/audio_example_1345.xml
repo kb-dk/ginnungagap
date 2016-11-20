@@ -248,6 +248,9 @@
                 <field name="Host Item ID">
                     <value>1345</value>
                 </field>
+                <field name="1. linie">
+                    <value>FØRSTE LINIE</value>
+                </field>
                 <field name="Track medvirkende">
                     <value>Græshopperne</value>
                 </field>
