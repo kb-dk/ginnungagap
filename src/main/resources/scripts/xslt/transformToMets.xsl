@@ -167,8 +167,8 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-      <!-- Add Tracks descriptive metadata, if format allows -->
-      <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForPbCore(field[@name='formatName']/value)">
+      <!-- Add Tracks descriptive metadata, if the required metadata fields are present -->
+      <xsl:if test="field[@name='Tracks']">
         <xsl:element name="mets:dmdSec">
           <xsl:attribute name="CREATED">
             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
