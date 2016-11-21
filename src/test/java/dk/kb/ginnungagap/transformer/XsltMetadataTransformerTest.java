@@ -80,7 +80,7 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testTransformationWithTracks() throws Exception {
+    public void testTransformationWithAudioTracks() throws Exception {
         addDescription("Test the transformation of a Cumulus XML file with tracks and BEXT metadata.");
         File xmlFile = new File("src/test/resources/audio_example_1345.xml");
 //        File tracksXsltFile = new File("src/test/resources/scripts/standaloneTracks.xsl");

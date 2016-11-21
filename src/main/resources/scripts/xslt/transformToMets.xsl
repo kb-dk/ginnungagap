@@ -24,7 +24,7 @@
   
   <xsl:variable name="MODS-ID" select="'Mods'" />
   <xsl:variable name="PBCORE-DESCRIPTION-ID" select="'PBCoreDescription'" />
-  <xsl:variable name="TRACKS-ID" select="'PBCoreDescription'" />
+  <xsl:variable name="TRACKS-ID" select="'Tracks'" />
   <xsl:variable name="MODS-RIGHTS-ID" select="'ModsRights'" />
   <xsl:variable name="PREMIS-ID" select="'Premis'" />
   <xsl:variable name="PBCORE-INSTANTIATION-ID" select="'PBCoreInstantiation'" />
@@ -168,7 +168,7 @@
         </xsl:element>
       </xsl:if>
       <!-- Add Tracks descriptive metadata, if the required metadata fields are present -->
-      <xsl:if test="field[@name='Tracks']">
+      <xsl:if test="field[@name='Tracks']/table">
         <xsl:element name="mets:dmdSec">
           <xsl:attribute name="CREATED">
             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
