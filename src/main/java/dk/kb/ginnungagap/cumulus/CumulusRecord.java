@@ -3,7 +3,6 @@ package dk.kb.ginnungagap.cumulus;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,8 +117,6 @@ public class CumulusRecord {
         } catch (Exception e) {
             throw new IllegalStateException("Could not extract metadata file.", e);
         }
-//        StringBuffer sb = extractMetadataAsXML();
-//        return new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -137,6 +134,12 @@ public class CumulusRecord {
         }
     }
     
+    /**
+     * Extracts all the metadata fields for this record and converts them into an XML file. 
+     * @param cumulusFieldFile The file where the XML for this record is placed.
+     * @throws ParserConfigurationException If the XML parse has an issue with the configuration.
+     * @throws TransformerException If the transformer has an issue.
+     */
     protected void writeMetadataFile(File cumulusFieldFile) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -261,6 +264,9 @@ public class CumulusRecord {
         }
     }
     
+    /**
+     * Initializes the value in the related object identifier value for the intellectual entity.
+     */
     public void initRelatedIntellectualEntityObjectIdentifier() {
         try {
             GUID relatedIntellectualEntityGuid = fe.getFieldGUID(
@@ -272,11 +278,11 @@ public class CumulusRecord {
                 item.save();
             }
         } catch (Exception e) {
-            String errMsg = "Could not set or retrieve the related object identifier value.";
+            String errMsg = "Could not set or retrieve the Cumulus field: " 
+                    + Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY;
             log.error(errMsg, e);
             throw new IllegalStateException(errMsg, e);
         }
-        
     }
     
     /**
