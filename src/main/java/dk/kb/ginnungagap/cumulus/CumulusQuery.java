@@ -78,6 +78,9 @@ public class CumulusQuery {
 
     /**
      * The default query for extracting preservation ready items from a given catalog.
+     * The records must have the preservation state 'ready for archival' and have the registration state
+     * 'registration finished', besides beloning the the given catalog.
+     * 
      * @param catalogName The name of the catalog.
      * @return The Cumulus query.
      */
@@ -88,6 +91,35 @@ public class CumulusQuery {
                 Constants.FieldNames.PRESERVATION_STATUS,
                 Constants.FieldValues.
                 PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName);
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
+    
+    /**
+     * The query for extracting records containing a specific UUID.
+     * If the full uuid is given, then Cumulus should only give a single Cumulus record.
+     * 
+     * The record must have the 'GUID' field contain the uuid (the Cumulus GUID has a silly prefix, which we ignore),
+     * It must have the registration state 'registration finished', and it must belong to the given catalog.
+     * 
+     * @param catalogName The name of the catalog.
+     * @param uuid The UUID for the Cumulus record to find.
+     * @return The query for finding the Cumulus record with the given UUID.
+     */
+    public static CumulusQuery getQueryForSpecificUUID(String catalogName, String uuid) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        ArgumentCheck.checkNotNullOrEmpty(uuid, "String uuid");
+        String query = String.format(
+                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
+                Constants.FieldNames.GUID,
+                uuid,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,

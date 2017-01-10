@@ -102,7 +102,7 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
     
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void testPrintingToXml() throws Exception {
         String catalogName = "Audio OM";
 //        int catalogId = server.getServer().findCatalogID(catalogName);

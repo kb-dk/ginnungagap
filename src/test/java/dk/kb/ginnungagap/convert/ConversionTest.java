@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 public class ConversionTest extends ExtendedTestCase {
 
-    @Test
+    @Test(enabled = false)
     public void testJWATReadingArcFile() throws Exception {
 
         File arcDir = new File("/home/jolf/data");
@@ -48,6 +48,7 @@ public class ConversionTest extends ExtendedTestCase {
     }
 
     @Test(enabled = false)
+//    @Test
     public void testArchiveIOReadingArcFile() throws Exception {
         //        ArchiveRecord 
         File arcDir = new File("/home/jolf/data");
@@ -59,10 +60,12 @@ public class ConversionTest extends ExtendedTestCase {
 
                 reader = ArchiveReaderFactory.get(f);
                 for(ArchiveRecord record : reader) {
-                    for(Map.Entry<String, Object> entry : record.getHeader().getHeaderFields().entrySet()) {
-                        System.out.print(entry.getValue() + " ");
-                    }
-                    System.out.println();
+                    System.out.println(record.getHeader().getUrl());
+//                    record.
+//                    for(Map.Entry<String, Object> entry : record.getHeader().getHeaderFields().entrySet()) {
+//                        System.out.print(entry.getValue() + " ");
+//                    }
+//                    System.out.println();
                 }
 
                 System.out.println("\n");
