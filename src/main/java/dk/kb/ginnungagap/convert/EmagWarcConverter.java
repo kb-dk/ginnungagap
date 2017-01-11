@@ -24,7 +24,14 @@ public class EmagWarcConverter extends EmagConverter {
     /** The warc packer, which also handles the upload. */
     protected final WarcPacker packer;
 
-    
+    /**
+     * Constructor.
+     * @param conf The configuration.
+     * @param cumulusServer The Cumulus server.
+     * @param catalogName The name of the catalog for the record.
+     * @param packer The WARC packer for packaging and preservation. 
+     * @param transformer The transformer of the metadata.
+     */
     public EmagWarcConverter(Configuration conf, CumulusServer cumulusServer, String catalogName, WarcPacker packer, 
             MetadataTransformer transformer) {
         super(conf, cumulusServer, catalogName);
@@ -41,10 +48,9 @@ public class EmagWarcConverter extends EmagConverter {
             File metadataFile = transformAndValidateMetadata(record);
             packer.packRecord(record, metadataFile);
         } catch (IOException e) {
-            throw new IllegalStateException("", e);
+            throw new IllegalStateException("Cannot package ", e);
         }
     }
-
     
     /**
      * Transforms and validates the metadata from the Cumulus record.

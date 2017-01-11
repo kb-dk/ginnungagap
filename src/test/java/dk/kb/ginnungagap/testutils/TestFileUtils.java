@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.bitrepository.common.utils.FileUtils;
 
-import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.config.TestConfiguration;
 
 public class TestFileUtils {
