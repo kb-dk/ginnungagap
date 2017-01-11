@@ -102,7 +102,7 @@ public abstract class EmagConverter {
      * @throws IOException If it fails.
      */
     protected File extractArcRecordAsFile(ArchiveRecord record, String uuid) throws IOException {
-        File outputFile = new File(conf.getBitmagConf().getTempDir(), uuid);
+        File outputFile = new File(conf.getConversionConfiguration().getTempDir(), uuid);
         try (OutputStream os = new FileOutputStream(outputFile)) {
             StreamUtils.copy(record, os);
         }

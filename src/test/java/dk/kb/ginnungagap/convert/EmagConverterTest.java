@@ -109,7 +109,7 @@ public class EmagConverterTest extends ExtendedTestCase {
                 String uuid = "random-" + UUID.randomUUID().toString();
                 converter.extractArcRecordAsFile(arcRecord, uuid);
                 
-                File expectedOutputFile = new File(conf.getBitmagConf().getTempDir(), uuid);
+                File expectedOutputFile = new File(conf.getConversionConfiguration().getTempDir(), uuid);
                 Assert.assertTrue(expectedOutputFile.isFile());
             }
         }
@@ -312,7 +312,6 @@ public class EmagConverterTest extends ExtendedTestCase {
     }
 
     private class TestEmagConverter extends EmagConverter {
-
         int callsToHandler = 0;
         
         public TestEmagConverter(Configuration conf, CumulusServer cumulusServer, String catalogName) {
@@ -323,6 +322,5 @@ public class EmagConverterTest extends ExtendedTestCase {
         protected void handleRecord(CumulusRecord record, File contentFile) {
             callsToHandler++;
         }
-        
     }
 }

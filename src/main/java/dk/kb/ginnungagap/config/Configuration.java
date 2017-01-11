@@ -16,7 +16,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  * The configurations in YAML format.
  * It must be in the following format:
  * <ul>
- *   <li>ginnungagap</li>
+ *   <li>ginnungagap:</li>
  *   <ul>
  *     <li>bitrepository:</li>
  *     <ul>
@@ -27,19 +27,24 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>temp_dir: $temp_dir</li>
  *       <li>algorithm: $algorithm</li>
  *     </ul>
- *     <li>cumulus</li>
+ *     <li>cumulus:</li>
  *     <ul>
  *       <li>server_url: $server url</li>
  *       <li>username: $username</li>
  *       <li>password: $password</li>
  *     </ul>
- *     <li>transformation</li>
+ *     <li>transformation:</li>
  *     <ul>
  *       <li>xsd_dir: $xsd_dir</li>
  *       <li>xslt_dir: $xslt_dir</li>
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
  *       <li>catalogs: <br/>- $catalog 1<br/>- $catalog 2<br/>- ...</li>
+ *     </ul>
+ *     <li>conversion:</li>
+ *     <ul>
+ *       <li>temp_dir: $temp_dir</li>
+ *       <li>script_file: $script_file</li>
  *     </ul>
  *   </ul>
  * </ul>
@@ -93,6 +98,13 @@ public class Configuration {
     /** Transformation catalogs array leaf-element.*/
     protected static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
 
+    /** Conversion node-element.*/
+    protected static final String CONF_CONVERSION = "conversion";
+    /** Conversion temp-dir leaf-element.*/
+    protected static final String CONF_CONVERSION_TEMP_DIR = "temp_dir";
+    /** Conversion script file leaf-element.*/
+    protected static final String CONF_CONVERSION_SCRIPT_DIR = "script_file";
+    
     /** Whether Cumulus should have write access.
      * TODO: should be 'true', when used properly.*/
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
@@ -103,6 +115,9 @@ public class Configuration {
     protected final CumulusConfiguration cumulusConf;
     /** The configuration for the transformation.*/
     protected final TransformationConfiguration transformationConf;
+    
+    /** The configuration for the conversion. May be null, if no conversion is needed.*/
+    protected ConversionConfiguration conversionConfiguration = null;
     
     /**
      * Constructor.
@@ -129,6 +144,11 @@ public class Configuration {
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
+            
+            if(confMap.containsKey(CONF_CONVERSION)) {
+                this.conversionConfiguration = loadConversionConfiguration(
+                        (Map<String, Object>) confMap.get(CONF_CONVERSION));
+            }
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
@@ -233,6 +253,26 @@ public class Configuration {
         return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, catalogs, requiredFields);
     }
     
+    /**
+     * Loads the Conversion configuration from the 'conversion' element in the configuration.
+     * @param map The map with the Conversion configuration.
+     * @return The configuration for the conversion.
+     */
+    protected ConversionConfiguration loadConversionConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_TEMP_DIR), 
+                "Missing Conversion element '" + CONF_CONVERSION_TEMP_DIR + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_SCRIPT_DIR), 
+                "Missing Conversion element '" + CONF_CONVERSION_SCRIPT_DIR + "'");
+
+        File tempDir = FileUtils.getDirectory((String) map.get(CONF_CONVERSION_TEMP_DIR));
+        File scriptFile = new File((String) map.get(CONF_CONVERSION_SCRIPT_DIR));
+        
+        ArgumentCheck.checkExistsDirectory(tempDir, "temp dir");
+        ArgumentCheck.checkExistsNormalFile(scriptFile, "script");
+
+        return new ConversionConfiguration(tempDir, scriptFile);
+    }
+    
     /** @return The configuration for the bitrepository.*/
     public BitmagConfiguration getBitmagConf() {
         return bitmagConf;
@@ -247,4 +287,10 @@ public class Configuration {
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
     }
+    
+    /** @return The configuration for the conversion. May be null, if no conversion is needed.*/
+    public ConversionConfiguration getConversionConfiguration() {
+        return conversionConfiguration;
+    }
+
 }
