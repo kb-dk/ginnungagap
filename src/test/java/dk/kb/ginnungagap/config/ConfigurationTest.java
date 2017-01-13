@@ -105,6 +105,7 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getConversionConfiguration());
         assertNotNull(conf.getConversionConfiguration().getScriptFile());
         assertNotNull(conf.getConversionConfiguration().getTempDir());
+        assertNotNull(conf.getConversionConfiguration().getPreIngestBaseDir());
     }
     
     @Test(expectedExceptions = ArgumentCheck.class)

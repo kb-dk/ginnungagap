@@ -65,9 +65,8 @@ public class WarcPacker {
      * @param record The record from Cumulus.
      * @param metadataFile The file with the transformed metadata.
      */
-    public synchronized void packRecord(CumulusRecord record, File metadataFile) {
+    public synchronized void packRecord(CumulusRecord record, File resourceFile, File metadataFile) {
         ContentType contentType = getContentType(record);
-        File resourceFile = record.getFile();
         WarcDigest blockDigest = ChecksumUtils.calculateChecksum(resourceFile, bitmagConf.getAlgorithm());
 
         Uri resourceUUID = packResource(resourceFile, blockDigest, contentType, record.getUUID());

@@ -21,7 +21,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.archive.WarcPacker;
+import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
@@ -41,7 +41,7 @@ public class EmagWarcConverterTest extends ExtendedTestCase {
     String catalogName = "asdasdfasdf";
     EmagWarcConverter converter;
     CumulusServer cumulusServer;
-    WarcPacker packer;
+    BitmagPreserver preserver;
     MetadataTransformer transformer;
     
     @BeforeMethod
@@ -51,9 +51,9 @@ public class EmagWarcConverterTest extends ExtendedTestCase {
         contentFile = TestFileUtils.createFileWithContent("This is the random content: " + UUID.randomUUID().toString());
         
         cumulusServer = mock(CumulusServer.class);
-        packer = mock(WarcPacker.class);
+        preserver = mock(BitmagPreserver.class);
         transformer = mock(MetadataTransformer.class);
-        converter = new EmagWarcConverter(conf, cumulusServer, catalogName, packer, transformer);
+        converter = new EmagWarcConverter(conf, cumulusServer, catalogName, preserver, transformer);
     }
     
     @AfterClass
@@ -83,13 +83,12 @@ public class EmagWarcConverterTest extends ExtendedTestCase {
         verify(transformer).validate(any(InputStream.class));
         verifyNoMoreInteractions(transformer);
         
-        verify(packer).packRecord(eq(record), any(File.class));
-        verifyNoMoreInteractions(packer);
+        verify(preserver).packRecordWithNonAssetResource(eq(record), any(File.class), any(File.class));
+        verifyNoMoreInteractions(preserver);
         
         verifyZeroInteractions(cumulusServer);
     }
     
-
     @Test(expectedExceptions = IllegalStateException.class)
     public void testHandleRecordFailure() throws IOException {
         addDescription("Test the ");

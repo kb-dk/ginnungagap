@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import dk.kb.ginnungagap.archive.WarcPacker;
+import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
@@ -21,22 +21,22 @@ public class EmagWarcConverter extends EmagConverter {
 
     /** The metadata transformer.*/
     protected final MetadataTransformer transformer;
-    /** The warc packer, which also handles the upload. */
-    protected final WarcPacker packer;
+    /** The preserver and WARC packer of data.*/
+    protected final BitmagPreserver preserver;
 
     /**
      * Constructor.
      * @param conf The configuration.
      * @param cumulusServer The Cumulus server.
      * @param catalogName The name of the catalog for the record.
-     * @param packer The WARC packer for packaging and preservation. 
+     * @param preserver The preserver and WARC packer of data. 
      * @param transformer The transformer of the metadata.
      */
-    public EmagWarcConverter(Configuration conf, CumulusServer cumulusServer, String catalogName, WarcPacker packer, 
+    public EmagWarcConverter(Configuration conf, CumulusServer cumulusServer, String catalogName, BitmagPreserver preserver, 
             MetadataTransformer transformer) {
         super(conf, cumulusServer, catalogName);
         this.transformer = transformer;
-        this.packer = packer;
+        this.preserver = preserver;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EmagWarcConverter extends EmagConverter {
             record.validateRequiredFields(conf.getTransformationConf().getRequiredFields());
 
             File metadataFile = transformAndValidateMetadata(record);
-            packer.packRecord(record, metadataFile);
+            preserver.packRecordWithNonAssetResource(record, contentFile, metadataFile);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot package ", e);
         }

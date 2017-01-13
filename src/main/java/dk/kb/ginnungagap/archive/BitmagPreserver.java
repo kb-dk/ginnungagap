@@ -60,8 +60,24 @@ public class BitmagPreserver {
     public void packRecord(CumulusRecord record, File metadataFile) {
         String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
         WarcPacker wp = getWarcPacker(collectionId);
-        wp.packRecord(record, metadataFile);
+        File resourceFile = record.getFile();
+        wp.packRecord(record, resourceFile, metadataFile);
         checkConditions();
+    }
+    
+    /**
+     * Pack a record with a specific resource-file along with its transformed metadata.
+     * This is especially thought for the conversion.
+     * @param record The cumulus record to preserve.
+     * @param resourceFile The resource file, when not using the Cumulus-record asset file.
+     * @param metadataFile The transformed metadata for the record, which should be preserved.
+     */
+    public void packRecordWithNonAssetResource(CumulusRecord record, File resourceFile, File metadataFile) {
+        String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
+        WarcPacker wp = getWarcPacker(collectionId);
+        wp.packRecord(record, resourceFile, metadataFile);
+        checkConditions();
+        
     }
     
     /**
