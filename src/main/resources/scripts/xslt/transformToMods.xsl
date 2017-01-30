@@ -175,6 +175,13 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
+    
+    <xsl:for-each select="field[@name='Copyright Notits']/value">
+      <xsl:element name="mods:accessCondition">
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:call-template name="cumulus_get_value" />
+      </xsl:element>
+    </xsl:for-each>
   </xsl:template>
   <!-- END accessCondition -->
 
@@ -201,6 +208,7 @@
 
   <!-- START genre -->
   <xsl:template name="mods_genre">
+    <!-- KB Bevarings profil -->
     <xsl:choose>
       <xsl:when test="field[@name='’KB Bevarings Profil’']">
         <xsl:element name="mods:genre">
@@ -220,11 +228,20 @@
       </xsl:otherwise>
     </xsl:choose>
     
+    <!-- Genre -->
     <xsl:for-each select="field[@name='Genre']/value">
       <xsl:element name="mods:genre">
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
+    
+    <!-- Categories -->
+    <xsl:for-each select="field[@name='Genre']/value">
+      <xsl:element name="mods:genre">
+        <xsl:value-of select="." />
+      </xsl:element>
+    </xsl:for-each>
+    
   </xsl:template>
   <!-- END genre -->
   
@@ -1339,6 +1356,16 @@
       </xsl:element>
     </xsl:for-each>
     
+    <!-- Intern note -->
+    <xsl:for-each select="field[@name='Intern note']/value">
+      <xsl:element name="mods:note">
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:attribute name="type">
+          <xsl:value-of select="'Intern note'" />
+        </xsl:attribute>
+        <xsl:call-template name="cumulus_get_value" />
+      </xsl:element>
+    </xsl:for-each>
   </xsl:template>
   <!-- END note -->
   

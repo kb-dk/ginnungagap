@@ -38,6 +38,12 @@
             <xsl:value-of select="field[@name='BEXT OriginatorReference']/value" />
           </xsl:element>
         </xsl:if>
+        <!-- Optional BEXT field 'OriginatorDate' -->
+        <xsl:if test="field[@name='BEXT OriginationDate']">
+          <xsl:element name="bext:OriginationDate">
+            <xsl:value-of select="field[@name='BEXT OriginationDate']/value" />
+          </xsl:element>
+        </xsl:if>
         <!-- Optional BEXT field 'Version' -->
         <xsl:if test="field[@name='BEXT Version']">
           <xsl:element name="bext:Version">

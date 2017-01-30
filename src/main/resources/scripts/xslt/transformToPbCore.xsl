@@ -137,10 +137,6 @@
       <xsl:element name="pbcore:instantiationIdentifier">
         <xsl:value-of select="field[@name='pbcoreIdentifier']/value" />
       </xsl:element>
-      <!-- instatiation location -->
-      <xsl:element name="pbcore:instantiationIdentifier">
-        <xsl:value-of select="field[@name='pbcoreIdentifier']/value" />
-      </xsl:element>
       <!-- instantiation date -->
       <xsl:if test="field[@name='instantiationDate']">
         <xsl:element name="pbcore:instantiationDate">
@@ -179,9 +175,19 @@
       </xsl:if>
       <!-- instantiation essence track -->
       <xsl:element name="pbcore:instantiationEssenceTrack">
+        <xsl:if test="field[@name='essenceTrackStandard']">
+          <xsl:element name="pbcore:essenceTrackStandard">
+            <xsl:value-of select="field[@name='essenceTrackStandard']/value" />
+          </xsl:element>
+        </xsl:if>
         <xsl:if test="field[@name='essenceTrackDataRate']">
           <xsl:element name="pbcore:essenceTrackDataRate">
             <xsl:value-of select="field[@name='essenceTrackDataRate']/value" />
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="field[@name='essenceTrackSamplingRate']">
+          <xsl:element name="pbcore:essenceTrackSamplingRate">
+            <xsl:value-of select="field[@name='essenceTrackSamplingRate']/value" />
           </xsl:element>
         </xsl:if>
         <xsl:if test="field[@name='essenceTrackBitDepth']">
@@ -192,16 +198,6 @@
         <xsl:if test="field[@name='essenceTrackDuration']">
           <xsl:element name="pbcore:essenceTrackDuration">
             <xsl:value-of select="field[@name='essenceTrackDuration']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='essenceTrackSamplingRate']">
-          <xsl:element name="pbcore:essenceTrackSamplingRate">
-            <xsl:value-of select="field[@name='essenceTrackSamplingRate']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='essenceTrackStandard']">
-          <xsl:element name="pbcore:essenceTrackStandard">
-            <xsl:value-of select="field[@name='essenceTrackStandard']/value" />
           </xsl:element>
         </xsl:if>
       </xsl:element>
