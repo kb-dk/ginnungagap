@@ -339,6 +339,13 @@
                     </xsl:element>
                   </xsl:when>
                 </xsl:choose>
+
+                <!-- exposureProgram NDD id="8.4.4.1.3" -->
+                <xsl:if test="field[@name='Exposure Program']">
+                  <xsl:element name="mix:exposureProgram">
+                    <xsl:value-of select="java:dk.kb.metadata.selector.MixEnumeratorSelector.exposureProgram(field[@name='Exposure Program']/value)" />
+                  </xsl:element>
+                </xsl:if>
                 
                 <!-- iso speed ratings NDD id="8.4.4.1.5" -->
                 <xsl:for-each select="field[@name='@ISO Speed']/value">
@@ -414,6 +421,18 @@
                   </xsl:when>
                 </xsl:choose>
                 
+                <!-- exposureBias NDD id="8.4.4.1.11" -->
+                <xsl:if test="java:dk.kb.metadata.selector.MixEnumeratorSelector.validExposureBias(field[@name='Exposure Bias']/value)">
+                  <xsl:element name="mix:exposureBiasValue">
+                      <xsl:element name="mix:numerator">
+                        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveNominatorAsInteger(field[@name='Exposure Bias']/value)" />
+                      </xsl:element>
+                      <xsl:element name="mix:denominator">
+                        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveDenominatorAsInteger(field[@name='Exposure Bias']/value)" />
+                      </xsl:element>
+                  </xsl:element>
+                </xsl:if>
+                
                 <!-- meteringMode NDD id="8.4.4.1.14" -->
                 <xsl:if test="java:dk.kb.metadata.selector.MixEnumeratorSelector.validMeteringMode(field[@name='Meter Mode']/value)">
                   <xsl:element name="mix:meteringMode">
@@ -421,6 +440,13 @@
                   </xsl:element>
                 </xsl:if>
                 
+                <!-- lightSource NDD id="8.4.4.1.15" -->
+                <xsl:if test="field[@name='Light Source']">
+                  <xsl:element name="mix:lightSource">
+                    <xsl:value-of select="java:dk.kb.metadata.selector.MixEnumeratorSelector.lightSource(field[@name='Light Source']/value)" />
+                  </xsl:element>
+                </xsl:if>
+
                 <!-- focalLenght NDD id="8.4.4.1.17" -->
                 <xsl:if test="field[@name='Focal Length [mm]']">
                   <xsl:element name="mix:focalLength">

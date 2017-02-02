@@ -54,6 +54,8 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         
         addStep("Validate the METS", "");
         transformer.validate(new FileInputStream(metadataFile));
+        
+        System.out.println(out.toString());
     }
 
     @Test

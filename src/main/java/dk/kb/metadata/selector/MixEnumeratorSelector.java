@@ -2,6 +2,7 @@ package dk.kb.metadata.selector;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import dk.kb.metadata.utils.ExceptionUtils;
@@ -11,13 +12,17 @@ import dk.kb.metadata.utils.ExceptionUtils;
  * corresponding in the enumerator.
  * Handles the selection of different enumerators used for MIX.
  * 
- * The different selectors will through 'IllegalStateException' if the given value 
- * cannot be found within their enumerator.
+ * The different selectors will throw 'IllegalStateException' if the given value cannot be found within 
+ * their enumerator.
  */
 public final class MixEnumeratorSelector {
     /** Private constructor for this Utility class.*/
     private MixEnumeratorSelector() {}
-
+    
+    // --------------------------
+    // EXIF VERSION
+    // --------------------------
+    
     /** The collection of possible EXIF versions accepted by the MIX standard.*/
     public static Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
 
@@ -41,6 +46,9 @@ public final class MixEnumeratorSelector {
         throw res;
     }
 
+    // --------------------------
+    // ORIENTATION
+    // --------------------------
     /*
     // Taken from http://www.impulseadventure.com/photo/exif-orientation.html
     EXIF Orientation Value  Row #0 is:  Column #0 is:                   MIX
@@ -113,6 +121,10 @@ public final class MixEnumeratorSelector {
         ExceptionUtils.insertException(res);
         throw res;
     }
+    
+    // --------------------------
+    // METERING MODE
+    // --------------------------
 
     /** Metering mode value: Average */
     private static String METERING_MODE_AVERAGE = "Average";
@@ -186,6 +198,10 @@ public final class MixEnumeratorSelector {
         ExceptionUtils.insertException(res);
         throw res;
     }
+    
+    // --------------------------
+    // COLOR SPACE
+    // --------------------------
 
     /**
      * Removes the potential suffix of the colorSpace value.
@@ -198,5 +214,118 @@ public final class MixEnumeratorSelector {
             return colorSpace.substring(0,  colorSpace.indexOf(" "));
         }
         return colorSpace;
+    }
+    
+    // --------------------------
+    // EXPOSURE PROGRAM
+    // --------------------------
+
+    /** Exposure program value for not defined.*/
+    public static final String EXPOSURE_PROGRAM_NOT_DEFINED = "Not defined";
+    /** Exposure program value for manual.*/
+    public static final String EXPOSURE_PROGRAM_MANUEL = "Manual";
+    /** Exposure program value for normal program.*/
+    public static final String EXPOSURE_PROGRAM_NORMAL_PROGRAM = "Normal program";
+    /** Exposure program value for aperture priority.*/
+    public static final String EXPOSURE_PROGRAM_APERTURE_PRIORITY = "Aperture priority";
+    /** Exposure program value for shutter priority.*/
+    public static final String EXPOSURE_PROGRAM_SHUTTER_PRIORITY = "Shutter priority";
+    /** Exposure program value for creative program (biased toward depth of field).*/
+    public static final String EXPOSURE_PROGRAM_CREATIVE_PROGRAM = "Creative program (biased toward depth of field)";
+    /** Exposure program value for action program (biased toward fast shutter speed).*/
+    public static final String EXPOSURE_PROGRAM_ACTION_PROGRAM = "Action program (biased toward fast shutter speed)";
+    /** Exposure program value for portrait mode (for closeup photos with the background out of focus).*/
+    public static final String EXPOSURE_PROGRAM_PORTRAIT_MODE = 
+            "Portrait mode (for closeup photos with the background out of focus)";
+    /** Exposure program value for landscape mode (for landscape photos with the background in focus).*/
+    public static final String EXPOSURE_PROGRAM_LANDSCAPE_MODE = 
+            "Landscape mode (for landscape photos with the background in focus)";
+    
+    /** Collection of all possible exposure values.*/
+    public static final List<String> EXPOSURE_PROGRAMS = Arrays.asList(EXPOSURE_PROGRAM_NOT_DEFINED, 
+            EXPOSURE_PROGRAM_MANUEL,EXPOSURE_PROGRAM_NORMAL_PROGRAM, EXPOSURE_PROGRAM_APERTURE_PRIORITY, 
+            EXPOSURE_PROGRAM_SHUTTER_PRIORITY,EXPOSURE_PROGRAM_CREATIVE_PROGRAM, EXPOSURE_PROGRAM_ACTION_PROGRAM, 
+            EXPOSURE_PROGRAM_PORTRAIT_MODE, EXPOSURE_PROGRAM_LANDSCAPE_MODE);
+    
+    /**
+     * Converts the Cumulus field for exposure program to a valid value for the MIX field.
+     * If it is an integer, then it will return the value at the given index.
+     * Will throw an exception, if a valid value for the MIX field cannot be found.
+     * @param exposureProgram The exposure program value from the Cumulus field.
+     * @return The valid exposure program value for the MIX field.
+     */
+    public static String exposureProgram(String exposureProgram) {
+        for(String validValue : EXPOSURE_PROGRAMS) {
+            if(validValue.startsWith(exposureProgram)) {
+                return validValue;
+            }
+        }
+        
+        try {
+            int i = Integer.parseInt(exposureProgram);
+            return EXPOSURE_PROGRAMS.get(i);
+        } catch (NumberFormatException e) {
+            ExceptionUtils.insertException(e);
+        }
+        
+        IllegalStateException res = new IllegalStateException("Could not convert the exposure program '" 
+                + exposureProgram + "' into any of the legal values: " + EXPOSURE_PROGRAMS);
+        ExceptionUtils.insertException(res);
+        throw res;
+    }
+    
+    
+    // --------------------------
+    // LIGHT SOURCE
+    // We have only implemented the values at both Cumulus and the MIX field. 
+    // TODO: add the rest of the possible values
+    // --------------------------
+
+    /** Light source value for daylight.*/
+    public static final String LIGHT_SOURCE_DAYLIGHT = "Daylight";
+    /** Light source value for flash.*/
+    public static final String LIGHT_SOURCE_FLASH = "Flash";
+    /** Light source value for other light source.*/
+    public static final String LIGHT_SOURCE_OTHER_LIGHT_SOURCE = "other light source";
+    
+    /** Collection of all possible light sources.*/
+    public static final List<String> LIGHT_SOURCES = Arrays.asList(LIGHT_SOURCE_DAYLIGHT, LIGHT_SOURCE_FLASH,
+            LIGHT_SOURCE_OTHER_LIGHT_SOURCE);
+    
+    /**
+     * Converts the Cumulus field for light source to a valid value for the MIX field.
+     * Only the two directly translatable values between the Cumulus enumerator and the MIX enumerator
+     * is implemented.
+     * Any other value from the Cumulus enumerator will be returned as 'other light source'.
+     * @param lightSource The light source value from the Cumulus field.
+     * @return The valid light source value for the MIX field.
+     */
+    public static String lightSource(String lightSource) {
+        for(String validValue : LIGHT_SOURCES) {
+            if(validValue.equalsIgnoreCase(lightSource)) {
+                return validValue;
+            }
+        }
+        
+        return LIGHT_SOURCE_OTHER_LIGHT_SOURCE;
+    }
+    
+    // --------------------------
+    // EXPOSURE BIAS
+    // --------------------------
+
+    /**
+     * Figures out whether the exposure bias field is valid.
+     * E.g. Whether it is null, the empty String or '0' (meaning no bias).
+     * 
+     * @param exposureBias The exposure bias field value.
+     * @return Whether it is valid or not.
+     */
+    public static Boolean validExposureBias(String exposureBias) {
+        if(exposureBias == null || exposureBias.isEmpty() || exposureBias.equalsIgnoreCase("0")) {
+            return false;
+        }
+
+        return true;
     }
 }

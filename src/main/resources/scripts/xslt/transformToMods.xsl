@@ -267,7 +267,7 @@
       </xsl:element>
     </xsl:for-each>
 
-    <!-- Accessionnr eller Accessionnummer -->
+    <!-- Accessionsnr eller Accessionsnummer -->
     <xsl:choose>
       <xsl:when test="field[@name='Accessionsnr']">
         <xsl:element name="mods:identifier">
@@ -2043,17 +2043,19 @@
     </xsl:for-each>
     
     <!-- Keywords -->
-    <xsl:for-each select="field[@name='Keywords']/value">
+    <xsl:if test="field[@name='Keywords']">
       <xsl:element name="mods:subject">
-        <xsl:element name="mods:topic">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:element>
+        <xsl:for-each select="field[@name='Keywords']/value">
+          <xsl:element name="mods:topic">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
+        </xsl:for-each>
         <xsl:element name="mods:genre">
           <xsl:value-of select="'Keywords'" />
         </xsl:element>
       </xsl:element>
-    </xsl:for-each>
+    </xsl:if>
     
     <!-- Location || Lokalitet 
          with both 'Location' and 'Lokalitet' as genre.-->

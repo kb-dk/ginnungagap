@@ -26,4 +26,10 @@ public class SillyTest extends ExtendedTestCase {
         String s = (String) null;
         assertNull(s);
     }
+    
+    @Test
+    public void testRetrievalOfVersion() {
+        String version = this.getClass().getPackage().getImplementationVersion();
+        System.err.println(version);
+    }
 }

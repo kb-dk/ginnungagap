@@ -454,4 +454,31 @@
  <field name="preservationLevelValue_Confidentiality">
   <value>confidentialityLow</value>
  </field>
+ <field name="Light Source">
+  <value>Flash</value>
+ </field>
+ <field name="Light Type (nm)">
+  <value>UV</value>
+ </field>
+ <field name="Lighting">
+  <value>Reflected</value>
+ </field>
+ <field name="Flash Mode">
+  <value>Flash not used, No strobe return detection function, Compulsory flash suppression, No flash function, No red-eye reduction mode</value>
+ </field>
+ <field name="White Balance Mode">
+  <value>As Shot</value>
+ </field>
+ <field name="Lens Info">
+  <value>EF50mm f/2.5 Compact Macro</value>
+ </field>
+ <field name="Exposure Bias">
+  <value>-5.0</value>
+ </field>
+ <field name="Exposure Program">
+  <value>3</value>
+ </field>
+ <field name="Camera Model">
+  <value>NONE</value>
+ </field>
 </record>
