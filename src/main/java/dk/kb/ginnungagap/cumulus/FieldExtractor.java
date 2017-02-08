@@ -149,8 +149,7 @@ public class FieldExtractor {
             return new TableField(fd, getFieldTypeName(fd.getFieldType()),  item.getTableValue(fd.getFieldUID()));
         }
 
-        log.warn("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
-        return null;
+        throw new IllegalStateException("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
     }
 
     /**

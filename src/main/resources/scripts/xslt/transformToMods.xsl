@@ -236,7 +236,7 @@
     </xsl:for-each>
     
     <!-- Categories -->
-    <xsl:for-each select="field[@name='Genre']/value">
+    <xsl:for-each select="field[@name='Categories']/value">
       <xsl:element name="mods:genre">
         <xsl:value-of select="." />
       </xsl:element>
