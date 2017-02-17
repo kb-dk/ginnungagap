@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.jwat.common.ContentType;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
@@ -49,15 +51,37 @@ public class WarcPacker {
 
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
-            // TODO make warc info?
-            Digest digestor = new Digest(conf.getAlgorithm());
-            String warcInfoPayload = YggdrasilWarcConstants.getWarcInfoPayload();
-            byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes(StandardCharsets.UTF_8);
-            warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
-                    digestor.getDigestOfBytes(warcInfoPayloadBytes));
+            writeWarcinfo();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
         }
+    }
+    
+    /**
+     * Write the warc info of the WARC file.
+     * This should be done as the first thing after instantiating a new WARC file. 
+     * @throws YggdrasilException If it fails to write the warc info.
+     */
+    protected void writeWarcinfo() throws YggdrasilException {
+        Digest digestor = new Digest(bitmagConf.getAlgorithm());
+        StringBuffer payload = new StringBuffer();
+        // TODO: write this in a nicer way.
+        payload.append("description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringService.html\n");
+        payload.append("conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n");
+        payload.append("revision: 1.0.0\n");
+
+        for(Map.Entry<String, String> property : System.getenv().entrySet()) {
+             payload.append(property.getKey() + ": " + property.getValue() + "\n");
+            
+        }
+        String warcInfoPayload = YggdrasilWarcConstants.getWarcInfoPayload();
+        byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes(StandardCharsets.UTF_8);
+        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                digestor.getDigestOfBytes(warcInfoPayloadBytes));
+
+        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                digestor.getDigestOfBytes(warcInfoPayloadBytes));
+        
     }
 
     /**
@@ -140,10 +164,11 @@ public class WarcPacker {
      * Reports back to Cumulus, that the preservation was successful for all records.
      * Should only be called after the warc packer has been closed and send to the archive.
      */
-    public void reportSucces() {
+    public void reportSucces(WarcDigest checksumDigest) {
         for(CumulusRecord r : packagedRecords) {
-            r.setPreservationResourcePackage(warcWrapper.getWarcFileId());
-            r.setPreservationMetadataPackage(warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.PreservationFieldNames.METADATAPACKAGEID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.PreservationFieldNames.RESOURCEPACKAGEID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
             r.setPreservationFinished();
         }
     }

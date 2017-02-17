@@ -322,37 +322,22 @@ public class CumulusRecord {
             log.error("Could not set preservation complete", e);
         }
     }
-
+    
     /**
-     * Sets the value for the preservation package for the resource.
-     * @param filename The name of the file containing the resource (content file).
+     * Set the string value of a given Cumulus field.
+     * @param fieldName The name of the field.
+     * @param value The new value of the field.
      */
-    public void setPreservationResourcePackage(String filename) {
+    public void setStringValueInField(String fieldName, String value) {
         try {
-            GUID representationPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
-            item.setStringValue(representationPackageIdGuid, filename);
+            GUID metadataPackageIdGuid = fe.getFieldGUID(fieldName);
+            item.setStringValue(metadataPackageIdGuid, value);
             item.save();
         } catch (Exception e) {
-            String errMsg = "Could not set the representation package id.";
+            String errMsg = "Could not set the value '" + value + "' for the field '" + fieldName + "'";
             log.error(errMsg, e);
             throw new IllegalStateException(errMsg, e);
-        }
-    }
-
-    /**
-     * Sets the value for the preservation package for the metadata.
-     * @param filename The name of the file containing the metadata.
-     */
-    public void setPreservationMetadataPackage(String filename) {
-        try {
-            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATAPACKAGEID);
-            item.setStringValue(metadataPackageIdGuid, filename);
-            item.save();
-        } catch (Exception e) {
-            String errMsg = "Could not set the package id for the metadata.";
-            log.error(errMsg, e);
-            throw new IllegalStateException(errMsg, e);
-        }
+        }        
     }
 
     /**

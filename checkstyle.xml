@@ -25,10 +25,6 @@
   <property name="charset" value="UTF-8"/>
  <!-- <property name="fileExtensions" value="java, xml, properties"/> -->
 
-  <module name="JavadocPackage">
-    <property name="severity" value="info"/>
-  </module>
-
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
 

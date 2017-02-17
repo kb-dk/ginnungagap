@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
@@ -111,9 +113,11 @@ public class BitmagPreserver {
         WarcPacker wp = warcPackerForCollection.get(collectionId);
         wp.close();
         
+        WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
+        
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
         if(uploadSucces) {
-            wp.reportSucces();
+            wp.reportSucces(checksumDigest);
         } else {
             log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "
                     + "Keeping it in temp dir: '" + bitmagConf.getTempDir().getAbsolutePath() + "'");
