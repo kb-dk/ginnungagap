@@ -32,7 +32,10 @@ public class ImportPrevalidator {
         this.notFoundArcFiles = new File(conf.getPreValidationOutputDir(), filename + SUFFIX_NOT_FOUND_FILE);
     }
     
-    
+
+//    public void handleArchiveIndexFile(File archiveFile) {
+//        
+//    }
     
 //    public void validateRecord(String catalogName, String guid, String checksum, String length) {
 //        CumulusQuery query = CumulusQuery.getQueryForSpecificUUID(catalogName, guid);

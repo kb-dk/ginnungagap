@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+     PREMIS for agent kbDkCumulusBevaringsService, som senere skal opdateres med mere MODS data, KB genereret UUID og link til registrering på id.loc.gov 
+ -->
+<premis:agent xmlns:premis="http://www.loc.gov/premis/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd">
+  <premis:agentIdentifier>
+    <premis:agentIdentifierType>Local</premis:agentIdentifierType>
+    <premis:agentIdentifierValue>kbDkCumulusBevaringsService</premis:agentIdentifierValue>
+  </premis:agentIdentifier>
+  <premis:agentName>The preservation service between the Cumulus repository and the BitRepository</premis:agentName>
+  <premis:agentType>application</premis:agentType>
+  <premis:agentNote>This is the intermediary application between the administration repository, Cumulus, and the preservation repository, the BitRepository. The Cumulus Bevarings Service deals with the transformation of metadata from Cumulus, packaging in the WARC format, ingesting it into the BitRepository, and importing it back from the BitRepository.</premis:agentNote>
+  <premis:agentExtension>
+    <mods:mods version="3.5" schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-5.xsd">
+      <mods:identifier type="uri">http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.xml</mods:identifier>
+    </mods:mods>
+  </premis:agentExtension>
+</premis:agent>

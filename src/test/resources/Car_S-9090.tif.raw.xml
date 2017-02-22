@@ -481,4 +481,13 @@
  <field name="Camera Model">
   <value>NONE</value>
  </field>
+ <field name="Aperture">
+  <value>3.14159265359</value>
+ </field>
+ <field name="Max Aperture (String)">
+  <value>20/20</value>
+ </field>
+ <field name="relatedObjectIdentifierValue_intellectualEntity">
+  <value>relatedObjectIdentifierValue_intellectualEntity_PLACE_HOLDER</value>
+ </field>
 </record>

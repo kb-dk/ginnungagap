@@ -66,7 +66,7 @@
       <!-- mods:location -->
       <xsl:call-template name="mods_location" />
       <!-- mods:name -->
-<!--       <xsl:call-template name="mods_name" /> -->
+      <xsl:call-template name="mods_name" />
       <!-- mods:note -->
       <xsl:call-template name="mods_note" />
       <!-- mods:originInfo -->
@@ -238,6 +238,9 @@
     <!-- Categories -->
     <xsl:for-each select="field[@name='Categories']/value">
       <xsl:element name="mods:genre">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'Categories'" />
+        </xsl:attribute>
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
@@ -1794,6 +1797,14 @@
       <!-- record origin -->
       <xsl:for-each select="field[@name='Aleph ID']/value">
         <xsl:element name="mods:recordOrigin">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:value-of select="." />
+        </xsl:element>
+      </xsl:for-each>
+      
+      <!-- record info note: page orientation -->
+      <xsl:for-each select="field[@name='Pageorientation']/value">
+        <xsl:element name="mods:recordInfoNote">
           <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:value-of select="." />
         </xsl:element>

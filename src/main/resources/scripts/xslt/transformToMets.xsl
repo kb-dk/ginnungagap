@@ -9,7 +9,6 @@
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:premis="http://www.loc.gov/premis/v3"
     xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html"
-    xmlns:tracks="http://id.kb.dk/tracks.html"
     
     extension-element-prefixes="java">
 
@@ -24,7 +23,6 @@
   
   <xsl:variable name="MODS-ID" select="'Mods'" />
   <xsl:variable name="PBCORE-DESCRIPTION-ID" select="'PBCoreDescription'" />
-  <xsl:variable name="TRACKS-ID" select="'Tracks'" />
   <xsl:variable name="MODS-RIGHTS-ID" select="'ModsRights'" />
   <xsl:variable name="PREMIS-ID" select="'Premis'" />
   <xsl:variable name="PBCORE-INSTANTIATION-ID" select="'PBCoreInstantiation'" />
@@ -75,7 +73,7 @@
         
         <xsl:element name="mets:agent">
           <xsl:attribute name="ID">
-            <xsl:value-of select="java:dk.kb.metadata.Constants.getAPIAgent()" />
+            <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgent()" />
           </xsl:attribute>
           <xsl:attribute name="ROLE"> 
             <xsl:value-of select="'CREATOR'" />
@@ -87,10 +85,10 @@
             <xsl:value-of select="'API'" />
           </xsl:attribute>
           <xsl:element name="mets:name">
-            <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getMdGenAgentValue()" />
+            <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentValue()" />
           </xsl:element>
           <xsl:element name="mets:note">
-            <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getMdGenAgentType()" />
+            <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentType()" />
           </xsl:element>
         </xsl:element>
         
@@ -163,29 +161,6 @@
             <!-- Handle the different cases of METS documents. -->
             <xsl:element name="mets:xmlData">
               <xsl:call-template name="pbcore_description" />      
-            </xsl:element>
-          </xsl:element>
-        </xsl:element>
-      </xsl:if>
-      <!-- Add Tracks descriptive metadata, if the required metadata fields are present -->
-      <xsl:if test="field[@name='Tracks']/table">
-        <xsl:element name="mets:dmdSec">
-          <xsl:attribute name="CREATED">
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-          </xsl:attribute>    
-          <xsl:attribute name="ID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($TRACKS-ID)" />
-          </xsl:attribute>
-          <xsl:element name="mets:mdWrap">
-            <xsl:attribute name="MDTYPE">
-              <xsl:value-of select="'OTHER'" />
-            </xsl:attribute>
-            <xsl:attribute name="OTHERMDTYPE">
-              <xsl:value-of select="'TRACKS'" />
-            </xsl:attribute>
-            <!-- Handle the different cases of METS documents. -->
-            <xsl:element name="mets:xmlData">
-              <xsl:call-template name="tracks" />      
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -332,7 +307,7 @@
         
         <xsl:element name="mets:div">
           <xsl:attribute name="DMDID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID, ',', $TRACKS-ID))" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
           </xsl:attribute>
           <xsl:attribute name="ADMID">
             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID))" />

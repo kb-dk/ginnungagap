@@ -17,18 +17,16 @@
       <xsl:element name="mix:BasicDigitalObjectInformation">
       
         <!-- mix/BasicDigitalObjectInformation/objectIdentifier NDD id="6.1" -->
-        <xsl:if test="field[@name='objectIdentifierValue']">
-          <xsl:element name="mix:ObjectIdentifier">
-            <!-- objectIdentifierType NDD id="6.1.1" -->
-            <xsl:element name="mix:objectIdentifierType">
-              <xsl:value-of select="'UUID'" />
-            </xsl:element>
-            <!-- objectIdentifierValue NDD id="6.1.2" -->
-            <xsl:element name="mix:objectIdentifierValue">
-              <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
-            </xsl:element>
+        <xsl:element name="mix:ObjectIdentifier">
+          <!-- objectIdentifierType NDD id="6.1.1" -->
+          <xsl:element name="mix:objectIdentifierType">
+            <xsl:value-of select="'UUID'" />
           </xsl:element>
-        </xsl:if>
+          <!-- objectIdentifierValue NDD id="6.1.2" -->
+          <xsl:element name="mix:objectIdentifierValue">
+            <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
+          </xsl:element>
+        </xsl:element>
         
         <!-- mix/BasicDigitalObjectInformation/fileSize NDD id="6.2" -->
         <xsl:choose>
@@ -207,10 +205,6 @@
           <!-- dateTimeCreated NDD id="8.2.1" -->
           <xsl:element name="mix:dateTimeCreated">
             <xsl:choose>
-              <xsl:when test="field[@name='Captured Date']">
-                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-                        'EEE MMM dd HH:mm:ss z yyyy', field[@name='Captured Date']/value)" />
-              </xsl:when>
               <xsl:when test="field[@name='Date Time Digitized']">
                 <xsl:value-of select="field[@name='Date Time Digitized']/value" />
               </xsl:when>
@@ -244,10 +238,17 @@
 
         <!-- Start mix/ImageCaptureMetadata/ScannerCapture NDD id="8.3" -->
         <xsl:element name="mix:ScannerCapture">
-          <!-- ScannerModel NDD id="8.2" -->
+          <!-- ScannerManifacturer NDD id="8.3.1" -->
+          <xsl:if test="field[@name='Scanner Manifacturer']">
+            <xsl:element name="mix:scannerManufacturer">
+              <xsl:value-of select="field[@name='Scanner Manifacturer']/value" />
+            </xsl:element>
+          </xsl:if>
+          
+          <!-- ScannerModel NDD id="8.3.2" -->
           <xsl:if test="field[@name='Scanner Model']">
             <xsl:element name="mix:ScannerModel">
-              <!-- scannerModelName NDD id="8.2.1" -->
+              <!-- scannerModelName NDD id="8.3.2.1" -->
                 <xsl:element name="mix:scannerModelName">
                   <xsl:value-of select="field[@name='Scanner Model']/value" />
                 </xsl:element>
@@ -269,20 +270,22 @@
           </xsl:element>
           
           <!-- ScanningSystemSoftware NDD id="8.3.5" -->
-          <xsl:element name="mix:ScanningSystemSoftware">
-            <xsl:for-each select="field[@name='creatingApplication']/value">
-              <!-- scanningeSoftwareName NDD id="8.3.5.1" -->
-              <xsl:element name="mix:scanningSoftwareName">
-                <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 0)" />
-              </xsl:element>
-              <!-- scanningSoftwareVersion NDD id="8.3.5.2" -->
-              <xsl:if test="java:dk.kb.metadata.utils.StringUtils.splitableOnComma(.)">
-                <xsl:element name="mix:scanningSoftwareVersionNo">
-                  <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 1)" />
+          <xsl:if test="field[@name='creatingApplication']">
+            <xsl:element name="mix:ScanningSystemSoftware">
+              <xsl:for-each select="field[@name='creatingApplication']/value">
+                <!-- scanningeSoftwareName NDD id="8.3.5.1" -->
+                <xsl:element name="mix:scanningSoftwareName">
+                  <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 0)" />
                 </xsl:element>
-              </xsl:if>
-            </xsl:for-each>
-          </xsl:element>
+                <!-- scanningSoftwareVersion NDD id="8.3.5.2" -->
+                <xsl:if test="java:dk.kb.metadata.utils.StringUtils.splitableOnComma(.)">
+                  <xsl:element name="mix:scanningSoftwareVersionNo">
+                    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 1)" />
+                  </xsl:element>
+                </xsl:if>
+              </xsl:for-each>
+            </xsl:element>
+          </xsl:if>
         </xsl:element>
         <!-- End mix/ImageCaptureMetadata/ScannerCapture -->
 
@@ -386,40 +389,16 @@
                 </xsl:if>
                 
                 <!-- Aperture NDD id="8.4.4.1.9" -->
-                <xsl:choose>
-                  <xsl:when test="field[@name='Max Aperture (String)']/value">
-                    <xsl:element name="mix:apertureValue">
-                      <xsl:choose>
-                        <xsl:when test="java:dk.kb.metadata.utils.StringUtils.splitableOnSlash(field[@name='Max Aperture (String)']/value)">
-                          <xsl:element name="mix:numerator">
-                            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnSlash(field[@name='Max Aperture (String)']/value, 0)" />
-                          </xsl:element>
-                          <xsl:element name="mix:denominator">
-                            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnSlash(field[@name='Max Aperture (String)']/value, 1)" />
-                          </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:element name="mix:numerator">
-                            <xsl:value-of select="field[@name='Max Aperture (String)']/value" />
-                          </xsl:element>
-                          <xsl:element name="mix:denominator">
-                            <xsl:value-of select="'1'" />
-                          </xsl:element>
-                        </xsl:otherwise>
-                      </xsl:choose>
+                <xsl:if test="field[@name='Aperture']/value">
+                  <xsl:element name="mix:apertureValue">
+                    <xsl:element name="mix:numerator">
+                      <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveNominatorAsInteger(field[@name='Aperture']/value)" />
                     </xsl:element>
-                  </xsl:when>
-                  <xsl:when test="field[@name='Aperture']/value">
-                    <xsl:element name="mix:apertureValue">
-                      <xsl:element name="mix:numerator">
-                        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveNominatorAsInteger(field[@name='Aperture']/value)" />
-                      </xsl:element>
-                      <xsl:element name="mix:denominator">
-                        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveDenominatorAsInteger(field[@name='Aperture']/value)" />
-                      </xsl:element>
+                    <xsl:element name="mix:denominator">
+                      <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveDenominatorAsInteger(field[@name='Aperture']/value)" />
                     </xsl:element>
-                  </xsl:when>
-                </xsl:choose>
+                  </xsl:element>
+                </xsl:if>
                 
                 <!-- exposureBias NDD id="8.4.4.1.11" -->
                 <xsl:if test="java:dk.kb.metadata.selector.MixEnumeratorSelector.validExposureBias(field[@name='Exposure Bias']/value)">
@@ -430,6 +409,30 @@
                       <xsl:element name="mix:denominator">
                         <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.retrieveDenominatorAsInteger(field[@name='Exposure Bias']/value)" />
                       </xsl:element>
+                  </xsl:element>
+                </xsl:if>
+                
+                <!-- maxApertureValue NND id="8.4.4.1.12" -->
+                <xsl:if test="field[@name='Max Aperture (String)']/value">
+                  <xsl:element name="mix:maxApertureValue">
+                    <xsl:choose>
+                      <xsl:when test="java:dk.kb.metadata.utils.StringUtils.splitableOnSlash(field[@name='Max Aperture (String)']/value)">
+                        <xsl:element name="mix:numerator">
+                          <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnSlash(field[@name='Max Aperture (String)']/value, 0)" />
+                        </xsl:element>
+                        <xsl:element name="mix:denominator">
+                          <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnSlash(field[@name='Max Aperture (String)']/value, 1)" />
+                        </xsl:element>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:element name="mix:numerator">
+                          <xsl:value-of select="field[@name='Max Aperture (String)']/value" />
+                        </xsl:element>
+                        <xsl:element name="mix:denominator">
+                          <xsl:value-of select="'1'" />
+                        </xsl:element>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </xsl:element>
                 </xsl:if>
                 

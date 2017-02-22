@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import dk.kb.metadata.Constants;
 import dk.kb.metadata.utils.ExceptionUtils;
 import dk.kb.metadata.utils.StringUtils;
 
@@ -18,10 +17,8 @@ public final class AgentSelector {
 
     /** The KB agent.*/
     private static final String KB_AGENT = "kbDk";
-    /** The ingest agent.*/
-    private static final String KB_INGEST = "kbDkDomsBmIngest";
     /** The metadata generator.*/
-    private static final String KB_METADATA_GENERATOR = "kbDkMdGen";
+    private static final String KB_AGENT_CBS = "kbDkCumulusBevaringsService";
 
     // The different names for the agents for the departments.
     /** Deprecated department abbr. */
@@ -59,8 +56,7 @@ public final class AgentSelector {
     /** The list of all possible agent names currently defined.*/
     public static final Set<String> AGENT_NAMES = new HashSet<String>(Arrays.asList(
             KB_AGENT,
-            KB_INGEST,
-            KB_METADATA_GENERATOR,
+            KB_AGENT_CBS,
             KB_DEP_NSA,
             KB_DEP_NSA1,
             KB_DEP_NSA2,
@@ -99,17 +95,10 @@ public final class AgentSelector {
     }
 
     /**
-     * @return The id for the ingest agent.
+     * @return The id for the API agent.
      */
-    public static String getIngestAgent() {
-        return KB_INGEST;
-    }
-
-    /**
-     * @return The id for the metadata agent.
-     */
-    public static String getMdGen() {
-        return KB_METADATA_GENERATOR;
+    public static String getApiAgent() {
+        return KB_AGENT_CBS;
     }
 
     /**
@@ -129,11 +118,6 @@ public final class AgentSelector {
             if(AGENT_NAMES.contains(agent)) {
                 return agent;
             }
-        }
-
-        // 'gatekeeper' is an alias for 'kbDkIngest'
-        if(agentName.equals("gatekeeper")) {
-            return KB_INGEST;
         }
 
         IllegalStateException res = new IllegalStateException("The agent named '" + agentName + "' does not exist.");
@@ -164,14 +148,7 @@ public final class AgentSelector {
     /**
      * The version for the ingest agent.
      */
-    private static String KB_INGEST_VERSION = "";
-
-    /**
-     * @param s The version for the metadata generator.
-     */
-    public static void setKbDkDomsBmIngestVersion(String s) {
-        KB_INGEST_VERSION = "(" + s + ")";
-    }
+    private static String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
 
     /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {
@@ -184,23 +161,17 @@ public final class AgentSelector {
     }
 
     /** @return Agent type for the metadata generator agent.*/
-    public static String getMdGenAgentType() {
+    public static String getApiAgentType() {
         return KB_TYPE_INTERNAL;
     }
 
     /** @return The metadata generator agent.*/
-    public static String getMdGenAgentValue() {
-        return getMdGen() + " (v. " + Constants.VERSION + ") ";
-    }
-
-    /** @return Agent type for the ingest agent.*/
-    public static String getIngestAgentType() {
-        return KB_TYPE_INTERNAL;
-    }
-
-    /** @return The ingest agent.*/
-    public static String getIngestAgentValue() {
-        return getIngestAgent() + " " + KB_INGEST_VERSION;
+    public static String getApiAgentValue() {
+        if(KB_API_VERSION != null) {
+            return KB_AGENT_CBS + " (v. " + KB_API_VERSION + ") ";
+        } else {
+            return KB_AGENT_CBS + " (v. Undetermined) ";
+        }
     }
 
     /** @return Agent type for the department agent.*/

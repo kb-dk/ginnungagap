@@ -19,6 +19,11 @@
   <xsl:template name="premis_preservation">
     <!-- Preservation level for bit safety. -->
     <xsl:element name="premis:preservationLevel">
+      <!-- preservationLevelType -->
+      <xsl:element name="premis:preservationLevelType">
+        <xsl:value-of select="'bitSafety'" />
+      </xsl:element>
+      
       <!-- preservationLevelValue -->
       <xsl:element name="premis:preservationLevelValue">
         <xsl:value-of select="java:dk.kb.metadata.selector.PremisPreservationLevelEnumeratorSelector.getBitPreservationLevelValue(
@@ -41,6 +46,11 @@
     </xsl:element>
     <!-- Preservation level for logical preservation. -->
     <xsl:element name="premis:preservationLevel">
+      <!-- preservationLevelType -->
+      <xsl:element name="premis:preservationLevelType">
+        <xsl:value-of select="'logical'" />
+      </xsl:element>
+
       <!-- preservationLevelValue -->
       <xsl:element name="premis:preservationLevelValue">
         <xsl:value-of select="java:dk.kb.metadata.selector.PremisPreservationLevelEnumeratorSelector.getLogicalPreservationLevelValue(
@@ -63,6 +73,11 @@
     </xsl:element>
     <!-- Preservation level for confidentiality. -->
     <xsl:element name="premis:preservationLevel">
+      <!-- preservationLevelType -->
+      <xsl:element name="premis:preservationLevelType">
+        <xsl:value-of select="'confidentiality'" />
+      </xsl:element>
+    
       <!-- preservationLevelValue -->
       <xsl:element name="premis:preservationLevelValue">
         <xsl:value-of select="java:dk.kb.metadata.selector.PremisPreservationLevelEnumeratorSelector.getConfidentialityPreservationLevelValue(
@@ -113,7 +128,7 @@
         </xsl:element>
         
         <!-- 1.5.2 messageDigest -->
-        <xsl:if test="field[@name='messageDigest']">
+        <xsl:if test="field[@name='CHECKSUM_ORIGINAL_MASTER']">
           <xsl:element name="premis:fixity">
             <xsl:element name="premis:messageDigestAlgorithm">
             <xsl:choose>
@@ -126,7 +141,7 @@
             </xsl:choose>
             </xsl:element>
             <xsl:element name="premis:messageDigest">
-              <xsl:value-of select="field[@name='messageDigest']/value" />
+              <xsl:value-of select="field[@name='CHECKSUM_ORIGINAL_MASTER']/value" />
             </xsl:element>
           </xsl:element>
         </xsl:if>
@@ -146,23 +161,18 @@
         </xsl:choose>
         
         <!-- 1.5.4 format -->
-        <xsl:choose>
-          <xsl:when test="field[@name='formatName']/value">
-            <xsl:element name="premis:format">
-              <xsl:element name="premis:formatDesignation">
+        <xsl:element name="premis:format">
+          <xsl:element name="premis:formatDesignation">
+            <xsl:choose>
+              <xsl:when test="field[@name='formatName']/value">
                 <xsl:element name="premis:formatName">
                   <xsl:value-of select="field[@name='formatName']/value" />
                 </xsl:element>
                 <xsl:element name="premis:formatVersion">
                   <xsl:value-of select="field[@name='formatVersion']/value" />
                 </xsl:element>
-             </xsl:element>
-            </xsl:element>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:if test="field[@name='objectCharacteristicsFormatName']/value">
-              <xsl:element name="premis:format">
-                <xsl:element name="premis:formatDesignation">
+              </xsl:when>
+              <xsl:otherwise>
                   <xsl:element name="premis:formatName">
                     <xsl:value-of select="field[@name='objectCharacteristicsFormatName']/value" />
                   </xsl:element>
@@ -171,11 +181,13 @@
                       <xsl:value-of select="." />
                     </xsl:element>
                   </xsl:for-each>
-                </xsl:element>
-              </xsl:element>
-            </xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:element>
+          <xsl:element name="premis:formatNote">
+            <xsl:value-of select="'Validated by Cumulus version 10'" />
+          </xsl:element>
+        </xsl:element>
         
         <!-- 1.5.5 creatingApplication -->
         <xsl:if test="field[@name='creatingTool'] or field[@name='Software']">
@@ -183,10 +195,10 @@
             <xsl:element name="premis:creatingApplicationName">
               <xsl:choose>
                 <xsl:when test="field[@name='creatingTool']">
-                  <xsl:value-of select="field[@name='creatingTool']" />
+                  <xsl:value-of select="field[@name='creatingTool']/value" />
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:value-of select="field[@name='Software']" />
+                  <xsl:value-of select="field[@name='Software']/value" />
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:element>
@@ -209,24 +221,22 @@
       <!-- END 1.5 ObjectCharacteristics -->
       
       <!-- START 1.13 relationship -->
-      <xsl:if test="field[@name='linkingIntellectualEntityIdentifierValue']">
-        <xsl:element name="premis:relationship">
-          <xsl:element name="premis:relationshipType">
-            <xsl:value-of select="'structural'" />
+      <xsl:element name="premis:relationship">
+        <xsl:element name="premis:relationshipType">
+          <xsl:value-of select="'structural'" />
+        </xsl:element>
+        <xsl:element name="premis:relationshipSubType">
+          <xsl:value-of select="'represents'" />
+        </xsl:element>
+        <xsl:element name="premis:relatedObjectIdentifier">
+          <xsl:element name="premis:relatedObjectIdentifierType">
+            <xsl:value-of select="'UUID'" />
           </xsl:element>
-          <xsl:element name="premis:relationshipSubType">
-            <xsl:value-of select="'represents'" />
-          </xsl:element>
-          <xsl:element name="premis:relatedObjectIdentifier">
-            <xsl:element name="premis:relatedObjectIdentifierType">
-              <xsl:value-of select="'UUID'" />
-            </xsl:element>
-            <xsl:element name="premis:relatedObjectIdentifierValue">
-              <xsl:value-of select="field[@name='linkingIntellectualEntityIdentifierValue']/value" />
-            </xsl:element>
+          <xsl:element name="premis:relatedObjectIdentifierValue">
+            <xsl:value-of select="field[@name='relatedObjectIdentifierValue_intellectualEntity']/value" />
           </xsl:element>
         </xsl:element>
-      </xsl:if>
+      </xsl:element>
       <!-- END 1.13 relationship -->
       
       <!-- START 1.15 linkingRightsStatementIdentifier -->
@@ -284,10 +294,10 @@
       <!-- linkingAgentIdentifier -->
       <xsl:element name="premis:linkingAgentIdentifier">
         <xsl:element name="premis:linkingAgentIdentifierType">
-          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentType()" />
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentValue()" />
         </xsl:element>
         <xsl:element name="premis:linkingAgentIdentifierValue">
-          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getIngestAgentValue()" />
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentType()" />
         </xsl:element>
       </xsl:element>
       

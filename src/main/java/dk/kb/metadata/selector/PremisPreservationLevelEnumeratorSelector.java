@@ -18,6 +18,10 @@ public final class PremisPreservationLevelEnumeratorSelector {
     private PremisPreservationLevelEnumeratorSelector() {}
 
     // Different values for the 'premis:preservationLevelValue'.
+    
+    /** The prefix for the confidentiality preservation level values.*/
+    private static final String BITSAFETY_PREFIX = "bitSafety";
+    
     /** Bit safety level: bitSafetyMax*/
     private static final String MAX_BIT_SAFETY = "bitSafetyMax";
     /** Bit safety level: bitSafetyVeryHigh*/
@@ -46,17 +50,13 @@ public final class PremisPreservationLevelEnumeratorSelector {
     /**
      * Retrieves the valid value for the field 'premis:preservationLevelValue'.
      * @param level The value to evaluate.
-     * @return The value or the corresponding value which is allowed by the restrictions.
+     * @return The value, stripped from the prefix (which are put in the premis:preservationLevelType).
      */
     public static String getBitPreservationLevelValue(String level) {
         if(BIT_PRESERVATION_LEVEL_VALUES.contains(level)) {
-            return level;
+            return level.replace(BITSAFETY_PREFIX, "");
         }
 
-        // Conversion of old values
-        if(level.equals("Aktiv bit bevaring")) {
-            return VERY_HIGH_BIT_SAFETY;
-        }
 
         IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue: '" + level 
                 + "'. Only accepts: " + BIT_PRESERVATION_LEVEL_VALUES);
@@ -64,6 +64,9 @@ public final class PremisPreservationLevelEnumeratorSelector {
         throw res;
     }
 
+    /** The prefix for the confidentiality preservation level values.*/
+    private static final String LOGICAL_STATEGY_PREFIX = "logicalStrategy";
+    
     /** Logical preservation strategy: logicalStrategyMigration */
     private static final String MIGRATION_STRATEGY = "logicalStrategyMigration";
     /** Logical preservation strategy: logicalStrategyEmulation */
@@ -83,16 +86,11 @@ public final class PremisPreservationLevelEnumeratorSelector {
     /**
      * Retrieves the valid value for the field 'premis:preservationLevelValue' for the logical preservation type.
      * @param level The level for the logical preservation to validate.
-     * @return The value or the corresponding value which is allowed by the restrictions.
+     * @return The value, stripped from the prefix (which are put in the premis:preservationLevelType).
      */
     public static String getLogicalPreservationLevelValue(String level) {
         if(LOGICAL_PRESERVATION_LEVEL_VALUES.contains(level)) {
-            return level;
-        }
-
-        // Conversion of old values
-        if(level.equals("Aktiv bit bevaring")) {
-            return MIGRATION_STRATEGY;
+            return level.replace(LOGICAL_STATEGY_PREFIX, "");
         }
 
         IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for logical preservation: '" + level 
@@ -101,6 +99,9 @@ public final class PremisPreservationLevelEnumeratorSelector {
         throw res;
     }
 
+    /** The prefix for the confidentiality preservation level values.*/
+    private static final String CONFIDENTIALITY_PREFIX = "confidentiality";
+    
     /** Confidentiality level: confidentialityMax */
     private static final String MAX_CONFIDENTIALITY = "confidentialityMax";
     /** Confidentiality level: confidentialityVeryHigh */
@@ -129,16 +130,11 @@ public final class PremisPreservationLevelEnumeratorSelector {
     /**
      * Retrieves the valid value for the field 'premis:preservationLevelValue' for the confidentiality.
      * @param level The value to evaluate.
-     * @return The value or the corresponding value which is allowed by the restrictions.
+     * @return The value, stripped from the prefix (which are put in the premis:preservationLevelType).
      */
     public static String getConfidentialityPreservationLevelValue(String level) {
         if(CONFIDENTIALITY_PRESERVATION_LEVEL_VALUES.contains(level)) {
-            return level;
-        }
-
-        // Conversion of old values
-        if(level.equals("Aktiv bit bevaring")) {
-            return LOW_CONFIDENTIALITY;
+            return level.replace(CONFIDENTIALITY_PREFIX, "");
         }
 
         IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for confidentiality: '" + level 

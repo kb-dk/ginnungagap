@@ -66,7 +66,7 @@ public class WarcPacker {
         Digest digestor = new Digest(bitmagConf.getAlgorithm());
         StringBuffer payload = new StringBuffer();
         // TODO: write this in a nicer way.
-        payload.append("description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringService.html\n");
+        payload.append("description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.html\n");
         payload.append("conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n");
         payload.append("revision: 1.0.0\n");
 
