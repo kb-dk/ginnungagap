@@ -206,7 +206,8 @@
           <xsl:element name="mix:dateTimeCreated">
             <xsl:choose>
               <xsl:when test="field[@name='Date Time Digitized']">
-                <xsl:value-of select="field[@name='Date Time Digitized']/value" />
+                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                  'EEE MMM dd HH:mm:ss z yyyy',field[@name='Date Time Digitized']/value)" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />

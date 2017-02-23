@@ -490,4 +490,7 @@
  <field name="relatedObjectIdentifierValue_intellectualEntity">
   <value>relatedObjectIdentifierValue_intellectualEntity_PLACE_HOLDER</value>
  </field>
+ <field name="Date Time Digitized" data-type="date">
+  <value>Wed Jun 08 15:45:13 CEST 2011</value>
+ </field>
 </record>

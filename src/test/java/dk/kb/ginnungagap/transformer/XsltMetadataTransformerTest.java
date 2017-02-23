@@ -44,18 +44,19 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         
         addStep("Transform the Cumulus XML", "METS");
-        transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
-        
-        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
-            fos.write(out.toByteArray());
-            fos.flush();
+        try {
+            transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
+            File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+            try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+                fos.write(out.toByteArray());
+                fos.flush();
+            }
+
+            addStep("Validate the METS", "");
+            transformer.validate(new FileInputStream(metadataFile));
+        } finally {
+            System.out.println(out.toString());
         }
-        
-        addStep("Validate the METS", "");
-        transformer.validate(new FileInputStream(metadataFile));
-        
-        System.out.println(out.toString());
     }
 
     @Test

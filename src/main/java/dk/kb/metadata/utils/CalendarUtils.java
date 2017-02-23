@@ -56,6 +56,7 @@ public final class CalendarUtils {
      * @return The given date in the XML date format.
      */
     public static String getDateTime(String format, String dateString) {
+        System.err.println("format: " + format + ", dateString: " + dateString);
         SimpleDateFormat formater = new SimpleDateFormat(format);
         try {
             Date date = formater.parse(dateString);
