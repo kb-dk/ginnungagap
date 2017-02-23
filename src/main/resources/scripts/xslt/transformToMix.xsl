@@ -271,22 +271,22 @@
           </xsl:element>
           
           <!-- ScanningSystemSoftware NDD id="8.3.5" -->
-          <xsl:if test="field[@name='creatingApplication']">
-            <xsl:element name="mix:ScanningSystemSoftware">
-              <xsl:for-each select="field[@name='creatingApplication']/value">
-                <!-- scanningeSoftwareName NDD id="8.3.5.1" -->
-                <xsl:element name="mix:scanningSoftwareName">
-                  <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 0)" />
-                </xsl:element>
-                <!-- scanningSoftwareVersion NDD id="8.3.5.2" -->
-                <xsl:if test="java:dk.kb.metadata.utils.StringUtils.splitableOnComma(.)">
-                  <xsl:element name="mix:scanningSoftwareVersionNo">
-                    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 1)" />
-                  </xsl:element>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:element>
-          </xsl:if>
+<!--           <xsl:if test="field[@name='creatingApplication']"> -->
+<!--             <xsl:element name="mix:ScanningSystemSoftware"> -->
+<!--               <xsl:for-each select="field[@name='creatingApplication']/value"> -->
+<!--                 scanningeSoftwareName NDD id="8.3.5.1" -->
+<!--                 <xsl:element name="mix:scanningSoftwareName"> -->
+<!--                   <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 0)" /> -->
+<!--                 </xsl:element> -->
+<!--                 scanningSoftwareVersion NDD id="8.3.5.2" -->
+<!--                 <xsl:if test="java:dk.kb.metadata.utils.StringUtils.splitableOnComma(.)"> -->
+<!--                   <xsl:element name="mix:scanningSoftwareVersionNo"> -->
+<!--                     <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 1)" /> -->
+<!--                   </xsl:element> -->
+<!--                 </xsl:if> -->
+<!--               </xsl:for-each> -->
+<!--             </xsl:element> -->
+<!--           </xsl:if> -->
         </xsl:element>
         <!-- End mix/ImageCaptureMetadata/ScannerCapture -->
 
