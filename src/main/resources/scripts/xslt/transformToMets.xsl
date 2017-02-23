@@ -17,7 +17,6 @@
   <xsl:include href="transformToMods.xsl"/>
   <xsl:include href="transformToPbCore.xsl"/>
   <xsl:include href="transformToPremis.xsl"/>
-  <xsl:include href="transformToTracks.xsl"/>
  
   <xsl:variable name="FILE_GUID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />
   

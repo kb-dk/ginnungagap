@@ -209,24 +209,12 @@
   <!-- START genre -->
   <xsl:template name="mods_genre">
     <!-- KB Bevarings profil -->
-    <xsl:choose>
-      <xsl:when test="field[@name='’KB Bevarings Profil’']">
-        <xsl:element name="mods:genre">
-          <xsl:attribute name="type">
-            <xsl:value-of select="'KB Samling'" />
-          </xsl:attribute>
-          <xsl:value-of select="field[@name='’KB Bevarings Profil’']/value" />
-        </xsl:element>        
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:element name="mods:genre">
-          <xsl:attribute name="type">
-            <xsl:value-of select="'KB Samling'" />
-          </xsl:attribute>
-          <xsl:value-of select="'F: substitutions-digitaliseret samlings-materiale (som ikke er fortroligt)'" />
-        </xsl:element>        
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:element name="mods:genre">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'KB Samling'" />
+      </xsl:attribute>
+      <xsl:value-of select="field[@name='’KB Bevarings Profil’']/value" />
+    </xsl:element>        
     
     <!-- Genre -->
     <xsl:for-each select="field[@name='Genre']/value">
