@@ -185,7 +185,7 @@
             </xsl:choose>
           </xsl:element>
           <xsl:element name="premis:formatNote">
-            <xsl:value-of select="'Validated by Cumulus version 10'" />
+            <xsl:value-of select="concat('Validated by Cumulus version: ', java:dk.kb.metadata.selector.AgentSelector.getCumulusVersion())" />
           </xsl:element>
         </xsl:element>
         

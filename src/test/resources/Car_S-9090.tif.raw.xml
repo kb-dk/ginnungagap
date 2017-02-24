@@ -493,4 +493,7 @@
  <field name="Date Time Digitized" data-type="date">
   <value>Wed Jun 08 15:45:13 CEST 2011</value>
  </field>
+ <field name="KB Samling">
+  <value>H</value>
+ </field>
 </record>

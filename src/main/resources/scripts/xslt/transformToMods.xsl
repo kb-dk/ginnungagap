@@ -213,8 +213,8 @@
       <xsl:attribute name="type">
         <xsl:value-of select="'KB Samling'" />
       </xsl:attribute>
-      <xsl:value-of select="field[@name='’KB Bevarings Profil’']/value" />
-    </xsl:element>        
+      <xsl:value-of select="field[@name='KB Samling']/value" />
+    </xsl:element>
     
     <!-- Genre -->
     <xsl:for-each select="field[@name='Genre']/value">

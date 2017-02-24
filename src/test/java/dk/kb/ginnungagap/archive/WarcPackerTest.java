@@ -37,7 +37,7 @@ public class WarcPackerTest extends ExtendedTestCase {
     
     @AfterClass
     public void tearDown() {
-        TestFileUtils.tearDown();
+//        TestFileUtils.tearDown();
     }
     
     @Test

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.canto.cumulus.Cumulus;
+
 import dk.kb.metadata.utils.ExceptionUtils;
 import dk.kb.metadata.utils.StringUtils;
 
@@ -177,5 +179,10 @@ public final class AgentSelector {
     /** @return Agent type for the department agent.*/
     public static String getDepartmentAgentType() {
         return KB_TYPE_DEPARTMENT;
+    }
+    
+    /** @return The version of the Cumulus client.*/
+    public static String getCumulusVersion() {
+        return Cumulus.getVersion();
     }
 }

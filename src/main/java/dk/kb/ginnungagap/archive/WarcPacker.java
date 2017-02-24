@@ -70,18 +70,17 @@ public class WarcPacker {
         payload.append("conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n");
         payload.append("revision: 1.0.0\n");
 
+        for(Object key : System.getProperties().keySet()) {
+            String value = System.getProperty((String) key);
+            payload.append((String) key + ": " + value + "\n");
+        }
         for(Map.Entry<String, String> property : System.getenv().entrySet()) {
              payload.append(property.getKey() + ": " + property.getValue() + "\n");
-            
         }
-        String warcInfoPayload = YggdrasilWarcConstants.getWarcInfoPayload();
-        byte[] warcInfoPayloadBytes = warcInfoPayload.getBytes(StandardCharsets.UTF_8);
-        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
-                digestor.getDigestOfBytes(warcInfoPayloadBytes));
-
-        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
-                digestor.getDigestOfBytes(warcInfoPayloadBytes));
         
+        byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
+        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                digestor.getDigestOfBytes(warcInfoPayloadBytes));
     }
 
     /**
