@@ -485,7 +485,7 @@
   <value>3.14159265359</value>
  </field>
  <field name="Max Aperture (String)">
-  <value>20/20</value>
+  <value>2625/1000</value>
  </field>
  <field name="relatedObjectIdentifierValue_intellectualEntity">
   <value>relatedObjectIdentifierValue_intellectualEntity_PLACE_HOLDER</value>

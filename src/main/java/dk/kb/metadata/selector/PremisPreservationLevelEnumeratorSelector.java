@@ -19,7 +19,7 @@ public final class PremisPreservationLevelEnumeratorSelector {
 
     // Different values for the 'premis:preservationLevelValue'.
     
-    /** The prefix for the confidentiality preservation level values.*/
+    /** The prefix for the bitsafety preservation level values.*/
     private static final String BITSAFETY_PREFIX = "bitSafety";
     
     /** Bit safety level: bitSafetyMax*/
@@ -64,7 +64,7 @@ public final class PremisPreservationLevelEnumeratorSelector {
         throw res;
     }
 
-    /** The prefix for the confidentiality preservation level values.*/
+    /** The prefix for the logicalStrategy preservation level values.*/
     private static final String LOGICAL_STATEGY_PREFIX = "logicalStrategy";
     
     /** Logical preservation strategy: logicalStrategyMigration */

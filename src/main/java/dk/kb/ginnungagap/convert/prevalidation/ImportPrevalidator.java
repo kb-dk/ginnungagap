@@ -2,11 +2,8 @@ package dk.kb.ginnungagap.convert.prevalidation;
 
 import java.io.File;
 
-import dk.kb.ginnungagap.config.ConversionConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
-
 /**
- * 
+ * Prevalidator.
  * 
  * KBDOMS-20140917190643-00516-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2007-01/742a6c00-908a-11e2-a385-0016357f605f#0##47667682##e113fb8d9b20515056b53eff07c98a45
  * KBDOMS-20140917190643-00516-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2007-01/8b0feee0-908a-11e2-a385-0016357f605f#0##52006696##5484079db1b5974c1e2324dcdae82e72
@@ -14,22 +11,18 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
  */
 public class ImportPrevalidator {
     
-    protected static final String SUFFIX_FOUND_FILE = ".found";
-    protected static final String SUFFIX_NOT_FOUND_FILE = ".not_found";
+    protected static final String PREFIX_FOUND_FILE = "found";
+    protected static final String PREFIX_NOT_FOUND_ARCHIVE = ".not_found";
     
-    protected final CumulusServer server;
+    protected static final String SUFFFIX_FILES = ".txt";
     
     protected final File foundArcFiles;
-    protected final File notFoundArcFiles;
-    
-    protected final ConversionConfiguration conf;
+    protected final File notFoundArchiveFiles;
     
     
-    public ImportPrevalidator(CumulusServer server, ConversionConfiguration conf, String filename) {
-        this.server = server;
-        this.conf = conf;
-        this.foundArcFiles = new File(conf.getPreValidationOutputDir(), filename + SUFFIX_FOUND_FILE);
-        this.notFoundArcFiles = new File(conf.getPreValidationOutputDir(), filename + SUFFIX_NOT_FOUND_FILE);
+    public ImportPrevalidator(File outputDir) {
+        this.foundArcFiles = new File(outputDir, PREFIX_FOUND_FILE);
+        this.notFoundArchiveFiles = new File(outputDir, PREFIX_NOT_FOUND_ARCHIVE);
     }
     
 
