@@ -94,23 +94,6 @@
     </mods:mods>
   </xsl:template>
   
-  <!-- MODS SUB ASSET TEMPLATE BASE -->
-  <xsl:template name="mods_for_file_mets">
-    <!-- Begin the MODS document -->
-    <mods:mods xsi:schemaLocation="{$MODS_LOCATION}" version="{$MODS_VERSION}">
-      <!-- mods:genre -->
-      <xsl:call-template name="mods_genre" />
-      <!-- mods:identifiers -->
-      <xsl:call-template name="mods_identifier" />
-      <!-- mods:recordInfo -->
-      <xsl:call-template name="mods_recordInfo" />
-      <!-- mods:relatedItem -->
-      <xsl:call-template name="mods_relatedItem_File" />
-      <!-- mods:typeOfResource -->
-      <xsl:call-template name="mods_typeOfResource" />
-    </mods:mods>
-  </xsl:template>
-
   <!-- MODS MASTER ASSET TEMPLATE BASE -->
   <xsl:template name="mods_for_representation_mets">
     <!-- Begin the MODS document -->
@@ -195,8 +178,6 @@
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
-    
-    <!-- NOTHING YET! -->
   </xsl:template>
   <!-- END classification -->
 
@@ -918,7 +899,7 @@
     <xsl:if test="field[@name='Sender (organization)'] or field[@name='Afsender, Organisation']">
       <xsl:element name="mods:name">
         <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
+          <xsl:value-of select="'corporate'" />
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="field[@name='Sender (organization)']">
@@ -1110,7 +1091,7 @@
     <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
       <xsl:element name="mods:name">
         <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
+          <xsl:value-of select="'corporate'" />
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="field[@name='Recipient (organization)']">
@@ -1156,6 +1137,9 @@
     <!-- Plademærke -->
     <xsl:for-each select="field[@name='Plademærke']/value">
       <xsl:element name="mods:name">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'corporate'" />
+        </xsl:attribute>
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:element name="mods:namePart">
           <xsl:call-template name="cumulus_get_value" />
@@ -1174,6 +1158,9 @@
     <!-- Medvirkende -->
     <xsl:if test="field[@name='Medvirkende']">
       <xsl:element name="mods:name">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'personal'" />
+        </xsl:attribute>
         <xsl:for-each select="field[@name='Medvirkende']/value">
           <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:element name="mods:namePart">
@@ -2154,21 +2141,17 @@
         <xsl:choose>
           <xsl:when test="field[@name='Organisation']">
             <xsl:for-each select="field[@name='Organisation']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Organisation, ophav']">
             <xsl:for-each select="field[@name='Organisation, ophav']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
+              <xsl:element name="mods:topic">
                   <xsl:call-template name="cumulus_get_lang_attribute" />
                   <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
@@ -2195,21 +2178,17 @@
         <xsl:choose>
           <xsl:when test="field[@name='Organisational affiliation of additional recipient']">
             <xsl:for-each select="field[@name='Organisational affiliation of additional recipient']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Medmodtagers organisation']">
             <xsl:for-each select="field[@name='Medmodtagers organisation']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
@@ -2236,21 +2215,17 @@
         <xsl:choose>
           <xsl:when test="field[@name='Organisation affiliation of recipient']">
             <xsl:for-each select="field[@name='Organisation affiliation of recipient']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Modtagers organisation']">
             <xsl:for-each select="field[@name='Modtagers organisation']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
@@ -2277,21 +2252,17 @@
         <xsl:choose>
           <xsl:when test="field[@name='Organisational affiliation of additional sender']">
             <xsl:for-each select="field[@name='Organisational affiliation of additional sender']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Medsenders organisation']">
             <xsl:for-each select="field[@name='Medsenders organisation']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
@@ -2318,21 +2289,17 @@
         <xsl:choose>
           <xsl:when test="field[@name='Organisational affiliation of sender']">
             <xsl:for-each select="field[@name='Organisational affiliation of sender']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Afsenders organisation']">
             <xsl:for-each select="field[@name='Afsenders organisation']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
+              <xsl:element name="mods:topic">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>

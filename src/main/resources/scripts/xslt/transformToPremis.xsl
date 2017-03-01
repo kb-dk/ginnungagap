@@ -38,11 +38,17 @@
       </xsl:if>
       
       <!-- preservationLevelDateAssigned -->
-      <xsl:if test="field[@name='preservationLevelDateAssigned']">
-        <xsl:element name="premis:preservationLevelDateAssigned">
-          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-        </xsl:element>
-      </xsl:if>
+      <xsl:element name="premis:preservationLevelDateAssigned">
+        <xsl:choose>
+          <xsl:when test="field[@name='preservationLevelDateAssigned']">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                  'YYYYMMdd',field[@name='preservationLevelDateAssigned']/value)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:otherwise>
+        </xsl:choose> 
+      </xsl:element>
     </xsl:element>
     <!-- Preservation level for logical preservation. -->
     <xsl:element name="premis:preservationLevel">
@@ -65,11 +71,17 @@
       </xsl:if>
 
       <!-- preservationLevelDateAssigned -->
-      <xsl:if test="field[@name='preservationLevelDateAssigned']">
-        <xsl:element name="premis:preservationLevelDateAssigned">
-          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-        </xsl:element>
-      </xsl:if>
+      <xsl:element name="premis:preservationLevelDateAssigned">
+        <xsl:choose>
+          <xsl:when test="field[@name='preservationLevelDateAssigned']">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                  'YYYYMMdd',field[@name='preservationLevelDateAssigned']/value)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:otherwise>
+        </xsl:choose> 
+      </xsl:element>
     </xsl:element>
     <!-- Preservation level for confidentiality. -->
     <xsl:element name="premis:preservationLevel">
@@ -92,11 +104,17 @@
       </xsl:if>
 
       <!-- preservationLevelDateAssigned -->
-      <xsl:if test="field[@name='preservationLevelDateAssigned']">
-        <xsl:element name="premis:preservationLevelDateAssigned">
-          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-        </xsl:element>
-      </xsl:if>
+      <xsl:element name="premis:preservationLevelDateAssigned">
+        <xsl:choose>
+          <xsl:when test="field[@name='preservationLevelDateAssigned']">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                  'YYYYMMdd',field[@name='preservationLevelDateAssigned']/value)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:otherwise>
+        </xsl:choose> 
+      </xsl:element>
     </xsl:element>
   </xsl:template>
   
@@ -190,12 +208,12 @@
         </xsl:element>
         
         <!-- 1.5.5 creatingApplication -->
-        <xsl:if test="field[@name='creatingTool'] or field[@name='Software']">
+        <xsl:if test="field[@name='creatingApplication'] or field[@name='Software']">
           <xsl:element name="premis:creatingApplication">
             <xsl:element name="premis:creatingApplicationName">
               <xsl:choose>
-                <xsl:when test="field[@name='creatingTool']">
-                  <xsl:value-of select="field[@name='creatingTool']/value" />
+                <xsl:when test="field[@name='creatingApplication']">
+                  <xsl:value-of select="field[@name='creatingApplication']/value" />
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="field[@name='Software']/value" />
@@ -294,10 +312,10 @@
       <!-- linkingAgentIdentifier -->
       <xsl:element name="premis:linkingAgentIdentifier">
         <xsl:element name="premis:linkingAgentIdentifierType">
-          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentValue()" />
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentType()" />
         </xsl:element>
         <xsl:element name="premis:linkingAgentIdentifierValue">
-          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentType()" />
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentValue()" />
         </xsl:element>
       </xsl:element>
       

@@ -86,32 +86,23 @@
         </xsl:for-each>
 
         <!-- mix/BasicDigitalObjectInformation/Fixity NDD id="6.7" -->
-        <xsl:choose>
-          <xsl:when test="field[@name='messageDigest']">
-            <xsl:element name="mix:Fixity">
-              <!-- messageDigestAlgorithm NDD id="6.7.1" -->
-              <xsl:element name="mix:messageDigestAlgorithm">
+        <xsl:element name="mix:Fixity">
+          <!-- messageDigestAlgorithm NDD id="6.7.1" -->
+          <xsl:element name="mix:messageDigestAlgorithm">
+            <xsl:choose>
+              <xsl:when test="field[@name='messageDigestAlgorithm']">
                 <xsl:value-of select="field[@name='messageDigestAlgorithm']/value" />
-              </xsl:element>
-              <!-- messageDigest NDD id="6.7.2" -->
-              <xsl:element name="mix:messageDigest">
-                <xsl:value-of select="field[@name='messageDigest']/value" />
-              </xsl:element>            
-            </xsl:element>            
-          </xsl:when>
-          <xsl:when test="field[@name='CHECKSUM_ORIGINAL_MASTER']">
-            <xsl:element name="mix:Fixity">
-              <!-- messageDigestAlgorithm NDD id="6.7.1" -->
-              <xsl:element name="mix:messageDigestAlgorithm">
+              </xsl:when>
+              <xsl:otherwise>
                 <xsl:value-of select="'MD5'" />
-              </xsl:element>
-              <!-- messageDigest NDD id="6.7.2" -->
-              <xsl:element name="mix:messageDigest">
-                <xsl:value-of select="field[@name='CHECKSUM_ORIGINAL_MASTER']/value" />
-              </xsl:element>            
-            </xsl:element>            
-          </xsl:when>
-        </xsl:choose>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:element>
+          <!-- messageDigest NDD id="6.7.2" -->
+          <xsl:element name="mix:messageDigest">
+            <xsl:value-of select="field[@name='CHECKSUM_ORIGINAL_MASTER']/value" />
+          </xsl:element>            
+        </xsl:element>            
       </xsl:element>
       <!-- End mix/BasicDigitalObjectInformation NDD id="6" -->
       

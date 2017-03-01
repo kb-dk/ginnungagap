@@ -124,20 +124,13 @@
         <xsl:attribute name="ID">
           <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($MODS-ID)" />
         </xsl:attribute>
+        <!-- Embed MODS here -->
         <xsl:element name="mets:mdWrap">
           <xsl:attribute name="MDTYPE">
             <xsl:value-of select="'MODS'" />
           </xsl:attribute>
-          <!-- Handle the different cases of METS documents. -->
           <xsl:element name="mets:xmlData">
-            <xsl:choose>
-              <xsl:when test="field[@name='Related Sub Assets'] or field[@name='Related Master Assets']">
-                <xsl:call-template name="mods_for_file_mets" />      
-              </xsl:when>
-              <xsl:otherwise>
-                 <xsl:call-template name="mods" />
-               </xsl:otherwise>
-             </xsl:choose>
+             <xsl:call-template name="mods" />
           </xsl:element>
         </xsl:element>
       </xsl:element>
@@ -157,7 +150,6 @@
             <xsl:attribute name="OTHERMDTYPE">
               <xsl:value-of select="'PBCORE'" />
             </xsl:attribute>
-            <!-- Handle the different cases of METS documents. -->
             <xsl:element name="mets:xmlData">
               <xsl:call-template name="pbcore_description" />      
             </xsl:element>
@@ -238,23 +230,6 @@
 <!--             </xsl:attribute> -->
 <!--             <xsl:element name="mets:xmlData"> -->
 <!--               <xsl:call-template name="premis_rights" /> -->
-<!--             </xsl:element> -->
-<!--           </xsl:element> -->
-<!--         </xsl:element> -->
-        <!-- ADD PREMIS -->
-<!--         <xsl:element name="mets:digiprovMD"> -->
-<!--           <xsl:attribute name="CREATED"> -->
-<!--             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" /> -->
-<!--           </xsl:attribute> -->
-<!--           <xsl:attribute name="ID"> -->
-<!--             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-ID)" /> -->
-<!--           </xsl:attribute> -->
-<!--           <xsl:element name="mets:mdWrap"> -->
-<!--             <xsl:attribute name="MDTYPE"> -->
-<!--               <xsl:value-of select="'PREMIS'" /> -->
-<!--             </xsl:attribute> -->
-<!--             <xsl:element name="mets:xmlData"> -->
-<!--               <xsl:call-template name="premis" /> -->
 <!--             </xsl:element> -->
 <!--           </xsl:element> -->
 <!--         </xsl:element> -->
