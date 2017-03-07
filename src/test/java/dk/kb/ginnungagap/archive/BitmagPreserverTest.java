@@ -19,6 +19,7 @@ import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.TestBitmagConfiguration;
@@ -38,7 +39,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     @BeforeClass
     public void setup() throws Exception {
         TestFileUtils.setup();
-        bitmagConf = new TestBitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 100000, TestFileUtils.getTempDir(), "SHA-1");
         
         File origMetadataFile = new File("src/test/resources/test-mets.xml");
         metadataFile = new File(TestFileUtils.getTempDir(), origMetadataFile.getName());
@@ -49,9 +49,14 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         FileUtils.copyFile(origResourceFile, resourceFile);
     }
     
+    @BeforeMethod
+    public void setupMethod() throws Exception {
+        bitmagConf = new TestBitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 1000000, TestFileUtils.getTempDir(), "SHA-1");        
+    }
+    
     @AfterClass
     public void tearDown() throws Exception {
-//        TestFileUtils.tearDown();
+        TestFileUtils.tearDown();
     }
     
     @Test
@@ -112,7 +117,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         when(record.getFile()).thenReturn(resourceFile);
         when(record.getUUID()).thenReturn(recordId);
         
-        bitmagConf.setWarcFileSizeLimit(3000);
+        bitmagConf.setWarcFileSizeLimit(20000);
 
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
 

@@ -9,8 +9,8 @@
   <!-- TODO: remove draft, when finished reviewing. -->
   <title xml:lang="en">The Royal Danish Library METS profile for digital cultural heritage [Draft version 2]</title>
   <abstract xml:lang="en">
-    The METS profile for the Royal Library of Denmark specifies how METS documents representing digital objects 
-    in the digital archives for the Royal Library of Denmark should be encoded.
+    The METS profile for the Royal Danish Library specifies how METS documents representing digital objects 
+    in the digital archives for the Royal Danish Library should be encoded.
     The digital objects includes different types of images, audio, video, text and other various file formats.
     All MUST, MUST NOT, SHOULD, SHOULD NOT and MAY terms are used according to the meaning defined in RFC 2119 
     (http://www.ietf.org/rfc/rfc2119.txt).
@@ -18,8 +18,8 @@
   <date>2017-02-21T12:00:00+01:00</date>
   <!-- TODO: Is this the right contacts? -->
   <contact ROLE="IPOWNER">
-    <name>The current head of the Royal Library of Denmark</name>
-    <institution>The Royal Library of Denmark</institution>
+    <name>The current head of the Royal Danish Library</name>
+    <institution>The Royal Danish Library</institution>
     <address>Søren Kierkegaards Plads 1, 1221 København K, Denmark</address>
   </contact>
   
@@ -94,7 +94,7 @@
     <head ID="description_purpose">Purpose of this profile</head>
     <xhtml:p>
       The main purpose of this profile is to describe the requirements for encoding metadata in METS documents used 
-      by the Royal Library of Denmark.
+      by the Royal Danish Library.
     </xhtml:p>
     
     <head ID="description_XML">Rules for the XML</head>
@@ -176,7 +176,7 @@
     </xhtml:p>
     <!-- TODO: is the URL correct??? -->
     <xhtml:p>
-      All the agents involved with METS documents conforming to this profile must be defined at 
+      All the agents involved with METS documents conforming to this profile should be defined at 
       "http://id.kb.dk/authorities/agents". 
       Here a thorough description will be presented in accordance to the PREMIS:AGENT specification, which may embed
       other metadata formats, e.g. MODS.
@@ -187,7 +187,7 @@
       Since the agents can be changed or updated in a way where the description also requires changes/updates, then 
       a new version of the agent must registrered at "http://id.kb.dk/" with a new identifier.
       Therefore the identifier of an agent should contain a version to reflect which version of the agent is 
-      refered to.
+      referred to.
     </xhtml:p>
     <xhtml:p>
       All the agents used in the METS document are defined in the &lt;metsHdr&gt; element, where each &lt;agent&gt; 
@@ -209,28 +209,27 @@
     <xhtml:p>
       The level of preservation is described in the preservation part of the PREMIS metadata embedded in the METS.
       All the METS documents conforming to this profile must have this embedded PREMIS document containing the 
-      &lt;premis:preservationLevel&gt; defined from the elements &lt;premis:preservationLevelValue&gt;, 
-      &lt;premis:preservationLevelRole&gt;, &lt;premis:preservationLevelRationale&gt;, and 
-      &lt;premis:preservationLevelDateAssigned&gt;.
+      &lt;premis:preservationLevel&gt; defined from the elements &lt;premis:preservationLevelType&gt;, 
+      &lt;premis:preservationLevelValue&gt;, and &lt;premis:preservationLevelDateAssigned&gt;.
+      The &lt;premis:preservationLevel&gt; may also include a &lt;premis:preservationLevelRationale&gt; 
+      and a &lt;premis:preservationLevelRole&gt; to elaborate the reasons for the values in the other fields.
     </xhtml:p>
     <xhtml:p>
-      The term preservation can be interpreted in different way, e.g. bit-preservation, logical preservation, and
+      The term preservation can be interpreted in different way, e.g. bit safety, logical strategy, and
       confidentiality.
       It must be possible to assign different values for the different kinds of preservation, and therefore it must
       possible to assign several &lt;premis:preservationLevel&gt; elements to a digital object.
+      Each of these must use the &lt;premis:preservationLevelType&gt; for distinguishing which type of preservation
+      the &lt;premis:preservationLevelValue&gt; is referring to.
     </xhtml:p>
     <xhtml:p>
-      <!-- TODO: is the URL correct??? -->
-      The preservationLevelValue will be thoroughly defined at "http://id.kb.dk/preservationLevel", and the 
-      preservationLevelRole will be  thoroughly defined at "http://id.kb.dk/preservationLevelRole".
+      The preservationLevelValue will be thoroughly defined at "http://id.kb.dk/vocabulary/preservationLevelValue.html".
     </xhtml:p>
     
     <head ID="description_event_type">Definition of Event types</head>
     <xhtml:p>
-      All the events regarding the digital object must be recorded. 
-      
-      <!-- TODO: is the URL correct??? -->
-      The different event types are defined at "http://id.kb.dk/eventTypes".
+      All the events regarding the digital object should be recorded. 
+      The different event types are defined at "http://id.kb.dk/vocabulary/preservationEvents.html".
     </xhtml:p>
     
     <head ID="description_references">References</head>
@@ -242,8 +241,8 @@
       a &lt;div&gt; with the attribute DMDID="mods1".
     </xhtml:p>
     <xhtml:p>
-      References to external digital objects to the METS document must have a unique identifier in the format of an
-      UUID, and all such references must be of the type 'URN' and the value must be prefixed by 'urn:uuid:'.
+      References to external digital objects to the METS document must have a unique identifier, preferably in the 
+      format of an UUID with the type 'URN' and the reference value prefixed by 'urn:uuid:'.
     </xhtml:p>
     <xhtml:p>
       References to the digital object may also occur within the embedded metadata formats, like the 
@@ -261,12 +260,12 @@
   <controlled_vocabularies>
     <vocabulary ID="vocabulary_agentIdentifer_type">
       <name>Agent Identifier Types</name>
-      <maintenance_agency>The Royal Library of Denmark</maintenance_agency>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/agentIdentifiers.html</URI>
       <values>
         <value>kbDkInternal = for uniquely identification of a predefined agent specified at "http://id.kb.dk".</value>
-        <value>kbDkPersonel = for uniquely identification of a person within the Royal Library of Denmark.</value>
-        <value>kbDkDepartment = for uniquely identification of a department at the Royal Library of Denmark.</value>
+        <value>kbDkPersonel = for uniquely identification of a person within the Royal Danish Library.</value>
+        <value>kbDkDepartment = for uniquely identification of a department at the Royal Danish Library.</value>
       </values>
       <context>
         Defines the type of agents for both the agents in the METS document and in embedded PREMIS 
@@ -275,7 +274,7 @@
     </vocabulary>
     <vocabulary ID="vocabulary_agentType">
       <name>Agent Type</name>
-      <maintenance_agency>The Royal Library of Denmark</maintenance_agency>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
       <!-- TODO: is this the correct URL??? -->
       <URI>http://id.kb.dk/vocabulary/premisAgentType.html</URI>
       <values>
@@ -329,77 +328,108 @@
         is used for the METS digiprovMD sections.
       </context>
     </vocabulary>
-    <vocabulary ID="vocabulary_preservation_level_bit_preservation">
+    <vocabulary ID="vocabulary_preservation_level_bit_safety">
       <name>
-        Specific values for PREMIS Preservation level values regarding bit preservation for 
-        The Royal Library of Denmark.
+        Specific values for PREMIS Preservation level values regarding bit safety for 
+        The Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Library of Denmark</maintenance_agency>
-      <!-- TODO: is it the correct URL? -->
-      <URI>http://id.kb.dk/vocabulary/preservationLevelValue</URI>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
-        <value>maxBitSafety</value>
-        <value>veryHighBitSafety</value>
-        <value>highBitSafety</value>
-        <value>mediumBitSafety</value>
-        <value>lowBitSafety</value>
-        <value>veryLowBitSafety</value>
-        <value>minBitSafety</value>
+        <value>bitSafetyMax</value>
+        <value>bitSafetyVeryHigh</value>
+        <value>bitSafetyHigh</value>
+        <value>bitSafetyMedium</value>
+        <value>bitSafetyLow</value>
+        <value>bitSafetyVeryLow</value>
+        <value>bitSafetyMin</value>
       </values>
       <context>
-        The different preservation level values for dealing with bit preservation for the 
-        &lt;premis:preservationLevelValue&gt; element which is used in the &lt;premis:preservationLevel&gt; embedded 
-        within a &lt;mets:digiprovMD&gt;.
+        The different preservation levels for dealing with bit safety aspect of preservation.
+        They will be divided into &lt;premis:preservationLevelType&gt; and &lt;premis:preservationLevelValue&gt; in 
+        the &lt;premis:preservationLevel&gt; embedded within the &lt;premis:object&gt;.
       </context>
+      <description>
+        <xhtml:p>
+          E.g. the value 'bitSafetyMedium' will be in the format:
+        </xhtml:p>
+        <xhtml:p>
+          &lt;premis:preservationLevel&gt;
+            &lt;premis:preservationLevelType&gt;bitSafety&lt;/premis:preservationLevelType&gt;
+            &lt;premis:preservationLevelValue&gt;Medium&lt;/premis:preservationLevelValue&gt;
+          &lt;/premis:preservationLevel&gt;
+        </xhtml:p>
+      </description>
     </vocabulary>
-    <vocabulary ID="vocabulary_preservation_level_logical_preservation">
+    <vocabulary ID="vocabulary_preservation_level_logical_strategy">
       <name>
-        Specific values for PREMIS Preservation level values regarding logical preservation for 
-        the Royal Library of Denmark.
+        Specific values for PREMIS Preservation level values regarding logical preservation strategy for 
+        the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Library of Denmark</maintenance_agency>
-      <!-- TODO: is it the correct URL? -->
-      <URI>http://id.kb.dk/vocabulary/preservationLevelValue</URI>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
-        <value>migrationStrategy</value>
-        <value>emulationStrategy</value>
-        <value>virtualizationStrategy</value>
-        <value>technicalStrategy</value>
+        <value>logicalStrategyMigration</value>
+        <value>logicalStrategyEmulation</value>
+        <value>logicalStrategyVirtualization</value>
+        <value>logicalStrategyTechnical</value>
       </values>
       <context>
-        The different preservation level values for dealing with logical preservation for the 
-        &lt;premis:preservationLevelValue&gt; element which is used in the &lt;premis:preservationLevel&gt; embedded 
-        within a &lt;mets:digiprovMD&gt;.
+        The different preservation levels for dealing with bit safety aspect of preservation.
+        They will be divided into &lt;premis:preservationLevelType&gt; and &lt;premis:preservationLevelValue&gt; in 
+        the &lt;premis:preservationLevel&gt; embedded within the &lt;premis:object&gt;.
       </context>
+      <description>
+        <xhtml:p>
+          E.g. the value 'logicalStrategyEmulation' will be in the format:
+        </xhtml:p>
+        <xhtml:p>
+          &lt;premis:preservationLevel&gt;
+            &lt;premis:preservationLevelType&gt;logicalStrategy&lt;/premis:preservationLevelType&gt;
+            &lt;premis:preservationLevelValue&gt;Emulation&lt;/premis:preservationLevelValue&gt;
+          &lt;/premis:preservationLevel&gt;
+        </xhtml:p>
+      </description>
     </vocabulary>
     <vocabulary ID="vocabulary_preservation_level_confidentiality">
       <name>
         Specific values for PREMIS Preservation level values regarding confidentiality for
-        the Royal Library of Denmark.
+        the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Library of Denmark</maintenance_agency>
-      <!-- TODO: is it the correct URL? -->
-      <URI>http://id.kb.dk/vocabulary/preservationLevelValue</URI>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
-        <value>maxConfidentiality</value>
-        <value>veryHighConfidentiality</value>
-        <value>highConfidentiality</value>
-        <value>mediumConfidentiality</value>
-        <value>lowConfidentiality</value>
-        <value>veryLowConfidentiality</value>
-        <value>minConfidentiality</value>
+        <value>confidentialityMax</value>
+        <value>confidentialityVeryHigh</value>
+        <value>confidentialityHigh</value>
+        <value>confidentialityMedium</value>
+        <value>confidentialityLow</value>
+        <value>confidentialityVeryLow</value>
+        <value>confidentialityMin</value>
       </values>
       <context>
-        The different preservation level values for dealing with confidentiality for the 
-        &lt;premis:preservationLevelValue&gt; element which is used in the &lt;premis:preservationLevel&gt; embedded 
-        within a &lt;mets:digiprovMD&gt;.
+        The different preservation levels for dealing with bit safety aspect of preservation.
+        They will be divided into &lt;premis:preservationLevelType&gt; and &lt;premis:preservationLevelValue&gt; in 
+        the &lt;premis:preservationLevel&gt; embedded within the &lt;premis:object&gt;.
       </context>
+      <description>
+        <xhtml:p>
+          E.g. the value 'confidentialityMedium' will be in the format:
+        </xhtml:p>
+        <xhtml:p>
+          &lt;premis:preservationLevel&gt;
+            &lt;premis:preservationLevelType&gt;confidentiality&lt;/premis:preservationLevelType&gt;
+            &lt;premis:preservationLevelValue&gt;Medium&lt;/premis:preservationLevelValue&gt;
+          &lt;/premis:preservationLevel&gt;
+        </xhtml:p>
+      </description>
     </vocabulary>
     <vocabulary>
-      <!-- TODO: are we defining our own here?? -->
-      <name>PREMIS Preservation Level Role</name>
-      <maintenance_agency>Library of Congress</maintenance_agency>
-      <URI>http://www.loc.gov/standards/premis/</URI>
+      <name>
+        Specific values for PREMIS Preservation level role for the Royal Danish Library.
+      </name>
+      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <URI>http://id.kb.dk/vocabulary/preservationLevelRole.html</URI>
       <values>
         <value>
           capability = An indication of the level at which an institution is currently capable of preserving an 
@@ -416,7 +446,7 @@
       </values>
       <context>
         PREMIS Suggested Preservation Level Role are used as values for the &lt;premis:preservationLevelRole&gt;
-        element which is used in the &lt;premis:preservationLevel&gt; embedded within a &lt;mets:digiprovMD&gt;.
+        element which is used in the &lt;premis:preservationLevel&gt;.
       </context>
     </vocabulary>
   </controlled_vocabularies>
@@ -427,7 +457,9 @@
         <description>
           <xhtml:p>
             The root &lt;mets&gt; element must include an OBJID attribute.
-            The value of this attribut must be the primary, persistent, and unique identifier for the METS document.
+            The value of this attribute must be the primary, persistent, and unique identifier for the METS document.
+            This must not be identical to the identifier of any object referred to by the METS document, e.g. in the 
+            fileSec or structMap.
           </xhtml:p>
         </description>
       </requirement>
@@ -435,7 +467,7 @@
         <description>
           <xhtml:p>
             The root &lt;mets&gt; element must include a TYPE attribute value. This must reflect whether the METS file
-            is metadata for a single file or whether the metadata is the representation.
+            is metadata for a single file or whether the metadata is for a representation consisting of several files.
             Therefore it must either have the value 'FILE' or 'REPRESENTATION'.
           </xhtml:p>
         </description>
@@ -451,7 +483,7 @@
     </metsRootElement>
     <multiSection>
       <requirement ID="multiSection_FILEID" 
-          RELATEDMAT="structMap_div_fptr_FILEID fileSec_fileGrp_file_ID description_references" REQLEVEL="MUST">
+          RELATEDMAT="ref_mets description_references" REQLEVEL="MUST">
         <description>
           <xhtml:p>
             The &lt;structMap&gt; section and the &lt;fileSec&gt; section must be linked together through the
@@ -460,7 +492,7 @@
           </xhtml:p>
         </description>
       </requirement>
-      <requirement ID="multiSection_MDID" RELATEDMAT="amdSec_MD_ID dmdSec_ID structMap_div_ADMID structMap_div_DMDID" 
+      <requirement ID="multiSection_MDID" RELATEDMAT="ref_mets description_references" 
           REQLEVEL="MUST">
         <description>
           <xhtml:p>
@@ -497,7 +529,7 @@
       <requirement ID="ISO_requirements" REQLEVEL="MUST">
         <description>
           <xhtml:p>
-            The Royal Library of Denmark requires all dates to conform to the W3CDTF profile of ISO 8601, 
+            The Royal Danish Library requires all dates to conform to the W3CDTF profile of ISO 8601, 
             and all language codes must conform to the RFC 4646.
           </xhtml:p>
         </description>
@@ -563,84 +595,99 @@
   </tool>
   
   <Appendix NUMBER="1">
-    <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:premis="info:lc/xmlns/premis-v2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:mix="http://www.loc.gov/mix/v20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version191/mets.xsd" TYPE="File" OBJID="4ba46f00-0099-11e2-9397-005056887b67" PROFILE="http://id.kb.dk/mets/kbprofile-1.0.xml">
-      <mets:metsHdr CREATEDATE="2012-10-02T15:23:27.274+02:00">
+    <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html" xmlns:premis="http://www.loc.gov/premis/v3" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:mix="http://www.loc.gov/mix/v20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd" TYPE="File" OBJID="fc28c64f-8e6e-4d20-afb2-e314be587bf1" PROFILE="http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml">
+      <mets:metsHdr CREATEDATE="2017-02-24T11:09:40.235+01:00">
         <mets:agent ID="kbDk" ROLE="CREATOR" TYPE="ORGANIZATION">
-          <mets:name>Det Kongelige Bibliotek, Nationalbibliotek og Københavns Universitetsbibliotek</mets:name>
+          <mets:name>kbDk</mets:name>
+          <mets:note>kbDkInternal</mets:note>
         </mets:agent>
-        <mets:agent ID="kbDkMdGen0-6" ROLE="CREATOR" TYPE="OTHER" OTHERTYPE="API">
-          <mets:name>KB METADATA MATRJOSJKA v. 0.7</mets:name>
-          <mets:note>dk.kb.metadata.MetsGenerator</mets:note>
+        <mets:agent ID="kbDkCumulusBevaringsService" ROLE="CREATOR" TYPE="OTHER" OTHERTYPE="API">
+          <mets:name>kbDkCumulusBevaringsService (v. 1.0.0-RC5) </mets:name>
+          <mets:note>kbDkInternal</mets:note>
         </mets:agent>
-        <mets:agent ID="kbDkKob" ROLE="EDITOR" TYPE="OTHER" OTHERTYPE="DEPARTMENT">
-          <mets:name>KOB: Kort- og Billedafdelingen</mets:name>
+        <mets:agent ID="kbDkBev" ROLE="EDITOR" TYPE="OTHER" OTHERTYPE="DEPARTMENT">
+          <mets:name>kbDkBev</mets:name>
+          <mets:note>kbDkDepartment</mets:note>
         </mets:agent>
       </mets:metsHdr>
-      <mets:dmdSec CREATED="2012-10-02T15:23:27.316+02:00" ID="Mods1">
+      <mets:dmdSec CREATED="2017-02-24T11:09:40.259+01:00" ID="Mods1">
         <mets:mdWrap MDTYPE="MODS">
           <mets:xmlData>
-            <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
-              <mods:identifier type="uri">urn:uuid:14067980-0758-11e0-bc9e-0016357f605f</mods:identifier>
-              <mods:identifier type="local">Car_S-9088.tif</mods:identifier>
-              <mods:name lang="da" type="personal">
-                <mods:namePart>Carrebye</mods:namePart>
+            <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+              <mods:genre type="KB Samling">H</mods:genre>
+              <mods:genre type="Categories">Billedsamlingen, Albumsamlingen, 1992-485</mods:genre>
+              <mods:identifier type="uri">urn:uuid:be9f16d0-da42-11e2-b191-005056887b70</mods:identifier>
+              <mods:identifier type="local">1992_485_0001.tif</mods:identifier>
+              <mods:identifier displayLabel="Accession number" type="accession number">1992-485</mods:identifier>
+              <mods:name type="personal">
+                <mods:namePart>gca</mods:namePart>
                 <mods:role>
-                  <mods:roleTerm>Ophav</mods:roleTerm>
+                  <mods:roleTerm type="text" lang="da">Ophav</mods:roleTerm>
+                  <mods:roleTerm type="text" lang="en">Creator</mods:roleTerm>
                 </mods:role>
               </mods:name>
-              <mods:name lang="da" type="personal">
-                <mods:namePart>Mogens Carreby</mods:namePart>
-                <mods:role>
-                  <mods:roleTerm>Forfatter</mods:roleTerm>
-                </mods:role>
-              </mods:name>
-              <mods:note lang="da" type="content">Jacob Holm &amp; Sønner</mods:note>
+              <mods:note type="content">album 667, 8vo</mods:note>
               <mods:recordInfo>
-                <mods:recordCreationDate encoding="w3cdtf">Thu Mar 18 12:03:50 CET 2010</mods:recordCreationDate>
-                <mods:recordChangeDate encoding="w3cdtf">Thu Jun 07 15:33:35 CEST 2012</mods:recordChangeDate>
-                <mods:recordIdentifier>32</mods:recordIdentifier>
                 <mods:languageOfCataloging>
                   <mods:languageTerm authority="rfc4646" type="code">da</mods:languageTerm>
                 </mods:languageOfCataloging>
+                <mods:recordInfoNote>LTR</mods:recordInfoNote>
               </mods:recordInfo>
-              <mods:relatedItem type="otherFormat">
-                <mods:identifier displayLabel="image" type="uri">http://www.kb.dk/imageService/online_master_arkiv_7/non-archival/samlingsbilleder/Carrebye/Car_S-9088.jpg</mods:identifier>
-                <mods:identifier displayLabel="thumbnail" type="uri">http://www.kb.dk/imageService/w150/h150/online_master_arkiv_7/non-archival/samlingsbilleder/Carrebye/Car_S-9088.jpg</mods:identifier>
-              </mods:relatedItem>
               <mods:subject>
-                <mods:topic lang="da">rebslageri</mods:topic>
+                <mods:topic>album 667, 8vo</mods:topic>
                 <mods:genre>Keywords</mods:genre>
               </mods:subject>
-              <mods:subject>
-                <mods:geographic lang="da">Danmark, Amager</mods:geographic>
-                <mods:genre>Lokalitet</mods:genre>
-              </mods:subject>
-              <mods:titleInfo>
-                <mods:title>Jacob Holm &amp; Sønner rebslageri</mods:title>
-              </mods:titleInfo>
               <mods:typeOfResource>still image</mods:typeOfResource>
             </mods:mods>
           </mets:xmlData>
         </mets:mdWrap>
       </mets:dmdSec>
       <mets:amdSec>
-        <mets:techMD CREATED="2012-10-02T15:23:28.136+02:00" ID="PremisObject1">
+        <mets:techMD CREATED="2017-02-24T11:09:40.409+01:00" ID="PremisObject1">
           <mets:mdWrap MDTYPE="PREMIS:OBJECT">
             <mets:xmlData>
-              <premis:object xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd" xsi:type="premis:file">
+              <premis:object xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd" xsi:type="premis:file">
                 <premis:objectIdentifier>
                   <premis:objectIdentifierType>UUID</premis:objectIdentifierType>
-                  <premis:objectIdentifierValue>14067980-0758-11e0-bc9e-0016357f605f</premis:objectIdentifierValue>
+                  <premis:objectIdentifierValue>be9f16d0-da42-11e2-b191-005056887b70</premis:objectIdentifierValue>
                 </premis:objectIdentifier>
-                <premis:significantProperties>
-                  <premis:significantPropertiesExtension>
+                <premis:preservationLevel>
+                  <premis:preservationLevelType>bitSafety</premis:preservationLevelType>
+                  <premis:preservationLevelValue>High</premis:preservationLevelValue>
+                  <premis:preservationLevelDateAssigned>2017-02-24T11:09:40.412+01:00</premis:preservationLevelDateAssigned>
+                </premis:preservationLevel>
+                <premis:preservationLevel>
+                  <premis:preservationLevelType>logical</premis:preservationLevelType>
+                  <premis:preservationLevelValue>Migration</premis:preservationLevelValue>
+                  <premis:preservationLevelDateAssigned>2017-02-24T11:09:40.416+01:00</premis:preservationLevelDateAssigned>
+                </premis:preservationLevel>
+                <premis:preservationLevel>
+                  <premis:preservationLevelType>confidentiality</premis:preservationLevelType>
+                  <premis:preservationLevelValue>Low</premis:preservationLevelValue>
+                  <premis:preservationLevelDateAssigned>2017-02-24T11:09:40.420+01:00</premis:preservationLevelDateAssigned>
+                </premis:preservationLevel>
+                <premis:objectCharacteristics>
+                  <premis:compositionLevel>0</premis:compositionLevel>
+                  <premis:fixity>
+                    <premis:messageDigestAlgorithm>MD5</premis:messageDigestAlgorithm>
+                    <premis:messageDigest>0baebb965c9ff21c54e7c4d0a735e153</premis:messageDigest>
+                  </premis:fixity>
+                  <premis:size>38179032</premis:size>
+                  <premis:format>
+                    <premis:formatDesignation>
+                      <premis:formatName>TIFF Image</premis:formatName>
+                      <premis:formatVersion>6.0</premis:formatVersion>
+                    </premis:formatDesignation>
+                    <premis:formatNote>Validated by Cumulus version: 10.1.3</premis:formatNote>
+                  </premis:format>
+                  <premis:objectCharacteristicsExtension>
                     <mix:mix xsi:schemaLocation="http://www.loc.gov/mix/v20 http://www.loc.gov/standards/mix/mix20/mix20.xsd">
                       <mix:BasicDigitalObjectInformation>
                         <mix:ObjectIdentifier>
                           <mix:objectIdentifierType>UUID</mix:objectIdentifierType>
-                          <mix:objectIdentifierValue>14067980-0758-11e0-bc9e-0016357f605f</mix:objectIdentifierValue>
+                          <mix:objectIdentifierValue>be9f16d0-da42-11e2-b191-005056887b70</mix:objectIdentifierValue>
                         </mix:ObjectIdentifier>
-                        <mix:fileSize>165856122</mix:fileSize>
+                        <mix:fileSize>38179032</mix:fileSize>
                         <mix:FormatDesignation>
                           <mix:formatName>TIFF Image</mix:formatName>
                           <mix:formatVersion>6.0</mix:formatVersion>
@@ -651,18 +698,18 @@
                         </mix:Compression>
                         <mix:Fixity>
                           <mix:messageDigestAlgorithm>MD5</mix:messageDigestAlgorithm>
-                          <mix:messageDigest>93ed81c16f2f822c871b9c505db53a59</mix:messageDigest>
+                          <mix:messageDigest>0baebb965c9ff21c54e7c4d0a735e153</mix:messageDigest>
                         </mix:Fixity>
                       </mix:BasicDigitalObjectInformation>
                       <mix:BasicImageInformation>
                         <mix:BasicImageCharacteristics>
-                          <mix:imageWidth>8555</mix:imageWidth>
-                          <mix:imageHeight>6462</mix:imageHeight>
+                          <mix:imageWidth>4368</mix:imageWidth>
+                          <mix:imageHeight>2912</mix:imageHeight>
                           <mix:PhotometricInterpretation>
-                            <mix:colorSpace>RGB Color</mix:colorSpace>
+                            <mix:colorSpace>RGB</mix:colorSpace>
                             <mix:ColorProfile>
                               <mix:IccProfile>
-                                <mix:iccProfileName>eciRGB v2</mix:iccProfileName>
+                                <mix:iccProfileName>Adobe RGB (1998)</mix:iccProfileName>
                               </mix:IccProfile>
                             </mix:ColorProfile>
                           </mix:PhotometricInterpretation>
@@ -670,23 +717,53 @@
                       </mix:BasicImageInformation>
                       <mix:ImageCaptureMetadata>
                         <mix:GeneralCaptureInformation>
-                          <mix:dateTimeCreated>2009-09-25T15:52:14.000+02:00</mix:dateTimeCreated>
+                          <mix:dateTimeCreated>2011-06-08T15:45:13.000+02:00</mix:dateTimeCreated>
+                          <mix:imageProducer>gca</mix:imageProducer>
                         </mix:GeneralCaptureInformation>
                         <mix:ScannerCapture>
+                          <mix:ScannerModel>
+                            <mix:scannerModelName>Canon EOS 5D</mix:scannerModelName>
+                          </mix:ScannerModel>
                           <mix:MaximumOpticalResolution>
-                            <mix:xOpticalResolution>1800</mix:xOpticalResolution>
-                            <mix:yOpticalResolution>1800</mix:yOpticalResolution>
+                            <mix:xOpticalResolution>400</mix:xOpticalResolution>
+                            <mix:yOpticalResolution>400</mix:yOpticalResolution>
                           </mix:MaximumOpticalResolution>
-                          <mix:ScanningSystemSoftware>
-                            <mix:scanningSoftwareName>Adobe Photoshop CS3 Macintosh</mix:scanningSoftwareName>
-                          </mix:ScanningSystemSoftware>
                         </mix:ScannerCapture>
+                        <mix:DigitalCameraCapture>
+                          <mix:digitalCameraManufacturer>Canon</mix:digitalCameraManufacturer>
+                          <mix:DigitalCameraModel>
+                            <mix:digitalCameraModelName>Canon EOS 5D</mix:digitalCameraModelName>
+                          </mix:DigitalCameraModel>
+                          <mix:CameraCaptureSettings>
+                            <mix:ImageData>
+                              <mix:fNumber>16.0</mix:fNumber>
+                              <mix:exposureTime>0.5</mix:exposureTime>
+                              <mix:exposureProgram>Aperture priority</mix:exposureProgram>
+                              <mix:exifVersion>0221</mix:exifVersion>
+                              <mix:shutterSpeedValue>
+                                <mix:numerator>1</mix:numerator>
+                                <mix:denominator>1</mix:denominator>
+                              </mix:shutterSpeedValue>
+                              <mix:apertureValue>
+                                <mix:numerator>80</mix:numerator>
+                                <mix:denominator>10</mix:denominator>
+                              </mix:apertureValue>
+                              <mix:exposureBiasValue>
+                                <mix:numerator>00</mix:numerator>
+                                <mix:denominator>10</mix:denominator>
+                              </mix:exposureBiasValue>
+                              <mix:meteringMode>Pattern</mix:meteringMode>
+                              <mix:lightSource>other light source</mix:lightSource>
+                              <mix:focalLength>50.0</mix:focalLength>
+                            </mix:ImageData>
+                          </mix:CameraCaptureSettings>
+                        </mix:DigitalCameraCapture>
                         <mix:orientation>normal*</mix:orientation>
                       </mix:ImageCaptureMetadata>
                       <mix:ImageAssessmentMetadata>
                         <mix:ImageColorEncoding>
                           <mix:BitsPerSample>
-                            <mix:bitsPerSampleValue>16</mix:bitsPerSampleValue>
+                            <mix:bitsPerSampleValue>8</mix:bitsPerSampleValue>
                             <mix:bitsPerSampleUnit>integer</mix:bitsPerSampleUnit>
                           </mix:BitsPerSample>
                           <mix:samplesPerPixel>3</mix:samplesPerPixel>
@@ -694,86 +771,51 @@
                       </mix:ImageAssessmentMetadata>
                       <mix:ChangeHistory>
                         <mix:ImageProcessing>
-                          <mix:dateTimeProcessed>1970-01-01T01:59:59.000+01:00</mix:dateTimeProcessed>
+                          <mix:dateTimeProcessed>2011-06-08T15:45:13.000+02:00</mix:dateTimeProcessed>
                           <mix:sourceData>initial capture</mix:sourceData>
-                          <mix:ProcessingSoftware>
-                            <mix:processingSoftwareName>Adobe Photoshop CS3 Macintosh</mix:processingSoftwareName>
-                          </mix:ProcessingSoftware>
                         </mix:ImageProcessing>
                       </mix:ChangeHistory>
                     </mix:mix>
-                  </premis:significantPropertiesExtension>
-                </premis:significantProperties>
-                <premis:objectCharacteristics>
-                  <premis:compositionLevel>0</premis:compositionLevel>
-                  <premis:fixity>
-                    <premis:messageDigestAlgorithm>MD5</premis:messageDigestAlgorithm>
-                    <premis:messageDigest>93ed81c16f2f822c871b9c505db53a59</premis:messageDigest>
-                  </premis:fixity>
-                  <premis:size>165856122</premis:size>
-                  <premis:format>
-                    <premis:formatDesignation>
-                      <premis:formatName>TIFF Image</premis:formatName>
-                      <premis:formatVersion>6.0</premis:formatVersion>
-                    </premis:formatDesignation>
-                  </premis:format>
+                  </premis:objectCharacteristicsExtension>
                 </premis:objectCharacteristics>
-                <premis:linkingIntellectualEntityIdentifier>
-                  <premis:linkingIntellectualEntityIdentifierType>UUID</premis:linkingIntellectualEntityIdentifierType>
-                  <premis:linkingIntellectualEntityIdentifierValue>linkingIntellectualEntityIdentifierValue_PLACE_HOLDER</premis:linkingIntellectualEntityIdentifierValue>
-                </premis:linkingIntellectualEntityIdentifier>
+                <premis:relationship>
+                  <premis:relationshipType>structural</premis:relationshipType>
+                  <premis:relationshipSubType>represents</premis:relationshipSubType>
+                  <premis:relatedObjectIdentifier>
+                    <premis:relatedObjectIdentifierType>UUID</premis:relatedObjectIdentifierType>
+                    <premis:relatedObjectIdentifierValue>be9f16d1-da42-11e2-b191-005056887b70</premis:relatedObjectIdentifierValue>
+                  </premis:relatedObjectIdentifier>
+                </premis:relationship>
               </premis:object>
             </mets:xmlData>
           </mets:mdWrap>
         </mets:techMD>
-        <mets:rightsMD CREATED="2012-10-02T15:23:28.202+02:00" ID="ModsRights1">
+        <mets:rightsMD CREATED="2017-02-24T11:09:40.509+01:00" ID="ModsRights1">
           <mets:mdWrap MDTYPE="MODS">
             <mets:xmlData>
-              <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
-                <mods:accessCondition lang="da">Det Kongelige Bibliotek</mods:accessCondition>
-              </mods:mods>
+              <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+                <mods:accessCondition>Det Kongelige Bibliotek</mods:accessCondition>
+              </mods:mods>	
             </mets:xmlData>
           </mets:mdWrap>
         </mets:rightsMD>
-        <mets:digiprovMD CREATED="2012-10-02T15:23:28.205+02:00" ID="Premis1">
-          <mets:mdWrap MDTYPE="PREMIS">
-            <mets:xmlData>
-              <premis:preservationLevel xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd">
-                <premis:preservationLevelValue>highBitSafety</premis:preservationLevelValue>
-                <premis:preservationLevelRole>requirement</premis:preservationLevelRole>
-                <premis:preservationLevelRationale>Bitbevaring kun muligt for dette format</premis:preservationLevelRationale>
-                <premis:preservationLevelDateAssigned>2010-08-01T00:00:00.000+02:00</premis:preservationLevelDateAssigned>
-              </premis:preservationLevel>
-              <premis:preservationLevel xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd">
-                <premis:preservationLevelValue>migrationStrategy</premis:preservationLevelValue>
-                <premis:preservationLevelRole>requirement</premis:preservationLevelRole>
-                <premis:preservationLevelDateAssigned>2012-11-01T00:00:00.000+02:00</premis:preservationLevelDateAssigned>
-              </premis:preservationLevel>
-              <premis:preservationLevel xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd">
-                <premis:preservationLevelValue>minConfidentiality</premis:preservationLevelValue>
-                <premis:preservationLevelRole>requirement</premis:preservationLevelRole>
-                <premis:preservationLevelDateAssigned>2012-11-01T00:00:00.000+02:00</premis:preservationLevelDateAssigned>
-              </premis:preservationLevel>
-            </mets:xmlData>
-          </mets:mdWrap>
-        </mets:digiprovMD>
-        <mets:digiprovMD CREATED="2012-10-02T15:23:28.210+02:00" ID="PremisEvent1">
+        <mets:digiprovMD CREATED="2017-02-24T11:09:40.512+01:00" ID="PremisEvent1">
           <mets:mdWrap MDTYPE="PREMIS:EVENT">
             <mets:xmlData>
-              <premis:event xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd">
+              <premis:event xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd">
                 <premis:eventIdentifier>
                   <premis:eventIdentifierType>UUID</premis:eventIdentifierType>
-                  <premis:eventIdentifierValue>7601520c-938d-48fd-b0ee-5c63d744f1f9</premis:eventIdentifierValue>
+                  <premis:eventIdentifierValue>45927226-ebef-4648-8ba9-8628f3035c5f</premis:eventIdentifierValue>
                 </premis:eventIdentifier>
                 <premis:eventType>ingestion</premis:eventType>
-                <premis:eventDateTime>2012-10-02T15:23:28.223+02:00</premis:eventDateTime>
+                <premis:eventDateTime>2017-02-24T11:09:40.517+01:00</premis:eventDateTime>
                 <premis:linkingAgentIdentifier>
-                  <premis:linkingAgentIdentifierType>kbDkInternal</premis:linkingAgentIdentifierType>
-                  <premis:linkingAgentIdentifierValue>kbDkIngest</premis:linkingAgentIdentifierValue>
+                  <premis:linkingAgentIdentifierType>kbDkCumulusBevaringsService (v. 1.0.0-RC5) </premis:linkingAgentIdentifierType>
+                  <premis:linkingAgentIdentifierValue>kbDkInternal</premis:linkingAgentIdentifierValue>
                 </premis:linkingAgentIdentifier>
                 <premis:linkingObjectIdentifier>
                   <premis:linkingObjectIdentifierType>UUID</premis:linkingObjectIdentifierType>
-                  <premis:linkingObjectIdentifierValue>14067980-0758-11e0-bc9e-0016357f605f</premis:linkingObjectIdentifierValue>
+                  <premis:linkingObjectIdentifierValue>be9f16d0-da42-11e2-b191-005056887b70</premis:linkingObjectIdentifierValue>
                 </premis:linkingObjectIdentifier>
               </premis:event>
             </mets:xmlData>
@@ -783,13 +825,13 @@
       <mets:fileSec>
         <mets:fileGrp>
           <mets:file ID="fileId1">
-            <mets:FLocat LOCTYPE="URN" xlink:href="urn:uuid:14067980-0758-11e0-bc9e-0016357f605f"></mets:FLocat>
+            <mets:FLocat LOCTYPE="URN" xlink:href="urn:uuid:be9f16d0-da42-11e2-b191-005056887b70"/>
           </mets:file>
         </mets:fileGrp>
       </mets:fileSec>
       <mets:structMap TYPE="logical">
-        <mets:div DMDID="Mods1" ADMID="ModsRights1 Premis1 PremisEvent1 PremisObject1">
-          <mets:fptr FILEID="fileId1" />
+        <mets:div DMDID="Mods1" ADMID="ModsRights1 PremisEvent1 PremisObject1">
+          <mets:fptr FILEID="fileId1"/>
         </mets:div>
       </mets:structMap>
     </mets:mets>
