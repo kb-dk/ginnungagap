@@ -197,6 +197,14 @@
       <xsl:value-of select="field[@name='KB Samling']/value" />
     </xsl:element>
     
+    <!-- Catalog Name -->
+    <xsl:element name="mods:genre">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'Catalog Name'" />
+      </xsl:attribute>
+      <xsl:value-of select="field[@name='Catalog Name']/value" />
+    </xsl:element>
+    
     <!-- Genre -->
     <xsl:for-each select="field[@name='Genre']/value">
       <xsl:element name="mods:genre">
@@ -284,6 +292,26 @@
         </xsl:element>
       </xsl:when>
     </xsl:choose>
+    
+    <!-- Asset Reference -->
+    <xsl:if test="field[@name='Asset Reference']">
+        <xsl:element name="mods:identifier">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'Asset Reference'" />
+          </xsl:attribute>
+          <xsl:value-of select="field[@name='Asset Reference']/value" />
+        </xsl:element>
+    </xsl:if>
+    
+    <!-- Original Asset Reference -->
+    <xsl:if test="field[@name='Original Asset Reference']">
+        <xsl:element name="mods:identifier">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'Original Asset Reference'" />
+          </xsl:attribute>
+          <xsl:value-of select="field[@name='Original Asset Reference']/value" />
+        </xsl:element>
+    </xsl:if>
   </xsl:template>
   <!-- END identifiers -->
 
@@ -1613,7 +1641,7 @@
     <xsl:if test="field[@name='Script'] or field[@name='Skrifttype'] 
     or field[@name='Script: detail'] or field[@name='Skrifttype, detaljer'] 
     or field[@name='Størrelse'] or field[@name='Dimentions']
-    or field[@name='Textarea'] or field[@name='Tekstområde']">
+    or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']">
       <xsl:element name="mods:physicalDescription">
         <!-- Script || Skrifttype -->
         <xsl:choose>
@@ -1718,7 +1746,15 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-      
+        
+        <xsl:if test="field[@name='State']">
+          <xsl:element name="mods:note">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'State'" />
+            </xsl:attribute>
+            <xsl:value-of select="field[@name='State']/value"></xsl:value-of>
+          </xsl:element>
+        </xsl:if>
       </xsl:element>
     </xsl:if>
   </xsl:template>

@@ -22,58 +22,10 @@ public final class AgentSelector {
     /** The metadata generator.*/
     private static final String KB_AGENT_CBS = "kbDkCumulusBevaringsService";
 
-    // The different names for the agents for the departments.
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_DFS = "kbDkDfs";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_KULT = "kbDkKult";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_DB = "kbDkDb";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_PLG = "kbDkPlg";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_KOB = "kbDkKob";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_BEV = "kbDkBev";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_KAT = "kbDkKat";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_HA = "kbDkHa";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_OJA = "kbDkOja";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_MTA = "kbDkMta";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_DCM = "kbDkDcm";
-    /** Deprecated department abbr. */
-    private static final String KB_DEP_FRSK = "kbDkFrsk";
-
-    /** Current department abbr.*/
-    private static final String KB_DEP_NSA = "kbDkNSA";
-    /** Current department abbr.*/
-    private static final String KB_DEP_NSA1 = "kbDkNSA1";
-    /** Current department abbr.*/
-    private static final String KB_DEP_NSA2 = "kbDkNSA2";
-
     /** The list of all possible agent names currently defined.*/
     public static final Set<String> AGENT_NAMES = new HashSet<String>(Arrays.asList(
             KB_AGENT,
-            KB_AGENT_CBS,
-            KB_DEP_NSA,
-            KB_DEP_NSA1,
-            KB_DEP_NSA2,
-            KB_DEP_DFS,
-            KB_DEP_KULT,
-            KB_DEP_DB,
-            KB_DEP_PLG,
-            KB_DEP_KOB,
-            KB_DEP_BEV,
-            KB_DEP_KAT,
-            KB_DEP_HA,
-            KB_DEP_OJA,
-            KB_DEP_MTA,
-            KB_DEP_DCM,
-            KB_DEP_FRSK));
+            KB_AGENT_CBS));
 
     // The different types of agents.
     /** Internal agent. */

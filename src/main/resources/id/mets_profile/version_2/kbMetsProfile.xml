@@ -7,7 +7,7 @@
   <!-- TODO: determine exact URL. Also fix the 'draft' -->
   <URI ID="profile_URI" LOCTYPE="URL" ASSIGNEDBY="local">http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml</URI>
   <!-- TODO: remove draft, when finished reviewing. -->
-  <title xml:lang="en">The Royal Danish Library METS profile for digital cultural heritage [Draft version 2]</title>
+  <title xml:lang="en">Royal Danish Library METS profile for digital cultural heritage version 2</title>
   <abstract xml:lang="en">
     The METS profile for the Royal Danish Library specifies how METS documents representing digital objects 
     in the digital archives for the Royal Danish Library should be encoded.
@@ -19,7 +19,7 @@
   <!-- TODO: Is this the right contacts? -->
   <contact ROLE="IPOWNER">
     <name>The current head of the Royal Danish Library</name>
-    <institution>The Royal Danish Library</institution>
+    <institution>Royal Danish Library</institution>
     <address>Søren Kierkegaards Plads 1, 1221 København K, Denmark</address>
   </contact>
   
@@ -57,7 +57,7 @@
   </external_schema>
   <external_schema ID="extension_PREMIS">
     <name>PREMIS (Preservation Metadata)</name>
-    <URL TARGETNAMESPACE="info:lc/xmlns/premis-v2">http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd</URL>
+    <URL TARGETNAMESPACE="http://www.loc.gov/mods/v3">http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd</URL>
     <context>mets/amdSec/techMD/mdWrap/xmlData</context>
     <context>mets/amdSec/rightsMD/mdWrap[MDTYPE="PREMIS:RIGHTS"]/xmlData</context>
     <context>mets/amdSec/digiprovMD/mdWrap[MDTYPE="PREMIS:EVENT"]/xmlData</context>
@@ -99,7 +99,7 @@
     
     <head ID="description_XML">Rules for the XML</head>
     <xhtml:p> 
-      Every METS XML document comforming to this profile must have a XML-header with a clearly defined version and 
+      Every METS XML document conforming to this profile must have a XML-header with a clearly defined version and 
       encoding, e.g. a METS document of XML version 1.0 and encoded with the UTF-8 encoded Unicode and must therefore 
       begin with the standard XML  declaration: &lt;?xml version="1.0" encoding="UTF-8"?&gt;.
       Also, the METS document must only contain valid XML.
@@ -174,7 +174,6 @@
       represented by the METS document. The roles involves the creator, the owner, the events described in
       embedded PREMIS:EVENT elements, etc.
     </xhtml:p>
-    <!-- TODO: is the URL correct??? -->
     <xhtml:p>
       All the agents involved with METS documents conforming to this profile should be defined at 
       "http://id.kb.dk/authorities/agents". 
@@ -260,7 +259,7 @@
   <controlled_vocabularies>
     <vocabulary ID="vocabulary_agentIdentifer_type">
       <name>Agent Identifier Types</name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/agentIdentifiers.html</URI>
       <values>
         <value>kbDkInternal = for uniquely identification of a predefined agent specified at "http://id.kb.dk".</value>
@@ -274,9 +273,8 @@
     </vocabulary>
     <vocabulary ID="vocabulary_agentType">
       <name>Agent Type</name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
-      <!-- TODO: is this the correct URL??? -->
-      <URI>http://id.kb.dk/vocabulary/premisAgentType.html</URI>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
+      <URI>http://id.kb.dk/vocabulary/agentTypes.html</URI>
       <values>
         <value>INDIVIDUAL</value>
         <value>ORGANIZATION</value>
@@ -331,9 +329,9 @@
     <vocabulary ID="vocabulary_preservation_level_bit_safety">
       <name>
         Specific values for PREMIS Preservation level values regarding bit safety for 
-        The Royal Danish Library.
+        the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
         <value>bitSafetyMax</value>
@@ -366,7 +364,7 @@
         Specific values for PREMIS Preservation level values regarding logical preservation strategy for 
         the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
         <value>logicalStrategyMigration</value>
@@ -396,7 +394,7 @@
         Specific values for PREMIS Preservation level values regarding confidentiality for
         the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/preservationLevelValue.html</URI>
       <values>
         <value>confidentialityMax</value>
@@ -428,7 +426,7 @@
       <name>
         Specific values for PREMIS Preservation level role for the Royal Danish Library.
       </name>
-      <maintenance_agency>The Royal Danish Library</maintenance_agency>
+      <maintenance_agency>Royal Danish Library</maintenance_agency>
       <URI>http://id.kb.dk/vocabulary/preservationLevelRole.html</URI>
       <values>
         <value>
@@ -529,7 +527,7 @@
       <requirement ID="ISO_requirements" REQLEVEL="MUST">
         <description>
           <xhtml:p>
-            The Royal Danish Library requires all dates to conform to the W3CDTF profile of ISO 8601, 
+            Royal Danish Library requires all dates to conform to the W3CDTF profile of ISO 8601, 
             and all language codes must conform to the RFC 4646.
           </xhtml:p>
         </description>
@@ -583,7 +581,6 @@
     </metadata_files>
   </technical_requirements>
   
-  <!-- TODO: Perhaps add KBDOMS, the Gatekeeper, METADATA MATRJOSJKA or SIFD???-->
   <tool>
     <name>XSD - XML Schema Definition for XML validation</name>
     <description>
@@ -613,7 +610,7 @@
       <mets:dmdSec CREATED="2017-02-24T11:09:40.259+01:00" ID="Mods1">
         <mets:mdWrap MDTYPE="MODS">
           <mets:xmlData>
-            <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+            <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
               <mods:genre type="KB Samling">H</mods:genre>
               <mods:genre type="Categories">Billedsamlingen, Albumsamlingen, 1992-485</mods:genre>
               <mods:identifier type="uri">urn:uuid:be9f16d0-da42-11e2-b191-005056887b70</mods:identifier>
@@ -646,7 +643,7 @@
         <mets:techMD CREATED="2017-02-24T11:09:40.409+01:00" ID="PremisObject1">
           <mets:mdWrap MDTYPE="PREMIS:OBJECT">
             <mets:xmlData>
-              <premis:object xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd" xsi:type="premis:file">
+              <premis:object xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd" xsi:type="premis:file">
                 <premis:objectIdentifier>
                   <premis:objectIdentifierType>UUID</premis:objectIdentifierType>
                   <premis:objectIdentifierValue>be9f16d0-da42-11e2-b191-005056887b70</premis:objectIdentifierValue>
@@ -793,7 +790,7 @@
         <mets:rightsMD CREATED="2017-02-24T11:09:40.509+01:00" ID="ModsRights1">
           <mets:mdWrap MDTYPE="MODS">
             <mets:xmlData>
-              <mods:mods xmlns:xlink="http://www.w3.org.1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+              <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
                 <mods:accessCondition>Det Kongelige Bibliotek</mods:accessCondition>
               </mods:mods>	
             </mets:xmlData>
@@ -802,7 +799,7 @@
         <mets:digiprovMD CREATED="2017-02-24T11:09:40.512+01:00" ID="PremisEvent1">
           <mets:mdWrap MDTYPE="PREMIS:EVENT">
             <mets:xmlData>
-              <premis:event xmlns:xlink="http://www.w3.org.1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd">
+              <premis:event xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd">
                 <premis:eventIdentifier>
                   <premis:eventIdentifierType>UUID</premis:eventIdentifierType>
                   <premis:eventIdentifierValue>45927226-ebef-4648-8ba9-8628f3035c5f</premis:eventIdentifierValue>

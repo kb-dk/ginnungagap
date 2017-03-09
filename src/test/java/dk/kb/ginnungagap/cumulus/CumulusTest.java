@@ -4,6 +4,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import dk.kb.ginnungagap.config.CumulusConfiguration;
 import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
+import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
 import dk.kb.yggdrasil.utils.YamlTools;
 
 public class CumulusTest extends ExtendedTestCase {
@@ -71,7 +73,7 @@ public class CumulusTest extends ExtendedTestCase {
         //        TestFileUtils.tearDown();
     }
 
-    //    @Test
+//    @Test
     public void testRandomStuff() throws Exception {
         assertTrue(server.getServer().isAlive());
 
@@ -104,14 +106,14 @@ public class CumulusTest extends ExtendedTestCase {
     
     @Test(enabled = false)
     public void testPrintingToXml() throws Exception {
-        String catalogName = "Audio OM";
+        String catalogName = "Conservation";
 //        int catalogId = server.getServer().findCatalogID(catalogName);
 //        Catalog catalog = server.getServer().openCatalog(catalogId);
 
 //        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
 //                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
         
-        String query = "GUID\tcontains\t3870dc70-7403-11e1-bf98-0017a4f603c1"
+        String query = "GUID\tcontains\tbe9f16d0-da42-11e2-b191-005056887b70"
                 + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
         EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
 
@@ -142,11 +144,15 @@ public class CumulusTest extends ExtendedTestCase {
 //            cr.setPreservationFailed("Hej Tue\n\nDette er en test for at se, om jeg kan skrive til QA_error feltet, samt ændre på Preservation_status feltet.\n\nMed venlig hilsen\nGinnungagap");
 //            cr.setPreservationFinished();
 
-            File outputFile = new File(outputDir, item.getID() + ".xml");
-            cr.getMetadata(outputFile);
+            File cumulusMetadataFile = new File(outputDir, item.getID() + ".xml");
+            File metsMetadataFile = new File(outputDir, item.getID() + ".mets.xml");
+            cr.getMetadata(cumulusMetadataFile);
+            XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
+            
+            transformer.transformXmlMetadata(new FileInputStream(cumulusMetadataFile), new FileOutputStream(metsMetadataFile));
 //            StreamUtils.copy(cr.getMetadata(new File(outputDir, item.getID() + "_fields.xml")), new FileOutputStream(outputFile));
         }
 
-        assertEquals(outputDir.list().length, i);
+        assertEquals(outputDir.list().length, 2*i);
     }
 }
