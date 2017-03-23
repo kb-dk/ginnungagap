@@ -89,7 +89,7 @@ public class CumulusRecord {
     public String getUUID() {
         String res = getFieldValue(Constants.FieldNames.GUID);
         if(res.contains("/")) {
-            res = res.substring(res.indexOf("/")+1, res.length());
+            res = res.substring(res.lastIndexOf("/")+1, res.length());
         }
         return res;
     }

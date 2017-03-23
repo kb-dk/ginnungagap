@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.utils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Utility class for dealing with files.
@@ -21,6 +22,25 @@ public class FileUtils {
             if(!res.isDirectory()) {
                 throw new IllegalStateException("Cannot instantiate the directory at '" + path + "'.");
             }
+        }
+        return res;
+    }
+    
+    /**
+     * Creates a new file. Will throw an exception, if the file already exists, or if it cannot be instantiated.
+     * @param dir The directory of the new file.
+     * @param name The name of the new file.
+     * @return The new file.
+     */
+    public static File getNewFile(File dir, String name) {
+        File res = new File(dir, name);
+        try {
+            if(!res.createNewFile()) {
+                throw new IllegalStateException("Cannot create a new file at '" + res.getAbsolutePath() + "'");
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Issue occured while instantiation new file at '" + res.getAbsolutePath() 
+                + "'", e);
         }
         return res;
     }

@@ -20,11 +20,19 @@ public final class GuidExtrationUtils {
             throw e;
         }
 
-        String[] guidParts = guid.split("[/]");
-        if(guidParts.length > 1) {
-            return guidParts[1];
+        String res;
+        if(guid.contains("/")) {
+            String[] guidParts = guid.split("[/]");
+            res = guidParts[guidParts.length-1];
+        } else {
+            res = guid;
         }
-
-        return guid;
+        
+        if(res.contains("#")) {
+            String[] guidParts = res.split("[#]");
+            res = guidParts[0];            
+        }
+        
+        return res;
     }
 }

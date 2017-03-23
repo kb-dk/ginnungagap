@@ -1,0 +1,10 @@
+KBDOMS-20151207152759-00084-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1186015403#0##20263442##51005618db0690caa815b747be8252ef
+KBDOMS-20151207153526-00091-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1186015994#0##18229526##24a8c83943230e2eb41592a515f83375
+KBDOMS-20151207153526-00091-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1186016026#0##19022894##235416f25d01f4548050f7164ea80ba7
+KBDOMS-20151207153526-00091-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1186016058#0##23043422##db900ba210d0c91f53be9164ea8748a5
+KBDOMS-20151207153647-00097-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1188435181#0##33125382##be43b0c59e0cfb5f4d66a269fa450f99
+KBDOMS-20151207153647-00097-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1188435217#0##33125382##b2c77af49ec0f7a00e4e770068b1859f
+KBDOMS-20151207153647-00097-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1188435253#0##33125382##d7dfda2136dc5e9caa55ce97be4f8d2f
+KBDOMS-20151207153802-00102-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2006-09/1190592962#0##1246678##43553c0023df064b9aefc6bbeca98b70
+KBDOMS-20151207193005-00001-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2007-01/e5025760-9d18-11e5-96c3-005056887b70#0##2923804##88df22b2167a77b8ed87c47286295618
+KBDOMS-20151207193005-00001-dia-prod-dom-02.kb.dk.arc##digitalobject://Uid:dk:kb:doms:2007-01/e9346850-9d18-11e5-96c3-005056887b70#0##6743324##339afade375557baf20037e1503b3191

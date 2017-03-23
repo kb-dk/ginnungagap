@@ -27,6 +27,12 @@ public class TestFileUtils {
         }
     }
     
+    public static void delete(File fileToDelete) {
+        if(fileToDelete.exists()) {
+            FileUtils.delete(fileToDelete);
+        }
+    }
+    
     public static File getTempDir() {
         return tempDir;
     }
