@@ -10,38 +10,30 @@ import com.canto.cumulus.Cumulus;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 
-import dk.kb.ginnungagap.archive.Archive;
-import dk.kb.ginnungagap.archive.BitmagArchive;
-import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.convert.EmagConverter;
-import dk.kb.ginnungagap.convert.EmagImportConverter;
-import dk.kb.ginnungagap.convert.EmagWarcConverter;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
-import dk.kb.ginnungagap.transformation.MetadataTransformer;
-import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
+import dk.kb.ginnungagap.emagasin.EmagImportation;
 
 /**
- * Class for instantiating the conversion from E-magasinet.
- * It extracts the digital-objects of the ARC-files in E-magasinet and places them a the pre-ingest area.
+ * Class for instantiating the conversion from E-magasinet, by reimporting the content-files into Cumulus again.
+ * It extracts the digital-objects of the ARC-files in E-magasinet, finds the given Cumulus record and places them a the pre-ingest area.
  * 
  * This takes the following arguments:
  * 1. Configuration file
  * 2. File with list of ARC-files to convert.
  *   * This file must formatted where each (non-empty) line contains the name of one ARC-file to convert.
  * 3. Name of the catalog with the Cumulus record corresponding to the digital-objects in the ARC files.
- * 
+ * 4. [OPTIONAL] 
  * 
  * Run as commmand, e.g. :
  * dk.kb.ginningagap.EmagConversion conf/ginnungagap.yml arc-list.txt Catalog
  */
-public class EmagImporter {
+public class EmagExtractor {
     /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(EmagImporter.class);
+    private static final Logger log = LoggerFactory.getLogger(EmagExtractor.class);
 
     /**
      * Main method. 
@@ -88,9 +80,9 @@ public class EmagImporter {
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
             // TODO!!!
-            EmagConverter converter;
-            converter = new EmagImportConverter(conf, cumulusServer, catalogName);
-                
+            EmagImportation converter;
+            converter = new EmagImportation(conf, cumulusServer, catalogName);
+//            converter.
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();

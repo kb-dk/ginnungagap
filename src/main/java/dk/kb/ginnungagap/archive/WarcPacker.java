@@ -22,7 +22,6 @@ import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
 import dk.kb.yggdrasil.warc.WarcWriterWrapper;
-import dk.kb.yggdrasil.warc.YggdrasilWarcConstants;
 
 /**
  * Packages the warc files.
@@ -75,7 +74,7 @@ public class WarcPacker {
             payload.append((String) key + ": " + value + "\n");
         }
         for(Map.Entry<String, String> property : System.getenv().entrySet()) {
-             payload.append(property.getKey() + ": " + property.getValue() + "\n");
+            payload.append(property.getKey() + ": " + property.getValue() + "\n");
         }
         
         byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
@@ -86,6 +85,7 @@ public class WarcPacker {
     /**
      * Pack a record into the Warc file.
      * @param record The record from Cumulus.
+     * @param resourceFile The Cumulus Asset file for the record.
      * @param metadataFile The file with the transformed metadata.
      */
     public synchronized void packRecord(CumulusRecord record, File resourceFile, File metadataFile) {
@@ -162,6 +162,7 @@ public class WarcPacker {
     /**
      * Reports back to Cumulus, that the preservation was successful for all records.
      * Should only be called after the warc packer has been closed and send to the archive.
+     * @param checksumDigest The digest for the whole WARC file.
      */
     public void reportSucces(WarcDigest checksumDigest) {
         for(CumulusRecord r : packagedRecords) {

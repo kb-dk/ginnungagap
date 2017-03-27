@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert.prevalidation;
+package dk.kb.ginnungagap.emagasin.prevalidation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,11 +9,13 @@ import java.io.InputStreamReader;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.emagasin.prevalidation.CumulusExtractRecord;
+import dk.kb.ginnungagap.emagasin.prevalidation.EmagasinExtractRecord;
+import dk.kb.ginnungagap.emagasin.prevalidation.ImportPrevalidator;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 
@@ -25,17 +27,12 @@ public class ImportPrevalidatorTest extends ExtendedTestCase {
     File cumulusExtractionFile;
     File emagasinExtractionFile;
     
-    File origOutputDir;
-    File origCumulusExtractFile = new File("/home/jolf/data/cumulus_extract.txt");
-    File origEmagasinExtractFile = new File("/home/jolf/data/emagasin_extract.txt");
-    
     @BeforeClass
     public void setup() {
         TestFileUtils.setup();
         baseDir = TestFileUtils.getTempDir();
         cumulusExtractionFile = new File("src/test/resources/prevalidation/test_cumulus_extract.txt");
         emagasinExtractionFile = new File("src/test/resources/prevalidation/test_emagasin_extract.txt");
-        origOutputDir = new File(baseDir, "origOutputs");
         outputDir = new File(baseDir, "output");
     }
     
@@ -45,14 +42,9 @@ public class ImportPrevalidatorTest extends ExtendedTestCase {
             TestFileUtils.delete(outputDir);
         }
         outputDir = FileUtils.getDirectory(outputDir.getAbsolutePath());
-        origOutputDir = FileUtils.getDirectory(origOutputDir.getAbsolutePath()); 
     }
     
-//    @AfterMethod
-    public void tearDownMethod() {
-    }
-    
-//    @AfterClass
+    @AfterClass
     public void tearDownClass() {
         TestFileUtils.tearDown();
     }
@@ -96,8 +88,12 @@ public class ImportPrevalidatorTest extends ExtendedTestCase {
         prevalidator.compare(emagasinRecordReader, cumulusRecordReader);
     }
     
-    @Test
-    public void testCompleteCompare() throws FileNotFoundException {
+    @Test(enabled = false)
+    public void testCompleteCompare() throws FileNotFoundException {        
+        File origOutputDir = new File(baseDir, "origOutputs");
+        File origCumulusExtractFile = new File("/home/jolf/data/cumulus_extract.txt");
+        File origEmagasinExtractFile = new File("/home/jolf/data/emagasin_extract.txt");
+        
         ImportPrevalidator prevalidator = new ImportPrevalidator(origOutputDir);
         
         BufferedReader cumulusRecordReader = new BufferedReader(new InputStreamReader(new FileInputStream(origCumulusExtractFile)));

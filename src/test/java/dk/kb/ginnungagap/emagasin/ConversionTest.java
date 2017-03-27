@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert;
+package dk.kb.ginnungagap.emagasin;
 
 import java.io.File;
 import java.io.FileInputStream;

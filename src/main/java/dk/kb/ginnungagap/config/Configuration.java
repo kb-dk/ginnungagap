@@ -45,8 +45,6 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *     <ul>
  *       <li>temp_dir: $temp_dir</li>
  *       <li>script_file: $script_file</li>
- *       <li>pre_ingest_base_dir: $pre_ingest_base_dir</li>
- *       <li>pre_validation_output_dir: $pre_validation_output_dir</li>
  *     </ul>
  *   </ul>
  * </ul>
@@ -105,14 +103,9 @@ public class Configuration {
     /** Conversion temp-dir leaf-element.*/
     protected static final String CONF_CONVERSION_TEMP_DIR = "temp_dir";
     /** Conversion script file leaf-element.*/
-    protected static final String CONF_CONVERSION_SCRIPT_DIR = "script_file";
-    /** Conversion pre-ingest-base-dir leaf-element.*/
-    protected static final String CONF_CONVERSION_PRE_INGEST_BASE_DIR = "pre_ingest_base_dir";
-    /** Conversion pre-validation-output-dir leaf-element.*/
-    protected static final String CONF_CONVERSION_PRE_VALIDATION_OUTPUT_DIR = "pre_validation_output_dir";
+    protected static final String CONF_CONVERSION_SCRIPT_FILE = "script_file";
     
-    /** Whether Cumulus should have write access.
-     * TODO: should be 'true', when used properly.*/
+    /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
     
     /** The configuration for the bitrepository.*/
@@ -267,24 +260,16 @@ public class Configuration {
     protected ConversionConfiguration loadConversionConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_TEMP_DIR), 
                 "Missing Conversion element '" + CONF_CONVERSION_TEMP_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_SCRIPT_DIR), 
-                "Missing Conversion element '" + CONF_CONVERSION_SCRIPT_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_PRE_INGEST_BASE_DIR), 
-                "Missing Conversion element '" + CONF_CONVERSION_PRE_INGEST_BASE_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_PRE_VALIDATION_OUTPUT_DIR), 
-                "Missing Conversion element '" + CONF_CONVERSION_PRE_VALIDATION_OUTPUT_DIR + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_SCRIPT_FILE), 
+                "Missing Conversion element '" + CONF_CONVERSION_SCRIPT_FILE + "'");
 
         File tempDir = FileUtils.getDirectory((String) map.get(CONF_CONVERSION_TEMP_DIR));
-        File scriptFile = new File((String) map.get(CONF_CONVERSION_SCRIPT_DIR));
-        File preIngestBaseDir = FileUtils.getDirectory((String) map.get(CONF_CONVERSION_PRE_INGEST_BASE_DIR));
-        File preValidationOutputDir = FileUtils.getDirectory((String) map.get(CONF_CONVERSION_PRE_VALIDATION_OUTPUT_DIR));
+        File scriptFile = new File((String) map.get(CONF_CONVERSION_SCRIPT_FILE));
                 
         ArgumentCheck.checkExistsDirectory(tempDir, "temp dir");
         ArgumentCheck.checkExistsNormalFile(scriptFile, "script");
-        ArgumentCheck.checkExistsDirectory(preIngestBaseDir, "pre-ingest base-dir");
-        ArgumentCheck.checkExistsDirectory(preValidationOutputDir, "pre-ingest base-dir");
 
-        return new ConversionConfiguration(tempDir, scriptFile, preIngestBaseDir, preValidationOutputDir);
+        return new ConversionConfiguration(tempDir, scriptFile);
     }
     
     /** @return The configuration for the bitrepository.*/

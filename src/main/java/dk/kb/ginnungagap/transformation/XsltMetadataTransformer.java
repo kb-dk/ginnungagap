@@ -76,7 +76,7 @@ public class XsltMetadataTransformer implements MetadataTransformer {
     /**
      * Validates a metadata file.
      * @param metadata The inputstream with the metadata to validate.
-     * @throws YggdrasilException If it fails to validate.
+     * @throws IOException If it fails to validate.
      */
     public void validate(InputStream metadata) throws IOException {
         XmlEntityResolver entityResolver = null;

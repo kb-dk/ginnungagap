@@ -71,7 +71,7 @@ public class Ginnungagap {
         } else {
             confPath = args[0];
         }
-        String archiveType = ARCHIVE_LOCAL;
+        String archiveType = ARCHIVE_BITMAG;
         boolean fileOnly = false;
         if(args.length > 1) {
             archiveType = args[1];

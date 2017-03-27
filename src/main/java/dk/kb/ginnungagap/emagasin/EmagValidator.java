@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert;
+package dk.kb.ginnungagap.emagasin;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
 /**
  * This converter Performs the conversion from Emagasinet by importing the content-file back into Cumulus.
  */
-public class EmagImportConverter extends EmagConverter {
+public class EmagValidator extends EmagImportation {
 
     /**
      * Constructor.
@@ -20,7 +20,7 @@ public class EmagImportConverter extends EmagConverter {
      * @param cumulusServer The Cumulus server.
      * @param catalogName The name of the catalog for the record.
      */
-    public EmagImportConverter(Configuration conf, CumulusServer cumulusServer, String catalogName) {
+    public EmagValidator(Configuration conf, CumulusServer cumulusServer, String catalogName) {
         super(conf, cumulusServer, catalogName);
     }
 

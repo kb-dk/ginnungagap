@@ -20,5 +20,3 @@ ginnungagap:
   conversion:
     temp_dir: tempDir/conversion
     script_file: src/test/resources/scripts/conversion_get_file.sh
-    pre_ingest_base_dir: tempDir/preingest
-    pre_validation_output_dir: tempDir/prevalidation

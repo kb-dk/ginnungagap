@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert;
+package dk.kb.ginnungagap.emagasin;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -42,6 +42,7 @@ import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.emagasin.EmagImportation;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import junit.framework.Assert;
 
@@ -54,7 +55,7 @@ public class EmagConverterTest extends ExtendedTestCase {
 
     TestConfiguration conf;
     String catalogName = "asdasdfasdf";
-    EmagConverter converter;
+    EmagImportation converter;
     CumulusServer cumulusServer;
     
     @BeforeClass
@@ -311,7 +312,7 @@ public class EmagConverterTest extends ExtendedTestCase {
         verifyNoMoreInteractions(recordItemCollection); 
     }
 
-    private class TestEmagConverter extends EmagConverter {
+    private class TestEmagConverter extends EmagImportation {
         int callsToHandler = 0;
         
         public TestEmagConverter(Configuration conf, CumulusServer cumulusServer, String catalogName) {

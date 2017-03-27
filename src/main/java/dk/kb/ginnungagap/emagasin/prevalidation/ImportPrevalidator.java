@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert.prevalidation;
+package dk.kb.ginnungagap.emagasin.prevalidation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -167,7 +167,7 @@ public class ImportPrevalidator {
             return null;
         }
         for(EmagasinExtractRecord eRecord : emagasinList) {
-            if(eRecord.getUuid().equals(uuid)) {
+            if(eRecord.getUuid().startsWith(uuid)) {
                 return eRecord;
             }
         }

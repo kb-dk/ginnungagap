@@ -2,8 +2,6 @@ package dk.kb.ginnungagap.utils;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
 /**

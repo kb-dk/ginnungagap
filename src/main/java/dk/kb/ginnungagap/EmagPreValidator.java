@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-import dk.kb.ginnungagap.convert.prevalidation.ImportPrevalidator;
+import dk.kb.ginnungagap.emagasin.prevalidation.ImportPrevalidator;
 import dk.kb.ginnungagap.utils.FileUtils;
 
 /**

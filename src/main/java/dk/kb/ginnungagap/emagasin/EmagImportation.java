@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert;
+package dk.kb.ginnungagap.emagasin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
+import com.google.common.io.Files;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
@@ -23,7 +24,7 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 
 /**
- * Abstract class for converting the ARC files from the E-magasin.
+ * Class for import the digital objects of ARC files from the E-magasin back into Cumulus.
  * 
  * An Emag arc-file contains two kinds of records; metadata and digital-object.
  * The metadata is in a deprecated Cumulus format, or the old KB-DOMS environment metadata format.
@@ -35,9 +36,9 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
  * The sub-classes implement the way the ARC files are converted. Either by importing them back into Cumulus
  * or creating new WARC-files from the 'digital-object' ARC-records and their corresponding Cumulus record.
  */
-public abstract class EmagConverter {
+public class EmagImportation {
     /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(EmagConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(EmagImportation.class);
 
     /** Prefix for the digital object record uri (the content file). */
     protected static final String DIGITAL_OBJECT_PREFIX = "digitalobject";
@@ -59,7 +60,7 @@ public abstract class EmagConverter {
      * @param cumulusServer The cumulus server.
      * @param catalogName The name of the catalog for the record.
      */
-    public EmagConverter(Configuration conf, CumulusServer cumulusServer, String catalogName) {
+    public EmagImportation(Configuration conf, CumulusServer cumulusServer, String catalogName) {
         this.conf = conf;
         this.cumulus = cumulusServer;
         this.catalogName = catalogName;
@@ -88,11 +89,17 @@ public abstract class EmagConverter {
     }
     
     /**
-     * Implements the specific conversion of the record.
+     * Imports the record back into Cumulus.
      * @param record The Cumulus record for the digital object.
      * @param contentFile The digital object / Cumulus record asset / content file of new packaging.
      */
-    protected abstract void handleRecord(CumulusRecord record, File contentFile);
+    protected void handleRecord(CumulusRecord record, File contentFile) {
+        try {
+            Files.move(contentFile, record.getFile());
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot import the file into Cumulus.", e);
+        }
+    }
     
     /**
      * Extracts the ARC-record as a file.

@@ -18,3 +18,6 @@ ginnungagap:
     catalogs:
 #      - "Audio"
       - "Conservation"
+  conversion:
+    temp_dir: tempDir/conversion
+    script_file: src/test/resources/scripts/conversion_get_file.sh

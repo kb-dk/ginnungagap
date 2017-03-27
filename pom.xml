@@ -22,6 +22,7 @@
     <assembly.conf.env.file>GINNUNGAGAP_CONF_FILE</assembly.conf.env.file>
     <assembly.conf.env.file.ref>${GINNUNGAGAP_CONF_FILE}</assembly.conf.env.file.ref>
     <assembly.main.class.name>dk.kb.ginnungagap.Ginnungagap</assembly.main.class.name>
+    <assembly.prevalidate.class.name>dk.kb.ginnungagap.EmagPreValidator</assembly.prevalidate.class.name>
   </properties>
 
   <dependencies>

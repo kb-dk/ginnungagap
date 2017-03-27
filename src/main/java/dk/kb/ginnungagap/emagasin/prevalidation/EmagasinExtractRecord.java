@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.convert.prevalidation;
+package dk.kb.ginnungagap.emagasin.prevalidation;
 
 import dk.kb.metadata.utils.GuidExtrationUtils;
 
