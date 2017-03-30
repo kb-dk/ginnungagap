@@ -27,6 +27,11 @@ public class TestFileUtils {
         }
     }
     
+    public static void cleanUp() {
+        tearDown();
+        setup();
+    }
+    
     public static void delete(File fileToDelete) {
         if(fileToDelete.exists()) {
             FileUtils.delete(fileToDelete);

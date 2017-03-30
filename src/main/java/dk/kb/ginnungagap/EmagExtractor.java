@@ -1,35 +1,28 @@
 package dk.kb.ginnungagap;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
-
-import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
-import dk.kb.ginnungagap.emagasin.EmagImportation;
+import dk.kb.ginnungagap.emagasin.EmagasinRetriever;
+import dk.kb.ginnungagap.utils.FileUtils;
 
 /**
- * Class for instantiating the conversion from E-magasinet, by reimporting the content-files into Cumulus again.
- * It extracts the digital-objects of the ARC-files in E-magasinet, finds the given Cumulus record and places them a the pre-ingest area.
+ * Class for extracting ARC files and ARC records from Emagasinet.
  * 
  * This takes the following arguments:
- * 1. Configuration file
- * 2. File with list of ARC-files to convert.
- *   * This file must formatted where each (non-empty) line contains the name of one ARC-file to convert.
- * 3. Name of the catalog with the Cumulus record corresponding to the digital-objects in the ARC files.
- * 4. [OPTIONAL] 
+ *  1. File with list of ARC files.
+ *  2. Script for extracting the files from Emagasinet.
+ *  3. [OPTIONAL] Path to output directory
+ *    - Default is at the current directory
  * 
  * Run as commmand, e.g. :
- * dk.kb.ginningagap.EmagConversion conf/ginnungagap.yml arc-list.txt Catalog
+ * dk.kb.ginningagap.EmagExtractor arc-list.txt emag-get-file.sh /path/to/output
  */
 public class EmagExtractor {
     /** The logger.*/
@@ -43,81 +36,67 @@ public class EmagExtractor {
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
 
-        String confPath = null;
-        String arcListPath = null;
-        String catalogName = null;
-        if(args.length < 3) {
+        File arcListFile = null;
+        File scriptFile = null;
+        File outputDir = null;
+        String outputDirPath = null;
+        if(args.length < 2) {
             System.err.println("Missing arguments. Requires the following arguments:");
-            System.err.println("  1. Configuration file.");
-            System.err.println("  2. File with list of ARC-files to convert.");
-            System.err.println("  3. Name of Cumulus catalog.");
+            System.err.println("  1. File with list of ARC files");
+            System.err.println("  2. Script for extracting the files from Emagasinet.");
+            System.err.println("  [OPTIONAL] 3. Path to output directory (default is current directory)");
             System.exit(-1);
         } else {
-            confPath = args[0];
-            arcListPath = args[1];
-            catalogName = args[2];
+            arcListFile = new File(args[0]);
+            scriptFile = new File(args[1]);
+            if(args.length > 2) {
+                outputDirPath = args[2];
+            } else {
+                outputDirPath = ".";
+            }
         }
-
-        File confFile = new File(confPath);
-        if(!confFile.isFile()) {
-            System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
-            System.exit(-1);
-        }
-        File arcListFile = new File(arcListPath);
+        
         if(!arcListFile.isFile()) {
-            System.err.println("Cannot find the ARC list file '" + arcListFile.getAbsolutePath() + ".");
+            System.err.println("The file with the list of ARC filenames does not exist at '"
+                    + arcListFile.getAbsolutePath() + "'.");
             System.exit(-1);
         }
-
-        Configuration conf = new Configuration(confFile);
-        File xsltFile = new File(conf.getTransformationConf().getXsltDir(), "transformToMets.xsl");
-        if(!xsltFile.isFile()) {
-            System.err.println("Missing transformation file '" + xsltFile.getAbsolutePath() + "'");
+        if(!scriptFile.isFile()) {
+            System.err.println("The script does not exist at '" + scriptFile.getAbsolutePath() + "'");
             System.exit(-1);
         }
-
-        Cumulus.CumulusStart();
-        CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
-        try {
-            // TODO!!!
-            EmagImportation converter;
-            converter = new EmagImportation(conf, cumulusServer, catalogName);
-//            converter.
-        } finally {
-            System.out.println("Finished!");
-            Cumulus.CumulusStop();
+        
+        outputDir = FileUtils.getDirectory(outputDirPath);
+        
+        EmagasinRetriever retriever = new EmagasinRetriever(scriptFile, outputDir);
+        
+        try (BufferedReader arcListReader = new BufferedReader(new InputStreamReader(new FileInputStream(
+                arcListFile)));) {
+            String arcFilename;
+            while((arcFilename = getNextArcFilename(arcListReader)) != null) {
+                retriever.extractArcFile(arcFilename);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read the list of arc files.", e);
         }
     }
     
     /**
-     * Extracts only the Cumulus objects as files. 
-     * Does not do any kind of transformation or preservation.
-     * @param server The cumulus server.
-     * @param conf The configuration.
+     * Extracts the next valid line from the list.
+     * TODO: perhaps make more tests, that the line does not contain invalid characters, etc.
+     * @param reader The reader.
+     * @return The next valid line, or null when no more line can be read.
+     * @throws IOException If it fails to read.
      */
-    protected static void extractFilesOnly(CumulusServer server, Configuration conf) {
-        for(String catalogName : conf.getTransformationConf().getCatalogs()) {
-            log.info("Extracting files for catalog '" + catalogName + "'.");
-            CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
-            RecordItemCollection items = server.getItems(catalogName, query);
-            
-            log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-            FieldExtractor fe = new FieldExtractor(items.getLayout());
-            for(Item item : items) {
-                try {
-                    CumulusRecord record = new CumulusRecord(fe, item);
-                    File cumulusFile = record.getFile();
-                    File outputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
-                            cumulusFile.getName());
-                    FileUtils.copyFile(cumulusFile, outputFile);
-                    
-                    record.getMetadata(new File(conf.getTransformationConf().getMetadataTempDir(), 
-                            cumulusFile.getName() + "_fields.xml"));
-                } catch (Exception e) {
-                    log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID()
-                            + "'. ", e);
-                }
+    protected static String getNextArcFilename(BufferedReader reader) throws IOException {
+        String line;
+        while((line = reader.readLine()) != null) {
+            if(!line.isEmpty() && !line.contains(" ")) {
+                return line;
+            } else {
+                log.warn("Could not interpret line '" + line + "'");
             }
         }
+        return null;
     }
 }
