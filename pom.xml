@@ -4,7 +4,7 @@
 
   <groupId>dk.kb</groupId>
   <artifactId>ginnungagap</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>ginnungagap</name>
@@ -16,7 +16,7 @@
     <yggdrasil.version>1.3.5</yggdrasil.version>
     <slf4j.version>1.7.21</slf4j.version>
     <logback.version>1.1.7</logback.version>
-    <jwat.version>1.0.4</jwat.version>
+    <jwat.version>1.0.5</jwat.version>
     <assembly.home.env.name>GINNUNGAGAP_HOME</assembly.home.env.name>
     <assembly.home.env.name.ref>${GINNUNGAGAP_HOME}</assembly.home.env.name.ref>
     <assembly.conf.env.file>GINNUNGAGAP_CONF_FILE</assembly.conf.env.file>
@@ -30,6 +30,12 @@
       <groupId>dk.kb.yggdrasil</groupId>
       <artifactId>Yggdrasil</artifactId>
       <version>${yggdrasil.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jwat</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

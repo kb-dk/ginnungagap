@@ -63,12 +63,12 @@ public class EmagasinRetrieverTest extends ExtendedTestCase {
         // Must break here!
         retriever.extractArcFile(testArcFilename);
     }
-
-    @Test(expectedExceptions = NotImplementedException.class)
-    public void testNotImplementedMethod() {
-        String testArcFilename = UUID.randomUUID().toString();
-        String uuid = UUID.randomUUID().toString();
-        EmagasinRetriever retriever = new EmagasinRetriever(testScript, TestFileUtils.getTempDir());
-        retriever.extractArcRecord(testArcFilename, uuid);
-    }
+//
+//    @Test(expectedExceptions = NotImplementedException.class)
+//    public void testNotImplementedMethod() {
+//        String testArcFilename = UUID.randomUUID().toString();
+//        String uuid = UUID.randomUUID().toString();
+//        EmagasinRetriever retriever = new EmagasinRetriever(testScript, TestFileUtils.getTempDir());
+//        retriever.extractArcRecord(testArcFilename, uuid);
+//    }
 }

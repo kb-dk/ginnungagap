@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.testutils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import org.bitrepository.common.utils.FileUtils;
 
 import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.utils.StreamUtils;
 
 public class TestFileUtils {
 
@@ -49,6 +51,12 @@ public class TestFileUtils {
             os.flush();
         }
         
+        return res;
+    }
+    
+    public static File copyFileToTemp(File file) throws IOException {
+        File res = new File(getTempDir(), file.getName());
+        StreamUtils.copyInputStreamToOutputStream(new FileInputStream(file), new FileOutputStream(res));
         return res;
     }
     

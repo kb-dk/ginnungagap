@@ -2,8 +2,6 @@ package dk.kb.ginnungagap.emagasin;
 
 import java.io.File;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import dk.kb.ginnungagap.utils.ScriptWrapper;
 
 /**
@@ -45,17 +43,5 @@ public class EmagasinRetriever extends ScriptWrapper {
             throw new IllegalStateException("No file will be retrieved from E-magasinet.");
         }
         return outputFile;
-    }
-    
-    /**
-     * 
-     * TODO: figure out, whether we can do this, without retrieving the whole ARC file.
-     * @param filename
-     * @param uuid
-     * @return
-     */
-    public File extractArcRecord(String filename, String uuid) {
-        // TODO this!!!
-        throw new NotImplementedException("TODO");
     }
 }

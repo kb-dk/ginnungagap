@@ -7,7 +7,6 @@ import java.io.IOException;
  * Utility class for dealing with files.
  */
 public class FileUtils {
-
     /**
      * Retrieves the directory at the given path.
      * If the directory does not exist yet, then it is created.
@@ -24,6 +23,16 @@ public class FileUtils {
             }
         }
         return res;
+    }
+    
+    /**
+     * Retrieves the given subdirectory of a given directory.
+     * @param dir The parent directory.
+     * @param path The name of the directory
+     * @return The directory.
+     */
+    public static File getDirectory(File dir, String path) {
+        return getDirectory(new File(dir, path).getAbsolutePath());
     }
     
     /**
