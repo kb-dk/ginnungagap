@@ -18,6 +18,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import org.archive.io.ArchiveRecord;
+import org.archive.io.arc.ARCReader;
+import org.archive.io.arc.ARCReaderFactory;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.arc.ArcReader;
 import org.jwat.arc.ArcReaderFactory;
@@ -65,7 +68,7 @@ public class TiffValidatorTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
     
-//    @Test
+    @Test
     public void testTiffFile() throws IOException {
         Assert.assertTrue(tiffFile.isFile());
         Assert.assertTrue(scriptFile.isFile());
@@ -87,16 +90,16 @@ public class TiffValidatorTest extends ExtendedTestCase {
         
     }
     
-    @Test
+//    @Test
     public void testArcFile() throws Exception {
         File testFile = new File("/home/jolf/data/KBDOMS-20140917190643-00516-dia-prod-dom-02.kb.dk.arc");
 
-        ArcReader ar = ArcReaderFactory.getReader(new FileInputStream(testFile));
-        ArcRecordBase arcRecord;
-        while((arcRecord = ar.getNextRecord()) != null) {
-            String uid = GuidExtrationUtils.extractGuid(arcRecord.getUrlStr());
+
+        ARCReader ar = ARCReaderFactory.get(testFile);
+        for(ArchiveRecord arcRecord : ar) {
+            String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
             File outputFile = new File(outputDir, uid);
-            StreamUtils.copyInputStreamToOutputStream(arcRecord.getPayloadContent(), 
+            StreamUtils.copyInputStreamToOutputStream(arcRecord, 
                     new FileOutputStream(outputFile));
         }
     }
