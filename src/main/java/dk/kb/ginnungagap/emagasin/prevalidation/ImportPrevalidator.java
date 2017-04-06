@@ -69,7 +69,7 @@ public class ImportPrevalidator {
      * The main method.
      * Compares the emagasin records and the cumulus records.
      * @param emagasinRecordReader The reader of the file with the EmagasinRecords.
-     * @param cumulusRecordReader The reader of the flie with the CumulusRecords.
+     * @param cumulusRecordReader The reader of the file with the CumulusRecords.
      */
     public void compare(BufferedReader emagasinRecordReader, BufferedReader cumulusRecordReader) {
         loadEmagasinRecords(emagasinRecordReader);
@@ -100,7 +100,7 @@ public class ImportPrevalidator {
                 }
                 list.add(eRecord);
                 emagasinRecords.put(eRecord.arcFilename, list);
-            }            
+            }
         } catch (IOException e) {
             throw new IllegalStateException("Could not load the emagasin records.", e);
         }
