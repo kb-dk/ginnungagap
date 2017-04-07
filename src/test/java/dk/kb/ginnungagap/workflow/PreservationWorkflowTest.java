@@ -79,6 +79,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         addStep("Mock the methods", "");
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
+        when(server.getCatalogNames()).thenReturn(Arrays.asList("TEST"));
         when(recordItemCollection.iterator()).thenReturn(new ArrayList<Item>().iterator());
         when(recordItemCollection.getLayout()).thenReturn(null);
         when(recordItemCollection.getItemCount()).thenReturn(0);
@@ -89,6 +90,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verifyZeroInteractions(transformer);
         verifyZeroInteractions(preserver);
         
+        verify(server).getCatalogNames();
         verify(server).getItems(anyString(), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         

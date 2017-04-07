@@ -32,6 +32,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>server_url: $server url</li>
  *       <li>username: $username</li>
  *       <li>password: $password</li>
+ *       <li>catalogs: <br/>- $catalog 1<br/>- $catalog 2<br/>- ...</li>
  *     </ul>
  *     <li>transformation:</li>
  *     <ul>
@@ -39,7 +40,6 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>xslt_dir: $xslt_dir</li>
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
- *       <li>catalogs: <br/>- $catalog 1<br/>- $catalog 2<br/>- ...</li>
  *     </ul>
  *     <li>conversion:</li>
  *     <ul>
@@ -49,7 +49,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *   </ul>
  * </ul>
  * 
- * Contains specific configurations for each part of the workflow.
+ * This contains specific configurations for each part of the workflow.
  * 
  * Bitmag settings and cumulus settings.
  * 
@@ -84,6 +84,8 @@ public class Configuration {
     protected static final String CONF_CUMULUS_USERNAME = "username";
     /** The cumulus server password leaf-element.*/
     protected static final String CONF_CUMULUS_PASSWORD = "password";
+    /** The cumulus catalogs array leaf-element.*/
+    protected static final String CONF_CUMULUS_CATALOGS = "catalogs";
     
     /** Transformation node-element.*/
     protected static final String CONF_TRANSFORMATION = "transformation";
@@ -95,8 +97,6 @@ public class Configuration {
     protected static final String CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE = "required_fields_file";
     /** Transformation metadata temp file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
-    /** Transformation catalogs array leaf-element.*/
-    protected static final String CONF_TRANSFORMATION_CATALOGS = "catalogs";
 
     /** Conversion node-element.*/
     protected static final String CONF_CONVERSION = "conversion";
@@ -211,9 +211,13 @@ public class Configuration {
                 "Missing Cumulus element '" + CONF_CUMULUS_USERNAME + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_CUMULUS_PASSWORD), 
                 "Missing Cumulus element '" + CONF_CUMULUS_PASSWORD + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_CUMULUS_CATALOGS), 
+                "Missing Transformation element '" + CONF_CUMULUS_CATALOGS + "'");
+        
+        List<String> catalogs = (List<String>) map.get(CONF_CUMULUS_CATALOGS);
         
         return new CumulusConfiguration(CUMULUS_WRITE_ACCESS, (String) map.get(CONF_CUMULUS_SERVER), 
-                (String) map.get(CONF_CUMULUS_USERNAME), (String) map.get(CONF_CUMULUS_PASSWORD));
+                (String) map.get(CONF_CUMULUS_USERNAME), (String) map.get(CONF_CUMULUS_PASSWORD), catalogs);
     }
     
     /**
@@ -228,8 +232,6 @@ public class Configuration {
                 "Missing Transformation element '" + CONF_TRANSFORMATION_XSD_DIR + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSLT_DIR), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_XSLT_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_CATALOGS), 
-                "Missing Transformation element '" + CONF_TRANSFORMATION_CATALOGS + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_METADATA_TEMP_FILE), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_METADATA_TEMP_FILE + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE), 
@@ -245,11 +247,9 @@ public class Configuration {
         ArgumentCheck.checkExistsDirectory(metadataTempDir, "Metadata temporary dir");
         ArgumentCheck.checkExistsNormalFile(requiredFieldsFile, "RequireFieldsFile");
         
-        List<String> catalogs = (List<String>) map.get(CONF_TRANSFORMATION_CATALOGS);
-        
         RequiredFields requiredFields = RequiredFields.loadRequiredFieldsFile(requiredFieldsFile);
         
-        return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, catalogs, requiredFields);
+        return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, requiredFields);
     }
     
     /**

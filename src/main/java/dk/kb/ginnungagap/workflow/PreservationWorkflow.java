@@ -60,7 +60,7 @@ public class PreservationWorkflow implements Workflow {
      * Run the workflow!
      */
     public void run() {
-        for(String catalogName : conf.getCatalogs()) {
+        for(String catalogName : server.getCatalogNames()) {
             log.debug("Run '" + this.getClass().getName() + "' on catalog: " + catalogName);
             
             try {

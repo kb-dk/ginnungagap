@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.cumulus;
 
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,13 @@ public class CumulusServer {
         } catch (Exception e) {
             throw new IllegalStateException("Could not connect to server '" + configuration.getServerUrl() + "'", e);
         }
+    }
+    
+    /**
+     * @return The catalogs for the server.
+     */
+    public List<String> getCatalogNames() {
+        return configuration.getCatalogs();
     }
 
     /**

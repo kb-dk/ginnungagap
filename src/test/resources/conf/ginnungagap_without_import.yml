@@ -17,6 +17,4 @@ ginnungagap:
     xslt_dir: tempDir/scripts/xslt
     required_fields_file: src/test/resources/conf/required_fields.yml
     metadata_temp_dir: tempDir/metadata
-  conversion:
-    temp_dir: tempDir/conversion
-    script_file: src/test/resources/scripts/test_import_get_file.sh
+

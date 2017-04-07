@@ -1,6 +1,10 @@
 package dk.kb.ginnungagap;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -16,6 +20,7 @@ import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.emagasin.EmagImportation;
+import dk.kb.ginnungagap.emagasin.EmagasinRetriever;
 
 /**
  * Class for instantiating the conversion from E-magasinet, by reimporting the content-files into Cumulus again.
@@ -79,44 +84,43 @@ public class EmagCumulusImporter {
         Cumulus.CumulusStart();
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
-            // TODO!!!
             EmagImportation converter= new EmagImportation(conf, cumulusServer, catalogName);
+//            EmagasinRetriever retriever = new EmagasinRetriever(script, outputDir)
+            BufferedReader arcFileListReader = new BufferedReader(new InputStreamReader(new FileInputStream(arcListFile)));
+            
+            String filename;
+            while((filename = getNextArcFilename(arcFileListReader)) != null) {
+                // TODO!!!
+                
+//                converter.convertArcFile(arcFile);
+            }
 //            converter.
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Terminate after this!
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
         }
     }
     
+
     /**
-     * Extracts only the Cumulus objects as files. 
-     * Does not do any kind of transformation or preservation.
-     * @param server The cumulus server.
-     * @param conf The configuration.
+     * Extracts the next valid line from the list.
+     * TODO: perhaps make more tests, that the line does not contain invalid characters, etc.
+     * @param reader The reader.
+     * @return The next valid line, or null when no more line can be read.
+     * @throws IOException If it fails to read.
      */
-    protected static void extractFilesOnly(CumulusServer server, Configuration conf) {
-        for(String catalogName : conf.getTransformationConf().getCatalogs()) {
-            log.info("Extracting files for catalog '" + catalogName + "'.");
-            CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
-            RecordItemCollection items = server.getItems(catalogName, query);
-            
-            log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-            FieldExtractor fe = new FieldExtractor(items.getLayout());
-            for(Item item : items) {
-                try {
-                    CumulusRecord record = new CumulusRecord(fe, item);
-                    File cumulusFile = record.getFile();
-                    File outputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
-                            cumulusFile.getName());
-                    FileUtils.copyFile(cumulusFile, outputFile);
-                    
-                    record.getMetadata(new File(conf.getTransformationConf().getMetadataTempDir(), 
-                            cumulusFile.getName() + "_fields.xml"));
-                } catch (Exception e) {
-                    log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID()
-                            + "'. ", e);
-                }
+    protected static String getNextArcFilename(BufferedReader reader) throws IOException {
+        String line;
+        while((line = reader.readLine()) != null) {
+            if(!line.isEmpty() && !line.contains(" ")) {
+                return line;
+            } else {
+                log.warn("Could not interpret line '" + line + "'");
             }
         }
+        return null;
     }
 }

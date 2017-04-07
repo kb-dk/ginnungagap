@@ -22,18 +22,23 @@ import dk.kb.yggdrasil.utils.YamlTools;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ConfigurationTest extends ExtendedTestCase {
 
-    File confFile;
+    File confFileWithoutImport;
+    File confFileWithImport;
     File requiredFieldsFile;
     
     @BeforeClass
     public void setup() {
         TestFileUtils.setup();
         
-        File origConfFile = new File("src/test/resources/conf/ginnungagap.yml");
+        File origConfFileWithoutImport = new File("src/test/resources/conf/ginnungagap_without_import.yml");
+        File origConfFileWithImport = new File("src/test/resources/conf/ginnungagap.yml");
         requiredFieldsFile = new File("src/test/resources/conf/required_fields.yml");
 
-        confFile = new File(TestFileUtils.getTempDir(), origConfFile.getName());
-        FileUtils.copyFile(origConfFile, confFile);
+        confFileWithoutImport = new File(TestFileUtils.getTempDir(), origConfFileWithoutImport.getName());
+        FileUtils.copyFile(origConfFileWithoutImport, confFileWithoutImport);
+        
+        confFileWithImport = new File(TestFileUtils.getTempDir(), origConfFileWithImport.getName());
+        FileUtils.copyFile(origConfFileWithImport, confFileWithImport);
         
         File bitmagConfDir = new File(TestFileUtils.getTempDir(), "conf/bitrepository");
         bitmagConfDir.mkdirs();
@@ -55,9 +60,9 @@ public class ConfigurationTest extends ExtendedTestCase {
     
     @Test(enabled = false)
     public void testReadingConfigurationFile() throws Exception {
-        assertTrue(confFile.isFile());
+        assertTrue(confFileWithoutImport.isFile());
         assertTrue(requiredFieldsFile.isFile());
-        LinkedHashMap<String, LinkedHashMap> confMap = YamlTools.loadYamlSettings(confFile);
+        LinkedHashMap<String, LinkedHashMap> confMap = YamlTools.loadYamlSettings(confFileWithoutImport);
         printMap((LinkedHashMap<String, Object>) confMap.get("ginnungagap"), "  ");
         
         LinkedHashMap<String, LinkedHashMap> rfMap = YamlTools.loadYamlSettings(requiredFieldsFile);
@@ -77,9 +82,9 @@ public class ConfigurationTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testConfiguration() throws Exception {
+    public void testConfigurationWithoutImport() throws Exception {
         addDescription("Load the configuration");
-        Configuration conf = new Configuration(confFile);
+        Configuration conf = new Configuration(confFileWithoutImport);
         assertNotNull(conf.getBitmagConf());
         assertNotNull(conf.getBitmagConf().getComponentId());
         assertNotNull(conf.getBitmagConf().getMaxNumberOfFailingPillars());
@@ -93,9 +98,38 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getCumulusConf().getUserName());
         assertNotNull(conf.getCumulusConf().getUserPassword());
         assertNotNull(conf.getCumulusConf().getWriteAccess());
+        assertNotNull(conf.getCumulusConf().getCatalogs());
 
         assertNotNull(conf.getTransformationConf());
-        assertNotNull(conf.getTransformationConf().getCatalogs());
+        assertNotNull(conf.getTransformationConf().getXsdDir());
+        assertNotNull(conf.getTransformationConf().getXsltDir());
+        assertNotNull(conf.getTransformationConf().getRequiredFields());
+        assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
+        assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
+        
+        assertNull(conf.getConversionConfiguration());
+    }
+    
+    @Test
+    public void testConfigurationWithImport() throws Exception {
+        addDescription("Load the configuration");
+        Configuration conf = new Configuration(confFileWithImport);
+        assertNotNull(conf.getBitmagConf());
+        assertNotNull(conf.getBitmagConf().getComponentId());
+        assertNotNull(conf.getBitmagConf().getMaxNumberOfFailingPillars());
+        assertNull(conf.getBitmagConf().getPrivateKeyFile());
+        assertNotNull(conf.getBitmagConf().getSettingsDir());
+        assertNotNull(conf.getBitmagConf().getTempDir());
+        assertNotNull(conf.getBitmagConf().getWarcFileSizeLimit());
+
+        assertNotNull(conf.getCumulusConf());
+        assertNotNull(conf.getCumulusConf().getServerUrl());
+        assertNotNull(conf.getCumulusConf().getUserName());
+        assertNotNull(conf.getCumulusConf().getUserPassword());
+        assertNotNull(conf.getCumulusConf().getWriteAccess());
+        assertNotNull(conf.getCumulusConf().getCatalogs());
+
+        assertNotNull(conf.getTransformationConf());
         assertNotNull(conf.getTransformationConf().getXsdDir());
         assertNotNull(conf.getTransformationConf().getXsltDir());
         assertNotNull(conf.getTransformationConf().getRequiredFields());
@@ -116,11 +150,21 @@ public class ConfigurationTest extends ExtendedTestCase {
     @Test
     public void testLoadingBitmagConfigurationWithKeyFile() throws Exception {
         addDescription("Test loading the bitmag configuration with the key file.");
-        Configuration conf = new Configuration(confFile);
+        Configuration conf = new Configuration(confFileWithoutImport);
         
-        Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFile).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
+        Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFileWithoutImport).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
         map.put(Configuration.CONF_BITREPOSITORY_KEYFILE, requiredFieldsFile.getPath());
         BitmagConfiguration bc = conf.loadBitmagConf(map);
         assertEquals(bc.getPrivateKeyFile(), requiredFieldsFile);
+    }
+    
+    @Test(expectedExceptions = ArgumentCheck.class)
+    public void testImproperBitrepositoryAlgorithm() throws Exception {
+        addDescription("Test loading the bitmag configuration with the key file.");
+        Configuration conf = new Configuration(confFileWithoutImport);
+        
+        Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFileWithoutImport).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
+        map.put(Configuration.CONF_BITREPOSITORY_ALGORITHM, "THIS IS NOT A VALID ALGORITHM");
+        conf.loadBitmagConf(map);
     }
 }

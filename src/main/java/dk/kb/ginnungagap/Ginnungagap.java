@@ -144,7 +144,7 @@ public class Ginnungagap {
      * @param conf The configuration.
      */
     protected static void extractFilesOnly(CumulusServer server, Configuration conf) {
-        for(String catalogName : conf.getTransformationConf().getCatalogs()) {
+        for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             log.info("Extracting files for catalog '" + catalogName + "'.");
             CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
             RecordItemCollection items = server.getItems(catalogName, query);

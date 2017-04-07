@@ -15,8 +15,6 @@ public class TransformationConfiguration {
     protected final File xsdDir;
     /** The temporary directory, where the metadata files are stored.*/
     protected final File metadataTempDir;
-    /** The catalogs to go through.*/
-    protected final List<String> catalogs;
     /** The required fields from Cumulus for making the transformation.*/
     protected final RequiredFields requiredFields;
     
@@ -28,11 +26,9 @@ public class TransformationConfiguration {
      * @param metadataTempDir The temporary directory, where the metadata files are stored.
      * @param requiredFields The required fields.
      */
-    public TransformationConfiguration(File xsltDir, File xsdDir, File metadataTempDir, Collection<String> catalogs, 
-            RequiredFields requiredFields) {
+    public TransformationConfiguration(File xsltDir, File xsdDir, File metadataTempDir, RequiredFields requiredFields) {
         this.xsdDir = xsdDir;
         this.xsltDir = xsltDir;
-        this.catalogs = new ArrayList<String>(catalogs);
         this.metadataTempDir = metadataTempDir;
         this.requiredFields = requiredFields;
     }
@@ -40,10 +36,6 @@ public class TransformationConfiguration {
     /** @return The required fields. */
     public RequiredFields getRequiredFields() {
         return requiredFields;
-    }
-    /** @return The catalogs. */
-    public List<String> getCatalogs() {
-        return catalogs;
     }
     /** @return The directory with the XSLT files.*/
     public File getXsltDir() {

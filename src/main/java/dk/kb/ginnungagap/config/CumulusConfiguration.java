@@ -1,5 +1,9 @@
 package dk.kb.ginnungagap.config;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Configuration for accessing Cumulus.
  */
@@ -12,7 +16,9 @@ public class CumulusConfiguration {
     protected String userName;
     /** The password for logging into the server.*/
     protected String userPassword;
-    
+    /** The catalogs to go through.*/
+    protected final List<String> catalogs;
+
     /**
      * Constructor.
      * @param writeAccess Whether or not we need write access.
@@ -20,11 +26,13 @@ public class CumulusConfiguration {
      * @param userName The username for logging into the server.
      * @param userPassword The password for logging into the server.
      */
-    public CumulusConfiguration(boolean writeAccess, String serverUrl, String userName, String userPassword) {
+    public CumulusConfiguration(boolean writeAccess, String serverUrl, String userName, String userPassword, 
+            Collection<String> catalogs) {
         this.writeAccess = writeAccess;
         this.serverUrl = serverUrl;
         this.userName = userName;
         this.userPassword = userPassword;
+        this.catalogs = new ArrayList<String>(catalogs);
     }
     
     /** @return Whether or not we need write access.*/
@@ -45,5 +53,10 @@ public class CumulusConfiguration {
     /** @return The password for logging onto the server.*/
     public String getUserPassword() {
         return userPassword;
+    }
+    
+    /** @return The catalogs. */
+    public List<String> getCatalogs() {
+        return catalogs;
     }
 }

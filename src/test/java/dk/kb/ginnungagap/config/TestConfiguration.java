@@ -38,7 +38,7 @@ public class TestConfiguration extends Configuration {
 
     public void removeRequiredFields() {
         TransformationConfiguration tc = getTransformationConf();
-        transConf = new TransformationConfiguration(tc.getXsltDir(), tc.getXsdDir(), tc.getMetadataTempDir(), tc.getCatalogs(), 
+        transConf = new TransformationConfiguration(tc.getXsltDir(), tc.getXsdDir(), tc.getMetadataTempDir(), 
                 new RequiredFields(new ArrayList<String>(), new ArrayList<String>()));
     }
 }

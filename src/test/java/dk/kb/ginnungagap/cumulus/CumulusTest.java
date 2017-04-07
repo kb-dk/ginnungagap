@@ -63,7 +63,8 @@ public class CumulusTest extends ExtendedTestCase {
         String username = cumulusLogin.get("login");
         String password = cumulusLogin.get("password");
         
-        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", username, password);
+        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", username, password,
+                Arrays.asList("Conservation"));
         server = new CumulusServer(conf);
     }
 
