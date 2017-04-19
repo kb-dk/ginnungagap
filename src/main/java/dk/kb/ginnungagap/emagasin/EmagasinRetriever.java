@@ -2,6 +2,9 @@ package dk.kb.ginnungagap.emagasin;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.kb.ginnungagap.utils.ScriptWrapper;
 
 /**
@@ -12,6 +15,8 @@ import dk.kb.ginnungagap.utils.ScriptWrapper;
  * It works on two levels. It can either retrieve a whole ARC file, or a given ARC record within an ARC file.
  */
 public class EmagasinRetriever extends ScriptWrapper {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(EmagasinRetriever.class);
 
     /** The directory where the ARC files should be placed.*/
     protected final File outputDir;
@@ -33,6 +38,7 @@ public class EmagasinRetriever extends ScriptWrapper {
      * @return The retrieved ARC file.
      */
     public File extractArcFile(String filename) {
+        log.debug("Retrieving the Emagasin file: '" + filename + "'");
         File outputFile = new File(outputDir, filename);
         if(outputFile.exists()) {
             throw new IllegalStateException("The file '" + outputFile.getAbsolutePath() + "' already exists");
@@ -40,8 +46,10 @@ public class EmagasinRetriever extends ScriptWrapper {
         callVoidScript(filename, outputFile.getAbsolutePath());
         
         if(!outputFile.exists()) {
+            log.warn("Failed to retrieve the Emagasin file '" + filename + "'");
             throw new IllegalStateException("No file will be retrieved from E-magasinet.");
         }
+        log.debug("Successfully retrieve the Emagasin file: '" + filename + "'");
         return outputFile;
     }
 }

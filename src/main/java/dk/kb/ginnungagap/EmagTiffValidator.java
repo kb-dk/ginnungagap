@@ -16,19 +16,21 @@ import dk.kb.ginnungagap.utils.FileUtils;
 
 /**
  * Class for validating tiff files in Emagasinet.
- * It extracts a given set of ARC-files, where each record of a TIFF is validated using a script. 
- * The whole thing is placed in 
+ * It extracts a given set of ARC-files, where each TIFF-record is validated using a script. 
  * 
  * This takes the following arguments:
  *  1. File with list of ARC files (one arc-filename per line).
  *  2. Script for extracting the files from Emagasinet.
- *  3. Script for running the FITS
+ *  3. [OPTIONAL] Script for running the checkit_tiff
+ *    - The default script is in the bin folder ("bin/run_checkit_tiff.sh")
  *  4. [OPTIONAL] Path to output directory
  *    - Default is at the current directory
- *  5. [OPTIONAL] Whether to remove the retrieved ARC-files and ARC-records afterwared
+ *  5. [OPTIONAL] Whether to remove the retrieved ARC-files and ARC-records afterwards
  *    - Default yes, remove them.
  *    - Give argument y/n
- * 
+ *  6. [OPTIONAL] A configuration for checkit_tiff
+ *    - The default configuration is in the conf folder ("conf/cit_tiff.cfg")
+ *     
  * Run as commmand, e.g. :
  * dk.kb.ginningagap.EmagExtractor arc-list.txt emag-get-file.sh /path/to/output
  */
@@ -40,35 +42,44 @@ public class EmagTiffValidator {
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
-     * Requires 3 arguments, as described in the class definition.
+     * Requires 3 arguments and accepts further 3 optional arguments, as described in the class definition.
      */
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
 
         File arcListFile = null;
         File retrieveScriptFile = null;
-        File validationScriptFile = null;
+        File validationScriptFile = new File("bin/run_checkit_tiff.sh");
         File outputDir = null;
-        String outputDirPath = null;
+        String outputDirPath = ".";
         boolean removeAfterwards = true;
-        if(args.length < 3) {
+        File checkitConf = new File("conf/cit_tiff.cfg");        
+        if(args.length < 2) {
             System.err.println("Missing arguments. Requires the following arguments:");
             System.err.println("  1. File with list of ARC files");
             System.err.println("  2. Script for extracting the files from Emagasinet.");
-            System.err.println("  3. Script for running the FITS.");
+            System.err.println("  [OPTIONAL] 3. Script for running the checkit_tiff.");
             System.err.println("  [OPTIONAL] 4. Path to output directory (default is current directory)");
             System.err.println("  [OPTIONAL] 5. Where or not to remove the retrieved ARC files afterwards "
                     + "(default is yes)");
+            System.err.println("  [OPTIONAL] 6. Another configuration for checkit_tiff "
+                    + "(default is in the conf folder)");
             System.exit(-1);
         } else {
             arcListFile = new File(args[0]);
             retrieveScriptFile = new File(args[1]);
+        }
+        if(args.length > 2) {
             validationScriptFile = new File(args[2]);
-            if(args.length > 3) {
-                outputDirPath = args[3];
-            } else {
-                outputDirPath = ".";
-            }
+        }
+        if(args.length > 3) {
+            outputDirPath = args[3];            
+        }
+        if(args.length > 4) {
+            removeAfterwards = args[4].startsWith("y") || args[4].startsWith("Y");
+        }
+        if(args.length > 5) {
+            checkitConf = new File(args[5]);
         }
         
         if(!arcListFile.isFile()) {
@@ -85,8 +96,11 @@ public class EmagTiffValidator {
                     + validationScriptFile.getAbsolutePath() + "'");
             System.exit(-1);
         }
-        // TODO: make this into an optional argument
-        File checkitConf = new File("conf/cit_tiff.cfg");
+        if(!checkitConf.isFile()) {
+            System.err.println("The checkit_tiff configuration does not exist at '" 
+                    + checkitConf.getAbsolutePath() + "'");
+            System.exit(-1);
+        }
         
         outputDir = FileUtils.getDirectory(outputDirPath);
 

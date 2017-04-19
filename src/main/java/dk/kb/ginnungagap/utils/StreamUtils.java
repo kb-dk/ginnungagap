@@ -14,7 +14,7 @@ import java.util.List;
  */
 public final class StreamUtils {
     /** The default buffer size. 32 kb. */
-    private static final int IO_BUFFER_SIZE = 32*1024;
+    private static final int IO_BUFFER_SIZE = 16*1024;
     
     /**
      * Utility function for moving data from an inputstream to an outputstream.

@@ -3,7 +3,6 @@ package dk.kb.ginnungagap;
 import java.io.File;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

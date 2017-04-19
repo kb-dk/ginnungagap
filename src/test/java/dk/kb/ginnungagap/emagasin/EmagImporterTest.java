@@ -1,8 +1,6 @@
 package dk.kb.ginnungagap.emagasin;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -12,8 +10,6 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -22,12 +18,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
+import dk.kb.ginnungagap.utils.FileUtils;
 import junit.framework.Assert;
 
 public class EmagImporterTest extends ExtendedTestCase {
@@ -61,45 +57,51 @@ public class EmagImporterTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
     
-//    @Test
-    public void testHandleRecordSuccess() throws IOException {
-        addDescription("Test the ");
+    @Test
+    public void testImportRecordSuccess() throws IOException {
+        addDescription("Test the successful import of a file into Cumulus.");
         CumulusRecord record = mock(CumulusRecord.class);
+        
+        File cumulusOutputFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
         when(record.getMetadataGUID()).thenReturn(UUID.randomUUID().toString());
         when(record.getMetadata(any(File.class))).thenReturn(new ByteArrayInputStream(new byte[0]));
+        when(record.getFile()).thenReturn(cumulusOutputFile);
         
-        Assert.assertEquals(conf.getTransformationConf().getMetadataTempDir().list().length, 0);
+        Assert.assertFalse(cumulusOutputFile.exists());
         converter.handleRecord(record, contentFile);
-        Assert.assertEquals(conf.getTransformationConf().getMetadataTempDir().list().length, 1);
+        Assert.assertTrue(cumulusOutputFile.exists());
         
-        verify(record).initFields();
-        verify(record).validateRequiredFields(any(RequiredFields.class));
-        verify(record).getMetadataGUID();
-        verify(record).getMetadata(any(File.class));
+        verify(record).getFile();
         verifyNoMoreInteractions(record);
         
-        verify(transformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
-        verify(transformer).validate(any(InputStream.class));
-        verifyNoMoreInteractions(transformer);
+        verifyZeroInteractions(transformer);
         
-        verify(preserver).packRecordWithNonAssetResource(eq(record), any(File.class), any(File.class));
-        verifyNoMoreInteractions(preserver);
+        verifyZeroInteractions(preserver);
         
         verifyZeroInteractions(cumulusServer);
     }
     
-//    @Test(expectedExceptions = IllegalStateException.class)
-    public void testHandleRecordFailure() throws IOException {
-        addDescription("Test the ");
-        CumulusRecord record = mock(CumulusRecord.class);
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testFailedImportMissingRights() throws Exception {
+        addDescription("Test the scenario, where the file cannot be imported due to missing rights");
+        File cumulusOutputDir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
-        when(record.getMetadataGUID()).thenReturn(UUID.randomUUID().toString());
-        when(record.getMetadata(any(File.class))).thenReturn(new ByteArrayInputStream(new byte[0]));
-        
-        doThrow(new IOException("FAIL HERE!!!")).when(transformer).validate(any(InputStream.class));
-        
-        Assert.assertEquals(conf.getTransformationConf().getMetadataTempDir().list().length, 0);
-        converter.handleRecord(record, contentFile);
+        try {
+            cumulusOutputDir.setReadOnly();
+            CumulusRecord record = mock(CumulusRecord.class);
+
+            File cumulusOutputFile = new File(cumulusOutputDir, UUID.randomUUID().toString());
+
+            when(record.getMetadataGUID()).thenReturn(UUID.randomUUID().toString());
+            when(record.getMetadata(any(File.class))).thenReturn(new ByteArrayInputStream(new byte[0]));
+            when(record.getFile()).thenReturn(cumulusOutputFile);
+
+            Assert.assertFalse(cumulusOutputFile.exists());
+            converter.handleRecord(record, contentFile);
+        } finally {
+            cumulusOutputDir.setWritable(true);
+            cumulusOutputDir.setExecutable(true);
+        }
     }
 }
