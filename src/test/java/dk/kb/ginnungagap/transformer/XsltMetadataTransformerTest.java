@@ -23,8 +23,6 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
     public void setup() {
         TestFileUtils.setup();
         xsltFile = new File("src/main/resources/scripts/xslt/transformToMets.xsl");
-//        xsltFile = new File("src/main/resources/scripts/xslt/standaloneMods.xsl");
-//        xsltFile = new File("src/main/resources/scripts/xslt/standalonePremis.xsl");
         assertTrue(xsltFile.isFile());
     }
     
@@ -95,6 +93,29 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
         
         addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+        
+//        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+//            fos.write(out.toByteArray());
+//            fos.flush();
+//        }
+        
+        addStep("Validate the METS", "");
+        transformer.validate(new FileInputStream(metadataFile));
+    }
+    
+    @Test
+    public void testCatalogStructmapTransformation() throws Exception {
+        addDescription("Test the catalog structmap transformation");
+        File xmlFile = new File("src/test/resources/structMapTestInput.xml");
+        File xsltFile = new File("src/main/resources/scripts/xslt/transformCatalogStructmap.xsl");
+
+        assertTrue(xmlFile.isFile());
+        XsltMetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+        
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+        
+        addStep("Transform the Cumulus XML into a structmap", "METS");
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
         
 //        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {

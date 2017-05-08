@@ -130,4 +130,26 @@ public class CumulusQuery {
 
         return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
     }
+    
+    /**
+     * The query for extracting all the records in a Cumulus catalog.
+     * 
+     * The records which have the registration state 'registration finished', and it must belong to the given catalog.
+     * 
+     * @param catalogName The name of the catalog.
+     * @return The query for all the records in a Cumulus catalog.
+     */
+    public static CumulusQuery getQueryForAllInCatalog(String catalogName) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        String query = String.format(StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s"),
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName);        
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
 }

@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.log4j.lf5.util.StreamUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -28,12 +26,12 @@ import com.canto.cumulus.Server.CatalogInfo;
 import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
 
-import dk.kb.ginnungagap.config.CumulusConfiguration;
+import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.config.RequiredFields;
+import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
 import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
-import dk.kb.yggdrasil.utils.YamlTools;
 
 public class CumulusTest extends ExtendedTestCase {
 
@@ -42,8 +40,9 @@ public class CumulusTest extends ExtendedTestCase {
 
     int MAX_NUMBER_OF_RECORDS = 1000;
     String passwordFilePath = System.getenv("HOME") + "/cumulus-password.yml";
+    
+    String catalogName = "Conservation";
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @BeforeClass
     public void setup() throws Exception {
         if(TravisUtils.runningOnTravis()) {
@@ -57,15 +56,8 @@ public class CumulusTest extends ExtendedTestCase {
         TestFileUtils.setup();
         outputDir = TestFileUtils.getTempDir();
 
-        Map cumulusFileContent = YamlTools.loadYamlSettings(passwordFile);
-        Map<String, String> cumulusLogin = (Map<String, String>) cumulusFileContent;
-
-        String username = cumulusLogin.get("login");
-        String password = cumulusLogin.get("password");
-        
-        CumulusConfiguration conf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", username, password,
-                Arrays.asList("Conservation"));
-        server = new CumulusServer(conf);
+        Configuration conf = SetupCumulusTests.getConfiguration(catalogName);
+        server = new CumulusServer(conf.getCumulusConf());
     }
 
     @AfterClass
@@ -107,7 +99,6 @@ public class CumulusTest extends ExtendedTestCase {
     
     @Test(enabled = false)
     public void testPrintingToXml() throws Exception {
-        String catalogName = "Conservation";
 //        int catalogId = server.getServer().findCatalogID(catalogName);
 //        Catalog catalog = server.getServer().openCatalog(catalogId);
 

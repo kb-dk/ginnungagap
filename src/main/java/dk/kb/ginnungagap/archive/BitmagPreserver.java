@@ -79,7 +79,6 @@ public class BitmagPreserver {
         WarcPacker wp = getWarcPacker(collectionId);
         wp.packRecord(record, resourceFile, metadataFile);
         checkConditions();
-        
     }
     
     /**
@@ -93,6 +92,16 @@ public class BitmagPreserver {
                 uploadWarcFile(collectionId);
             }
         }
+    }
+    
+    /**
+     * It is asserted that the metadata has the name of metadata file will become the WARC-record uuid,
+     * and that the metadata is in XML format.
+     * @param metadataFile The XML file with the metadata to preserve.
+     */
+    public void packMetadataRecordWithoutCumulusReference(File metadataFile, String collectionID) {
+        WarcPacker wp = getWarcPacker(collectionID);
+        wp.packMetadata(metadataFile, null);
     }
     
     /**
