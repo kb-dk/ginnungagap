@@ -8,12 +8,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
@@ -23,6 +27,8 @@ import dk.kb.ginnungagap.transformation.MetadataTransformer;
  * Workflow for creating a structmap for a given Cumulus catalog.
  */
 public class CatalogStructMapWorkflow implements Workflow {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(CatalogStructMapWorkflow.class);
 
     /** The configuration.*/
     protected final Configuration conf;
@@ -36,6 +42,8 @@ public class CatalogStructMapWorkflow implements Workflow {
     protected final String catalogName;
     /** The name of the Bitrepository collection, where the metadata will be preserved.*/
     protected final String collectionID;
+    /** The intellectuel entity id for the catalog.*/
+    protected final String intellectualEntityID;
     
     /**
      * Constructor.
@@ -45,15 +53,17 @@ public class CatalogStructMapWorkflow implements Workflow {
      * @param transformer The transformer for the metadata.
      * @param catalogName The name of the catalog for the structmap.
      * @param collectionID The name of the Bitrepository collection, where the metadata will be preserved.
+     * @param intellectualEntityID The id of the intellectuel entity for the catalog.
      */
     public CatalogStructMapWorkflow(Configuration conf, CumulusServer cumulusServer, BitmagPreserver preserver, 
-            MetadataTransformer transformer, String catalogName, String collectionID) {
+            MetadataTransformer transformer, String catalogName, String collectionID, String intellectualEntityID) {
         this.conf = conf;
         this.cumulusServer = cumulusServer;
         this.preserver = preserver;
         this.transformer = transformer;
         this.catalogName = catalogName;
         this.collectionID = collectionID;
+        this.intellectualEntityID = intellectualEntityID;
     }
     
     public void run() {
@@ -87,30 +97,46 @@ public class CatalogStructMapWorkflow implements Workflow {
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
         RecordItemCollection items = cumulusServer.getItems(catalogName, query);
         FieldExtractor fieldExtractor = new FieldExtractor(items.getLayout());
-        GUID uuidGuid = fieldExtractor.getFieldGUID("GUID");
+        GUID recordIntellectualEntityGuid = fieldExtractor.getFieldGUID(
+                Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         GUID recordNameGuid = fieldExtractor.getFieldGUID("Record Name");
         
         String uuid = UUID.randomUUID().toString();
         File res = new File(conf.getTransformationConf().getMetadataTempDir(), uuid + ".xml");
         try (FileOutputStream os = new FileOutputStream(res)) {
+            boolean failure = false;
             os.write("<catalog>\n".getBytes());
             os.write("  <uuid>".getBytes());
             os.write(uuid.getBytes());
             os.write("</uuid>\n".getBytes());
+            os.write("  <ie_uuid>".getBytes());
+            os.write(intellectualEntityID.getBytes());
+            os.write("</ie_uuid>\n".getBytes());
             os.write("  <catalogName>".getBytes());
             os.write(catalogName.getBytes());
             os.write("</catalogName>\n".getBytes());
             for(Item item : items) {
+                String recordName = item.getStringValue(recordNameGuid);
+                if(!item.hasValue(recordIntellectualEntityGuid)) {
+                    failure = true;
+                    System.err.println("Failed record: " + recordName);
+                    continue;
+                }
                 os.write("  <record>\n".getBytes());
                 os.write("    <guid>".getBytes());
-                os.write(item.getStringValue(uuidGuid).getBytes());
+                os.write(item.getStringValue(recordIntellectualEntityGuid).getBytes());
                 os.write("</guid>\n".getBytes());
                 os.write("    <name>".getBytes());
-                os.write(item.getStringValue(recordNameGuid).getBytes());
+                os.write(recordName.getBytes());
                 os.write("</name>\n".getBytes());
                 os.write("  </record>\n".getBytes());
             }
             os.write("</catalog>\n".getBytes());
+
+            if(failure) {
+                log.error("Should fail now!");
+//                throw new IllegalStateException("Failed");
+            }
         }
         return res;
     }

@@ -5,10 +5,16 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mets="http://www.loc.gov/METS/"
+    xmlns:premis="http://www.loc.gov/premis/v3"
     
     extension-element-prefixes="java">
 
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
+
+  <xsl:include href="transformToPremis.xsl"/>
+
+  <xsl:variable name="PREMIS-INTELLECTUAL_ENTITY_ID" select="'PremisIE'" />
+  
 
   <xsl:template match="catalog">
     <xsl:call-template name="structmap_generator" />
@@ -73,6 +79,29 @@
       </xsl:element>
       <!-- END metsHdr -->
       
+      
+      <!-- START amdSec -->
+      <xsl:element name="mets:amdSec">
+        <!-- ADD PREMIS:OBJECT -->
+        <xsl:element name="mets:digiprovMD">
+          <xsl:attribute name="CREATED">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:attribute>
+          <xsl:attribute name="ID">
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-INTELLECTUAL_ENTITY_ID)" />
+          </xsl:attribute>
+          <xsl:element name="mets:mdWrap">
+            <xsl:attribute name="MDTYPE">
+              <xsl:value-of select="'PREMIS:OBJECT'" />
+            </xsl:attribute>
+            <xsl:element name="mets:xmlData">
+              <xsl:call-template name="premis_intellectual_entity_catalog" />
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <!-- END amdSec -->
+        
       <!-- START structMap -->
       <xsl:element name="mets:structMap">
         <xsl:attribute name="TYPE">
@@ -83,15 +112,15 @@
           <xsl:attribute name="xlink:label">
             <xsl:value-of select="catalogName" />
           </xsl:attribute>
+          <xsl:attribute name="ADMID">
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor($PREMIS-INTELLECTUAL_ENTITY_ID)" />
+          </xsl:attribute>
           <xsl:for-each select="record">
-            <xsl:element name="mets:mptr">
+            <xsl:element name="mets:div">
               <xsl:attribute name="ID">
                 <xsl:value-of select="name" />
               </xsl:attribute>
-              <xsl:attribute name="LOCTYPE">
-                <xsl:value-of select="'URN'" />
-              </xsl:attribute>
-              <xsl:attribute name="xlink:href">
+              <xsl:attribute name="CONTENTIDS">
                 <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(guid)" />
               </xsl:attribute>
             </xsl:element>

@@ -5,6 +5,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.ginnungagap.exception.RunScriptException;
 import dk.kb.ginnungagap.utils.ScriptWrapper;
 
 /**
@@ -43,7 +44,11 @@ public class EmagasinRetriever extends ScriptWrapper {
         if(outputFile.exists()) {
             throw new IllegalStateException("The file '" + outputFile.getAbsolutePath() + "' already exists");
         }
-        callVoidScript(filename, outputFile.getAbsolutePath());
+        try {
+            callVoidScript(filename, outputFile.getAbsolutePath());
+        } catch (RunScriptException e) {
+            throw new IllegalStateException("The script failed to retrieve the ARC file.", e);
+        }
         
         if(!outputFile.exists()) {
             log.warn("Failed to retrieve the Emagasin file '" + filename + "'");

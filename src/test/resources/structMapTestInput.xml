@@ -1,16 +1,17 @@
 <catalog>
   <uuid>bb36cd92-9dc0-442c-9a0b-88961e686a2b</uuid>
+  <ie_uuid>intellectual-entity-guid</ie_uuid>
   <catalogName>TEST CATALOG NAME</catalogName>
   <record>
-    <guid>Uid:dk:kb:doms:2007-01/structmap-test-guid1</guid>
-    <name>test1</name>
+    <guid>Uid:dk:kb:doms:2007-01/structmap-intellectual-entity-guid1</guid>
+    <name>test-record-name-1</name>
   </record>
   <record>
-    <guid>Uid:dk:kb:doms:2007-01/structmap-test-guid2</guid>
-    <name>test2</name>
+    <guid>Uid:dk:kb:doms:2007-01/structmap-intellectual-entity-guid2</guid>
+    <name>test-record-name-2</name>
   </record>
   <record>
-    <guid>Uid:dk:kb:doms:2007-01/structmap-test-guid3</guid>
-    <name>test3</name>
+    <guid>Uid:dk:kb:doms:2007-01/structmap-intellectual-entity-guid3</guid>
+    <name>test-record-name-3</name>
   </record>
 </catalog>

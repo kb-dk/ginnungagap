@@ -367,4 +367,40 @@
 <!--     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='rightsStatementIdentifierValue']/value)" /> -->
     <xsl:value-of select="'rightsStatementIdentifierValue'" />
   </xsl:template>  
+  
+  <xsl:template name="premis_intellectual_entity_catalog">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+      <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
+      <!-- START 1.1 objectIdentifier -->
+      <xsl:element name="premis:objectIdentifier">
+        <xsl:element name="premis:objectIdentifierType">
+          <xsl:value-of select="'UUID'" />
+        </xsl:element>
+        <xsl:element name="premis:objectIdentifierValue">
+          <xsl:value-of select="uuid" />
+        </xsl:element>
+      </xsl:element>
+      
+      <!-- START 1.13 relationship -->
+      <xsl:element name="premis:relationship">
+        <xsl:element name="premis:relationshipType">
+          <xsl:value-of select="'structural'" />
+        </xsl:element>
+        <xsl:element name="premis:relationshipSubType">
+          <xsl:value-of select="'represents'" />
+        </xsl:element>
+        <xsl:element name="premis:relatedObjectIdentifier">
+          <xsl:element name="premis:relatedObjectIdentifierType">
+            <xsl:value-of select="'UUID'" />
+          </xsl:element>
+          <xsl:element name="premis:relatedObjectIdentifierValue">
+            <xsl:value-of select="ie_uuid" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <!-- END 1.13 relationship -->
+    </premis:object>
+  </xsl:template>
+  
+  
 </xsl:stylesheet> 

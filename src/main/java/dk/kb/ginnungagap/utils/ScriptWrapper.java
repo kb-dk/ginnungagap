@@ -6,6 +6,9 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.exception.RunScriptException;
+
 /**
  * Class for executing an external bash script.
  */
@@ -21,17 +24,17 @@ public class ScriptWrapper {
      * @param scriptFile The script for to be called.
      */
     public ScriptWrapper(File scriptFile) {
-        if(!scriptFile.isFile()) {
-            throw new IllegalStateException("The file '" + scriptFile.getAbsolutePath() + "' is not valid.");
-        }
+        ArgumentCheck.checkExistsNormalFile(scriptFile, "File scriptFile");
         this.scriptFile = scriptFile;
     }
     
     /**
      * Calls the script with the given argument.
      * @param args The argument(s) for the script.
+     * @throws RunScriptException If the scripts fails to run, or gives a non-success termination code (0).
+     * It will contain all the output from the script (both std and err output).
      */
-    protected void callVoidScript(String ... args) {
+    protected void callVoidScript(String ... args) throws RunScriptException {
         StringBuffer command = new StringBuffer();
         command.append("bash ");
         command.append(scriptFile.getAbsolutePath());
@@ -46,14 +49,14 @@ public class ScriptWrapper {
                 String errMsg = "Failed to run the script.\nErrors:\n" 
                         + StreamUtils.extractInputStreamAsString(p.getErrorStream()) + "Output:\n"
                         + StreamUtils.extractInputStreamAsString(p.getInputStream());
-                throw new IllegalStateException(errMsg);
+                throw new RunScriptException(errMsg);
             } else {
                 log.debug("Successful execution of script. Received the following output:\nErrors:\n" 
                         + StreamUtils.extractInputStreamAsString(p.getErrorStream()) + "Output:\n"
                         + StreamUtils.extractInputStreamAsString(p.getInputStream()));
             }
         } catch (IOException | InterruptedException e) {
-            throw new IllegalStateException("Failure during execution of command: '" + command + "'", e);
+            throw new RunScriptException("Failure during execution of command: '" + command + "'", e);
         }
     }
 }

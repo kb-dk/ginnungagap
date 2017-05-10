@@ -30,6 +30,7 @@ public class CatalogStructMapTest extends ExtendedTestCase {
     File xsltFile;
     String catalogName = "Conservation";
     String collectionID = "TestCollectionID";
+    String intellectualEntityID = "intellectuel_entity_id";
     
     @BeforeClass
     public void setup() throws Exception {
@@ -47,14 +48,14 @@ public class CatalogStructMapTest extends ExtendedTestCase {
         Cumulus.CumulusStop();
     }
     
-    @Test
+    @Test//(enabled = false)
     public void testPerformingWorkflow() {
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
 //        MetadataTransformer transformer = Mockito.mock(MetadataTransformer.class); 
         MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile); 
         BitmagPreserver preserver = Mockito.mock(BitmagPreserver.class);
 
-        CatalogStructmap.createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, collectionID);
+        CatalogStructmap.createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, collectionID, intellectualEntityID);
     }
     
 //    @Test(enabled = false)

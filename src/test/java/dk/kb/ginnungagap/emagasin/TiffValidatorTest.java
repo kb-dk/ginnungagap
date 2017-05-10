@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.exception.RunScriptException;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import junit.framework.Assert;
@@ -40,8 +41,8 @@ public class TiffValidatorTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
 
-    @Test
-    public void testTiffFile() throws IOException {
+    @Test(expectedExceptions = RunScriptException.class)
+    public void testTiffFile() throws IOException, RunScriptException {
         Assert.assertTrue(tiffFile.isFile());
         Assert.assertTrue(scriptFile.isFile());
         Assert.assertTrue(confFile.isFile());

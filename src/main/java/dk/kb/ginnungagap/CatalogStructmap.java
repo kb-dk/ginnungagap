@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import dk.kb.ginnungagap.workflow.PreservationWorkflow;
  * 4. [OPTIONAL] Archive type
  *   * Bitmag - for The BitRepository
  *   * Local - for placing the  
+ * 5. [OPTIONAL] Intellecual entity id for the catalog
  * 
  * e.g.
  * dk.kb.ginningagap.CatalogStructmap conf/ginnungagap.yml CatalogName
@@ -74,6 +76,7 @@ public class CatalogStructmap {
                 System.err.println(" 2. Catalog name");
                 System.err.println(" 3. Bitrepository Collection ID");
                 System.err.println(" 4. [OPTIONAL] Archive type (bitmag or local)");
+                System.err.println(" 5. [OPTIONAL] Intellecual entity id for the catalog");
                 System.exit(-1);
             }
         } else {
@@ -89,6 +92,13 @@ public class CatalogStructmap {
                         + ARCHIVE_LOCAL + "' or '" + ARCHIVE_BITMAG + "'.");
                 System.exit(-1);
             }
+        }
+        String intellectualEntityID;
+        if(args.length > 4) {
+            intellectualEntityID = args[4];
+        } else {
+            intellectualEntityID = UUID.randomUUID().toString();
+            log.info("Creating a new Intellectuel entity id for the catalog: " + intellectualEntityID);
         }
         
         File confFile = new File(confPath);
@@ -123,7 +133,7 @@ public class CatalogStructmap {
             MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
             BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
-            createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, preservationCollectionID);
+            createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, preservationCollectionID, intellectualEntityID);
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
@@ -140,9 +150,10 @@ public class CatalogStructmap {
      * @param catalogName
      */
     protected static void createCatalogStructmap(CumulusServer cumulusServer, MetadataTransformer transformer, 
-            BitmagPreserver preserver, Configuration conf, String catalogName, String collectionID) {
+            BitmagPreserver preserver, Configuration conf, String catalogName, String collectionID, 
+            String intellectualEntityID) {
         CatalogStructMapWorkflow workflow = new CatalogStructMapWorkflow(conf, cumulusServer, preserver, transformer, 
-                catalogName, collectionID);
+                catalogName, collectionID, intellectualEntityID);
 
         System.out.println("Starting workflow");
         workflow.run();

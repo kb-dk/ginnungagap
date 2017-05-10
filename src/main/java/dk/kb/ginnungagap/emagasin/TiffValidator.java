@@ -18,6 +18,7 @@ import org.archive.io.arc.ARCReaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.ginnungagap.exception.RunScriptException;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.ScriptWrapper;
 import dk.kb.ginnungagap.utils.StreamUtils;
@@ -79,25 +80,50 @@ public class TiffValidator extends ScriptWrapper {
         ARCReader arcReader = ARCReaderFactory.get(arcFile);
         
         for(ArchiveRecord arcRecord : arcReader) {
-            String mimetype = arcRecord.getHeader().getMimetype();
             String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
-            if(mimetype.equals(CONTENT_TYPE_TIFF)) {
-                log.info("Validating Tiff record '" + uid + "'");
-                File tiffFile = new File(outputDir, uid);
-                StreamUtils.copyInputStreamToOutputStream(arcRecord, 
-                        new FileOutputStream(tiffFile));
-                
-                try {
-                    validateTiffFile(tiffFile);
-                } finally {
-                    if(deleteAfterValidation) {
-                        Files.delete(tiffFile.toPath());
-                    }
-                }
-            } else {
-                log.debug("No validation of mimetype '" + mimetype + "' for record '" + uid + "'");
+            try {
+                validateArcRecordIfTiff(arcRecord, uid);
+                writeCsvToOutput(Arrays.asList("Success", uid));
+            } catch (RunScriptException e) {
+                log.debug("Invalid tiff record", e);
+                writeValidationFailure(uid, e);                
             }
         }
+    }
+    
+    /**
+     * 
+     * @param arcRecord
+     * @throws IOException
+     */
+    public void validateArcRecordIfTiff(ArchiveRecord arcRecord, String uid) throws IOException, RunScriptException {
+        String mimetype = arcRecord.getHeader().getMimetype();
+        if(mimetype.equals(CONTENT_TYPE_TIFF)) {
+            log.info("Validating Tiff record '" + uid + "'");
+            File tiffFile = new File(outputDir, uid);
+            StreamUtils.copyInputStreamToOutputStream(arcRecord, 
+                    new FileOutputStream(tiffFile));
+            
+            try {
+                validateTiffFile(tiffFile);
+            } finally {
+                if(deleteAfterValidation) {
+                    Files.delete(tiffFile.toPath());
+                }
+            }
+        } else {
+            log.debug("No validation of mimetype '" + mimetype + "' for record '" + uid + "'");
+        }
+    }
+    
+    /**
+     * Validate the TIFF file.
+     * Just calls the script with the right paths.
+     * @param tiffFile The TIFF file to validate.
+     * @throws RunScriptException If the validation fails. 
+     */
+    protected void validateTiffFile(File tiffFile) throws RunScriptException {
+        callVoidScript(tiffFile.getAbsolutePath(), validationConf.getAbsolutePath());
     }
     
     /**
@@ -106,21 +132,7 @@ public class TiffValidator extends ScriptWrapper {
     public File getOutputFile() {
         return outputFile;
     }
-    
-    /**
-     * Validates a given TIFF file.
-     * @param tiffFile The TIFF file to validate.
-     */
-    protected void validateTiffFile(File tiffFile) {
-        try {
-            callVoidScript(tiffFile.getAbsolutePath(), validationConf.getAbsolutePath());
-            writeCsvToOutput(Arrays.asList("Success", tiffFile.getName()));
-        } catch (IllegalStateException e) {
-            log.debug("Invalid tiff record", e);
-            writeValidationFailure(tiffFile.getName(), e);
-        }
-    }
-    
+        
     /**
      * Write about the failed validation of a given TIFF file.
      * It will add the status, the filename, the number of errors reported in the exception,
@@ -129,7 +141,7 @@ public class TiffValidator extends ScriptWrapper {
      * @param filename The name of the TIFF file, which is invalid.
      * @param e The error from the checkit_tiff. Should contain number of errors and which tags failed.
      */
-    protected void writeValidationFailure(String filename, IllegalStateException e) {
+    protected void writeValidationFailure(String filename, RunScriptException e) {
         Pattern errorsPattern = Pattern.compile(VALIDATION_ERRORS_REGEX);
         Matcher errorsMatch = errorsPattern.matcher(e.getMessage());
         Pattern errorTagPattern = Pattern.compile(VALIDATION_ERROR_TAG_REGEX);

@@ -141,9 +141,11 @@ public class CumulusQuery {
      */
     public static CumulusQuery getQueryForAllInCatalog(String catalogName) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
-        String query = String.format(StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s"),
+        String query = String.format(StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.PRESERVATION_STATUS,
+                Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED,
                 Constants.FieldNames.CATALOG_NAME,
                 catalogName);        
         EnumSet<FindFlag> findFlags = EnumSet.of(
