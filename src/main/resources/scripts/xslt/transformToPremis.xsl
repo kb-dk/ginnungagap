@@ -132,10 +132,6 @@
       </xsl:element>
       <!-- END 1.1 objectIdentifier -->
       
-      <!-- START 1.3 preservation level -->
-      <xsl:call-template name="premis_preservation" />
-      <!-- END 1.3 preservation level -->
-      
       <!-- BEGIN 1.5 ObjectCharacteristics -->
       <xsl:element name="premis:objectCharacteristics">
         <!-- 1.5.1 compositionLevel -->
@@ -238,25 +234,6 @@
       </xsl:element>
       <!-- END 1.5 ObjectCharacteristics -->
       
-      <!-- START 1.13 relationship -->
-      <xsl:element name="premis:relationship">
-        <xsl:element name="premis:relationshipType">
-          <xsl:value-of select="'structural'" />
-        </xsl:element>
-        <xsl:element name="premis:relationshipSubType">
-          <xsl:value-of select="'represents'" />
-        </xsl:element>
-        <xsl:element name="premis:relatedObjectIdentifier">
-          <xsl:element name="premis:relatedObjectIdentifierType">
-            <xsl:value-of select="'UUID'" />
-          </xsl:element>
-          <xsl:element name="premis:relatedObjectIdentifierValue">
-            <xsl:value-of select="field[@name='relatedObjectIdentifierValue_intellectualEntity']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-      <!-- END 1.13 relationship -->
-      
       <!-- START 1.15 linkingRightsStatementIdentifier -->
       <xsl:if test="field[@name='rightsStatementIdentifierValue']">
         <xsl:element name="premis:linkingRightsStatementIdentifier">
@@ -339,6 +316,14 @@
     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
   </xsl:template>
 
+  <xsl:template name="premis_representation_identifier_type">
+    <xsl:value-of select="'UUID'" />
+  </xsl:template>
+  
+  <xsl:template name="premis_representation_identifier_value">
+    <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='METADATA GUID']/value)" />
+  </xsl:template>
+
   <xsl:template name="premis_agent_identifier_type">
     <xsl:if test="field[@name='agentIdentifierType']">
       <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getAgentType(field[@name='agentIdentifierType']/value)" />
@@ -367,6 +352,45 @@
 <!--     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='rightsStatementIdentifierValue']/value)" /> -->
     <xsl:value-of select="'rightsStatementIdentifierValue'" />
   </xsl:template>  
+  
+  <xsl:template name="premis_relationship">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+      <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
+      <!-- START 1.1 objectIdentifier -->
+      <xsl:element name="premis:objectIdentifier">
+        <xsl:element name="premis:objectIdentifierType">
+          <xsl:call-template name="premis_representation_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:objectIdentifierValue">
+          <xsl:call-template name="premis_representation_identifier_value" />
+        </xsl:element>
+      </xsl:element>
+      <!-- END 1.1 objectIdentifier -->
+      
+      <!-- START 1.3 preservation level -->
+      <xsl:call-template name="premis_preservation" />
+      <!-- END 1.3 preservation level -->
+      
+      <!-- START 1.13 relationship -->
+      <xsl:element name="premis:relationship">
+        <xsl:element name="premis:relationshipType">
+          <xsl:value-of select="'structural'" />
+        </xsl:element>
+        <xsl:element name="premis:relationshipSubType">
+          <xsl:value-of select="'represents'" />
+        </xsl:element>
+        <xsl:element name="premis:relatedObjectIdentifier">
+          <xsl:element name="premis:relatedObjectIdentifierType">
+            <xsl:value-of select="'UUID'" />
+          </xsl:element>
+          <xsl:element name="premis:relatedObjectIdentifierValue">
+            <xsl:value-of select="field[@name='relatedObjectIdentifierValue_intellectualEntity']/value" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <!-- END 1.13 relationship -->
+    </premis:object>
+  </xsl:template>
   
   <xsl:template name="premis_intellectual_entity_catalog">
     <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">

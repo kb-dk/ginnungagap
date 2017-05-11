@@ -28,6 +28,7 @@
   <xsl:variable name="PREMIS-AGENT-ID" select="'PremisAgent'" />
   <xsl:variable name="PREMIS-EVENT-ID" select="'PremisEvent'" />
   <xsl:variable name="PREMIS-OBJECT-ID" select="'PremisObject'" />
+  <xsl:variable name="PREMIS-REPRESENTATION-ID" select="'PremisRepresentation'" />
   <xsl:variable name="PREMIS-RIGHTS-ID" select="'PremisRights'" />
   
   <xsl:template match="record">
@@ -227,6 +228,23 @@
             </xsl:element>
           </xsl:element>
         </xsl:element>
+        <!-- ADD PREMIS -->
+        <xsl:element name="mets:digiprovMD">
+          <xsl:attribute name="CREATED">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:attribute>
+          <xsl:attribute name="ID">
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-REPRESENTATION-ID)" />
+          </xsl:attribute>
+          <xsl:element name="mets:mdWrap">
+            <xsl:attribute name="MDTYPE">
+              <xsl:value-of select="'PREMIS'" />
+            </xsl:attribute>
+            <xsl:element name="mets:xmlData">
+              <xsl:call-template name="premis_relationship" />
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
       </xsl:element>
       <!-- END amdSec -->
       
@@ -261,7 +279,7 @@
             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
           </xsl:attribute>
           <xsl:attribute name="ADMID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID))" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID, ',', $PREMIS-REPRESENTATION-ID))" />
           </xsl:attribute>
           <xsl:element name="mets:fptr">
             <xsl:attribute name="FILEID">
