@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.transformation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 
 /**
  * Interface for the metadata transformer.
@@ -23,4 +24,6 @@ public interface MetadataTransformer {
      * If the validation itself fails, then an IllegalStateException will be thrown instead.
      */
     void validate(InputStream is) throws IOException;
+    
+    Collection<String> getMetadataStandards(InputStream is) throws IOException;
 }

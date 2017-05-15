@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +105,8 @@ public class PreservationWorkflow implements Workflow {
             record.initFields();
             record.validateRequiredFields(conf.getRequiredFields());
             File metadataFile = transformAndValidateMetadata(record);
-            
+
+            setMetadataStandardsForRecord(record, metadataFile);
             preserver.packRecord(record, metadataFile);
         } catch (Exception e) {
             log.warn("Preserving the record '" + record + "' failed.", e);
@@ -133,5 +135,23 @@ public class PreservationWorkflow implements Workflow {
         transformer.validate(new FileInputStream(metadataFile));
         
         return metadataFile;
+    }
+    
+    /**
+     * Finds the metadata standards used in the metadata file, and set it as the value for the corresponding field 
+     * in the cumulus record.
+     * @param record The cumulus record where the metadata standards are written to.
+     * @param metadataFile The file with the metadata.
+     * @throws IOException If it fails to read the metadata standards from the metadata file.
+     */
+    protected void setMetadataStandardsForRecord(CumulusRecord record, File metadataFile) throws IOException {
+        Collection<String> namespaces = transformer.getMetadataStandards(new FileInputStream(metadataFile));
+        StringBuilder value = new StringBuilder();
+        for(String s : namespaces) {
+            value.append(s);
+            value.append("\n");
+        }
+        log.warn("TODO: set Metadata Standards: " + value.toString());
+//        record.setStringValueInField(fieldName, value);
     }
 }

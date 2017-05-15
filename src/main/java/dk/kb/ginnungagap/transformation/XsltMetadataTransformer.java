@@ -4,11 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.StringUtils;
@@ -96,5 +107,49 @@ public class XsltMetadataTransformer implements MetadataTransformer {
         } catch (YggdrasilException e) {
             throw new IOException("Could not validate the metadata.", e);
         }
+    }
+    
+    /**
+     * Retrieves the schema versions of a given XML metadata stream.
+     * Will only retrieve each schema location once.
+     * @param metadata The XML metadata input stream.
+     * @return The collection of unique schemalocations.
+     * @throws IOException If the input stream cannot be loaded as XML objects.
+     */
+    public Collection<String> getMetadataStandards(InputStream metadata) throws IOException {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(metadata);
+
+            return getNamespaceLocation(document);
+        } catch(ParserConfigurationException | SAXException e) {
+            throw new IOException("Could not extract the metadata standards.", e);
+        }
+    }
+    
+    /**
+     * Retrieves the namespace locations of a given node, and all the subnodes.
+     * @param node The node.
+     * @return The namespaces of the current node and all its subnodes.
+     */
+    protected Set<String> getNamespaceLocation(Node node) {
+        Set<String> res = new HashSet<String>();
+        for(int i = 0; i < node.getChildNodes().getLength(); i++) {
+            Node n = node.getChildNodes().item(i);
+            if(n.hasChildNodes()) {
+                res.addAll(getNamespaceLocation(n));
+            }
+        }
+        if(node.hasAttributes()) {
+            Node schemaLocation = node.getAttributes().getNamedItemNS(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI, 
+                    "schemaLocation");
+            if(schemaLocation != null) {
+                res.add(schemaLocation.getNodeValue());
+            }
+        }
+        
+        return res;
     }
 }

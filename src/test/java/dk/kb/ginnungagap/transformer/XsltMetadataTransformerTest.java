@@ -6,6 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
@@ -125,5 +128,29 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
         
         addStep("Validate the METS", "");
         transformer.validate(new FileInputStream(metadataFile));
+    }
+    
+    @Test
+    public void testExtractingSchemaVersions() throws Exception {
+        addDescription("Tets the extraction of schema versions from an XML document.");
+        List<String> expectedNamespaces = Arrays.asList("http://www.loc.gov/premis/", 
+                "http://www.loc.gov/mods/", 
+                "http://www.loc.gov/mix/", 
+                "http://www.loc.gov/METS/");
+        File testMetsFile = new File("src/test/resources/test-mets.xml");
+        XsltMetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+
+        Collection<String> schemaLocations =  transformer.getMetadataStandards(new FileInputStream(testMetsFile));
+        
+        addStep("Find expected namespaces", "Must be present");
+        for(String namespace : expectedNamespaces) {
+            boolean found = false;
+            for(String s : schemaLocations) {
+                if(s.contains(namespace)) {
+                    found = true;
+                }
+            }
+            assertTrue(found, namespace);
+        }
     }
 }

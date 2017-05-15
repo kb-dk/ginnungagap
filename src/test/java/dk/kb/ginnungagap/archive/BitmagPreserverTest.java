@@ -117,7 +117,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         when(record.getFile()).thenReturn(resourceFile);
         when(record.getUUID()).thenReturn(recordId);
         
-        bitmagConf.setWarcFileSizeLimit(20000);
+        bitmagConf.setWarcFileSizeLimit(40000);
 
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
 

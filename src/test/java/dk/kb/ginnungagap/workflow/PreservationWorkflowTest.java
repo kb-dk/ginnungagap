@@ -181,6 +181,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         verify(transformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
         verify(transformer).validate(any(InputStream.class));
+        verify(transformer).getMetadataStandards(any(InputStream.class));
         verifyNoMoreInteractions(transformer);
         
         verify(preserver).packRecord(any(CumulusRecord.class), any(File.class));
