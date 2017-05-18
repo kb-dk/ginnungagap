@@ -48,7 +48,7 @@ public class CatalogStructMapTest extends ExtendedTestCase {
         Cumulus.CumulusStop();
     }
     
-    @Test//(enabled = false)
+    @Test(enabled = false)
     public void testPerformingWorkflow() {
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
 //        MetadataTransformer transformer = Mockito.mock(MetadataTransformer.class); 
