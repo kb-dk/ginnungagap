@@ -17,6 +17,24 @@ ginnungagap:
     xslt_dir: tempDir/scripts/xslt
     required_fields_file: src/test/resources/conf/required_fields.yml
     metadata_temp_dir: tempDir/metadata
-  conversion:
+  import:
     temp_dir: tempDir/conversion
     script_file: src/test/resources/scripts/test_import_get_file.sh
+    substitute:
+      - from: 'dia-prod-dom-01.kb.dk:/online_master_arkiv_m_1/non-archival/Maps/LUFTFO/'
+        to: 'dia-prod-cdb-01.kb.dk/online_master_arkiv_8/non-archival/Maps/LUFTFO'
+      - from: 'dia-prod-dom-01.kb.dk:/archive_pool/non-archival/Maps/LUFTFO/'
+        to: 'dia-prod-cdb-01.kb.dk/online_master_arkiv_8/non-archival/Maps/LUFTFO'
+      - from: 'dia-prod-dom-01.kb.dk:/online_master_arkiv_6/non-archival/Maps/LUFTFO/'
+        to: 'dia-prod-cdb-01.kb.dk/online_master_arkiv_8/non-archival/Maps/LUFTFO'
+      - from: 'dia-prod-dom-01.kb.dk:/online_master_arkiv_8/non-archival/Maps/LUFTFO/'
+        to: 'dia-prod-cdb-01.kb.dk/online_master_arkiv_8/non-archival/Maps/LUFTFO'
+      - from: '*:dia-prod-dom-02.kb.dk::Maps:LUFTFO:2012:jan:BCO54:BC54_relaterede_filer:CD_1:'
+        to: 'dia-prod-dom-02.kb.dk/Maps/LUFTFO/2012/jan/BCO54/BC54_relaterede_filer/CD_1/'
+      - from: '*:dia-prod-dom-02.kb.dk::Maps:LUFTFO:2012:jan:BCO54:BC54_relaterede_filer:CD_2:'
+        to: 'dia-prod-dom-02.kb.dk/Maps/LUFTFO/2012/jan/BCO54/BC54_relaterede_filer/CD_2/'
+      - from: '*:dia-prod-dom-02.kb.dk::Maps:LUFTFO:2012:jan:BCO54:BC54_relaterede_filer:MapinfoOverview_dbs:'
+        to: 'dia-prod-dom-02.kb.dk/Maps/LUFTFO/2012/jan/BCO54/BC54_relaterede_filer/MapinfoOverview_dbs/'
+
+
+

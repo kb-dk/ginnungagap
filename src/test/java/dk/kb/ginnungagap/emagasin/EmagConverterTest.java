@@ -110,7 +110,7 @@ public class EmagConverterTest extends ExtendedTestCase {
                 String uuid = "random-" + UUID.randomUUID().toString();
                 converter.extractArcRecordAsFile(arcRecord, uuid);
                 
-                File expectedOutputFile = new File(conf.getConversionConfiguration().getTempDir(), uuid);
+                File expectedOutputFile = new File(conf.getImportationConfiguration().getTempDir(), uuid);
                 Assert.assertTrue(expectedOutputFile.isFile());
             }
         }

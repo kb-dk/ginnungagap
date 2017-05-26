@@ -58,11 +58,11 @@ public class ConfigurationTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
     
-    @Test(enabled = false)
+    @Test//(enabled = false)
     public void testReadingConfigurationFile() throws Exception {
         assertTrue(confFileWithoutImport.isFile());
         assertTrue(requiredFieldsFile.isFile());
-        LinkedHashMap<String, LinkedHashMap> confMap = YamlTools.loadYamlSettings(confFileWithoutImport);
+        LinkedHashMap<String, LinkedHashMap> confMap = YamlTools.loadYamlSettings(confFileWithImport);
         printMap((LinkedHashMap<String, Object>) confMap.get("ginnungagap"), "  ");
         
         LinkedHashMap<String, LinkedHashMap> rfMap = YamlTools.loadYamlSettings(requiredFieldsFile);
@@ -107,7 +107,7 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
         
-        assertNull(conf.getConversionConfiguration());
+        assertNull(conf.getImportationConfiguration());
     }
     
     @Test
@@ -136,9 +136,9 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
         
-        assertNotNull(conf.getConversionConfiguration());
-        assertNotNull(conf.getConversionConfiguration().getScriptFile());
-        assertNotNull(conf.getConversionConfiguration().getTempDir());
+        assertNotNull(conf.getImportationConfiguration());
+        assertNotNull(conf.getImportationConfiguration().getScriptFile());
+        assertNotNull(conf.getImportationConfiguration().getTempDir());
     }
     
     @Test(expectedExceptions = ArgumentCheck.class)

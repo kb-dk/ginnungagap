@@ -22,6 +22,8 @@ import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
+import dk.kb.ginnungagap.emagasin.importation.InputFormat;
+import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
 
 /**
  * Class for import the digital objects of ARC files from the E-magasin back into Cumulus.
@@ -53,6 +55,12 @@ public class EmagImportation {
     protected final CumulusServer cumulus;
     /** The name of the catalog. */
     protected final String catalogName;
+//    /** The Retriever of ARC files from the Emagasin.*/
+//    protected final EmagasinRetriever emagRetriever;
+//    
+//    protected final InputFormat inputFormat;
+//    protected final OutputFormatter outputFormat;
+    
     
     /**
      * Constructor.
@@ -109,7 +117,7 @@ public class EmagImportation {
      * @throws IOException If it fails.
      */
     protected File extractArcRecordAsFile(ArchiveRecord record, String uuid) throws IOException {
-        File outputFile = new File(conf.getConversionConfiguration().getTempDir(), uuid);
+        File outputFile = new File(conf.getImportationConfiguration().getTempDir(), uuid);
         try (OutputStream os = new FileOutputStream(outputFile)) {
             StreamUtils.copy(record, os);
         }

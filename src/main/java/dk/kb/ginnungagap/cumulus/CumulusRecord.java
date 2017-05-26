@@ -61,8 +61,7 @@ public class CumulusRecord {
     /** The Cumulus record item.*/
     protected final Item item;
 
-    /** The guid for the metadata record. It is created and stored the first time it is needed.
-     * @see */
+    /** The guid for the metadata record. It is created and stored the first time it is needed. */
     protected String metadataGuid;
     
     /**
@@ -72,7 +71,7 @@ public class CumulusRecord {
      */
     public CumulusRecord(FieldExtractor fe, Item item) {
         this.fe = fe;
-        this.item = item;
+        this.item = item;        
     }
     
     /**
@@ -104,6 +103,15 @@ public class CumulusRecord {
     public String getFieldValue(String fieldname) {
         GUID fieldGuid = fe.getFieldGUID(fieldname);
         return item.getStringValue(fieldGuid);
+    }
+    
+    /**
+     * Retrieves the string value of a field (also non-string fields, except tables, pictures and audio).
+     * @param fieldname The name of the field.
+     * @return The string value of the field.
+     */
+    public String getFieldValueForNonStringField(String fieldname) {
+        return fe.getStringValueForField(fieldname, item);
     }
 
     /**

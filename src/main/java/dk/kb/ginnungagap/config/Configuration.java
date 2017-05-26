@@ -41,10 +41,22 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
  *     </ul>
- *     <li>conversion:</li>
+ *     <li>import:</li>
  *     <ul>
  *       <li>temp_dir: $temp_dir</li>
  *       <li>script_file: $script_file</li>
+ *       <li>substitute:<br/> -$sub1_name 
+ *       <ul>
+ *         <li>from: $from1</li>
+ *         <li>to: $to1</li>
+ *       </ul>
+ *       - $sub2_name
+ *       <ul>
+ *         <li>from: $from2</li>
+ *         <li>to: $to2</li>
+ *       </ul>
+ *       - ...
+ *       </li>
  *     </ul>
  *   </ul>
  * </ul>
@@ -98,12 +110,14 @@ public class Configuration {
     /** Transformation metadata temp file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
 
-    /** Conversion node-element.*/
-    protected static final String CONF_CONVERSION = "conversion";
+    /** Importation node-element.*/
+    protected static final String CONF_IMPORT = "import";
     /** Conversion temp-dir leaf-element.*/
-    protected static final String CONF_CONVERSION_TEMP_DIR = "temp_dir";
+    protected static final String CONF_IMPORT_TEMP_DIR = "temp_dir";
     /** Conversion script file leaf-element.*/
-    protected static final String CONF_CONVERSION_SCRIPT_FILE = "script_file";
+    protected static final String CONF_IMPORT_SCRIPT_FILE = "script_file";
+    /** Conversion script file leaf-element.*/
+    protected static final String CONF_IMPORT_SUBSTITUTE = "substitute";
     
     /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
@@ -116,7 +130,7 @@ public class Configuration {
     protected final TransformationConfiguration transformationConf;
     
     /** The configuration for the conversion. May be null, if no conversion is needed.*/
-    protected ConversionConfiguration conversionConfiguration = null;
+    protected ImportationConfiguration importConfiguration = null;
     
     /**
      * Constructor.
@@ -144,9 +158,9 @@ public class Configuration {
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
             
-            if(confMap.containsKey(CONF_CONVERSION)) {
-                this.conversionConfiguration = loadConversionConfiguration(
-                        (Map<String, Object>) confMap.get(CONF_CONVERSION));
+            if(confMap.containsKey(CONF_IMPORT)) {
+                this.importConfiguration = loadConversionConfiguration(
+                        (Map<String, Object>) confMap.get(CONF_IMPORT));
             }
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
@@ -257,19 +271,20 @@ public class Configuration {
      * @param map The map with the Conversion configuration.
      * @return The configuration for the conversion.
      */
-    protected ConversionConfiguration loadConversionConfiguration(Map<String, Object> map) {
-        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_TEMP_DIR), 
-                "Missing Conversion element '" + CONF_CONVERSION_TEMP_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_CONVERSION_SCRIPT_FILE), 
-                "Missing Conversion element '" + CONF_CONVERSION_SCRIPT_FILE + "'");
+    protected ImportationConfiguration loadConversionConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_IMPORT_TEMP_DIR), 
+                "Missing Conversion element '" + CONF_IMPORT_TEMP_DIR + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_IMPORT_SCRIPT_FILE), 
+                "Missing Conversion element '" + CONF_IMPORT_SCRIPT_FILE + "'");
 
-        File tempDir = FileUtils.getDirectory((String) map.get(CONF_CONVERSION_TEMP_DIR));
-        File scriptFile = new File((String) map.get(CONF_CONVERSION_SCRIPT_FILE));
-                
+        File tempDir = FileUtils.getDirectory((String) map.get(CONF_IMPORT_TEMP_DIR));
+        File scriptFile = new File((String) map.get(CONF_IMPORT_SCRIPT_FILE));
+        List<Map<String, String>> subs = (List<Map<String, String>>) map.get(CONF_IMPORT_SUBSTITUTE);
+        
         ArgumentCheck.checkExistsDirectory(tempDir, "temp dir");
         ArgumentCheck.checkExistsNormalFile(scriptFile, "script");
 
-        return new ConversionConfiguration(tempDir, scriptFile);
+        return new ImportationConfiguration(tempDir, scriptFile, subs);
     }
     
     /** @return The configuration for the bitrepository.*/
@@ -287,9 +302,8 @@ public class Configuration {
         return transformationConf;
     }
     
-    /** @return The configuration for the conversion. May be null, if no conversion is needed.*/
-    public ConversionConfiguration getConversionConfiguration() {
-        return conversionConfiguration;
+    /** @return The configuration for the importation. May be null, if no importation is needed.*/
+    public ImportationConfiguration getImportationConfiguration() {
+        return importConfiguration;
     }
-
 }

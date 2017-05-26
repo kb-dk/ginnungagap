@@ -205,4 +205,25 @@ public class FieldExtractor {
         
         throw new IllegalStateException("Could not find field: " + fieldName); 
     }
+    
+    /**
+     * Retrieves the string value of a field.
+     * Though it does not handle fields of type Table.
+     * @param fieldName The name of the field.
+     * @param item The item to extract it from.
+     * @return The string value.
+     */
+    public String getStringValueForField(String fieldName, Item item) {
+        for(FieldDefinition fd : layout) {
+            if(fd.getName().equalsIgnoreCase(fieldName)) {
+                Field f = getFieldValue(fd, item, false);
+                if(f instanceof StringField) {
+                    return ((StringField) f).getStringValue();
+                } else {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
 }
