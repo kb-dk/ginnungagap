@@ -1,7 +1,6 @@
 package dk.kb.ginnungagap.emagasin.importation;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ public class PathSubstituteConfiguration {
      * Constructor.
      * @param config The configuration map.
      */
-    @SuppressWarnings("unchecked")
     public PathSubstituteConfiguration(List<Map<String, String>> config) {
         substitutes = new HashMap<String, String>();
         for(Map<String, String> subMap : config) {
@@ -47,11 +45,18 @@ public class PathSubstituteConfiguration {
             substitutes.put(subMap.get(SUBSTITUTE_ELEMENT_FROM), subMap.get(SUBSTITUTE_ELEMENT_TO));
         }
     }
-
+    
     /**
-     * @return The substitutes.
+     * Substitute the path, if it starts with any of the substitutions.
+     * @param path The path to substitute.
+     * @return The substituted path.
      */
-    public Map<String, String> getSubstitutes() {
-        return new HashMap<String, String>(substitutes);
+    public String substitute(String path) {
+        for(Map.Entry<String, String> sub : substitutes.entrySet()) {
+            if(path.startsWith(sub.getKey())) {
+                return path.replace(sub.getKey(), sub.getValue());
+            }
+        }
+        return path;
     }
 }

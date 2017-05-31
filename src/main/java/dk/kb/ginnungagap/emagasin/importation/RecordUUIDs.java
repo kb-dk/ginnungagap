@@ -66,6 +66,13 @@ public class RecordUUIDs {
         return found;
     }
     
+    /**
+     * Set this record to being found.
+     */
+    public void setFound() {
+        found = true;
+    }
+    
     @Override
     public String toString() {
         return "ArcFile: " + arcFilename + ", ArcRecordUUID: " + arcRecordUUID + ", CumulusRecordUUID: " 

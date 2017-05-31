@@ -1,10 +1,15 @@
 package dk.kb.ginnungagap.cumulus;
 
-import java.util.List;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.canto.cumulus.Catalog;
+import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server;
 
@@ -15,6 +20,8 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
  * Wrapper for accessing the Cumulus server.
  */
 public class CumulusServer {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(CumulusServer.class);
 
     /** The configuraiton for the Cumulus server. */
     protected final CumulusConfiguration configuration;
@@ -88,4 +95,33 @@ public class CumulusServer {
                 query.getLocale());
         return recordCollection;
     }
+    
+    /**
+     * Find the Cumulus record containing a given UUID and belonging to a given catalog.
+     * Will only return the first found result. And it will return a null if no results were found. 
+     * @param catalogName The name of the catalog, where the Cumulus record is.
+     * @param uuid The UUID of the Cumulus record to find.
+     * @return The Cumulus record, or null if no record was found.
+     */
+    public CumulusRecord findCumulusRecord(String catalogName, String uuid) {
+        CumulusQuery query = CumulusQuery.getQueryForSpecificUUID(catalogName, uuid);
+        RecordItemCollection items = getItems(catalogName, query);
+        if(items == null || !items.iterator().hasNext()) {
+            log.warn("Could not find any records for UUID: '" + uuid + "'. Returning a null");            
+            return null;
+        }
+        
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
+        
+        FieldExtractor fe = new FieldExtractor(items.getLayout());
+
+        Iterator<Item> iterator = items.iterator();
+        CumulusRecord res = new CumulusRecord(fe, iterator.next());
+        if(iterator.hasNext()) {
+            log.warn("More than one record found for '" + uuid + "'. Only using the first found.");
+        }
+        
+        return res;
+    }
+
 }

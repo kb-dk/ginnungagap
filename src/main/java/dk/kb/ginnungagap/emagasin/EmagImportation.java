@@ -4,26 +4,27 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Iterator;
 
 import org.apache.log4j.lf5.util.StreamUtils;
-import org.archive.io.ArchiveReader;
-import org.archive.io.ArchiveReaderFactory;
 import org.archive.io.ArchiveRecord;
+import org.archive.io.arc.ARCReader;
+import org.archive.io.arc.ARCReaderFactory;
+import org.bitrepository.common.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
 import com.google.common.io.Files;
 
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.emagasin.importation.InputFormat;
 import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
+import dk.kb.ginnungagap.emagasin.importation.RecordUUIDs;
+import dk.kb.ginnungagap.exception.RunScriptException;
+import dk.kb.ginnungagap.utils.CalendarUtils;
+import dk.kb.metadata.utils.GuidExtrationUtils;
 
 /**
  * Class for import the digital objects of ARC files from the E-magasin back into Cumulus.
@@ -53,60 +54,130 @@ public class EmagImportation {
     protected final Configuration conf;
     /** The Cumulus server. */
     protected final CumulusServer cumulus;
-    /** The name of the catalog. */
-    protected final String catalogName;
-//    /** The Retriever of ARC files from the Emagasin.*/
-//    protected final EmagasinRetriever emagRetriever;
-//    
-//    protected final InputFormat inputFormat;
-//    protected final OutputFormatter outputFormat;
+    /** The Retriever of ARC files from the Emagasin.*/
+    protected final EmagasinRetriever emagRetriever;
+    
+    protected final InputFormat inputFormat;
+    protected final OutputFormatter outputFormat;
+    protected final TiffValidator validator;
     
     
     /**
      * Constructor.
      * @param conf The configuration.
      * @param cumulusServer The cumulus server.
-     * @param catalogName The name of the catalog for the record.
+     * @param emagasinRetriever
+     * @param inputFormat
+     * @param outputFormat
+     * @param validator
      */
-    public EmagImportation(Configuration conf, CumulusServer cumulusServer, String catalogName) {
+    public EmagImportation(Configuration conf, CumulusServer cumulusServer, EmagasinRetriever emagasinRetriever, 
+            InputFormat inputFormat, OutputFormatter outputFormat, TiffValidator validator) {
         this.conf = conf;
         this.cumulus = cumulusServer;
-        this.catalogName = catalogName;
+        this.emagRetriever = emagasinRetriever;
+        this.inputFormat = inputFormat;
+        this.outputFormat = outputFormat;
+        this.validator = validator;
     }
     
     /**
-     * The method for initiating the conversion.
-     * 
-     * @param arcFile The ARC file to convert.
+     * Run the workflow and import everything!.
      */
-    public void convertArcFile(File arcFile) {
-        try (ArchiveReader reader = ArchiveReaderFactory.get(arcFile);) {
-            log.debug("Starting to convert the arc-file: " + arcFile.getName());
-            for(ArchiveRecord arcRecord : reader) {
-                if(isDigitalObject(arcRecord.getHeader().getUrl())) {
-                    String uuid = extractUUID(arcRecord.getHeader().getUrl());
-                    File contentFile = extractArcRecordAsFile(arcRecord, uuid);
-                    CumulusRecord cumulusRecord = findCumulusRecord(uuid);
-
-                    handleRecord(cumulusRecord, contentFile);
-                }
+    public void run() {
+        for(String arcFilename : inputFormat.getArcFilenames()) {
+            File arcFile = emagRetriever.extractArcFile(arcFilename);
+            try {
+                handleArcFile(arcFile);
+            } catch (IOException e) {
+                // TODO: ??
             }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to convert Arc-file: " + arcFile, e);
         }
     }
     
     /**
-     * Imports the record back into Cumulus.
-     * @param record The Cumulus record for the digital object.
-     * @param contentFile The digital object / Cumulus record asset / content file of new packaging.
+     * Handle a given ARC file.
+     * @param arcFile
+     * @throws IOException
      */
-    protected void handleRecord(CumulusRecord record, File contentFile) {
+    protected void handleArcFile(File arcFile) throws IOException {
+        ARCReader arcReader = ARCReaderFactory.get(arcFile);
+        
+        for(ArchiveRecord arcRecord : arcReader) {
+            if(!isDigitalObject(arcRecord.getHeader().getUrl())) {
+                continue;
+            }
+            String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
+            RecordUUIDs uuids = inputFormat.getUUIDsForArcRecordUUID(arcFile.getName(), uid);
+            if(uuids == null) {
+                // TODO log this error
+                continue;
+            }
+            CumulusRecord record = cumulus.findCumulusRecord(uuids.getCatalogID(), uuids.getCumulusRecordUUID());
+            try {
+                handleRecord(record, arcRecord, uuids.getCumulusRecordUUID());
+                outputFormat.writeSucces(uuids);
+            } catch(Exception e) {
+                log.warn("Failed to handle record '" + uuids + "'.", e);
+                outputFormat.writeFailure(uuids, e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Imports the ARC record back into Cumulus as the Asset of the Cumulus Record.
+     * @param record The Cumulus record for the digital object.
+     * @param arcRecord The ARC record.
+     * @param guid The GUID of the ARC record.
+     */
+    protected void handleRecord(CumulusRecord record, ArchiveRecord arcRecord, String guid) {
         try {
+            File contentFile = extractArcRecordAsFile(arcRecord, guid);
+            String validationText = "Importation date: " + CalendarUtils.nowToText() + "\n";
+            if(validator.isTiffMimetype(arcRecord.getHeader().getMimetype())) {
+                validationText += performValidationOfTiffFile(contentFile);
+            }
             Files.move(contentFile, record.getFile());
+            record.setStringValueInField(Constants.FieldNames.QA_ERROR, validationText);
         } catch (IOException e) {
+            String failureText = "Failed to import '" + guid + "': " + e.getMessage();
+            record.setStringValueInField(Constants.FieldNames.QA_ERROR, failureText);
             throw new IllegalStateException("Cannot import the file into Cumulus.", e);
         }
+    }
+    
+    /**
+     * Performs the validation of the tiff file.
+     * @param contentFile
+     * @return The results of the validation. Thus the error-message 
+     */
+    protected String performValidationOfTiffFile(File contentFile) {
+        try {
+            validator.validateTiffFile(contentFile);
+        } catch(RunScriptException e) {
+            return e.getMessage();
+        }
+        
+        return "TIFF file is valid";
+    }
+    
+    /**
+     * Uploads the file to the asset reference location.
+     * Some locations are no longer available, and thus part of their path must be substituted for a new location.
+     * In that case the new file location must be made into a new asset-reference for the cumulus record.
+     * The record will have its asset reference updated afterwards, so Cumulus is aware of the changes. 
+     * @param record The cumulus record to update.
+     * @param contentFile The new file for the cumulus record asset reference.
+     */
+    protected void importFileToCumulusRecord(CumulusRecord record, File contentFile) {
+        String oldPath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
+        String newPath = conf.getImportationConfiguration().getSubstitute().substitute(oldPath);
+        File newFile = new File(newPath);
+        FileUtils.moveFile(contentFile, newFile);
+        if(!oldPath.equals(newPath)) {
+            record.setNewAssetReference(newFile);
+        }
+        record.updateAssetReference();
     }
     
     /**
@@ -124,30 +195,6 @@ public class EmagImportation {
         return outputFile;
     }
     
-    /**
-     * Finds the Cumulus record corresponding to the ARC record / digital object.
-     * @param uuid The UUID of the Cumulus record to find.
-     * @return The Cumulus record.
-     */
-    protected CumulusRecord findCumulusRecord(String uuid) {
-        CumulusQuery query = CumulusQuery.getQueryForSpecificUUID(catalogName, uuid);
-        RecordItemCollection items = cumulus.getItems(catalogName, query);
-        if(items == null || !items.iterator().hasNext()) {
-            throw new IllegalStateException("Could not find any records for UUID: '" + uuid + "'");            
-        }
-        
-        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-        
-        FieldExtractor fe = new FieldExtractor(items.getLayout());
-
-        Iterator<Item> iterator = items.iterator();
-        CumulusRecord res = new CumulusRecord(fe, iterator.next());
-        if(iterator.hasNext()) {
-            log.warn("More than one record found for '" + uuid + "'. Only using the first found.");
-        }
-        
-        return res;
-    }
     
     /**
      * Determines whether the ARC-record URL corresponds to a digital object.
@@ -160,26 +207,5 @@ public class EmagImportation {
      */
     protected boolean isDigitalObject(String recordUrl) {
         return recordUrl.startsWith(DIGITAL_OBJECT_PREFIX);
-    }
-    
-    /**
-     * Extracts the UUID from the ARC-record URL.
-     * E.g. the URL:
-     * digitalobject://Uid:dk:kb:doms:2007-01/7dfe7540-6ab1-11e2-83ab-005056887b70#0
-     * will give the UUID:
-     * 7dfe7540-6ab1-11e2-83ab-005056887b70
-     * 
-     * @param recordUrl The URL of the ARC-record.
-     * @return The UUID part of the URL.
-     */
-    protected String extractUUID(String recordUrl) {
-        int lowerIndex = recordUrl.lastIndexOf(SPLIT_SLASH) + 1;
-        int upperIndex;
-        if(recordUrl.contains(SPLIT_HASH)) {
-            upperIndex = recordUrl.lastIndexOf(SPLIT_HASH);
-        } else {
-            upperIndex = recordUrl.length();
-        }
-        return recordUrl.substring(lowerIndex, upperIndex);
     }
 }

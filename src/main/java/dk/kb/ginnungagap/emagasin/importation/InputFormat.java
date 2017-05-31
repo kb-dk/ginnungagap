@@ -20,21 +20,17 @@ import java.util.Map;
  * Therefore we must have both UUIDs for each record.
  * 
  * The input format is expected to be in the following CSV format:
- * ARC-FILENAME; ARC-RECORD-UUID; CUMULUS-RECORD-UUID
+ * ARC-FILENAME; ARC-RECORD-UUID; CUMULUS-RECORD-UUID; CATALOG_NAME
  */
 public class InputFormat {
-    /** The name of the catalog for the current import..*/
-    protected final String catalogID;
     /** The mapping between arc filenames and their list of records UUIDs.*/
     protected final Map<String, List<RecordUUIDs>> uuidsForArcFiles;
     
     /**
      * Constructor.
-     * @param catalogID The ID of the catalog for the import.
      * @param inputFile The CSV file with the data to import.
      */
-    public InputFormat(String catalogID, File inputFile) {
-        this.catalogID = catalogID;
+    public InputFormat(File inputFile) {
         this.uuidsForArcFiles = new HashMap<String, List<RecordUUIDs>>();
     }
     
@@ -50,6 +46,7 @@ public class InputFormat {
                 String arcFilename = split[0];
                 String arcRecordUUID = split[1];
                 String cumulusRecordUUID = split[2];
+                String catalogName = split[3];
                 
                 List<RecordUUIDs> listForArcFile;
                 if(uuidsForArcFiles.containsKey(arcFilename)) {
@@ -57,19 +54,12 @@ public class InputFormat {
                 } else {
                     listForArcFile = new ArrayList<RecordUUIDs>();
                 }
-                listForArcFile.add(new RecordUUIDs(catalogID, arcFilename, arcRecordUUID, cumulusRecordUUID));
+                listForArcFile.add(new RecordUUIDs(catalogName, arcFilename, arcRecordUUID, cumulusRecordUUID));
                 uuidsForArcFiles.put(arcFilename, listForArcFile);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read file '" + inputFile.getAbsolutePath() + "'", e);
         }
-    }
-    
-    /**
-     * @return The ID of the Cumulus catalog.
-     */
-    public String getCatalogID() {
-        return catalogID;
     }
     
     /**
@@ -85,10 +75,11 @@ public class InputFormat {
      * @param arcRecordUUID
      * @return
      */
-    public String getCumulusRecordUUIDForArcRecordUUID(String arcFilename, String arcRecordUUID) {
+    public RecordUUIDs getUUIDsForArcRecordUUID(String arcFilename, String arcRecordUUID) {
         for(RecordUUIDs r : uuidsForArcFiles.get(arcFilename)) {
             if(r.arcRecordUUID.equalsIgnoreCase(arcRecordUUID)) {
-                return r.cumulusRecordUUID;
+                r.setFound();
+                return r;
             }
         }
         return null;

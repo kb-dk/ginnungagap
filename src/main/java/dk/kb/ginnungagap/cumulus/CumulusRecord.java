@@ -139,7 +139,32 @@ public class CumulusRecord {
             return asset.getAsFile();
         } catch (Exception e) {
             throw new IllegalStateException("Cannot retrieve the file.", e);
+        }        
+    }
+    
+    /**
+     * Set the given file as new asset reference for this cumulus record.
+     * @param f The new file for the asset reference.
+     */
+    public void setNewAssetReference(File f) {
+        try {
+            AssetReference reference = item.getAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE);
+
+            AssetReference newARef = new AssetReference(reference.getCumulusSession(), f.getAbsolutePath(), null);
+            item.setAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE, newARef);
+            item.save();
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot update the asset reference with file '" + f.getAbsolutePath() 
+                    + "'.", e);
         }
+    }
+    
+    /**
+     * Updates the asset reference.
+     */
+    public void updateAssetReference() {
+        item.updateAssetReference();
+        item.save();
     }
     
     /**

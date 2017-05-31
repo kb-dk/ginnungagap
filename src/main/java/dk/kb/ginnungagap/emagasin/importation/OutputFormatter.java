@@ -99,5 +99,24 @@ public class OutputFormatter {
                     + recordUUIDs + "'", e);
         }
     }
+    
+    /**
+     * Writes the failure when encountering a non expected ARC record.
+     * @param arcFilename The name of the ARC file.
+     * @param arcRecordID The ID of the arc record.
+     */
+    public void writeFailureForNonExpectedRecord(String arcFilename, String arcRecordID) {
+        try (OutputStream os = new FileOutputStream(succesFile, true)) {
+            StringBuffer sb = new StringBuffer();
+            sb.append(arcFilename + ";");
+            sb.append(arcRecordID + ";");
+            sb.append(";");
+            sb.append("Did not expect this record\n");
+            os.write(sb.toString().getBytes());
+        } catch (IOException e) {
+            throw new IllegalStateException("Issue occured while writing failure for the unexpected record '"
+                    + arcRecordID + "' in arc file '" + arcFilename + "'", e);
+        }
+    }
 }
 

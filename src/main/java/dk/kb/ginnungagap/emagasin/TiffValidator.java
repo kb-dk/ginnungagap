@@ -92,13 +92,13 @@ public class TiffValidator extends ScriptWrapper {
     }
     
     /**
-     * 
-     * @param arcRecord
-     * @throws IOException
+     * Validate the ARC record, if it is a TIFF file.
+     * @param arcRecord The arc record.
+     * @throws IOException If it fails to extract the ARC record of 
      */
     public void validateArcRecordIfTiff(ArchiveRecord arcRecord, String uid) throws IOException, RunScriptException {
         String mimetype = arcRecord.getHeader().getMimetype();
-        if(mimetype.equals(CONTENT_TYPE_TIFF)) {
+        if(isTiffMimetype(mimetype)) {
             log.info("Validating Tiff record '" + uid + "'");
             File tiffFile = new File(outputDir, uid);
             StreamUtils.copyInputStreamToOutputStream(arcRecord, 
@@ -117,12 +117,20 @@ public class TiffValidator extends ScriptWrapper {
     }
     
     /**
+     * @param mimetype The mimetype.
+     * @return Whether the mimetype is a TIFF mimetype.
+     */
+    public boolean isTiffMimetype(String mimetype) {
+        return mimetype.equals(CONTENT_TYPE_TIFF);
+    }
+    
+    /**
      * Validate the TIFF file.
      * Just calls the script with the right paths.
      * @param tiffFile The TIFF file to validate.
      * @throws RunScriptException If the validation fails. 
      */
-    protected void validateTiffFile(File tiffFile) throws RunScriptException {
+    public void validateTiffFile(File tiffFile) throws RunScriptException {
         callVoidScript(tiffFile.getAbsolutePath(), validationConf.getAbsolutePath());
     }
     
