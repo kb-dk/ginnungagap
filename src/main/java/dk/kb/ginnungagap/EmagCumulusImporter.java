@@ -1,24 +1,11 @@
 package dk.kb.ginnungagap;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.emagasin.EmagImportation;
 import dk.kb.ginnungagap.emagasin.EmagasinRetriever;
 import dk.kb.ginnungagap.emagasin.TiffValidator;
@@ -45,12 +32,6 @@ import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
  * dk.kb.ginningagap.EmagConversion conf/ginnungagap.yml records-list.csv retrieve_arc_files.sh
  */
 public class EmagCumulusImporter {
-    /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(EmagCumulusImporter.class);
-    /** Path to the script for running the characterization script.*/
-    private static final String DEFAULT_TIFF_VALIDATION_PATH = "bin/run_checkit_tiff.sh";
-    /** Path to the configuration for the CheckIT tiff validation.*/
-    private static final String DEFAULT_TIFF_VALIDATION_CONFIGURATION_PATH = "conf/cit_tiff.cfg";
     /** Constant for not removing files after they have been validated.*/
     private static final boolean DO_NOT_REMOVE_FILES_AFTER_VALIDATION = false;
     
@@ -75,13 +56,8 @@ public class EmagCumulusImporter {
         if(args.length > 2) {
             outputDirPath = args[2];
         }
-        String tiffValidationScriptPath = DEFAULT_TIFF_VALIDATION_PATH;
         if(args.length > 3) {
-            tiffValidationScriptPath = args[3];
-        }
-        String tiffConfig = DEFAULT_TIFF_VALIDATION_CONFIGURATION_PATH;
-        if(args.length > 4) {
-            tiffConfig = args[4];
+            System.out.println("No validation, the scripts");
         }
 
         Configuration conf = getConfiguration(confPath);
@@ -94,14 +70,12 @@ public class EmagCumulusImporter {
         
         InputFormat inFormat = new InputFormat(recordListFile);
         OutputFormatter outFormat = new OutputFormatter(outputDir);
-        
-        TiffValidator tv = getTiffValidator(tiffValidationScriptPath, tiffConfig, outputDir);
 
         Cumulus.CumulusStart();
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
-            EmagImportation converter= new EmagImportation(conf, cumulusServer, arcRetriever, inFormat, outFormat, tv);
-//            converter.
+            EmagImportation converter= new EmagImportation(conf, cumulusServer, arcRetriever, inFormat, outFormat);
+            converter.run();
         } catch(Exception e) {
             e.printStackTrace();
             // Terminate after this!
@@ -117,17 +91,13 @@ public class EmagCumulusImporter {
     protected static void argumentErrorExit() {
         System.err.println("Missing arguments. Requires the following arguments:");
         System.err.println("1. Configuration file");
-        System.err.println("2. The CSV file with the ARC-filename, ARC-record-guid and Cumulus-record-guid.");
-        System.err.println("3. Name of the catalog with the Cumulus record corresponding to the digital-objects in the ARC files.");
-        System.err.println("4. path to ARC-file retrieval script");
-        System.err.println("5. [OPITONAL] output directory");
+        System.err.println("2. The CSV file with the ARC-filename, ARC-record-guid, Cumulus-record-guid, and catalog-name.");
+        System.err.println("3. [OPITONAL] output directory");
         System.err.println("  - Default '.'");
-        System.err.println("6. [OPTIONAL] prefix to be replace");
-        System.err.println("  - Default is no prefix (use '-')");
-        System.err.println("7. [OPTIONAL] prefix to replace with");
-        System.err.println("  - Default is no prefix (use '-')");
-        System.err.println("8. [OPTIONAL] path to TIFF validation script");
+        System.err.println("4. [OPTIONAL] path to TIFF validation script");
         System.err.println("  - Default is 'bin/run_checkit_tiff.sh'");
+        System.err.println("5. [OPTIONAL] path to CheckIT configuration");
+        System.err.println("  - Default is 'conf/cit_tiff.cfg'");
         System.exit(-1);
     }
     

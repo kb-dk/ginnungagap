@@ -1,0 +1,3 @@
+ARC-FILENAME; ARC-RECORD-UUID; CUMULUS-RECORD-UUID; CATALOG_NAME
+ARC-FILENAME; ArcUuid; CumulusUuid; catalog
+ARC2; ArcRecord2; CumulusRecord2; catalog

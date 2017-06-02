@@ -77,20 +77,11 @@ public class EmagImportationTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
     
-    @Test
+//    @Test
     public void testIsDigitalObject() {
         addDescription("Test which ARC-record URLs are digital objects");
         Assert.assertTrue(converter.isDigitalObject(digitalObjectUrl));
         Assert.assertFalse(converter.isDigitalObject(nonDigitalObjectUrl));
-    }
-    
-    @Test
-    public void testExtractUUID() {
-        addDescription("Test extracting the UUID");
-        String expectedUuid = "7dfe7540-6ab1-11e2-83ab-005056887b70";
-
-        String uuid = GuidExtrationUtils.extractGuid(digitalObjectUrl);
-        Assert.assertEquals(expectedUuid, uuid);
     }
     
     @Test
@@ -103,7 +94,7 @@ public class EmagImportationTest extends ExtendedTestCase {
         Assert.assertEquals(expectedUuid, uuid);
     }
     
-    @Test
+//    @Test
     public void testExtractArcRecordAsFile() throws Exception {
         addDescription("Test extracting the ARC records as files.");
         try (ArchiveReader reader = ArchiveReaderFactory.get(arcFile);) {

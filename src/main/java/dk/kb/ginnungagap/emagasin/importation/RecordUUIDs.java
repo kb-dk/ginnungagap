@@ -76,6 +76,6 @@ public class RecordUUIDs {
     @Override
     public String toString() {
         return "ArcFile: " + arcFilename + ", ArcRecordUUID: " + arcRecordUUID + ", CumulusRecordUUID: " 
-                + cumulusRecordUUID + ", found:" + found;
+                + cumulusRecordUUID + ", catalog: " + catalogID + ", found:" + found;
     }
 }

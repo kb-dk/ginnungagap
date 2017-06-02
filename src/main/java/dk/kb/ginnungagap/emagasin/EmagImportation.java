@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
 
 import org.apache.log4j.lf5.util.StreamUtils;
 import org.archive.io.ArchiveRecord;
@@ -13,8 +14,6 @@ import org.bitrepository.common.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
-
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
@@ -22,7 +21,6 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.emagasin.importation.InputFormat;
 import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
 import dk.kb.ginnungagap.emagasin.importation.RecordUUIDs;
-import dk.kb.ginnungagap.exception.RunScriptException;
 import dk.kb.ginnungagap.utils.CalendarUtils;
 import dk.kb.metadata.utils.GuidExtrationUtils;
 
@@ -57,10 +55,10 @@ public class EmagImportation {
     /** The Retriever of ARC files from the Emagasin.*/
     protected final EmagasinRetriever emagRetriever;
     
+    /** The input format.*/
     protected final InputFormat inputFormat;
+    /** The output formatter.*/
     protected final OutputFormatter outputFormat;
-    protected final TiffValidator validator;
-    
     
     /**
      * Constructor.
@@ -72,13 +70,12 @@ public class EmagImportation {
      * @param validator
      */
     public EmagImportation(Configuration conf, CumulusServer cumulusServer, EmagasinRetriever emagasinRetriever, 
-            InputFormat inputFormat, OutputFormatter outputFormat, TiffValidator validator) {
+            InputFormat inputFormat, OutputFormatter outputFormat) {
         this.conf = conf;
         this.cumulus = cumulusServer;
         this.emagRetriever = emagasinRetriever;
         this.inputFormat = inputFormat;
         this.outputFormat = outputFormat;
-        this.validator = validator;
     }
     
     /**
@@ -90,9 +87,10 @@ public class EmagImportation {
             try {
                 handleArcFile(arcFile);
             } catch (IOException e) {
-                // TODO: ??
+                outputFormat.writeFailure(arcFilename, "", "Issue occurd handling the ARC-file: " + e.getMessage());
             }
         }
+        reportNotFoundRecords();
     }
     
     /**
@@ -134,31 +132,13 @@ public class EmagImportation {
         try {
             File contentFile = extractArcRecordAsFile(arcRecord, guid);
             String validationText = "Importation date: " + CalendarUtils.nowToText() + "\n";
-            if(validator.isTiffMimetype(arcRecord.getHeader().getMimetype())) {
-                validationText += performValidationOfTiffFile(contentFile);
-            }
-            Files.move(contentFile, record.getFile());
+            importFileToCumulusRecord(record, contentFile);
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, validationText);
         } catch (IOException e) {
             String failureText = "Failed to import '" + guid + "': " + e.getMessage();
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, failureText);
             throw new IllegalStateException("Cannot import the file into Cumulus.", e);
         }
-    }
-    
-    /**
-     * Performs the validation of the tiff file.
-     * @param contentFile
-     * @return The results of the validation. Thus the error-message 
-     */
-    protected String performValidationOfTiffFile(File contentFile) {
-        try {
-            validator.validateTiffFile(contentFile);
-        } catch(RunScriptException e) {
-            return e.getMessage();
-        }
-        
-        return "TIFF file is valid";
     }
     
     /**
@@ -195,7 +175,6 @@ public class EmagImportation {
         return outputFile;
     }
     
-    
     /**
      * Determines whether the ARC-record URL corresponds to a digital object.
      * The URL of a digital object is in the form:
@@ -207,5 +186,17 @@ public class EmagImportation {
      */
     protected boolean isDigitalObject(String recordUrl) {
         return recordUrl.startsWith(DIGITAL_OBJECT_PREFIX);
+    }
+    
+    /**
+     * Report all the records, which has not been found.
+     */
+    protected void reportNotFoundRecords() {
+        for(String arcFilename : inputFormat.getArcFilenames()) {
+            Collection<RecordUUIDs> notFound = inputFormat.getNotFoundRecordsForArcFile(arcFilename);
+            for(RecordUUIDs r : notFound) {
+                outputFormat.writeFailure(r, "Not found.");
+            }
+        }
     }
 }

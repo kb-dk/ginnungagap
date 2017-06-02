@@ -104,14 +104,15 @@ public class OutputFormatter {
      * Writes the failure when encountering a non expected ARC record.
      * @param arcFilename The name of the ARC file.
      * @param arcRecordID The ID of the arc record.
+     * @param cause The cause of the failure.
      */
-    public void writeFailureForNonExpectedRecord(String arcFilename, String arcRecordID) {
+    public void writeFailure(String arcFilename, String arcRecordID, String cause) {
         try (OutputStream os = new FileOutputStream(succesFile, true)) {
             StringBuffer sb = new StringBuffer();
             sb.append(arcFilename + ";");
             sb.append(arcRecordID + ";");
             sb.append(";");
-            sb.append("Did not expect this record\n");
+            sb.append(cause + "\n");
             os.write(sb.toString().getBytes());
         } catch (IOException e) {
             throw new IllegalStateException("Issue occured while writing failure for the unexpected record '"

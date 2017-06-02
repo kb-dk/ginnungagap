@@ -32,6 +32,7 @@ public class InputFormat {
      */
     public InputFormat(File inputFile) {
         this.uuidsForArcFiles = new HashMap<String, List<RecordUUIDs>>();
+        loadFile(inputFile);
     }
     
     /**
@@ -43,10 +44,10 @@ public class InputFormat {
             String line;
             while((line = reader.readLine()) != null) {
                 String[] split = line.split(";");
-                String arcFilename = split[0];
-                String arcRecordUUID = split[1];
-                String cumulusRecordUUID = split[2];
-                String catalogName = split[3];
+                String arcFilename = split[0].trim();
+                String arcRecordUUID = split[1].trim();
+                String cumulusRecordUUID = split[2].trim();
+                String catalogName = split[3].trim();
                 
                 List<RecordUUIDs> listForArcFile;
                 if(uuidsForArcFiles.containsKey(arcFilename)) {
@@ -67,6 +68,21 @@ public class InputFormat {
      */
     public Collection<String> getArcFilenames() {
         return uuidsForArcFiles.keySet();
+    }
+    
+    /**
+     * Retrieves the record uuids for the records in a given ARC file which has not been found.
+     * @param arcFilename The name of the ARC file.
+     * @return The record uuids for records in the ARC file which has not been found.
+     */
+    public Collection<RecordUUIDs> getNotFoundRecordsForArcFile(String arcFilename) {
+        List<RecordUUIDs> res = new ArrayList<RecordUUIDs>();
+        for(RecordUUIDs r : uuidsForArcFiles.get(arcFilename)) {
+            if(!r.found) {
+                res.add(r);
+            }
+        }
+        return res;
     }
     
     /**
