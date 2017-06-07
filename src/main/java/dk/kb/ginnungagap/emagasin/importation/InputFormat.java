@@ -86,10 +86,10 @@ public class InputFormat {
     }
     
     /**
-     * 
-     * @param arcFilename
-     * @param arcRecordUUID
-     * @return
+     * Retrieve the recordUUIDs for a given ARC-record in a given ARC-file.
+     * @param arcFilename The name of the arc file.
+     * @param arcRecordUUID The uuid of the arc record.
+     * @return The record uuids
      */
     public RecordUUIDs getUUIDsForArcRecordUUID(String arcFilename, String arcRecordUUID) {
         for(RecordUUIDs r : uuidsForArcFiles.get(arcFilename)) {

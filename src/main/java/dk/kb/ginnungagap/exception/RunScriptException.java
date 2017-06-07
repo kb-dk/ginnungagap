@@ -1,10 +1,8 @@
 package dk.kb.ginnungagap.exception;
 
-import dk.kb.ginnungagap.utils.ScriptWrapper;
-
 /**
  * Exception which should be cast, when running a script fails.
- * Should be used by the {@link ScriptWrapper} and all its sub-implementations.
+ * Should be used by the {@link dk.kb.ginnungagap.utils.ScriptWrapper} and all its sub-implementations.
  */
 @SuppressWarnings("serial")
 public class RunScriptException extends Exception {

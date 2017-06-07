@@ -25,5 +25,11 @@ public interface MetadataTransformer {
      */
     void validate(InputStream is) throws IOException;
     
+    /**
+     * Retrieves the metadata standards of a transformed metadata input-stream. 
+     * @param is The input stream to the transformed metadata.
+     * @return The list of standards used within the transformed metadata.
+     * @throws IOException If it fails to read the input-stream or extract the name of the metadata standards.
+     */
     Collection<String> getMetadataStandards(InputStream is) throws IOException;
 }

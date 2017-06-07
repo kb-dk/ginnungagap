@@ -47,14 +47,14 @@ public final class StringUtils {
      * @param elementIndex The index for the element to select.
      * @return The requested element, or null if it is out-of-bounce.
      */
-    public static String splitOnSlash(String line, int element) {
+    public static String splitOnSlash(String line, int elementIndex) {
         String[] split = line.split("/");
 
-        if(element > split.length) {
+        if(elementIndex > split.length) {
             return null;
         }
 
-        return split[element];
+        return split[elementIndex];
     }
 
     /**

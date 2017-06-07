@@ -1,6 +1,6 @@
 package dk.kb.ginnungagap.utils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -13,8 +13,8 @@ public class CalendarUtils {
      * @return The text for now.
      */
     public static String nowToText() {
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         return date.format(formatter);
     }
 }

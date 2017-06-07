@@ -89,6 +89,8 @@ public class CumulusServer {
      * @return The collection of record items.
      */
     public RecordItemCollection getItems(String catalogName, CumulusQuery query) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        ArgumentCheck.checkNotNull(query, "CumulusQuery query");
         Catalog catalog = getCatalog(catalogName);
         RecordItemCollection recordCollection = catalog.newRecordItemCollection(true);
         recordCollection.find(query.getQuery(), query.getFindFlags(), query.getCombineMode(),
@@ -104,6 +106,8 @@ public class CumulusServer {
      * @return The Cumulus record, or null if no record was found.
      */
     public CumulusRecord findCumulusRecord(String catalogName, String uuid) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        ArgumentCheck.checkNotNullOrEmpty(uuid, "String uuid");
         CumulusQuery query = CumulusQuery.getQueryForSpecificUUID(catalogName, uuid);
         RecordItemCollection items = getItems(catalogName, query);
         if(items == null || !items.iterator().hasNext()) {
@@ -123,5 +127,4 @@ public class CumulusServer {
         
         return res;
     }
-
 }

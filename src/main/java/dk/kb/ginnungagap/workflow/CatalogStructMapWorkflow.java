@@ -66,6 +66,9 @@ public class CatalogStructMapWorkflow implements Workflow {
         this.intellectualEntityID = intellectualEntityID;
     }
     
+    /**
+     * Run this workflow.
+     */
     public void run() {
         try {
             File extractFile = extractGuidsAndFileIDsForCatalog();

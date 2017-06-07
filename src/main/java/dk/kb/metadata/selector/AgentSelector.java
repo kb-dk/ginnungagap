@@ -102,7 +102,7 @@ public final class AgentSelector {
     /**
      * The version for the ingest agent.
      */
-    private static String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
+    private static final String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
 
     /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {

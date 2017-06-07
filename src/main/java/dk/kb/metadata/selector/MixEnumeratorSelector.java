@@ -24,7 +24,7 @@ public final class MixEnumeratorSelector {
     // --------------------------
     
     /** The collection of possible EXIF versions accepted by the MIX standard.*/
-    public static Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
+    public static final Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
 
     /**
      * Extracts a exif version based on the value of a Cumulus field.
@@ -40,8 +40,8 @@ public final class MixEnumeratorSelector {
             }
         }
 
-        IllegalStateException res = new IllegalStateException("Could not convert the exifVersion '" + cumulusExifVersion + "' into any "
-                + "of the legal versions: " + EXIF_VERSIONS);
+        IllegalStateException res = new IllegalStateException("Could not convert the exifVersion '" 
+                + cumulusExifVersion + "' into any of the legal versions: " + EXIF_VERSIONS);
         ExceptionUtils.insertException(res);
         throw res;
     }
@@ -127,22 +127,22 @@ public final class MixEnumeratorSelector {
     // --------------------------
 
     /** Metering mode value: Average */
-    private static String METERING_MODE_AVERAGE = "Average";
+    private static final String METERING_MODE_AVERAGE = "Average";
     /** Metering mode value: Center weighted average */
-    private static String METERING_MODE_CENTER_WEIGHTED_AVERAGE = "Center weighted average";
+    private static final String METERING_MODE_CENTER_WEIGHTED_AVERAGE = "Center weighted average";
     /** Metering mode value: Spot */
-    private static String METERING_MODE_SPOT = "Spot";
+    private static final String METERING_MODE_SPOT = "Spot";
     /** Metering mode value: Multispot */
-    private static String METERING_MODE_MULTISPOT = "Multispot";
+    private static final String METERING_MODE_MULTISPOT = "Multispot";
     /** Metering mode value: Pattern */
-    private static String METERING_MODE_PATTERN = "Pattern";
+    private static final String METERING_MODE_PATTERN = "Pattern";
     /** Metering mode value: Partial */
-    private static String METERING_MODE_PARTIAL = "Partial";
+    private static final String METERING_MODE_PARTIAL = "Partial";
 
     /** The collection of possible values for the field 'mix:meteringMode'.*/
-    private static Set<String> METERING_MODE_RESTRICTION = new HashSet<String>(Arrays.asList(METERING_MODE_AVERAGE, 
-            METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, METERING_MODE_MULTISPOT, METERING_MODE_PATTERN, 
-            METERING_MODE_PARTIAL));
+    private static final Set<String> METERING_MODE_RESTRICTION = new HashSet<String>(Arrays.asList(
+            METERING_MODE_AVERAGE,METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, METERING_MODE_MULTISPOT, 
+            METERING_MODE_PATTERN, METERING_MODE_PARTIAL));
 
     /**
      * Figures out whether the MeteringMode field is valid.
@@ -182,21 +182,27 @@ public final class MixEnumeratorSelector {
         try {
             Integer i = Integer.parseInt(meteringMode);
             switch (i) {
-            case 1: return METERING_MODE_AVERAGE;
-            case 2: return METERING_MODE_CENTER_WEIGHTED_AVERAGE;
-            case 3: return METERING_MODE_SPOT;
-            case 4: return METERING_MODE_MULTISPOT;
-            case 5: return METERING_MODE_PATTERN;
-            case 6: return METERING_MODE_PARTIAL;
+            case 1: 
+                return METERING_MODE_AVERAGE;
+            case 2: 
+                return METERING_MODE_CENTER_WEIGHTED_AVERAGE;
+            case 3: 
+                return METERING_MODE_SPOT;
+            case 4: 
+                return METERING_MODE_MULTISPOT;
+            case 5: 
+                return METERING_MODE_PATTERN;
+            case 6: 
+                return METERING_MODE_PARTIAL;
+            default: 
+                throw new NumberFormatException("Cannot handle the number '" + i + "'.");
             }
         } catch (NumberFormatException e) {
-            // Not a valid number, thus throw the exception in next line.
+            IllegalStateException res = new IllegalStateException("Could not convert the meteringMode '" 
+                    + meteringMode + "' into any of the legal versions: " + METERING_MODE_RESTRICTION);
+            ExceptionUtils.insertException(res);
+            throw res;
         }
-
-        IllegalStateException res = new IllegalStateException("Could not convert the meteringMode '" + meteringMode + "' into any "
-                + "of the legal versions: " + METERING_MODE_RESTRICTION);
-        ExceptionUtils.insertException(res);
-        throw res;
     }
     
     // --------------------------

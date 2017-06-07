@@ -3,27 +3,20 @@ package dk.kb.ginnungagap;
 import java.io.File;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagArchive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
 import dk.kb.ginnungagap.workflow.CatalogStructMapWorkflow;
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 
 /**
  * Class for instantiating the Ginnungagap Catalog Structmap preservation.
@@ -71,13 +64,7 @@ public class CatalogStructmap {
         if(args.length < 3) {
             confPath = System.getenv("GINNUNGAGAP_CONF_FILE");
             if(confPath == null || confPath.isEmpty()) {
-                System.err.println("Missing arguments. At least two arguments:");
-                System.err.println(" 1. Config file");
-                System.err.println(" 2. Catalog name");
-                System.err.println(" 3. Bitrepository Collection ID");
-                System.err.println(" 4. [OPTIONAL] Archive type (bitmag or local)");
-                System.err.println(" 5. [OPTIONAL] Intellecual entity id for the catalog");
-                System.exit(-1);
+                failPrintErrorAndExit();
             }
         } else {
             confPath = args[0];
@@ -90,7 +77,7 @@ public class CatalogStructmap {
             if(!archiveType.equalsIgnoreCase(ARCHIVE_LOCAL) && !archiveType.equalsIgnoreCase(ARCHIVE_BITMAG)) {
                 System.err.println("Unable to comply with archive type '" + archiveType + "'. Only accepts '"
                         + ARCHIVE_LOCAL + "' or '" + ARCHIVE_BITMAG + "'.");
-                System.exit(-1);
+                failPrintErrorAndExit();
             }
         }
         String intellectualEntityID;
@@ -110,12 +97,12 @@ public class CatalogStructmap {
         File xsltFile = new File(conf.getTransformationConf().getXsltDir(), "transformCatalogStructmap.xsl");
         if(!xsltFile.isFile()) {
             System.err.println("Missing transformation file '" + xsltFile.getAbsolutePath() + "'");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         
         if(!conf.getCumulusConf().getCatalogs().contains(catalogName)) {
             System.err.println("The catalog name '" + catalogName + "' must be the configuration.");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
 
         Archive archive;
@@ -133,7 +120,9 @@ public class CatalogStructmap {
             MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
             BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
-            createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, preservationCollectionID, intellectualEntityID);
+            System.out.println("Starting workflow");
+            createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, 
+                    preservationCollectionID, intellectualEntityID);
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
@@ -142,23 +131,34 @@ public class CatalogStructmap {
     }
     
     /**
-     * 
-     * @param cumulusServer
-     * @param transformer
-     * @param preserver
-     * @param conf
-     * @param catalogName
+     * Failure. Print argument requirements and exit.
+     */
+    protected static void failPrintErrorAndExit() {
+        System.err.println("Missing arguments. At least two arguments:");
+        System.err.println(" 1. Config file");
+        System.err.println(" 2. Catalog name");
+        System.err.println(" 3. Bitrepository Collection ID");
+        System.err.println(" 4. [OPTIONAL] Archive type (bitmag or local)");
+        System.err.println(" 5. [OPTIONAL] Intellecual entity id for the catalog");
+        System.exit(-1);        
+    }
+    
+    /**
+     * Create the catalog structmap.
+     * @param cumulusServer Access to the cumulus server.
+     * @param transformer The transformer for transforming the extracted metadata into the wanted METS structure.
+     * @param preserver The preserver for packing it in WARC and sending it to the Bitrepository.
+     * @param conf The configuration.
+     * @param catalogName The name of the catalog to handle.
      */
     protected static void createCatalogStructmap(CumulusServer cumulusServer, MetadataTransformer transformer, 
             BitmagPreserver preserver, Configuration conf, String catalogName, String collectionID, 
             String intellectualEntityID) {
         CatalogStructMapWorkflow workflow = new CatalogStructMapWorkflow(conf, cumulusServer, preserver, transformer, 
                 catalogName, collectionID, intellectualEntityID);
-
-        System.out.println("Starting workflow");
-        workflow.run();
-
-        preserver.uploadAll();
         
+        workflow.run();
+        
+        preserver.uploadAll();
     }
 }

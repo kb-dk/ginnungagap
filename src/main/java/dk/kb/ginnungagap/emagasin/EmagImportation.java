@@ -10,7 +10,6 @@ import org.apache.log4j.lf5.util.StreamUtils;
 import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCReader;
 import org.archive.io.arc.ARCReaderFactory;
-import org.bitrepository.common.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,10 +17,13 @@ import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.emagasin.importation.ImportDecider;
 import dk.kb.ginnungagap.emagasin.importation.InputFormat;
 import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
 import dk.kb.ginnungagap.emagasin.importation.RecordUUIDs;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.CalendarUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.metadata.utils.GuidExtrationUtils;
 
 /**
@@ -64,13 +66,17 @@ public class EmagImportation {
      * Constructor.
      * @param conf The configuration.
      * @param cumulusServer The cumulus server.
-     * @param emagasinRetriever
-     * @param inputFormat
-     * @param outputFormat
-     * @param validator
+     * @param emagasinRetriever The retriever for the data from Emagasinet.
+     * @param inputFormat The input format.
+     * @param outputFormat The output formatter.
      */
     public EmagImportation(Configuration conf, CumulusServer cumulusServer, EmagasinRetriever emagasinRetriever, 
             InputFormat inputFormat, OutputFormatter outputFormat) {
+        ArgumentCheck.checkNotNull(conf, "Configuration conf");
+        ArgumentCheck.checkNotNull(cumulusServer, "CumulusServer cumulusServer");
+        ArgumentCheck.checkNotNull(emagasinRetriever, "EmagasinRetriever emagasinRetriever"); 
+        ArgumentCheck.checkNotNull(inputFormat, "InputFormat inputFormat"); 
+        ArgumentCheck.checkNotNull(outputFormat, "OutputFormatter outputFormat");
         this.conf = conf;
         this.cumulus = cumulusServer;
         this.emagRetriever = emagasinRetriever;
@@ -86,6 +92,7 @@ public class EmagImportation {
             File arcFile = emagRetriever.extractArcFile(arcFilename);
             try {
                 handleArcFile(arcFile);
+                arcFile.delete();
             } catch (IOException e) {
                 outputFormat.writeFailure(arcFilename, "", "Issue occurd handling the ARC-file: " + e.getMessage());
             }
@@ -95,8 +102,8 @@ public class EmagImportation {
     
     /**
      * Handle a given ARC file.
-     * @param arcFile
-     * @throws IOException
+     * @param arcFile The arc file to handle.
+     * @throws IOException If it fails to read.
      */
     protected void handleArcFile(File arcFile) throws IOException {
         ARCReader arcReader = ARCReaderFactory.get(arcFile);
@@ -108,10 +115,15 @@ public class EmagImportation {
             String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
             RecordUUIDs uuids = inputFormat.getUUIDsForArcRecordUUID(arcFile.getName(), uid);
             if(uuids == null) {
+                log.warn("Could not handle record: " + uid);
                 // TODO log this error
                 continue;
             }
             CumulusRecord record = cumulus.findCumulusRecord(uuids.getCatalogID(), uuids.getCumulusRecordUUID());
+            if(record == null) {
+                outputFormat.writeFailure(uuids, "No cumulus record found.");
+                continue;
+            }
             try {
                 handleRecord(record, arcRecord, uuids.getCumulusRecordUUID());
                 outputFormat.writeSucces(uuids);
@@ -130,11 +142,15 @@ public class EmagImportation {
      */
     protected void handleRecord(CumulusRecord record, ArchiveRecord arcRecord, String guid) {
         try {
-            File contentFile = extractArcRecordAsFile(arcRecord, guid);
-            String validationText = "Importation date: " + CalendarUtils.nowToText() + "\n";
-            importFileToCumulusRecord(record, contentFile);
+            String validationText = "Importation date: " + CalendarUtils.nowToText();                
+            if(ImportDecider.shouldImportRecord(record)) {
+                File contentFile = extractArcRecordAsFile(arcRecord, guid);
+                importFileToCumulusRecord(record, contentFile);
+            } else {
+                validationText += "\nDid not need to import file.";
+            }
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, validationText);
-        } catch (IOException e) {
+        } catch (Exception e) {
             String failureText = "Failed to import '" + guid + "': " + e.getMessage();
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, failureText);
             throw new IllegalStateException("Cannot import the file into Cumulus.", e);
@@ -153,6 +169,7 @@ public class EmagImportation {
         String oldPath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
         String newPath = conf.getImportationConfiguration().getSubstitute().substitute(oldPath);
         File newFile = new File(newPath);
+        FileUtils.getDirectory(newFile.getParent());
         FileUtils.moveFile(contentFile, newFile);
         if(!oldPath.equals(newPath)) {
             record.setNewAssetReference(newFile);

@@ -1,9 +1,6 @@
 package dk.kb.ginnungagap.config;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Configuration for the transformation and of the required fields.
@@ -22,7 +19,6 @@ public class TransformationConfiguration {
      * Constructor.
      * @param xsltDir The directory with XSLT files.
      * @param xsdDir The directory with XSD files.
-     * @param catalogs The Cumulus catalogs to transform. TODO: is this a good location for this setting?
      * @param metadataTempDir The temporary directory, where the metadata files are stored.
      * @param requiredFields The required fields.
      */
@@ -49,5 +45,4 @@ public class TransformationConfiguration {
     public File getMetadataTempDir() {
         return metadataTempDir;
     }
-
 }

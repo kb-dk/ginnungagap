@@ -1,9 +1,11 @@
 package dk.kb.ginnungagap.testutils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -72,5 +74,18 @@ public class TestFileUtils {
         FileUtils.retrieveSubDirectory(scriptDir, "xslt");
 
         return new TestConfiguration(new File(confDir, "ginnungagap.yml"));
+    }
+    
+    public static int numberOfLinesInFile(File f) throws IOException {
+        int res = 0;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)))) {
+            String line;
+            while((line = br.readLine()) != null) {
+                if(!line.trim().isEmpty()) {
+                    res++;
+                }
+            }
+        }
+        return res;
     }
 }

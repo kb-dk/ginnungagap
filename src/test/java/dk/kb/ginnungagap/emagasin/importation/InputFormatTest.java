@@ -13,7 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.ginnungagap.utils.CalendarUtils;
 
 public class InputFormatTest extends ExtendedTestCase {
 
@@ -46,7 +45,6 @@ public class InputFormatTest extends ExtendedTestCase {
         Assert.assertEquals(uuids.size(), 3);
     }
     
-    
     @Test
     public void testFile() throws IOException {
         File file = createTestFile();
@@ -58,6 +56,7 @@ public class InputFormatTest extends ExtendedTestCase {
         Assert.assertEquals(inf.getNotFoundRecordsForArcFile(ARC_FILENAME_1).size(), NUMBER_OF_RECORDS_PER_ARC_FILE);
         Assert.assertEquals(inf.getNotFoundRecordsForArcFile(ARC_FILENAME_2).size(), NUMBER_OF_RECORDS_PER_ARC_FILE);
         
+        addStep("Find all record uuids and set them to found", "Should be not be any not-found records");
         for(String s : ARC_1_ARC_UUIDS) {
             RecordUUIDs r = inf.getUUIDsForArcRecordUUID(ARC_FILENAME_1, s);
             Assert.assertNotNull(r);
@@ -71,6 +70,28 @@ public class InputFormatTest extends ExtendedTestCase {
         Assert.assertEquals(inf.getNotFoundRecordsForArcFile(ARC_FILENAME_1).size(), 0);
         Assert.assertEquals(inf.getNotFoundRecordsForArcFile(ARC_FILENAME_2).size(), 0);
 
+        addStep("Find record uuids for the wrong file", "Should retrieve nulls");
+        for(String s : ARC_1_ARC_UUIDS) {
+            RecordUUIDs r = inf.getUUIDsForArcRecordUUID(ARC_FILENAME_2, s);
+            Assert.assertNull(r);
+        }
+        for(String s : ARC_2_ARC_UUIDS) {
+            RecordUUIDs r = inf.getUUIDsForArcRecordUUID(ARC_FILENAME_1, s);
+            Assert.assertNull(r);
+        }
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testNonReadableFile() throws IOException {
+        File f = TestFileUtils.createFileWithContent("DO NOT READ!!!");
+        try {
+            Assert.assertTrue(f.setReadable(false));
+            new InputFormat(f);            
+        } finally {
+            f.setReadable(true);
+            f.setWritable(true);
+            f.setExecutable(true);
+        }
     }
     
     protected File createTestFile() throws IOException {

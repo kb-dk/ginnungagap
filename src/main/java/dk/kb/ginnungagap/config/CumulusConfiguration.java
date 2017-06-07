@@ -25,6 +25,7 @@ public class CumulusConfiguration {
      * @param serverUrl The URL to the Cumlus server.
      * @param userName The username for logging into the server.
      * @param userPassword The password for logging into the server.
+     * @param catalogs The cumulus catalogs to use.
      */
     public CumulusConfiguration(boolean writeAccess, String serverUrl, String userName, String userPassword, 
             Collection<String> catalogs) {

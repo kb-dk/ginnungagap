@@ -1,5 +1,9 @@
 package dk.kb.metadata.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,32 +27,24 @@ import org.slf4j.LoggerFactory;
  */
 public class TransformUtils {
     /** The logger.*/
-    private final static Logger log = LoggerFactory.getLogger(TransformUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(TransformUtils.class);
+    /** The language separator for descriptive metadata.*/
+    private static final String LANG_SEPARATOR = "|";
 
-    private static String LANG_SEPARATOR = "|";
-
-    
-    
-    /**
-     * 
-     */
+    /** Whether it is a non-transliteration.*/
     private static final int IS_NON_TRANSLITERATION = 0;
-    
-    /**
-     * 
-     */
+
+    /** Whether it is a transliteration.*/
     private static final int IS_TRANSLITERATION_REX = 1;
-    
-    
-    /**
-     * 
-     */
+
+
+    /** Unknown.*/
     private static final int IS_RSS = 2;
     /**
      * Dummy constructor, for at tilfredsstille checkstyle :-(.
      */
     protected TransformUtils(){}
-    
+
     /**
      * 
      * @param val Cumulus raw xml value felt.
@@ -62,11 +58,10 @@ public class TransformUtils {
             return applyRules(val, IS_NON_TRANSLITERATION).trim();
         }    
     }
-    
+
     /**
-     * 
-     * @param val
-     * @return 
+     * @param val The field value.
+     * @return The field value, without the language prefix.
      */
     public static String getCumulusSimpleVal(String val){
         if(val.indexOf(LANG_SEPARATOR)>-1){
@@ -76,7 +71,7 @@ public class TransformUtils {
             return applyRules(val, IS_RSS).trim();
         }     
     }
-    
+
     /**
      * 
      * @param val cumulus raw xml value felt.
@@ -85,8 +80,8 @@ public class TransformUtils {
     public static boolean isCumulusValNonSort(String val){
         return val.matches("^.*<<[^=]*>>.*$");
     }
-    
-    
+
+
     /**
      * 
      * @param val Cumulus raw xml value felt.
@@ -99,7 +94,7 @@ public class TransformUtils {
             return val;
         }    
     }
-    
+
     /**
      * 
      * @param val Cumulus raw xml value felt.
@@ -108,7 +103,7 @@ public class TransformUtils {
     public static Boolean isCumulusValTranslit(String val){
         return val.matches("^.*<<.*=.*$");
     }
-    
+
     /**
      * forudsætter at der er blevet testet med isCumulusValSubject.
      * @param val Cumulus raw xml value felt.
@@ -122,7 +117,7 @@ public class TransformUtils {
             return applyRules(val, IS_TRANSLITERATION_REX).trim();
         }
     }
-    
+
     /**
      * 
      * @param val Streng der skal parses.
@@ -136,19 +131,20 @@ public class TransformUtils {
         }
         if (val.matches("^.*<<.*=.*$")) {
             switch (transliteration){
-                case IS_NON_TRANSLITERATION: val = 
-                    val.replaceAll("<<", "").replaceAll("=.*>>", "");
-                    break;
-                case IS_RSS: // Same as below.
-                case IS_TRANSLITERATION_REX: val = 
-                    val.replaceAll(">>", "").replaceAll("<<.*=", "");
-                    break;
-                default:break;
+            case IS_NON_TRANSLITERATION: 
+                val = val.replaceAll("<<", "").replaceAll("=.*>>", "");
+                break;
+            case IS_RSS: // Same as below.
+            case IS_TRANSLITERATION_REX: 
+                val = val.replaceAll(">>", "").replaceAll("<<.*=", "");
+                break;
+            default:
+                break;
             }
         }
         return val;          
     }
-    
+
     /**
      * 
      * @param val Cumulus raw xml value felt.
@@ -174,13 +170,12 @@ public class TransformUtils {
             }
         }    
     }
-    
+
     /**
-     * 
-     * @param val
-     * @param lang
-     * @param defLang
-     * @return
+     * @param val The field value.
+     * @param lang The language.
+     * @param defLang The defined language.
+     * @return Whether or not???
      */
     public static boolean isTocTitle(String val, String lang, String defLang){
         if(val.indexOf(LANG_SEPARATOR)>-1){
@@ -192,38 +187,44 @@ public class TransformUtils {
             return true;
         } 
         return false;
-        
+
     }
 
-
-    public static String getIsoDate(String informat, String outformat, String indate) {
-    java.text.SimpleDateFormat informatter = new java.text.SimpleDateFormat(informat);
-    java.util.Date date = null;
-    try {
-        date = informatter.parse(indate);
-    } catch(java.text.ParseException parseError) {
-    }
-    if(date != null) {
-        java.text.SimpleDateFormat outformatter = new java.text.SimpleDateFormat(outformat);
-        return outformatter.format(date);
-    } else {
-        return "0000-00-00";
-    }
-    }
-    
     /**
-     * 
-     * @param val
-     * @param lang
-     * @return
+     * Retrieves the date in ISO format.
+     * @param informat The input format.
+     * @param outformat The output format.
+     * @param indate The text date in the input format.
+     * @return The date in the output format.
      */
-    public static String getTocTitle(String val, String lang){
+    public static String getIsoDate(String informat, String outformat, String indate) {
+        SimpleDateFormat informatter = new SimpleDateFormat(informat);
+        Date date = null;
+        try {
+            date = informatter.parse(indate);
+        } catch(ParseException parseError) {
+            log.warn("Couldn't parse date", parseError);
+        }
+        if(date != null) {
+            SimpleDateFormat outformatter = new SimpleDateFormat(outformat);
+            return outformatter.format(date);
+        } else {
+            return "0000-00-00";
+        }
+    }
+
+    /**
+     * @param val The field value.
+     * @param lang The language, if any.
+     * @return The value, with the potential language removed.
+     */
+    public static String getTocTitle(String val, String lang) {
         if(val.startsWith(lang + LANG_SEPARATOR)){
             return val.substring(val.indexOf(LANG_SEPARATOR)+1,val.length());
         } else {   
             return val;
         }
-        
+
     }
 }
 

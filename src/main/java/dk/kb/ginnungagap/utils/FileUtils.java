@@ -3,6 +3,8 @@ package dk.kb.ginnungagap.utils;
 import java.io.File;
 import java.io.IOException;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+
 /**
  * Utility class for dealing with files.
  */
@@ -23,6 +25,28 @@ public class FileUtils {
             }
         }
         return res;
+    }
+    
+    /**
+     * Method for moving a file from one position to another.
+     * @param from The file to move from.
+     * @param to The file to move to.
+     */
+    public static void moveFile(File from, File to) {
+        ArgumentCheck.checkNotNull(from, "File from");
+        ArgumentCheck.checkNotNull(to, "File to");
+        
+        if(!from.isFile()) {
+            throw new IllegalArgumentException("No downloaded file to archive '" + from.getName() + "'");
+        }
+        if(to.exists()) {
+            throw new IllegalArgumentException("The file already exists within the archive. Cannot archive again!");
+        }
+        
+        if(!from.renameTo(to)) {
+            throw new IllegalArgumentException("Could move the file '" + from.getAbsolutePath() 
+                    + "' to the location '" + to.getAbsolutePath() + "'");
+        }
     }
     
     /**

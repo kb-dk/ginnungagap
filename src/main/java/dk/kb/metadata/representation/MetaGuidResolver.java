@@ -52,7 +52,11 @@ public final class MetaGuidResolver {
     	fileidGuid = null;
     	exception = null;
     }
-
+    
+    /**
+     * Validate a given field.
+     * @param fileId The id of the field.
+     */
     private static void validateFileid(String fileId) {
     	if(fileidGuid == null || !fileidGuid.hasKey(fileId)) {
         	exception = new IllegalStateException("No entry for the file '" + fileId + "'.");
@@ -60,9 +64,15 @@ public final class MetaGuidResolver {
     	}
     }
     
+    /**
+     * @return Whether or not it has failed.
+     */
     public static boolean hasFailure() {
     	return (exception != null);
     }
+    /** 
+     * @return The exception.
+     */
     public static RuntimeException getException() {
     	return exception;
     }

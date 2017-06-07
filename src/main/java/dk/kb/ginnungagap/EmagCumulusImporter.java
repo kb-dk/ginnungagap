@@ -14,18 +14,17 @@ import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
 
 /**
  * Class for instantiating the conversion from E-magasinet, by reimporting the content-files into Cumulus again.
- * It extracts the digital-objects of the ARC-files in E-magasinet, finds the given Cumulus record and places them a the pre-ingest area.
+ * It extracts the digital-objects of the ARC-files in E-magasinet, finds the given Cumulus record 
+ * and places them a the pre-ingest area.
  * 
  * The configuration must contain the 
  * 
  * This takes the following arguments:
  * 1. Configuration file
  * 2. The CSV file with the ARC-filename, ARC-record-guid, Cumulus-record-guid, and catalog-name.
- * 3. [OPITONAL] output directory
- *   - Default '.'
- * 4. [OPTIONAL] path to TIFF validation script
+ * 3. [OPTIONAL] path to TIFF validation script
  *   - Default is 'bin/run_checkit_tiff.sh'
- * 5. [OPTIONAL] path to CheckIT configuration
+ * 4. [OPTIONAL] path to CheckIT configuration
  *   - Default is 'conf/cit_tiff.cfg'
  * 
  * Run as commmand, e.g. :
@@ -52,17 +51,13 @@ public class EmagCumulusImporter {
             recordListPath = args[1];
         }
         
-        String outputDirPath = ".";
-        if(args.length > 2) {
-            outputDirPath = args[2];
-        }
         if(args.length > 3) {
-            System.out.println("No validation, the scripts");
+            System.out.println("NO VALIDATION IS RUN!!!");
         }
 
         Configuration conf = getConfiguration(confPath);
         
-        File outputDir = getOutputDir(outputDirPath);
+        File outputDir = getOutputDir(conf.getImportationConfiguration().getTempDir());
         
         File recordListFile = getRecordListFile(recordListPath);
         
@@ -91,12 +86,12 @@ public class EmagCumulusImporter {
     protected static void argumentErrorExit() {
         System.err.println("Missing arguments. Requires the following arguments:");
         System.err.println("1. Configuration file");
-        System.err.println("2. The CSV file with the ARC-filename, ARC-record-guid, Cumulus-record-guid, and catalog-name.");
-        System.err.println("3. [OPITONAL] output directory");
-        System.err.println("  - Default '.'");
-        System.err.println("4. [OPTIONAL] path to TIFF validation script");
+        System.err.println("2. The CSV file with the ARC-filename, ARC-record-guid, "
+                + "Cumulus-record-guid, and catalog-name.");
+        System.err.println("-- THESE ARE NO LONGER USED --");
+        System.err.println("3. [OPTIONAL] path to TIFF validation script");
         System.err.println("  - Default is 'bin/run_checkit_tiff.sh'");
-        System.err.println("5. [OPTIONAL] path to CheckIT configuration");
+        System.err.println("4. [OPTIONAL] path to CheckIT configuration");
         System.err.println("  - Default is 'conf/cit_tiff.cfg'");
         System.exit(-1);
     }
@@ -120,8 +115,7 @@ public class EmagCumulusImporter {
      * @param outputDirPath The path to the output directory.
      * @return The output directory.
      */
-    protected static File getOutputDir(String outputDirPath) {
-        File outputDir = new File(outputDirPath);
+    protected static File getOutputDir(File outputDir) {
         if(!outputDir.isDirectory()) {
             System.err.println("Invalid output directory '" + outputDir.getAbsolutePath() + "'");
             argumentErrorExit();

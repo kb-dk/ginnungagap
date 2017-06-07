@@ -98,6 +98,7 @@ public class BitmagPreserver {
      * It is asserted that the metadata has the name of metadata file will become the WARC-record uuid,
      * and that the metadata is in XML format.
      * @param metadataFile The XML file with the metadata to preserve.
+     * @param collectionID The id of the collection, where the WARC file will be preserved.
      */
     public void packMetadataRecordWithoutCumulusReference(File metadataFile, String collectionID) {
         WarcPacker wp = getWarcPacker(collectionID);

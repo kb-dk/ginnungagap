@@ -26,10 +26,11 @@ public class OutputFormatter {
     protected static final String FILENAME_FAILURE_FILE = "import_failure.txt";
     
     /** The first line and CSV format of the success file.*/
-    protected static final String COLOUMN_NAMES_SUCCES_FILE = "ARC-file; ARC-record-uuid; Cumulus-record-UUID;\n";
+    protected static final String COLOUMN_NAMES_SUCCES_FILE = 
+            "Catalog;ARC-file; ARC-record-uuid; Cumulus-record-UUID;\n";
     /** The first line and CSV format of the failure file.*/
     protected static final String COLOUMN_NAMES_FAILURE_FILE = 
-            "ARC-file; ARC-record-uuid; Cumulus-record-UUID; Error\n";
+            "Catalog;ARC-file; ARC-record-uuid; Cumulus-record-UUID; Error\n";
     
     /** The file containing the successful import results.*/
     protected File succesFile;
@@ -43,6 +44,11 @@ public class OutputFormatter {
     public OutputFormatter(File outputDir) {
         this.succesFile = new File(outputDir, FILENAME_SUCCES_FILE);
         this.failureFile = new File(outputDir, FILENAME_FAILURE_FILE);
+        try {
+            initializeFiles();
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not instantiate the output files.");
+        }
     }
     
     /**
@@ -71,8 +77,9 @@ public class OutputFormatter {
     public void writeSucces(RecordUUIDs recordUUIDs) {
         try (OutputStream os = new FileOutputStream(succesFile, true)) {
             StringBuffer sb = new StringBuffer();
-            sb.append(recordUUIDs.arcFilename + ";");
-            sb.append(recordUUIDs.arcRecordUUID + ";");
+            sb.append(recordUUIDs.getCatalogID() + ";");
+            sb.append(recordUUIDs.getArcFilename() + ";");
+            sb.append(recordUUIDs.getArcRecordUUID() + ";");
             sb.append(recordUUIDs.getCumulusRecordUUID() + "\n");
             os.write(sb.toString().getBytes());
         } catch (IOException e) {
@@ -87,10 +94,11 @@ public class OutputFormatter {
      * @param cause The cause of that failure.
      */
     public void writeFailure(RecordUUIDs recordUUIDs, String cause) {
-        try (OutputStream os = new FileOutputStream(succesFile, true)) {
+        try (OutputStream os = new FileOutputStream(failureFile, true)) {
             StringBuffer sb = new StringBuffer();
-            sb.append(recordUUIDs.arcFilename + ";");
-            sb.append(recordUUIDs.arcRecordUUID + ";");
+            sb.append(recordUUIDs.getCatalogID() + ";");
+            sb.append(recordUUIDs.getArcFilename() + ";");
+            sb.append(recordUUIDs.getArcRecordUUID() + ";");
             sb.append(recordUUIDs.getCumulusRecordUUID() + ";");
             sb.append(cause + "\n");
             os.write(sb.toString().getBytes());
@@ -107,8 +115,9 @@ public class OutputFormatter {
      * @param cause The cause of the failure.
      */
     public void writeFailure(String arcFilename, String arcRecordID, String cause) {
-        try (OutputStream os = new FileOutputStream(succesFile, true)) {
+        try (OutputStream os = new FileOutputStream(failureFile, true)) {
             StringBuffer sb = new StringBuffer();
+            sb.append("??;");
             sb.append(arcFilename + ";");
             sb.append(arcRecordID + ";");
             sb.append(";");

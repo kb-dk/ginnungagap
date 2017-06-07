@@ -116,6 +116,7 @@ public class CumulusRecord {
 
     /**
      * Retrieves the metadata as an input stream.
+     * @param cumulusFieldMetadataFile The file which the metadata is written to.
      * @return The input stream with the metadata.
      */
     public InputStream getMetadata(File cumulusFieldMetadataFile) {
@@ -280,9 +281,8 @@ public class CumulusRecord {
     }
 
     /**
-     * Sets the value for the archive md5 checksum.
-     * This must be the checksum of the resource record in the packaged WARC file. 
-     * @param checksum The checksum of the resource record in the packaged WARC file.
+     * Sets the value for the md5 checksum of the file for this record.
+     * This must be the checksum of the resource record in the packaged WARC file.
      */
     public void initChecksumField() {
         WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
@@ -363,14 +363,14 @@ public class CumulusRecord {
      */
     public void setStringValueInField(String fieldName, String value) {
         try {
-            GUID metadataPackageIdGuid = fe.getFieldGUID(fieldName);
-            item.setStringValue(metadataPackageIdGuid, value);
+            GUID fieldGuid = fe.getFieldGUID(fieldName);
+            item.setStringValue(fieldGuid, value);
             item.save();
         } catch (Exception e) {
             String errMsg = "Could not set the value '" + value + "' for the field '" + fieldName + "'";
             log.error(errMsg, e);
             throw new IllegalStateException(errMsg, e);
-        }        
+        }
     }
 
     /**

@@ -93,8 +93,8 @@ public final class PremisPreservationLevelEnumeratorSelector {
             return level.replace(LOGICAL_STATEGY_PREFIX, "");
         }
 
-        IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for logical preservation: '" + level 
-                + "'. Only accepts: " + LOGICAL_PRESERVATION_LEVEL_VALUES);
+        IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for "
+                + "logical preservation: '" + level + "'. Only accepts: " + LOGICAL_PRESERVATION_LEVEL_VALUES);
         ExceptionUtils.insertException(res);
         throw res;
     }
@@ -137,8 +137,8 @@ public final class PremisPreservationLevelEnumeratorSelector {
             return level.replace(CONFIDENTIALITY_PREFIX, "");
         }
 
-        IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for confidentiality: '" + level 
-                + "'. Only accepts: " + CONFIDENTIALITY_PRESERVATION_LEVEL_VALUES);
+        IllegalStateException res = new IllegalStateException("Cannot handle the PreservationLevelValue for "
+                + "confidentiality: '" + level + "'. Only accepts: " + CONFIDENTIALITY_PRESERVATION_LEVEL_VALUES);
         ExceptionUtils.insertException(res);
         throw res;
     }

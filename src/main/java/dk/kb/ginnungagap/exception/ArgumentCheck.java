@@ -59,6 +59,23 @@ public class ArgumentCheck extends RuntimeException {
     }
 
     /**
+     * Check if a collection argument is null or the empty.
+     *
+     * @param val  the value to check
+     * @param name the name and type of the value being checked
+     * @throws ArgumentCheck if test fails
+     */
+    public static void checkNotNullOrEmpty(Collection val, String name) {
+        checkNotNull(val, name);
+
+        if (val.isEmpty()) {
+            throw new ArgumentCheck("The value of the variable '" + name
+                    + "' must not be an empty collection.");
+        }
+    }
+
+
+    /**
      * Check if a byte array argument is null or empty.
      *
      * @param val  the value to check

@@ -11,20 +11,20 @@ public final class FileIdHandler {
     private FileIdHandler() {}
 
     /** Maps between a GUID and the respective file id. */
-    private static Map<String, String> fileIds = new HashMap<String, String>();
+    protected static Map<String, String> fileIds = new HashMap<String, String>();
 
     /**
      * Returns the file id for the respective GUID. If no file id exists for such GUID, then it is created.
-     * @param GUID The guid of the file.
+     * @param guid The GUID of the file.
      * @return The file id corresponding to the GUID.
      */
-    public static String getFileID(String GUID) {
-        String fileId = fileIds.get(GUID);
+    public static String getFileID(String guid) {
+        String fileId = fileIds.get(guid);
         if (fileId == null) {
             fileId = "fileId" + (fileIds.size() + 1);
-            fileIds.put(GUID, fileId);
+            fileIds.put(guid, fileId);
         }
-        return fileIds.get(GUID);
+        return fileIds.get(guid);
     }
 
     /**

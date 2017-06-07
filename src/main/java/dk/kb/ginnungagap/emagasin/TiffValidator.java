@@ -60,6 +60,7 @@ public class TiffValidator extends ScriptWrapper {
      * Constructor.
      * @param outputDir The directory where the TIFF files should be stored after extraction from the ARC-files.
      * @param validationScript The script to use for the validation.
+     * @param validationConf The configuration file for the validation.
      * @param deleteAfterValidation Where or not to delete the TIFF files after validation.
      */
     public TiffValidator(File outputDir, File validationScript, File validationConf, boolean deleteAfterValidation) {
@@ -94,7 +95,9 @@ public class TiffValidator extends ScriptWrapper {
     /**
      * Validate the ARC record, if it is a TIFF file.
      * @param arcRecord The arc record.
-     * @throws IOException If it fails to extract the ARC record of 
+     * @param uid The UUID of the record.
+     * @throws IOException If it fails to extract the ARC record of
+     * @throws RunScriptException If a failure occurs while running the script. 
      */
     public void validateArcRecordIfTiff(ArchiveRecord arcRecord, String uid) throws IOException, RunScriptException {
         String mimetype = arcRecord.getHeader().getMimetype();

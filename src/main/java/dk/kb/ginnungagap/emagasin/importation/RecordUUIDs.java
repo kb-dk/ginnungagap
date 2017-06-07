@@ -20,8 +20,10 @@ public class RecordUUIDs {
     
     /**
      * Constructor.
-     * @param arcRecord The uuid of the arc record.
-     * @param cumulusRecord The uuid of the cumulus record.
+     * @param catalogID The id of the catalog.
+     * @param arcFilename The name of the ARC file.
+     * @param arcRecord The UUID of the ARC record.
+     * @param cumulusRecord The UUID of the Cumulus record.
      */
     public RecordUUIDs(String catalogID, String arcFilename, String arcRecord, String cumulusRecord) {
         this.catalogID = catalogID;
@@ -39,28 +41,28 @@ public class RecordUUIDs {
     }
     
     /** 
-     * param The name of the ARC file.
+     * @return The name of the ARC file.
      */
     public String getArcFilename() {
         return arcFilename;
     }
     
     /** 
-     * @param The UUID of the ARC record.
+     * @return The UUID of the ARC record.
      */
     public String getArcRecordUUID() {
         return arcRecordUUID;
     }
     
     /** 
-     * @param The UUID of the Cumulus record.
+     * @return The UUID of the Cumulus record.
      */
     public String getCumulusRecordUUID() {
         return cumulusRecordUUID;
     }
     
     /** 
-     * @param Whether or not it has been found.
+     * @return Whether or not it has been found.
      */
     public boolean isFound() {
         return found;

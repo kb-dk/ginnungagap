@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+
 /**
  * Substitutes of part of the path for the Asset Reference.
  * It is due to some of the servers and paths previously defined and used when the data was preserved
@@ -37,6 +39,7 @@ public class PathSubstituteConfiguration {
      * @param config The configuration map.
      */
     public PathSubstituteConfiguration(List<Map<String, String>> config) {
+        ArgumentCheck.checkNotNullOrEmpty(config, "List<Map<String, String>> config");
         substitutes = new HashMap<String, String>();
         for(Map<String, String> subMap : config) {
             if(!subMap.containsKey(SUBSTITUTE_ELEMENT_FROM) || !subMap.containsKey(SUBSTITUTE_ELEMENT_TO)) {
@@ -52,6 +55,7 @@ public class PathSubstituteConfiguration {
      * @return The substituted path.
      */
     public String substitute(String path) {
+        ArgumentCheck.checkNotNullOrEmpty(path, "String path");
         for(Map.Entry<String, String> sub : substitutes.entrySet()) {
             if(path.startsWith(sub.getKey())) {
                 return path.replace(sub.getKey(), sub.getValue());

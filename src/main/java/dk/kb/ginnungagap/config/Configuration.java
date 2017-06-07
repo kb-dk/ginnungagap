@@ -226,7 +226,7 @@ public class Configuration {
         ArgumentCheck.checkTrue(map.containsKey(CONF_CUMULUS_PASSWORD), 
                 "Missing Cumulus element '" + CONF_CUMULUS_PASSWORD + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_CUMULUS_CATALOGS), 
-                "Missing Transformation element '" + CONF_CUMULUS_CATALOGS + "'");
+                "Missing Cumulus element '" + CONF_CUMULUS_CATALOGS + "'");
         
         List<String> catalogs = (List<String>) map.get(CONF_CUMULUS_CATALOGS);
         
