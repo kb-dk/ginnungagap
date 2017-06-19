@@ -1,5 +1,7 @@
 package dk.kb.ginnungagap.emagasin.importation;
 
+import java.io.File;
+
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 
@@ -22,7 +24,8 @@ public class ImportDecider {
         if(format.contains(FORMAT_TIFF)) {
             return true;
         }
-        if(!record.getFile().exists()) {
+        String filePath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
+        if(!(new File(filePath).exists())) {
             return true;
         }
         return false;

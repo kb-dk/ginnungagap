@@ -1,14 +1,16 @@
 package dk.kb.ginnungagap.emagasin.importation;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
-
-import org.omg.CORBA.AnySeqHelper;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -43,13 +45,13 @@ public class ImportDeciderTest extends ExtendedTestCase {
     public void testImportDeciderWithMissingNonTiffFile() {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("RANDOM-FILE-FORMAT");
-        when(record.getFile()).thenReturn(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()));
+        when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()).getAbsolutePath());
         
         boolean res = ImportDecider.shouldImportRecord(record);
         Assert.assertTrue(res);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.FILE_FORMAT));
-        verify(record).getFile();
+        verify(record).getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE));
         verifyNoMoreInteractions(record);
     }
     
@@ -57,14 +59,13 @@ public class ImportDeciderTest extends ExtendedTestCase {
     public void testImportDeciderWithExistingNonTiffFile() {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("RANDOM-FILE-FORMAT");
-        when(record.getFile()).thenReturn(testFile);
+        when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(testFile.getAbsolutePath());
         
         boolean res = ImportDecider.shouldImportRecord(record);
         Assert.assertFalse(res);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.FILE_FORMAT));
-        verify(record).getFile();
+        verify(record).getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE));
         verifyNoMoreInteractions(record);
     }
-
 }

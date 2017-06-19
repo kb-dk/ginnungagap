@@ -170,7 +170,7 @@ public class EmagImportation {
         String newPath = conf.getImportationConfiguration().getSubstitute().substitute(oldPath);
         File newFile = new File(newPath);
         FileUtils.getDirectory(newFile.getParent());
-        FileUtils.moveFile(contentFile, newFile);
+        FileUtils.moveOrOverrideFile(contentFile, newFile);
         if(!oldPath.equals(newPath)) {
             record.setNewAssetReference(newFile);
         }

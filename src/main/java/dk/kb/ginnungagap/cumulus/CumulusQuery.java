@@ -117,7 +117,7 @@ public class CumulusQuery {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         ArgumentCheck.checkNotNullOrEmpty(uuid, "String uuid");
         String query = String.format(
-                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
+                StringUtils.replaceSpacesToTabs("%s contains %s\nand %s is %s\nand %s is %s"),
                 Constants.FieldNames.GUID,
                 uuid,
                 Constants.FieldNames.REGISTRATIONSTATE,

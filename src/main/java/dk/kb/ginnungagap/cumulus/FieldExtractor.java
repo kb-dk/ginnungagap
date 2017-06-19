@@ -134,16 +134,16 @@ public class FieldExtractor {
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringValue(fd.getFieldUID()));
         case FieldTypes.FieldTypeBinary:
-            log.debug("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
+            log.trace("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
                 + ", tries to extracts it as the path of the Asset Reference");
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getAssetReferenceValue(fd.getFieldUID()).getPart(0).getDisplayString());
         case FieldTypes.FieldTypeAudio:
-            log.info("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
+            log.debug("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
                 + ", an empty string returned for field " + fd.getName());
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), "");
         case FieldTypes.FieldTypePicture:
-            log.info("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
+            log.debug("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
                     + ", an empty string returned for field " + fd.getName());
             return new StringField(fd, getFieldTypeName(fd.getFieldType()),  "");
         case FieldTypes.FieldTypeTable:

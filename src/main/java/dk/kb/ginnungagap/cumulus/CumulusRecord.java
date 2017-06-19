@@ -149,10 +149,8 @@ public class CumulusRecord {
      */
     public void setNewAssetReference(File f) {
         try {
-            AssetReference reference = item.getAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE);
-
-            AssetReference newARef = new AssetReference(reference.getCumulusSession(), f.getAbsolutePath(), null);
-            item.setAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE, newARef);
+            AssetReference newAssetRef = new AssetReference(item.getCumulusSession(), f.getAbsolutePath(), null);
+            item.setAssetReferenceValue(GUID.UID_REC_ASSET_REFERENCE, newAssetRef);
             item.save();
         } catch (Exception e) {
             throw new IllegalStateException("Cannot update the asset reference with file '" + f.getAbsolutePath() 

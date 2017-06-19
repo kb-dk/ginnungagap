@@ -2,6 +2,8 @@ package dk.kb.ginnungagap.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
@@ -29,23 +31,23 @@ public class FileUtils {
     
     /**
      * Method for moving a file from one position to another.
+     * It will override the destination file, if it already exists.
      * @param from The file to move from.
      * @param to The file to move to.
      */
-    public static void moveFile(File from, File to) {
+    public static void moveOrOverrideFile(File from, File to) {
         ArgumentCheck.checkNotNull(from, "File from");
         ArgumentCheck.checkNotNull(to, "File to");
         
         if(!from.isFile()) {
-            throw new IllegalArgumentException("No downloaded file to archive '" + from.getName() + "'");
-        }
-        if(to.exists()) {
-            throw new IllegalArgumentException("The file already exists within the archive. Cannot archive again!");
+            throw new IllegalArgumentException("No file to move from location '" + from.getAbsolutePath() + "'");
         }
         
-        if(!from.renameTo(to)) {
-            throw new IllegalArgumentException("Could move the file '" + from.getAbsolutePath() 
-                    + "' to the location '" + to.getAbsolutePath() + "'");
+        try {
+            Files.move(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not move the file '" + from.getAbsolutePath() 
+                    + "' to the location '" + to.getAbsolutePath() + "'", e);
         }
     }
     
