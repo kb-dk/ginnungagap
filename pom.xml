@@ -4,7 +4,7 @@
 
   <groupId>dk.kb</groupId>
   <artifactId>ginnungagap</artifactId>
-  <version>1.1.0-RC6</version>
+  <version>1.1.0-RC7</version>
   <packaging>jar</packaging>
 
   <name>ginnungagap</name>

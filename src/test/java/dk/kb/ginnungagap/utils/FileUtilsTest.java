@@ -2,11 +2,14 @@ package dk.kb.ginnungagap.utils;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
@@ -54,7 +57,7 @@ public class FileUtilsTest extends ExtendedTestCase {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testGetDirectoryOnNotWritableParentDirectory() {
-        addDescription("Test getting ");
+        addDescription("Test getting a sub-directory from a non-writable directory");
         File parentDir = TestFileUtils.getTempDir();
         try {
             parentDir.setWritable(false);
@@ -64,5 +67,26 @@ public class FileUtilsTest extends ExtendedTestCase {
         } finally {
             parentDir.setWritable(true);
         }
+    }
+    
+    @Test
+    public void testMovingFile() throws IOException, InterruptedException {
+        addDescription("Try moving a file");
+        File from = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        long size1 = from.length();
+        File to = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        
+        FileUtils.moveOrOverrideFile(from, to);
+        
+        assertEquals(to.length(), size1);
+        
+        from = TestFileUtils.createFileWithContent(UUID.randomUUID().toString() + "-" + UUID.randomUUID().toString());
+        long size2 = from.length();
+        assertNotEquals(size1, size2);
+        
+        FileUtils.moveOrOverrideFile(from, to);
+        
+        assertNotEquals(to.length(), size1);
+        assertEquals(to.length(), size2);
     }
 }

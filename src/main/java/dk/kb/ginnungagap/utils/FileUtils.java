@@ -1,9 +1,9 @@
 package dk.kb.ginnungagap.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
@@ -43,11 +43,19 @@ public class FileUtils {
             throw new IllegalArgumentException("No file to move from location '" + from.getAbsolutePath() + "'");
         }
         
+        long moveDate = from.lastModified();
+        
         try {
-            Files.move(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            StreamUtils.copyInputStreamToOutputStream(new FileInputStream(from), new FileOutputStream(to));
+            from.delete();
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not move the file '" + from.getAbsolutePath() 
                     + "' to the location '" + to.getAbsolutePath() + "'", e);
+        }
+        
+        if(to.lastModified() < moveDate) {
+            throw new IllegalStateException("Moved file is older than time for moving (" + to.lastModified() 
+                    + " < " + moveDate + ")");
         }
     }
     
