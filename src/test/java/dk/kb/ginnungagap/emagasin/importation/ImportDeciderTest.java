@@ -33,6 +33,7 @@ public class ImportDeciderTest extends ExtendedTestCase {
     public void testImportDeciderWithTiffFileFormat() {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("TIFF Image");
+        when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(1L);
         
         boolean res = ImportDecider.shouldImportRecord(record);
         Assert.assertTrue(res);
@@ -46,6 +47,7 @@ public class ImportDeciderTest extends ExtendedTestCase {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("RANDOM-FILE-FORMAT");
         when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()).getAbsolutePath());
+        when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(1L);
         
         boolean res = ImportDecider.shouldImportRecord(record);
         Assert.assertTrue(res);
@@ -56,16 +58,34 @@ public class ImportDeciderTest extends ExtendedTestCase {
     }
     
     @Test
+    public void testImportDeciderWithExistingNonTiffFileWithWrongSize() {
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("RANDOM-FILE-FORMAT");
+        when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(testFile.getAbsolutePath());
+        when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(testFile.length() + 1L);
+        
+        boolean res = ImportDecider.shouldImportRecord(record);
+        Assert.assertTrue(res);
+        
+        verify(record).getFieldValue(eq(Constants.FieldNames.FILE_FORMAT));
+        verify(record).getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE));
+        verify(record).getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE));
+        verifyNoMoreInteractions(record);
+    }
+    
+    @Test
     public void testImportDeciderWithExistingNonTiffFile() {
         CumulusRecord record = mock(CumulusRecord.class);
         when(record.getFieldValue(eq(Constants.FieldNames.FILE_FORMAT))).thenReturn("RANDOM-FILE-FORMAT");
         when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(testFile.getAbsolutePath());
+        when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(testFile.length());
         
         boolean res = ImportDecider.shouldImportRecord(record);
         Assert.assertFalse(res);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.FILE_FORMAT));
         verify(record).getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE));
+        verify(record).getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE));
         verifyNoMoreInteractions(record);
     }
 }

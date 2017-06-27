@@ -25,6 +25,8 @@ import java.util.Map;
 public class InputFormat {
     /** The mapping between arc filenames and their list of records UUIDs.*/
     protected final Map<String, List<RecordUUIDs>> uuidsForArcFiles;
+    /** The list of ARC files, in imported order.*/
+    protected final List<String> arcFiles;
     
     /**
      * Constructor.
@@ -32,6 +34,7 @@ public class InputFormat {
      */
     public InputFormat(File inputFile) {
         this.uuidsForArcFiles = new HashMap<String, List<RecordUUIDs>>();
+        this.arcFiles = new ArrayList<String>();
         loadFile(inputFile);
     }
     
@@ -54,6 +57,7 @@ public class InputFormat {
                     listForArcFile = uuidsForArcFiles.get(arcFilename);
                 } else {
                     listForArcFile = new ArrayList<RecordUUIDs>();
+                    arcFiles.add(arcFilename);
                 }
                 listForArcFile.add(new RecordUUIDs(catalogName, arcFilename, arcRecordUUID, cumulusRecordUUID));
                 uuidsForArcFiles.put(arcFilename, listForArcFile);
@@ -67,7 +71,7 @@ public class InputFormat {
      * @return The collection of arc filenames.
      */
     public Collection<String> getArcFilenames() {
-        return uuidsForArcFiles.keySet();
+        return arcFiles;
     }
     
     /**

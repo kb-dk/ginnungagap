@@ -106,6 +106,18 @@ public class CumulusRecord {
     }
     
     /**
+     * Extracts the long value of the field with the given name.
+     * If multiple fields have the given field name, then only the value of one of the fields are returned.
+     * The result is in Long format.
+     * @param fieldname The name for the field. 
+     * @return The long value of the field. 
+     */
+    public Long getFieldLongValue(String fieldname) {
+        GUID fieldGuid = fe.getFieldGUID(fieldname);
+        return item.getLongValue(fieldGuid);
+    }
+    
+    /**
      * Retrieves the string value of a field (also non-string fields, except tables, pictures and audio).
      * @param fieldname The name of the field.
      * @return The string value of the field.

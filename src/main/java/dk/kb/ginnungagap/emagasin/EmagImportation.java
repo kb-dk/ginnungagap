@@ -110,6 +110,7 @@ public class EmagImportation {
         
         for(ArchiveRecord arcRecord : arcReader) {
             if(!isDigitalObject(arcRecord.getHeader().getUrl())) {
+                log.trace("Ignoring ARC record: " + arcRecord.getHeader().getUrl());
                 continue;
             }
             String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
