@@ -1,6 +1,8 @@
 package dk.kb.ginnungagap;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import dk.kb.ginnungagap.archive.BitmagArchive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
@@ -38,8 +41,8 @@ import dk.kb.ginnungagap.workflow.PreservationWorkflow;
  * 
  * Receives the following arguments:
  * 1. Configuration file.
- * 2. Archive - must be local (default) or bitmag
- * 3. retrieve only file (default: no)
+ * 2. Archive - must be local or bitmag (default)
+ * 3. retrieve only file and metadata - no packaging or preservation (yes/no; default: no)
  * 
  * e.g.
  * dk.kb.ginningagap.Ginnungagap conf/ginnungagap.yml local
@@ -66,7 +69,7 @@ public class Ginnungagap {
             confPath = System.getenv("GINNUNGAGAP_CONF_FILE");
             if(confPath == null || confPath.isEmpty()) {
                 System.err.println("Missing argument with configuration file.");
-                System.exit(-1);
+                printParametersAndExit();
             }
         } else {
             confPath = args[0];
@@ -78,10 +81,10 @@ public class Ginnungagap {
             if(!archiveType.equalsIgnoreCase(ARCHIVE_LOCAL) && !archiveType.equalsIgnoreCase(ARCHIVE_BITMAG)) {
                 System.err.println("Unable to comply with archive type '" + archiveType + "'. Only accepts '"
                         + ARCHIVE_LOCAL + "' or '" + ARCHIVE_BITMAG + "'.");
-                System.exit(-1);
+                printParametersAndExit();
             }
         }
-        if(args.length > 3) {
+        if(args.length > 2) {
             if(args[2].startsWith("y") || args[2].startsWith("Y")) {
                 fileOnly = true;
             }
@@ -94,14 +97,14 @@ public class Ginnungagap {
         File confFile = new File(confPath);
         if(!confFile.isFile()) {
             System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
-            System.exit(-1);
+            printParametersAndExit();
         }
 
         Configuration conf = new Configuration(confFile);
         File xsltFile = new File(conf.getTransformationConf().getXsltDir(), "transformToMets.xsl");
         if(!xsltFile.isFile()) {
             System.err.println("Missing transformation file '" + xsltFile.getAbsolutePath() + "'");
-            System.exit(-1);
+            printParametersAndExit();
         }
 
         Archive archive;
@@ -116,10 +119,10 @@ public class Ginnungagap {
         Cumulus.CumulusStart();
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
+            MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
             if(fileOnly) {
-                extractFilesOnly(cumulusServer, conf);
+                extractFilesOnly(cumulusServer, conf, transformer);
             } else {
-                MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
                 BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
                 PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), 
@@ -138,12 +141,24 @@ public class Ginnungagap {
     }
     
     /**
+     * Prints the parameters for the main class, and then exit.
+     * Should only be used, when it has failed on a parameter.
+     */
+    protected static void printParametersAndExit() {
+        System.err.println("Have the following arguments: ");
+        System.err.println(" 1. Configuration file.");
+        System.err.println(" 2. Archive - must be local or bitmag (default)");
+        System.err.println(" 3. retrieve only file and metadata - no packaging or preservation (yes/no; default: no)");
+        System.exit(-1);
+    }
+    
+    /**
      * Extracts only the Cumulus objects as files. 
      * Does not do any kind of transformation or preservation.
      * @param server The cumulus server.
      * @param conf The configuration.
      */
-    protected static void extractFilesOnly(CumulusServer server, Configuration conf) {
+    protected static void extractFilesOnly(CumulusServer server, Configuration conf, MetadataTransformer transformer) {
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             log.info("Extracting files for catalog '" + catalogName + "'.");
             CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
@@ -154,13 +169,19 @@ public class Ginnungagap {
             for(Item item : items) {
                 try {
                     CumulusRecord record = new CumulusRecord(fe, item);
+                    String filename = record.getFieldValue(Constants.FieldNames.RECORD_NAME);
+                    File metadataOutputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
+                            filename + ".xml");
+                    record.getMetadata(metadataOutputFile);
+                    File transformedMetadataOutputFile = new File(conf.getTransformationConf().getMetadataTempDir(),
+                            record.getMetadataGUID());
+                    transformer.transformXmlMetadata(new FileInputStream(metadataOutputFile), 
+                            new FileOutputStream(transformedMetadataOutputFile));
+                    
                     File cumulusFile = record.getFile();
                     File outputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
                             cumulusFile.getName());
                     FileUtils.copyFile(cumulusFile, outputFile);
-                    
-                    record.getMetadata(new File(conf.getTransformationConf().getMetadataTempDir(), 
-                            cumulusFile.getName() + "_fields.xml"));
                 } catch (Exception e) {
                     log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID()
                             + "'. ", e);
