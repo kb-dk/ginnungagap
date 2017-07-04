@@ -154,4 +154,33 @@ public class CumulusQuery {
 
         return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
     }
+    
+    
+    /**
+     * The query for extracting the records which requires a given type of preservation validation from a given 
+     * catalog.
+     * 
+     * The records which have the registration state 'registration finished', they must belong to the given catalog, 
+     * and the must have the given value for the preservation validation field.
+     * 
+     * @param catalogName The name of the catalog.
+     * @param value The expected value for the preservation validation field.
+     * @return The query for all the records in a Cumulus catalog.
+     */
+    public static CumulusQuery getQueryForPreservationValidation(String catalogName, String value) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        String query = String.format(StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.BEVARING_CHECK,
+                value,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName);        
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
+
 }

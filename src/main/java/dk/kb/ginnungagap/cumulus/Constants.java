@@ -26,6 +26,10 @@ public interface Constants {
      * various Cumulus record fields.
     */
     public interface FieldNames {
+        
+        /** TODO: make sure this is the right name for this field. **/
+        String BEVARING_CHECK = "Bevaring_check";
+        String BEVARING_CHECK_STATUS = "Bevaring_check_status";
 
         /** The name of the title field. */
         String TITEL = "Titel";
@@ -813,6 +817,16 @@ public interface Constants {
      * values.
      */
     interface FieldValues {
+        
+        /** The "OK" state for the preservation validation field.*/
+        String PRESERVATION_VALIDATION_OK = "OK";
+        /** The "Simpelt check" state for the preservation validation field.*/
+        String PRESERVATION_VALIDATION_SIMPLE_CHECK = "Simpelt check";
+        /** The "Fuldt check" state for the preservation validation field.*/
+        String PRESERVATION_VALIDATION_FULL_CHECK = "Fuldt check";
+        /** The "Integritets fejl" state for the preservation validation field.*/
+        String PRESERVATION_VALIDATION_FAILURE = "Integritets fejl";
+
 
         /** The "OK" value for MASTERTRANSFERSTATUS. */
         String TRANSFER_STATUS_OK = "OK";
