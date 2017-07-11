@@ -116,8 +116,7 @@ public class EmagImportation {
             String uid = GuidExtrationUtils.extractGuid(arcRecord.getHeader().getUrl());
             RecordUUIDs uuids = inputFormat.getUUIDsForArcRecordUUID(arcFile.getName(), uid);
             if(uuids == null) {
-                log.warn("Could not handle record: " + uid);
-                // TODO log this error
+                log.debug("Ignoring ARC record not in the import list: " + uid);
                 continue;
             }
             CumulusRecord record = cumulus.findCumulusRecord(uuids.getCatalogID(), uuids.getCumulusRecordUUID());
@@ -151,6 +150,7 @@ public class EmagImportation {
                 validationText += "\nDid not need to import file.";
             }
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, validationText);
+            log.debug("Successfully updated record '" + record.toString() + "'");
         } catch (Exception e) {
             String failureText = "Failed to import '" + guid + "': " + e.getMessage();
             record.setStringValueInField(Constants.FieldNames.QA_ERROR, failureText);

@@ -11,6 +11,9 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
  * Utility class for dealing with files.
  */
 public class FileUtils {
+    /** The number of milliseconds per second. */
+    protected static final long MILLIS_PER_SECOND = 1000L;
+    
     /**
      * Retrieves the directory at the given path.
      * If the directory does not exist yet, then it is created.
@@ -53,7 +56,7 @@ public class FileUtils {
                     + "' to the location '" + to.getAbsolutePath() + "'", e);
         }
         
-        if(to.lastModified() < moveDate) {
+        if(to.lastModified() + MILLIS_PER_SECOND < moveDate) {
             throw new IllegalStateException("Moved file is older than time for moving (" + to.lastModified() 
                     + " < " + moveDate + ")");
         }

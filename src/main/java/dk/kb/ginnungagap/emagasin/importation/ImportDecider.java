@@ -41,7 +41,7 @@ public class ImportDecider {
             log.debug("Importing file due to wrong size.");
             return true;
         }
-        log.debug("Not importing the file.");
+        log.debug("Not importing the file to location '" + filePath + "'");
         return false;
     }
 }
