@@ -89,11 +89,11 @@ public class EmagImportation {
      */
     public void run() {
         for(String arcFilename : inputFormat.getArcFilenames()) {
-            File arcFile = emagRetriever.extractArcFile(arcFilename);
             try {
+                File arcFile = emagRetriever.extractArcFile(arcFilename);
                 handleArcFile(arcFile);
                 arcFile.delete();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 outputFormat.writeFailure(arcFilename, "", "Issue occurd handling the ARC-file: " + e.getMessage());
             }
         }
