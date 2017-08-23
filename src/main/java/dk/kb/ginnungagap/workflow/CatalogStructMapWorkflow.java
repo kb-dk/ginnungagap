@@ -99,7 +99,7 @@ public class CatalogStructMapWorkflow implements Workflow {
     protected File extractGuidsAndFileIDsForCatalog() throws IOException {
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
         RecordItemCollection items = cumulusServer.getItems(catalogName, query);
-        FieldExtractor fieldExtractor = new FieldExtractor(items.getLayout());
+        FieldExtractor fieldExtractor = new FieldExtractor(items.getLayout(), cumulusServer, catalogName);
         GUID recordIntellectualEntityGuid = fieldExtractor.getFieldGUID(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         GUID recordNameGuid = fieldExtractor.getFieldGUID("Record Name");

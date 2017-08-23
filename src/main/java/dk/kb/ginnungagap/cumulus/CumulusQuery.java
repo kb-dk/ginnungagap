@@ -77,14 +77,14 @@ public class CumulusQuery {
     }
 
     /**
-     * The default query for extracting preservation ready items from a given catalog.
+     * The default query for extracting all the preservation ready items from a given catalog.
      * The records must have the preservation state 'ready for archival' and have the registration state
      * 'registration finished', besides beloning the the given catalog.
      * 
      * @param catalogName The name of the catalog.
      * @return The Cumulus query.
      */
-    public static CumulusQuery getPreservationQuery(String catalogName) {
+    public static CumulusQuery getPreservationAllQuery(String catalogName) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
@@ -95,6 +95,62 @@ public class CumulusQuery {
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
                 catalogName);
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
+    
+    /**
+     * The default query for extracting the preservation ready items from a given catalog, which are sub-assets
+     * - thus having a value in the relates master-asset field.
+     * The records must have the preservation state 'ready for archival' and have the registration state
+     * 'registration finished', besides beloning the the given catalog.
+     * 
+     * @param catalogName The name of the catalog.
+     * @return The Cumulus query for all sub-assets in the given catalog ready for preservation.
+     */
+    public static CumulusQuery getPreservationSubAssetQuery(String catalogName) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        String query = String.format(
+                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s\nand %s has value"),
+                Constants.FieldNames.PRESERVATION_STATUS,
+                Constants.FieldValues.
+                PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName,
+                Constants.PreservationFieldNames.RELATED_MASTER_ASSETS);
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
+    
+    /**
+     * The default query for extracting the preservation ready items from a given catalog, which are master-assets
+     * - thus having a value in the relates sub-asset field.
+     * The records must have the preservation state 'ready for archival' and have the registration state
+     * 'registration finished', besides beloning the the given catalog.
+     * 
+     * @param catalogName The name of the catalog.
+     * @return The Cumulus query for all master-assets in the given catalog ready for preservation.
+     */
+    public static CumulusQuery getPreservationMasterAssetQuery(String catalogName) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        String query = String.format(
+                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s\nand %s has value"),
+                Constants.FieldNames.PRESERVATION_STATUS,
+                Constants.FieldValues.
+                PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName,
+                Constants.PreservationFieldNames.RELATED_SUB_ASSETS);
         EnumSet<FindFlag> findFlags = EnumSet.of(
                 FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
                 FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
@@ -122,6 +178,29 @@ public class CumulusQuery {
                 uuid,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName);
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
+    
+    /**
+     * The query for extracting records containing a specific record name.
+     * 
+     * @param catalogName The name of the catalog.
+     * @param name The record name for the Cumulus record to find.
+     * @return The query for finding the Cumulus record with the given record name.
+     */
+    public static CumulusQuery getQueryForSpecificRecordName(String catalogName, String name) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        ArgumentCheck.checkNotNullOrEmpty(name, "String uuid");
+        String query = String.format(
+                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s"),
+                Constants.FieldNames.RECORD_NAME,
+                name,
                 Constants.FieldNames.CATALOG_NAME,
                 catalogName);
         EnumSet<FindFlag> findFlags = EnumSet.of(

@@ -128,7 +128,7 @@ public class CumulusFileValidation {
     protected static void validateForCatalog(CumulusServer server, String catalogName, OutputStream out) {
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
         RecordItemCollection collection = server.getItems(catalogName, query);
-        FieldExtractor fe = new FieldExtractor(collection.getLayout());
+        FieldExtractor fe = new FieldExtractor(collection.getLayout(), server, catalogName);
         for(Item item : collection) {
             CumulusRecord record = new CumulusRecord(fe, item);
             try {

@@ -161,11 +161,11 @@ public class Ginnungagap {
     protected static void extractFilesOnly(CumulusServer server, Configuration conf, MetadataTransformer transformer) {
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             log.info("Extracting files for catalog '" + catalogName + "'.");
-            CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
+            CumulusQuery query = CumulusQuery.getPreservationAllQuery(catalogName);
             RecordItemCollection items = server.getItems(catalogName, query);
             
             log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-            FieldExtractor fe = new FieldExtractor(items.getLayout());
+            FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
             for(Item item : items) {
                 try {
                     CumulusRecord record = new CumulusRecord(fe, item);

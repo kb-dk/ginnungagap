@@ -67,7 +67,7 @@ public class ValidationWorkflow {
                 Constants.FieldValues.PRESERVATION_VALIDATION_SIMPLE_CHECK);
         
         RecordItemCollection items = server.getItems(catalogName, query);
-        FieldExtractor fe = new FieldExtractor(items.getLayout());
+        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
         for(Item item : items) {
             CumulusRecord record = new CumulusRecord(fe, item);
             simpleValidationOnRecord(record);

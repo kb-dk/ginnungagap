@@ -24,12 +24,12 @@ public class TableField extends Field{
      * @param fieldType The type of field.
      * @param itemCollection The item collection of the contructor.
      */
-    public TableField(FieldDefinition fieldDefinition, String fieldType, ItemCollection itemCollection) {
+    public TableField(FieldDefinition fieldDefinition, String fieldType, ItemCollection itemCollection, FieldExtractor fe) {
         super(fieldDefinition, fieldType);
         this.rows = new ArrayList<Row>();
-        FieldExtractor fe = new FieldExtractor(itemCollection.getLayout());
+        FieldExtractor extractor = new FieldExtractor(itemCollection.getLayout(), fe.getServer(), fe.getCatalog());
         for(Item i : itemCollection) {
-            rows.add(new Row(fe.getMap(i)));
+            rows.add(new Row(extractor.getMap(i)));
         }
     }
     

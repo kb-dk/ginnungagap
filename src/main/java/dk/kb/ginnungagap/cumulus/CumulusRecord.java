@@ -31,6 +31,7 @@ import com.canto.cumulus.fieldvalue.AssetReference;
 import com.canto.cumulus.fieldvalue.StringEnumFieldValue;
 
 import dk.kb.ginnungagap.config.RequiredFields;
+import dk.kb.ginnungagap.cumulus.field.AssetsField;
 import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.cumulus.field.StringField;
 import dk.kb.ginnungagap.cumulus.field.TableField;
@@ -228,6 +229,26 @@ public class CumulusRecord {
                             }
                         }
                     }
+                } else if(f instanceof AssetsField) {
+                    AssetsField af = (AssetsField) f;
+                    for(String n : af.getNames()) {
+                        Element value = doc.createElement("value");
+                        field.appendChild(value);
+                        
+                        Element name = doc.createElement("name");
+                        name.appendChild(doc.createTextNode(n));
+                        value.appendChild(name);
+                        
+                        Element uuid = doc.createElement("uuid");
+                        uuid.appendChild(doc.createTextNode(af.getGuid(n)));
+                        value.appendChild(uuid);
+                        
+                        Element index = doc.createElement("order");
+                        index.appendChild(doc.createTextNode(af.getIndex(n).toString()));
+                        value.appendChild(index);
+                    }
+                } else {
+                    log.warn("Could not handle field: " + f);
                 }
             }
         }

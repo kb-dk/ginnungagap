@@ -91,12 +91,10 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verifyZeroInteractions(preserver);
         
         verify(server).getCatalogNames();
-        verify(server).getItems(anyString(), any(CumulusQuery.class));
+        verify(server, times(3)).getItems(anyString(), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
-        verify(recordItemCollection).iterator();
-        verify(recordItemCollection).getLayout();
-        verify(recordItemCollection).getItemCount();
+        verify(recordItemCollection, times(6)).getItemCount();
         verifyNoMoreInteractions(recordItemCollection);
     }
     
@@ -112,7 +110,9 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
         RecordItemCollection recordItemCollection = mock(RecordItemCollection.class);
-        
+        RecordItemCollection recordItemCollection_subassets = mock(RecordItemCollection.class);
+        RecordItemCollection recordItemCollection_masterassets = mock(RecordItemCollection.class);
+
         Item item = mock(Item.class);
         Layout layout = mock(Layout.class);
         
@@ -130,7 +130,10 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         Asset asset = mock(Asset.class);
         
         addStep("Mock the methods", "");
-        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
+        when(server.getItems(anyString(), any(CumulusQuery.class)))
+                .thenReturn(recordItemCollection_subassets)
+                .thenReturn(recordItemCollection_masterassets)
+                .thenReturn(recordItemCollection);
 
         when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
         when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
@@ -152,9 +155,16 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(metadataGuidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
         when(metadataGuidField.getFieldUID()).thenReturn(metadataGuidGuid);
 
-        when(recordItemCollection.iterator()).thenReturn(Arrays.asList(item).iterator());
-        when(recordItemCollection.getLayout()).thenReturn(layout);
+        when(recordItemCollection_subassets.getItemCount()).thenReturn(0);
+        when(recordItemCollection_masterassets.getItemCount()).thenReturn(0);
         when(recordItemCollection.getItemCount()).thenReturn(1);
+        when(recordItemCollection.iterator()).thenAnswer(new Answer<Iterator<Item>>() {
+            @Override
+            public Iterator<Item> answer(InvocationOnMock invocation) throws Throwable {
+                return Arrays.asList(item).iterator();
+            }
+        });
+        when(recordItemCollection.getLayout()).thenReturn(layout);
         
         when(assetReference.getAsset(any(Boolean.class))).thenReturn(asset);
         when(asset.getAsFile()).thenReturn(contentFile);
@@ -171,12 +181,17 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);
         pw.runOnCatalog(catalogName);
         
-        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+        verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
+        verify(recordItemCollection_subassets, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection_subassets);
+        verify(recordItemCollection_masterassets, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection_masterassets);
+
         verify(recordItemCollection).iterator();
         verify(recordItemCollection).getLayout();
-        verify(recordItemCollection).getItemCount();
+        verify(recordItemCollection, times(2)).getItemCount();
         verifyNoMoreInteractions(recordItemCollection);
         
         verify(transformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
@@ -200,6 +215,8 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         XsltMetadataTransformer transformer = mock(XsltMetadataTransformer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
+        RecordItemCollection recordItemCollection_subassets = mock(RecordItemCollection.class);
+        RecordItemCollection recordItemCollection_masterassets = mock(RecordItemCollection.class);
         RecordItemCollection recordItemCollection = mock(RecordItemCollection.class);
         
         Item item = mock(Item.class);
@@ -222,9 +239,15 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         Asset asset = mock(Asset.class);
 
         addStep("Mock the methods", "");
-        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(recordItemCollection);
+        when(server.getItems(anyString(), any(CumulusQuery.class)))
+                .thenReturn(recordItemCollection_subassets)
+                .thenReturn(recordItemCollection_masterassets)
+                .thenReturn(recordItemCollection);
         
-        // When returning a iterator, then the returned iterator is final, and its state is kept, thus 
+        // When returning a iterator, then the returned iterator is final, and its state is kept, thus
+        when(recordItemCollection_subassets.getItemCount()).thenReturn(0);
+        when(recordItemCollection_masterassets.getItemCount()).thenReturn(0);
+        when(recordItemCollection.getItemCount()).thenReturn(1);
         when(recordItemCollection.iterator()).thenAnswer(new Answer<Iterator<Item>>() {
             @Override
             public Iterator<Item> answer(InvocationOnMock invocation) throws Throwable {
@@ -232,7 +255,6 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
             }
         });
         when(recordItemCollection.getLayout()).thenReturn(layout);
-        when(recordItemCollection.getItemCount()).thenReturn(1);
         
         when(assetReference.getAsset(any(Boolean.class))).thenReturn(asset);
         when(asset.getAsFile()).thenReturn(contentFile);
@@ -291,15 +313,20 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         }
         
         addStep("Validate that the correct methods in the mocks are called", "");
-        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+        verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
         verifyZeroInteractions(transformer);
         verifyZeroInteractions(preserver);
         
+        verify(recordItemCollection_subassets, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection_subassets);
+        verify(recordItemCollection_masterassets, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection_masterassets);
+        
         verify(recordItemCollection).iterator();
         verify(recordItemCollection).getLayout();
-        verify(recordItemCollection).getItemCount();
+        verify(recordItemCollection, times(2)).getItemCount();
         verifyNoMoreInteractions(recordItemCollection);
 
         verify(item).getStringEnumValue(any(GUID.class));

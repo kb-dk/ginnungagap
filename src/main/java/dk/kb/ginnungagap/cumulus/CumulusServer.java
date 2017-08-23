@@ -117,12 +117,42 @@ public class CumulusServer {
         
         log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
         
-        FieldExtractor fe = new FieldExtractor(items.getLayout());
+        FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
 
         Iterator<Item> iterator = items.iterator();
         CumulusRecord res = new CumulusRecord(fe, iterator.next());
         if(iterator.hasNext()) {
             log.warn("More than one record found for '" + uuid + "'. Only using the first found.");
+        }
+        
+        return res;
+    }
+    
+    /**
+     * Find the Cumulus record containing a given UUID and belonging to a given catalog.
+     * Will only return the first found result. And it will return a null if no results were found. 
+     * @param catalogName The name of the catalog, where the Cumulus record is.
+     * @param uuid The UUID of the Cumulus record to find.
+     * @return The Cumulus record, or null if no record was found.
+     */
+    public CumulusRecord findCumulusRecordByName(String catalogName, String name) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        ArgumentCheck.checkNotNullOrEmpty(name, "String uuid");
+        CumulusQuery query = CumulusQuery.getQueryForSpecificRecordName(catalogName, name);
+        RecordItemCollection items = getItems(catalogName, query);
+        if(items == null || !items.iterator().hasNext()) {
+            log.warn("Could not find any records for the record name: '" + name + "'. Returning a null");            
+            return null;
+        }
+        
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
+        
+        FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
+
+        Iterator<Item> iterator = items.iterator();
+        CumulusRecord res = new CumulusRecord(fe, iterator.next());
+        if(iterator.hasNext()) {
+            log.warn("More than one record found for '" + name + "'. Only using the first found.");
         }
         
         return res;

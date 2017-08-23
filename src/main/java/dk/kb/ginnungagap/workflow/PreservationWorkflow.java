@@ -75,15 +75,38 @@ public class PreservationWorkflow implements Workflow {
     
     /**
      * Run the extraction on a given catalog, and preserve each Cumulus record.
+     * First preserves the sub-asset records, then the master records, and finally all the remaining records.
      * @param catalogName The name of the catalog.
      */
     protected void runOnCatalog(String catalogName) {
-        CumulusQuery query = CumulusQuery.getPreservationQuery(catalogName);
-        
+        // First on the sub-asset records
+        CumulusQuery query = CumulusQuery.getPreservationSubAssetQuery(catalogName);
         RecordItemCollection items = server.getItems(catalogName, query);
-        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-        
-        FieldExtractor fe = new FieldExtractor(items.getLayout());
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " sub-asset records to be preserved.");
+        preserveRecordItems(items, catalogName);
+        // Then on master records
+        query = CumulusQuery.getPreservationMasterAssetQuery(catalogName);
+        items = server.getItems(catalogName, query);
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " master records to be preserved.");
+        preserveRecordItems(items, catalogName);
+        // Finally on the rest
+        query = CumulusQuery.getPreservationAllQuery(catalogName);
+        items = server.getItems(catalogName, query);
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " remaining records to be preserved.");
+        preserveRecordItems(items, catalogName);
+    }
+    
+    /**
+     * Preserves all the record items of the given collection. 
+     * @param items The collection of record items to preserve.
+     */
+    protected void preserveRecordItems(RecordItemCollection items, String catalogName) {
+        int n = items.getItemCount();
+        System.err.println("GNU: " + n);
+        if(n == 0) { 
+            return;
+        }
+        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
         for(Item item : items) {
             try {
                 log.debug("Initiating preservation on '" + item.getDisplayString() + "'");
@@ -111,8 +134,6 @@ public class PreservationWorkflow implements Workflow {
         } catch (Exception e) {
             log.warn("Preserving the record '" + record + "' failed.", e);
             record.setPreservationFailed("Failed to preservatin record '" + record.getUUID() + ": \n" + e.getMessage());
-            // Send failures back.
-//            throw new IllegalStateException("Do not continue, when failure", e);
         }
     }
     

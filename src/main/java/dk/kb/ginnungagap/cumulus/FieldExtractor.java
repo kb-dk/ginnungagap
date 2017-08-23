@@ -1,6 +1,9 @@
 package dk.kb.ginnungagap.cumulus;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,7 +14,9 @@ import com.canto.cumulus.FieldTypes;
 import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
+import com.canto.cumulus.fieldvalue.AssetXRefFieldValue;
 
+import dk.kb.ginnungagap.cumulus.field.AssetsField;
 import dk.kb.ginnungagap.cumulus.field.EmptyField;
 import dk.kb.ginnungagap.cumulus.field.Field;
 import dk.kb.ginnungagap.cumulus.field.StringField;
@@ -29,12 +34,22 @@ public class FieldExtractor {
     /** The layout for this extractor.*/
     protected final Layout layout;
 
+    /** The cumulus server.*/
+    protected final CumulusServer server;
+    
+    /** The catalog for this extraction.*/
+    protected final String catalog;
+    
     /**
      * Constructor.
      * @param layout The field-layout for the extractor.
+     * @param server The cumulus server.
+     * @param catalog The catalog for this extraction.
      */
-    public FieldExtractor(Layout layout) {
+    public FieldExtractor(Layout layout, CumulusServer server, String catalog) {
         this.layout = layout;
+        this.server = server;
+        this.catalog = catalog;
     }
 
     /**
@@ -57,6 +72,20 @@ public class FieldExtractor {
      */
     public Map<String, Field> getAllFields(Item item) {
         return getFields(item, false);
+    }
+    
+    /**
+     * @return The cumulus server.
+     */
+    public CumulusServer getServer() {
+        return server;
+    }
+    
+    /**
+     * @return The catalog.
+     */
+    public String getCatalog() {
+        return catalog;
     }
     
     /**
@@ -134,10 +163,9 @@ public class FieldExtractor {
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringValue(fd.getFieldUID()));
         case FieldTypes.FieldTypeBinary:
-            log.trace("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
+            log.warn("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
                 + ", tries to extracts it as the path of the Asset Reference");
-            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
-                    item.getAssetReferenceValue(fd.getFieldUID()).getPart(0).getDisplayString());
+            return extractBinaryField(fd, item);
         case FieldTypes.FieldTypeAudio:
             log.debug("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
                 + ", an empty string returned for field " + fd.getName());
@@ -147,7 +175,7 @@ public class FieldExtractor {
                     + ", an empty string returned for field " + fd.getName());
             return new StringField(fd, getFieldTypeName(fd.getFieldType()),  "");
         case FieldTypes.FieldTypeTable:
-            return new TableField(fd, getFieldTypeName(fd.getFieldType()),  item.getTableValue(fd.getFieldUID()));
+            return new TableField(fd, getFieldTypeName(fd.getFieldType()),  item.getTableValue(fd.getFieldUID()), this);
         }
 
         throw new IllegalStateException("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
@@ -225,5 +253,36 @@ public class FieldExtractor {
             }
         }
         return null;
+    }
+    
+    /**
+     * Extracts the field for a binary field.
+     * @param fd The definition of the field.
+     * @param item The binary field item to extract. 
+     * @return The field.
+     */
+    protected Field extractBinaryField(FieldDefinition fd, Item item) {
+        log.warn("Format: " + fd.getName());
+        if(fd.getName().equals("Related Sub Assets")) {
+            AssetXRefFieldValue subAssets = item.getAssetXRefValue(fd.getFieldUID());
+            
+            List<String> names = new ArrayList<String>();
+            for(GUID g : subAssets.getRelations()) {
+                names.addAll(subAssets.getReferencedItemNames(subAssets.getReferences(g)).values());
+            }
+            Collections.sort(names);
+            
+            AssetsField res = new AssetsField(fd, getFieldTypeName(fd.getFieldType()));
+            for(String name : names) {
+                CumulusRecord cr = server.findCumulusRecordByName(catalog, name);
+                log.warn("Found sub asset record: " + cr.getUUID());
+                res.addAsset(name, cr.getUUID());
+            }
+            
+            return res;
+        } else {
+            return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
+                    item.getAssetReferenceValue(fd.getFieldUID()).getPart(0).getDisplayString());
+        }
     }
 }

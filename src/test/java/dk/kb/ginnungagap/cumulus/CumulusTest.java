@@ -1,6 +1,5 @@
 package dk.kb.ginnungagap.cumulus;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
@@ -101,7 +100,7 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
 
-    @Test(enabled = false)
+    @Test//(enabled = false)
     public void testPrintingToXml() throws Exception {
         //        int catalogId = server.getServer().findCatalogID(catalogName);
         //        Catalog catalog = server.getServer().openCatalog(catalogId);
@@ -109,7 +108,8 @@ public class CumulusTest extends ExtendedTestCase {
         //        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
         //                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
 
-        String query = "GUID\tcontains\tbe9f16d0-da42-11e2-b191-005056887b70"
+        String catalogName = "Letters OM";
+        String query = "GUID\tcontains\ta05d8e80-6d63-11df-8c95-0016357f605f"
                 + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
         EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
 
@@ -119,7 +119,7 @@ public class CumulusTest extends ExtendedTestCase {
         RequiredFields rf = new RequiredFields(Arrays.asList("CHECKSUM_ORIGINAL_MASTER"), Arrays.asList("Preservation_status"));
 
         // Try with resource, to ensure closing it.
-        FieldExtractor fe = new FieldExtractor(items.getLayout());
+        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
         for(FieldDefinition fd : items.getLayout()) {
             //            System.err.println(fd.getName() + " -> " + fd.getFieldUID().toString());
         }
@@ -149,7 +149,7 @@ public class CumulusTest extends ExtendedTestCase {
             //            StreamUtils.copy(cr.getMetadata(new File(outputDir, item.getID() + "_fields.xml")), new FileOutputStream(outputFile));
         }
 
-        assertEquals(outputDir.list().length, 2*i);
+//        assertEquals(outputDir.list().length, 2*i);
     }
 
     @Test(enabled = false)
@@ -183,7 +183,7 @@ public class CumulusTest extends ExtendedTestCase {
             RequiredFields rf = new RequiredFields(Arrays.asList("CHECKSUM_ORIGINAL_MASTER"), Arrays.asList("Preservation_status"));
 
             // Try with resource, to ensure closing it.
-            FieldExtractor fe = new FieldExtractor(items.getLayout());
+            FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
             Iterator<Item> iri = items.iterator();
             Item item;
             int i = 0;

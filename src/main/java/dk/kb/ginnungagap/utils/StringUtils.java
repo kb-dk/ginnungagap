@@ -54,6 +54,5 @@ public class StringUtils {
         s = s.replace("<", "&lt;");
         s = s.replace(">", "&gt;");
         return s;
-//        return StringEscapeUtils.escapeXml(s);
     }
 }

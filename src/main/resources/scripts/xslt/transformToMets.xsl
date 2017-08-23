@@ -270,23 +270,68 @@
       
       <!-- START structMap -->
       <xsl:element name="mets:structMap">
-        <xsl:attribute name="TYPE">
-          <xsl:value-of select="'logical'" />
-        </xsl:attribute>
-        
-        <xsl:element name="mets:div">
-          <xsl:attribute name="DMDID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
-          </xsl:attribute>
-          <xsl:attribute name="ADMID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID, ',', $PREMIS-REPRESENTATION-ID))" />
-          </xsl:attribute>
-          <xsl:element name="mets:fptr">
-            <xsl:attribute name="FILEID">
-              <xsl:value-of select="java:dk.kb.metadata.utils.FileIdHandler.getFileID($FILE_GUID)" />
+        <xsl:choose>
+          <xsl:when test="field[@name='Related Sub Assets']">
+            <xsl:attribute name="TYPE">
+              <xsl:value-of select="'representation'" />
             </xsl:attribute>
-          </xsl:element>
-        </xsl:element>
+            <xsl:element name="mets:div">
+              <xsl:attribute name="DMDID">
+                <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
+              </xsl:attribute>
+              <xsl:element name="mets:div">
+                <xsl:attribute name="ORDER">
+                  <xsl:value-of select="'1'" />
+                </xsl:attribute>
+                <xsl:attribute name="ADMID">
+                  <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID, ',', $PREMIS-REPRESENTATION-ID))" />
+                </xsl:attribute>
+                <xsl:element name="mets:fptr">
+                  <xsl:attribute name="FILEID">
+                    <xsl:value-of select="java:dk.kb.metadata.utils.FileIdHandler.getFileID($FILE_GUID)" />
+                  </xsl:attribute>
+                </xsl:element>
+              </xsl:element>
+              <xsl:for-each select="field[@name='Related Sub Assets']/value">
+              <xsl:element name="mets:div">
+                <xsl:attribute name="ORDER">
+                  <xsl:value-of select="order" />
+                </xsl:attribute>
+                  <xsl:attribute name="LABEL">
+                    <xsl:value-of select="name" />
+                  </xsl:attribute>
+                <xsl:element name="mets:mptr">
+                  <xsl:attribute name="LOCTYPE">
+                    <xsl:value-of select="'URN'" />
+                  </xsl:attribute>
+                  <xsl:attribute name="xlink:href">
+                    <xsl:value-of select="concat('urn:uuid:', uuid)" />
+                  </xsl:attribute>
+                </xsl:element>
+              </xsl:element>
+              </xsl:for-each>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="TYPE">
+              <xsl:value-of select="'logical'" />
+            </xsl:attribute>
+        
+            <xsl:element name="mets:div">
+              <xsl:attribute name="DMDID">
+                <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
+              </xsl:attribute>
+              <xsl:attribute name="ADMID">
+                <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID, ',', $PREMIS-REPRESENTATION-ID))" />
+              </xsl:attribute>
+              <xsl:element name="mets:fptr">
+                <xsl:attribute name="FILEID">
+                  <xsl:value-of select="java:dk.kb.metadata.utils.FileIdHandler.getFileID($FILE_GUID)" />
+                </xsl:attribute>
+              </xsl:element>
+            </xsl:element>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:element>
       <!-- END structMap -->
       
