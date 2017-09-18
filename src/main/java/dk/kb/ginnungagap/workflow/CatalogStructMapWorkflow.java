@@ -122,7 +122,7 @@ public class CatalogStructMapWorkflow implements Workflow {
                 String recordName = item.getStringValue(recordNameGuid);
                 if(!item.hasValue(recordIntellectualEntityGuid)) {
                     failure = true;
-                    System.err.println("Failed record: " + recordName);
+                    log.warn("Failed extracing intellectual entity for record: " + recordName);
                     continue;
                 }
                 os.write("  <record>\n".getBytes());

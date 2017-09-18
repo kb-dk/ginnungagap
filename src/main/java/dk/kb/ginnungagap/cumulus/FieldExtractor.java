@@ -263,7 +263,7 @@ public class FieldExtractor {
      */
     protected Field extractBinaryField(FieldDefinition fd, Item item) {
         log.warn("Format: " + fd.getName());
-        if(fd.getName().equals("Related Sub Assets")) {
+        if(fd.getName().equals("Related Sub Assets") || fd.getName().equals("Related Master Assets")) {
             AssetXRefFieldValue subAssets = item.getAssetXRefValue(fd.getFieldUID());
             
             List<String> names = new ArrayList<String>();
@@ -275,8 +275,7 @@ public class FieldExtractor {
             AssetsField res = new AssetsField(fd, getFieldTypeName(fd.getFieldType()));
             for(String name : names) {
                 CumulusRecord cr = server.findCumulusRecordByName(catalog, name);
-                log.warn("Found sub asset record: " + cr.getUUID());
-                res.addAsset(name, cr.getUUID());
+                res.addAsset(name, cr.getMetadataGUID());
             }
             
             return res;

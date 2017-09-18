@@ -73,6 +73,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         CumulusServer server = mock(CumulusServer.class);
         XsltMetadataTransformer transformer = mock(XsltMetadataTransformer.class);
+        XsltMetadataTransformer representationTransformer = mock(XsltMetadataTransformer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
         RecordItemCollection recordItemCollection = mock(RecordItemCollection.class);
@@ -84,10 +85,11 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(recordItemCollection.getLayout()).thenReturn(null);
         when(recordItemCollection.getItemCount()).thenReturn(0);
         
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);        
+        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);        
         pw.run();
         
         verifyZeroInteractions(transformer);
+        verifyZeroInteractions(representationTransformer);
         verifyZeroInteractions(preserver);
         
         verify(server).getCatalogNames();
@@ -107,6 +109,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         CumulusServer server = mock(CumulusServer.class);
         XsltMetadataTransformer transformer = mock(XsltMetadataTransformer.class);
+        XsltMetadataTransformer representationTransformer = mock(XsltMetadataTransformer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
         RecordItemCollection recordItemCollection = mock(RecordItemCollection.class);
@@ -178,7 +181,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
                 return Arrays.asList(guidField, metadataGuidField, preservationStatusField, masterChecksumField, relatedIdentifierField).iterator();
             }
         });        
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);
+        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
         pw.runOnCatalog(catalogName);
         
         verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
@@ -196,8 +199,10 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         verify(transformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
         verify(transformer).validate(any(InputStream.class));
-        verify(transformer).getMetadataStandards(any(InputStream.class));
+//        verify(transformer).getMetadataStandards(any(InputStream.class));
         verifyNoMoreInteractions(transformer);
+        
+        verifyZeroInteractions(representationTransformer);
         
         verify(preserver).packRecord(any(CumulusRecord.class), any(File.class));
         verifyNoMoreInteractions(preserver);
@@ -213,6 +218,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         addStep("Define the mocks", "");
         CumulusServer server = mock(CumulusServer.class);
         XsltMetadataTransformer transformer = mock(XsltMetadataTransformer.class);
+        XsltMetadataTransformer representationTransformer = mock(XsltMetadataTransformer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
         RecordItemCollection recordItemCollection_subassets = mock(RecordItemCollection.class);
@@ -302,7 +308,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         
         try {
             metadataDir.setWritable(false);
-            PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, preserver);
+            PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
             pw.runOnCatalog(catalogName);
 //            fail("Must fail here!");
         } catch (IllegalStateException e) {
@@ -317,6 +323,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verifyNoMoreInteractions(server);
         
         verifyZeroInteractions(transformer);
+        verifyZeroInteractions(representationTransformer);
         verifyZeroInteractions(preserver);
         
         verify(recordItemCollection_subassets, times(2)).getItemCount();
@@ -371,5 +378,127 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(relatedIdentifierField, times(3)).getFieldUID();
         verify(relatedIdentifierField, times(2)).getFieldType();
         verifyNoMoreInteractions(relatedIdentifierField);
+    }
+    
+    @Test
+    public void testPreservationOfRepresentationMaster() throws Exception {
+        addDescription("Test running the workflow on a single item, which is a master item for a reprensentation.");
+        
+        String catalogName = "Catalog-" + UUID.randomUUID().toString();
+        conf.removeRequiredFields();
+        
+        CumulusServer server = mock(CumulusServer.class);
+        XsltMetadataTransformer transformer = mock(XsltMetadataTransformer.class);
+        XsltMetadataTransformer representationTransformer = mock(XsltMetadataTransformer.class);
+        BitmagPreserver preserver = mock(BitmagPreserver.class);
+        
+        RecordItemCollection recordItemCollection = mock(RecordItemCollection.class);
+        RecordItemCollection recordItemCollection_subassets = mock(RecordItemCollection.class);
+        RecordItemCollection recordItemCollection_masterassets = mock(RecordItemCollection.class);
+
+        Item item = mock(Item.class);
+        Item subAssetItem = mock(Item.class);
+        Layout layout = mock(Layout.class);
+        
+        FieldDefinition masterChecksumField = mock(FieldDefinition.class);
+        GUID masterChecksumGuid = mock(GUID.class);
+        FieldDefinition relatedIdentifierField = mock(FieldDefinition.class);
+        GUID relatedIdentifierGuid = mock(GUID.class);
+        FieldDefinition guidField = mock(FieldDefinition.class);
+        GUID guidGuid = mock(GUID.class);
+        FieldDefinition metadataGuidField = mock(FieldDefinition.class);
+        GUID metadataGuidGuid = mock(GUID.class);
+        FieldDefinition preservationStatusField = mock(FieldDefinition.class);
+        GUID preservationStatusGuid = mock(GUID.class);
+        AssetReference assetReference = mock(AssetReference.class);
+        Asset asset = mock(Asset.class);
+        
+        addStep("Mock the methods", "");
+        when(server.getItems(anyString(), any(CumulusQuery.class)))
+                .thenReturn(recordItemCollection_subassets)
+                .thenReturn(recordItemCollection_masterassets)
+                .thenReturn(recordItemCollection);
+
+        when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
+        when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(masterChecksumField.getFieldUID()).thenReturn(masterChecksumGuid);
+        
+        when(relatedIdentifierField.getName()).thenReturn(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+        when(relatedIdentifierField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(relatedIdentifierField.getFieldUID()).thenReturn(relatedIdentifierGuid);
+        
+        when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
+        when(guidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(guidField.getFieldUID()).thenReturn(guidGuid);
+
+        when(preservationStatusField.getName()).thenReturn(Constants.FieldNames.PRESERVATION_STATUS);
+        when(preservationStatusField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(preservationStatusField.getFieldUID()).thenReturn(preservationStatusGuid);
+
+        when(metadataGuidField.getName()).thenReturn(Constants.PreservationFieldNames.METADATA_GUID);
+        when(metadataGuidField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
+        when(metadataGuidField.getFieldUID()).thenReturn(metadataGuidGuid);
+
+        when(recordItemCollection_subassets.getItemCount()).thenReturn(1);
+        when(recordItemCollection_subassets.iterator()).thenAnswer(new Answer<Iterator<Item>>() {
+            @Override
+            public Iterator<Item> answer(InvocationOnMock invocation) throws Throwable {
+                return Arrays.asList(subAssetItem).iterator();
+            }
+        });
+        
+        when(recordItemCollection_masterassets.getItemCount()).thenReturn(0);
+        when(recordItemCollection.getItemCount()).thenReturn(1);
+        when(recordItemCollection.iterator()).thenAnswer(new Answer<Iterator<Item>>() {
+            @Override
+            public Iterator<Item> answer(InvocationOnMock invocation) throws Throwable {
+                return Arrays.asList(item).iterator();
+            }
+        });
+        when(recordItemCollection.getLayout()).thenReturn(layout);
+        
+        when(assetReference.getAsset(any(Boolean.class))).thenReturn(asset);
+        when(asset.getAsFile()).thenReturn(contentFile);
+        
+        when(item.getStringValue(any(GUID.class))).thenReturn("cumulus-guid");
+        when(item.getAssetReferenceValue(any(GUID.class))).thenReturn(assetReference);
+
+        when(subAssetItem.getStringValue(any(GUID.class))).thenReturn("cumulus-sub-asset-guid");
+        when(subAssetItem.hasValue(any(GUID.class))).thenReturn(true);
+
+        
+        when(layout.iterator()).thenAnswer(new Answer<Iterator<FieldDefinition>>() {
+            @Override
+            public Iterator<FieldDefinition> answer(InvocationOnMock invocation) throws Throwable {
+                return Arrays.asList(guidField, metadataGuidField, preservationStatusField, masterChecksumField, relatedIdentifierField).iterator();
+            }
+        });        
+        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
+        pw.runOnCatalog(catalogName);
+        
+        verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
+        verifyNoMoreInteractions(server);
+        
+        verify(recordItemCollection_subassets, times(2)).getItemCount();
+        verify(recordItemCollection_subassets).iterator();
+        verify(recordItemCollection_subassets).getLayout();
+        verifyNoMoreInteractions(recordItemCollection_subassets);
+        verify(recordItemCollection_masterassets, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection_masterassets);
+
+        verify(recordItemCollection).iterator();
+        verify(recordItemCollection).getLayout();
+        verify(recordItemCollection, times(2)).getItemCount();
+        verifyNoMoreInteractions(recordItemCollection);
+        
+        verify(transformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
+        verify(transformer).validate(any(InputStream.class));
+//        verify(transformer).getMetadataStandards(any(InputStream.class));
+        verifyNoMoreInteractions(transformer);
+        
+        verifyZeroInteractions(representationTransformer);
+        
+        verify(preserver).packRecord(any(CumulusRecord.class), any(File.class));
+        verifyNoMoreInteractions(preserver);
     }
 }

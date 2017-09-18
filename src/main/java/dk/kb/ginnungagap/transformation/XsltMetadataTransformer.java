@@ -61,6 +61,16 @@ public class XsltMetadataTransformer implements MetadataTransformer {
 
     @Override
     public void transformXmlMetadata(InputStream xmlFile, OutputStream out) {
+        transform(xmlFile, out, xslTransformer);
+    }
+    
+    /**
+     * Performs the transformation of the metadata based on the given xsl transformation.
+     * @param xmlFile The metadata input stream.
+     * @param out The output stream where the transformed metadata is delivered.
+     * @param transformer The transformer for the metadata.
+     */
+    protected void transform(InputStream xmlFile, OutputStream out, XslTransformer transformer) {
         try {
             Cleaner.cleanStuff();
 
@@ -68,7 +78,7 @@ public class XsltMetadataTransformer implements MetadataTransformer {
             XslErrorListener errorListener = new XslErrorListener();
 
             Source source = new StreamSource(xmlFile);
-            byte[] bytes = xslTransformer.transform(source, uriResolver, errorListener);
+            byte[] bytes = transformer.transform(source, uriResolver, errorListener);
 
             out.write(bytes);
             out.flush();
@@ -82,6 +92,7 @@ public class XsltMetadataTransformer implements MetadataTransformer {
         } catch (IOException e) {
             throw new IllegalStateException("Could not deliver the transformed metadata to the output stream.", e);
         }
+        
     }
 
     /**

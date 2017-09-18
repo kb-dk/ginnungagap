@@ -120,13 +120,16 @@ public class Ginnungagap {
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
             MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+            MetadataTransformer representationTransformer = new XsltMetadataTransformer(
+                    new File(conf.getTransformationConf().getXsltDir(), "transformToRepresentationMets.xsl"));
+                    
             if(fileOnly) {
                 extractFilesOnly(cumulusServer, conf, transformer);
             } else {
                 BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
                 PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), 
-                        cumulusServer, transformer, preserver);
+                        cumulusServer, transformer, representationTransformer, preserver);
 
                 System.out.println("Starting workflow");
                 workflow.run();

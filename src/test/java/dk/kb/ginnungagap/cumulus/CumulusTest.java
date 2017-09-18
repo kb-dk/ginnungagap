@@ -66,7 +66,7 @@ public class CumulusTest extends ExtendedTestCase {
     @AfterClass
     public void stop() {
         Cumulus.CumulusStop();
-        //        TestFileUtils.tearDown();
+        TestFileUtils.tearDown();
     }
 
     //    @Test
@@ -100,7 +100,7 @@ public class CumulusTest extends ExtendedTestCase {
         System.err.println("Layout tablename: " + ic.getLayout().getTableName());
     }
 
-    @Test//(enabled = false)
+    @Test(enabled = false)
     public void testPrintingToXml() throws Exception {
         //        int catalogId = server.getServer().findCatalogID(catalogName);
         //        Catalog catalog = server.getServer().openCatalog(catalogId);

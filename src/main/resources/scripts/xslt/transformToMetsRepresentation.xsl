@@ -41,7 +41,7 @@
         <xsl:value-of select="'File'" />
       </xsl:attribute>
       <xsl:attribute name="OBJID">
-        <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='METADATA GUID']/value)" />
+        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />
       </xsl:attribute>
       <xsl:attribute name="PROFILE">
         <xsl:value-of select="java:dk.kb.metadata.Constants.getProfileURL()" />
@@ -95,6 +95,7 @@
       <!-- END metsHdr -->
       
       <!-- START dmdSec -->
+      <!-- Add MODS here -->
       <xsl:element name="mets:dmdSec">
         <xsl:attribute name="CREATED">
           <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
@@ -102,13 +103,12 @@
         <xsl:attribute name="ID">
           <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($MODS-ID)" />
         </xsl:attribute>
-        <!-- Embed MODS here -->
         <xsl:element name="mets:mdWrap">
           <xsl:attribute name="MDTYPE">
             <xsl:value-of select="'MODS'" />
           </xsl:attribute>
           <xsl:element name="mets:xmlData">
-             <xsl:call-template name="mods" />
+             <xsl:call-template name="mods_for_representation_mets" />
           </xsl:element>
         </xsl:element>
       </xsl:element>
@@ -138,81 +138,6 @@
 
       <!-- START amdSec -->
       <xsl:element name="mets:amdSec">
-        <!-- ADD PREMIS:OBJECT -->
-        <xsl:element name="mets:techMD">
-          <xsl:attribute name="CREATED">
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-          </xsl:attribute>
-          <xsl:attribute name="ID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-OBJECT-ID)" />
-          </xsl:attribute>
-          <xsl:element name="mets:mdWrap">
-            <xsl:attribute name="MDTYPE">
-              <xsl:value-of select="'PREMIS:OBJECT'" />
-            </xsl:attribute>
-            <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_object" />
-            </xsl:element>
-          </xsl:element>
-        </xsl:element>
-        <!-- Add PBCore technical metadata, if format allows -->
-        <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForPbCore(field[@name='formatName']/value)">
-          <xsl:element name="mets:techMD">
-            <xsl:attribute name="CREATED">
-              <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-            </xsl:attribute>    
-            <xsl:attribute name="ID">
-              <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PBCORE-INSTANTIATION-ID)" />
-            </xsl:attribute>
-            <xsl:element name="mets:mdWrap">
-              <xsl:attribute name="MDTYPE">
-                <xsl:value-of select="'OTHER'" />
-              </xsl:attribute>
-              <xsl:attribute name="OTHERMDTYPE">
-                <xsl:value-of select="'PBCORE'" />
-              </xsl:attribute>
-              <xsl:element name="mets:xmlData">
-                <xsl:call-template name="pbcore_instantiation" />      
-              </xsl:element>
-            </xsl:element>
-          </xsl:element>
-        </xsl:if>
-        <!-- ADD MODS (rights) -->
-        <xsl:if test="field[@name='Copyright']">
-          <xsl:element name="mets:rightsMD">
-            <xsl:attribute name="CREATED">
-              <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
-            </xsl:attribute>
-            <xsl:attribute name="ID">
-              <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($MODS-RIGHTS-ID)" />
-            </xsl:attribute>
-            <xsl:element name="mets:mdWrap">
-              <xsl:attribute name="MDTYPE">
-                <xsl:value-of select="'MODS'" />
-              </xsl:attribute>
-              <xsl:element name="mets:xmlData">
-                <xsl:call-template name="mods_rights" />
-              </xsl:element>
-            </xsl:element>
-          </xsl:element>
-        </xsl:if>
-        <!-- ADD PREMIS:RIGHTS -->
-<!--         <xsl:element name="mets:rightsMD"> -->
-<!--           <xsl:attribute name="CREATED"> -->
-<!--             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" /> -->
-<!--           </xsl:attribute> -->
-<!--           <xsl:attribute name="ID"> -->
-<!--             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-RIGHTS-ID)" /> -->
-<!--           </xsl:attribute> -->
-<!--           <xsl:element name="mets:mdWrap"> -->
-<!--             <xsl:attribute name="MDTYPE"> -->
-<!--               <xsl:value-of select="'PREMIS:RIGHTS'" /> -->
-<!--             </xsl:attribute> -->
-<!--             <xsl:element name="mets:xmlData"> -->
-<!--               <xsl:call-template name="premis_rights" /> -->
-<!--             </xsl:element> -->
-<!--           </xsl:element> -->
-<!--         </xsl:element> -->
         <!-- ADD PREMIS:EVENT -->
         <xsl:element name="mets:digiprovMD">
           <xsl:attribute name="CREATED">
@@ -243,51 +168,59 @@
               <xsl:value-of select="'PREMIS'" />
             </xsl:attribute>
             <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_relationship" />
+              <xsl:call-template name="premis_relationship_representation" />
             </xsl:element>
           </xsl:element>
         </xsl:element>
       </xsl:element>
       <!-- END amdSec -->
       
-      <!-- START fileSec -->
-      <xsl:element name="mets:fileSec">
-        <xsl:element name="mets:fileGrp">
-          <xsl:element name="mets:file">
-            <xsl:attribute name="ID">
-              <xsl:value-of select="java:dk.kb.metadata.utils.FileIdHandler.getFileID($FILE_GUID)" />
-            </xsl:attribute>
-            <xsl:element name="mets:FLocat">
-              <xsl:attribute name="LOCTYPE">
-                <xsl:value-of select="'URN'" />
-              </xsl:attribute>
-              <xsl:attribute name="xlink:href">
-                <xsl:value-of select="concat('urn:uuid:', $FILE_GUID)" />
-              </xsl:attribute>
-            </xsl:element>
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-      <!-- END fileSec -->
-      
       <!-- START structMap -->
       <xsl:element name="mets:structMap">
         <xsl:attribute name="TYPE">
-          <xsl:value-of select="'logical'" />
+          <xsl:value-of select="'representation'" />
         </xsl:attribute>
-    
         <xsl:element name="mets:div">
           <xsl:attribute name="DMDID">
             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
           </xsl:attribute>
           <xsl:attribute name="ADMID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-OBJECT-ID, ',', $PREMIS-RIGHTS-ID, ',', $PBCORE-INSTANTIATION-ID, ',', $PREMIS-REPRESENTATION-ID))" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID))" />
           </xsl:attribute>
-          <xsl:element name="mets:fptr">
-            <xsl:attribute name="FILEID">
-              <xsl:value-of select="java:dk.kb.metadata.utils.FileIdHandler.getFileID($FILE_GUID)" />
+          <xsl:element name="mets:div">
+            <xsl:attribute name="ORDER">
+              <xsl:value-of select="'1'" />
             </xsl:attribute>
+            <xsl:attribute name="LABEL">
+               <xsl:value-of select="field[@name='Record Name']/value" />
+            </xsl:attribute>
+            <xsl:element name="mets:mptr">
+              <xsl:attribute name="LOCTYPE">
+                <xsl:value-of select="'URN'" />
+              </xsl:attribute>
+              <xsl:attribute name="xlink:href">
+                <xsl:value-of select="concat('urn:uuid:', java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0))" />
+              </xsl:attribute>
+            </xsl:element>
           </xsl:element>
+          <xsl:for-each select="field[@name='Related Sub Assets']/value">
+            <xsl:element name="mets:div">
+              <xsl:attribute name="ORDER">
+                <xsl:value-of select="order" />
+              </xsl:attribute>
+              <xsl:attribute name="LABEL">
+                <xsl:value-of select="name" />
+              </xsl:attribute>
+              <xsl:element name="mets:mptr">
+                <xsl:attribute name="LOCTYPE">
+                  <xsl:value-of select="'URN'" />
+                </xsl:attribute>
+                <xsl:attribute name="xlink:href">
+                  <xsl:value-of select="concat('urn:uuid:', uuid)" />
+                </xsl:attribute>
+              </xsl:element>
+            </xsl:element>
+          </xsl:for-each>
         </xsl:element>
       </xsl:element>
       <!-- END structMap -->

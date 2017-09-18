@@ -384,7 +384,7 @@
             <xsl:value-of select="'UUID'" />
           </xsl:element>
           <xsl:element name="premis:relatedObjectIdentifierValue">
-            <xsl:value-of select="field[@name='relatedObjectIdentifierValue_intellectualEntity']/value" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 0)" />
           </xsl:element>
         </xsl:element>
       </xsl:element>
@@ -392,6 +392,46 @@
     </premis:object>
   </xsl:template>
   
+    <xsl:template name="premis_relationship_representation">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+      <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
+      <!-- START 1.1 objectIdentifier -->
+      <xsl:element name="premis:objectIdentifier">
+        <xsl:element name="premis:objectIdentifierType">
+          <xsl:call-template name="premis_representation_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:objectIdentifierValue">
+          <xsl:call-template name="premis_representation_identifier_value" />
+        </xsl:element>
+      </xsl:element>
+      <!-- END 1.1 objectIdentifier -->
+      
+      <!-- START 1.3 preservation level -->
+      <xsl:call-template name="premis_preservation" />
+      <!-- END 1.3 preservation level -->
+      
+      <!-- START 1.13 relationship -->
+      <xsl:element name="premis:relationship">
+        <xsl:element name="premis:relationshipType">
+          <xsl:value-of select="'structural'" />
+        </xsl:element>
+        <xsl:element name="premis:relationshipSubType">
+          <xsl:value-of select="'represents'" />
+        </xsl:element>
+        <xsl:element name="premis:relatedObjectIdentifier">
+          <xsl:element name="premis:relatedObjectIdentifierType">
+            <xsl:value-of select="'UUID'" />
+          </xsl:element>
+          <xsl:element name="premis:relatedObjectIdentifierValue">
+            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1)" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <!-- END 1.13 relationship -->
+    </premis:object>
+  </xsl:template>
+  
+  <!-- Template for the premis for a catalog -->
   <xsl:template name="premis_intellectual_entity_catalog">
     <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>

@@ -16,13 +16,13 @@ public class SetupCumulusTests {
     protected static String passwordFilePath = System.getenv("HOME") + "/cumulus-password.yml";
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Configuration getConfiguration(String ... catalogNames) throws Exception {
+    public static TestConfiguration getConfiguration(String ... catalogNames) throws Exception {
         File passwordFile = new File(passwordFilePath);
         if(!passwordFile.isFile()) {
             throw new SkipException("Cannot connect to Cumulus without the password-file: " + passwordFilePath);
         }
         TestFileUtils.setup();
-        TestConfiguration conf =TestFileUtils.createTempConf();
+        TestConfiguration conf = TestFileUtils.createTempConf();
         
         Map cumulusFileContent = YamlTools.loadYamlSettings(passwordFile);
         Map<String, String> cumulusLogin = (Map<String, String>) cumulusFileContent;

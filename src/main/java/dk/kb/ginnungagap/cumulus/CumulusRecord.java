@@ -82,6 +82,14 @@ public class CumulusRecord {
         initChecksumField();
         initRelatedIntellectualEntityObjectIdentifier();
     }
+    
+    /**
+     * Sets a new Metadata GUID for the record.
+     */
+    public void resetMetadataGuid() {
+        metadataGuid = UUID.randomUUID().toString();
+        setStringValueInField(Constants.PreservationFieldNames.METADATA_GUID, metadataGuid);
+    }
 
     /**
      * @return The identifier for this record.
@@ -98,12 +106,28 @@ public class CumulusRecord {
      * Extracts the value of the field with the given name.
      * If multiple fields have the given field name, then only the value of one of the fields are returned.
      * The result is in String format.
+     * It will throw an exception, if the field does not contain a value.
      * @param fieldname The name for the field. 
      * @return The string value of the field. 
      */
     public String getFieldValue(String fieldname) {
         GUID fieldGuid = fe.getFieldGUID(fieldname);
         return item.getStringValue(fieldGuid);
+    }
+    
+    /**
+     * Extracts the string value of a given field.
+     * It will return a null, if the field does not have a value.
+     * @param fieldname The name of the field to extract.
+     * @return The value of the field, or null if field is empty.
+     */
+    public String getFieldValueOrNull(String fieldname) {
+        GUID fieldGuid = fe.getFieldGUID(fieldname);
+        if(item.hasValue(fieldGuid)) {
+            return item.getStringValue(fieldGuid);
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -412,8 +436,11 @@ public class CumulusRecord {
      */
     public String getMetadataGUID() {
         if(metadataGuid == null) {
-            metadataGuid = UUID.randomUUID().toString();
             try {
+                metadataGuid = getFieldValueOrNull(Constants.PreservationFieldNames.METADATA_GUID);
+                if(metadataGuid == null) {
+                    metadataGuid = UUID.randomUUID().toString();
+                }
                 GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATA_GUID);
                 item.setStringValue(metadataPackageIdGuid, metadataGuid);
                 item.save();
@@ -421,12 +448,21 @@ public class CumulusRecord {
                 String errMsg = "Could not set the package id for the metadata.";
                 log.error(errMsg, e);
                 throw new IllegalStateException(errMsg, e);
-            }            
+            }
         }
 
         return metadataGuid;
     }
 
+    /**
+     * Checks whether the record has any sub-assets, and thus whether it is a master-asset.
+     * @return Whether or not this is record is a master-asset.
+     */
+    public boolean isMasterAsset() {
+        GUID fieldGuid = fe.getFieldGUID(Constants.PreservationFieldNames.RELATED_SUB_ASSETS);
+        return item.hasValue(fieldGuid);
+    }
+    
     @Override
     public String toString() {
         return "[CumulusRecord : " + getClass().getCanonicalName() + " -> " + getUUID() + "]";

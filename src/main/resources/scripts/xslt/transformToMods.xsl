@@ -60,6 +60,7 @@
       <!-- mods:genre -->
       <xsl:call-template name="mods_genre" />
       <!-- mods:identifiers -->
+      <xsl:call-template name="mods_identifier_for_records" />
       <xsl:call-template name="mods_identifier" />
       <!-- mods:language -->
       <xsl:call-template name="mods_language" />
@@ -106,6 +107,8 @@
       <xsl:call-template name="mods_extension" />
       <!-- mods:genre -->
       <xsl:call-template name="mods_genre" />
+      <!-- mods:identifiers -->
+      <xsl:call-template name="mods_identifier" />
       <!-- mods:language -->
       <xsl:call-template name="mods_language" />
       <!-- mods:location -->
@@ -225,8 +228,8 @@
   </xsl:template>
   <!-- END genre -->
   
-  <!-- START identifiers -->
-  <xsl:template name="mods_identifier">
+  <!-- START identifiers for records -->
+  <xsl:template name="mods_identifier_for_records">
     <!-- GUID -->
     <xsl:if test="field[@name='GUID']/value">
       <xsl:element name="mods:identifier">
@@ -246,6 +249,31 @@
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
+    
+    <!-- Asset Reference -->
+    <xsl:if test="field[@name='Asset Reference']">
+        <xsl:element name="mods:identifier">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'Asset Reference'" />
+          </xsl:attribute>
+          <xsl:value-of select="field[@name='Asset Reference']/value" />
+        </xsl:element>
+    </xsl:if>
+    
+    <!-- Original Asset Reference -->
+    <xsl:if test="field[@name='Original Asset Reference']">
+        <xsl:element name="mods:identifier">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'Original Asset Reference'" />
+          </xsl:attribute>
+          <xsl:value-of select="field[@name='Original Asset Reference']/value" />
+        </xsl:element>
+    </xsl:if>
+  </xsl:template>
+  <!-- END identifiers for records -->
+  
+  <!-- START identifiers for both records and representations -->
+  <xsl:template name="mods_identifier">
 
     <!-- Accessionsnr eller Accessionsnummer -->
     <xsl:choose>
@@ -292,26 +320,6 @@
         </xsl:element>
       </xsl:when>
     </xsl:choose>
-    
-    <!-- Asset Reference -->
-    <xsl:if test="field[@name='Asset Reference']">
-        <xsl:element name="mods:identifier">
-          <xsl:attribute name="type">
-            <xsl:value-of select="'Asset Reference'" />
-          </xsl:attribute>
-          <xsl:value-of select="field[@name='Asset Reference']/value" />
-        </xsl:element>
-    </xsl:if>
-    
-    <!-- Original Asset Reference -->
-    <xsl:if test="field[@name='Original Asset Reference']">
-        <xsl:element name="mods:identifier">
-          <xsl:attribute name="type">
-            <xsl:value-of select="'Original Asset Reference'" />
-          </xsl:attribute>
-          <xsl:value-of select="field[@name='Original Asset Reference']/value" />
-        </xsl:element>
-    </xsl:if>
   </xsl:template>
   <!-- END identifiers -->
 
