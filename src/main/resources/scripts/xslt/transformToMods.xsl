@@ -192,14 +192,6 @@
 
   <!-- START genre -->
   <xsl:template name="mods_genre">
-    <!-- KB Bevarings profil -->
-    <xsl:element name="mods:genre">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'KB Samling'" />
-      </xsl:attribute>
-      <xsl:value-of select="field[@name='KB Samling']/value" />
-    </xsl:element>
-    
     <!-- Catalog Name -->
     <xsl:element name="mods:genre">
       <xsl:attribute name="type">
