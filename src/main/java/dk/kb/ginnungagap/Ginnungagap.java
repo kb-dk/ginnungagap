@@ -132,7 +132,7 @@ public class Ginnungagap {
                         cumulusServer, transformer, representationTransformer, preserver);
 
                 System.out.println("Starting workflow");
-                workflow.run();
+                workflow.start();
 
                 preserver.uploadAll();
             }

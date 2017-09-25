@@ -86,11 +86,13 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(recordItemCollection.getItemCount()).thenReturn(0);
         
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);        
-        pw.run();
+        pw.start();
         
         verifyZeroInteractions(transformer);
         verifyZeroInteractions(representationTransformer);
-        verifyZeroInteractions(preserver);
+        
+        verify(preserver).uploadAll();
+        verifyNoMoreInteractions(preserver);
         
         verify(server).getCatalogNames();
         verify(server, times(3)).getItems(anyString(), any(CumulusQuery.class));
@@ -137,6 +139,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
                 .thenReturn(recordItemCollection_subassets)
                 .thenReturn(recordItemCollection_masterassets)
                 .thenReturn(recordItemCollection);
+        when(server.getCatalogNames()).thenReturn(Arrays.asList(catalogName));
 
         when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
         when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
@@ -182,9 +185,10 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
             }
         });        
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
-        pw.runOnCatalog(catalogName);
+        pw.start();
         
         verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
+        verify(server).getCatalogNames();
         verifyNoMoreInteractions(server);
         
         verify(recordItemCollection_subassets, times(2)).getItemCount();
@@ -205,6 +209,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verifyZeroInteractions(representationTransformer);
         
         verify(preserver).packRecord(any(CumulusRecord.class), any(File.class));
+        verify(preserver).uploadAll();
         verifyNoMoreInteractions(preserver);
     }
     
@@ -249,7 +254,8 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
                 .thenReturn(recordItemCollection_subassets)
                 .thenReturn(recordItemCollection_masterassets)
                 .thenReturn(recordItemCollection);
-        
+        when(server.getCatalogNames()).thenReturn(Arrays.asList(catalogName));
+
         // When returning a iterator, then the returned iterator is final, and its state is kept, thus
         when(recordItemCollection_subassets.getItemCount()).thenReturn(0);
         when(recordItemCollection_masterassets.getItemCount()).thenReturn(0);
@@ -309,7 +315,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         try {
             metadataDir.setWritable(false);
             PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
-            pw.runOnCatalog(catalogName);
+            pw.start();
 //            fail("Must fail here!");
         } catch (IllegalStateException e) {
             // expected!
@@ -319,12 +325,15 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         }
         
         addStep("Validate that the correct methods in the mocks are called", "");
-        verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
-        verifyNoMoreInteractions(server);
-        
         verifyZeroInteractions(transformer);
         verifyZeroInteractions(representationTransformer);
-        verifyZeroInteractions(preserver);
+
+        verify(preserver).uploadAll();
+        verifyNoMoreInteractions(preserver);
+        
+        verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
+        verify(server).getCatalogNames();
+        verifyNoMoreInteractions(server);
         
         verify(recordItemCollection_subassets, times(2)).getItemCount();
         verifyNoMoreInteractions(recordItemCollection_subassets);
@@ -418,6 +427,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
                 .thenReturn(recordItemCollection_subassets)
                 .thenReturn(recordItemCollection_masterassets)
                 .thenReturn(recordItemCollection);
+        when(server.getCatalogNames()).thenReturn(Arrays.asList(catalogName));
 
         when(masterChecksumField.getName()).thenReturn(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
         when(masterChecksumField.getFieldType()).thenReturn(FieldTypes.FieldTypeString);
@@ -474,9 +484,10 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
             }
         });        
         PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
-        pw.runOnCatalog(catalogName);
+        pw.start();
         
         verify(server, times(3)).getItems(eq(catalogName), any(CumulusQuery.class));
+        verify(server).getCatalogNames();
         verifyNoMoreInteractions(server);
         
         verify(recordItemCollection_subassets, times(2)).getItemCount();
@@ -499,6 +510,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verifyZeroInteractions(representationTransformer);
         
         verify(preserver).packRecord(any(CumulusRecord.class), any(File.class));
+        verify(preserver).uploadAll();
         verifyNoMoreInteractions(preserver);
     }
 }

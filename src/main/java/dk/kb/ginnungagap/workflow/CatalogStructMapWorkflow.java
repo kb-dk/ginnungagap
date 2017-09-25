@@ -26,7 +26,7 @@ import dk.kb.ginnungagap.transformation.MetadataTransformer;
 /**
  * Workflow for creating a structmap for a given Cumulus catalog.
  */
-public class CatalogStructMapWorkflow implements Workflow {
+public class CatalogStructMapWorkflow {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(CatalogStructMapWorkflow.class);
 

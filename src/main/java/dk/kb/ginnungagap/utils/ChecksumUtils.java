@@ -10,8 +10,6 @@ import org.bitrepository.bitrepositoryelements.ChecksumType;
 import org.bitrepository.client.eventhandler.OperationEvent.OperationEventType;
 import org.bitrepository.common.utils.Base16Utils;
 import org.jwat.warc.WarcDigest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
@@ -20,9 +18,6 @@ import dk.kb.yggdrasil.warc.Digest;
  * Utility class for dealing with checksums.
  */
 public class ChecksumUtils {
-    /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(ChecksumUtils.class);
-
     /** MD5 algorithm name.*/
     public static final String MD5_ALGORITHM = "MD5";
 

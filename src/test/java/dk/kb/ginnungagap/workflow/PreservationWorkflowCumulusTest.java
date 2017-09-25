@@ -100,7 +100,7 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
         Cumulus.CumulusStop();
     }
     
-    @Test
+//    @Test
     public void testStuff() throws Exception {
         
         XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
@@ -120,7 +120,7 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
         
         for(Item item : items) {
             CumulusRecord record = new TestCumulusRecord(fe, item);
-            workflow.sendRecordToPreservation(record);
+//            workflow.sendRecordToPreservation(record);
         }
 
     }
