@@ -19,8 +19,9 @@ public class PreserveSubAssetStep extends AbstractPreservationStep {
      * @param preserver the bitrepository preserver, for packaging and preserving the records.
      * @param catalogName The name of the catalog for this step.
      */
-    public PreserveSubAssetStep(TransformationConfiguration transConf, CumulusServer server, MetadataTransformer transformer,
-            MetadataTransformer representationTransformer, BitmagPreserver preserver, String catalogName) {
+    public PreserveSubAssetStep(TransformationConfiguration transConf, CumulusServer server, 
+            MetadataTransformer transformer, MetadataTransformer representationTransformer, BitmagPreserver preserver,
+            String catalogName) {
         super(transConf, server, transformer, representationTransformer, preserver, catalogName);
     }
 

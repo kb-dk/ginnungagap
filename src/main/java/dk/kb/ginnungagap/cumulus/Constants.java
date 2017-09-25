@@ -26,9 +26,9 @@ public interface Constants {
      * various Cumulus record fields.
     */
     public interface FieldNames {
-        
-        /** TODO: make sure this is the right name for this field. **/
+        /** The name of the preservation check field.*/
         String BEVARING_CHECK = "Bevaring_check";
+        /** The name of the preservation check status field.*/
         String BEVARING_CHECK_STATUS = "Bevaring_check_status";
 
         /** The name of the title field. */

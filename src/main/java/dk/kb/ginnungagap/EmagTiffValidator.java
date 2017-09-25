@@ -38,7 +38,21 @@ public class EmagTiffValidator {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(EmagTiffValidator.class);
 
-    
+    /** The file with the list of arc files.*/
+    private static File arcListFile = null;
+    /** The file with the script for retrieving the ARC files from E-magasinet.*/
+    private static File retrieveScriptFile = null;
+    /** The script for running the checkit_tiff validation.*/
+    private static File validationScriptFile = new File("bin/run_checkit_tiff.sh");
+    /** The output directory.*/
+    private static File outputDir = null;
+    /** The path for the output directory.*/
+    private static String outputDirPath = ".";
+    /** Whether to remove the retrieved ARC-files afterwards.*/
+    private static boolean removeAfterwards = true;
+    /** The configuration for checkit.*/
+    private static File checkitConf = new File("conf/cit_tiff.cfg");        
+
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
@@ -46,60 +60,43 @@ public class EmagTiffValidator {
      */
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
-
-        File arcListFile = null;
-        File retrieveScriptFile = null;
-        File validationScriptFile = new File("bin/run_checkit_tiff.sh");
-        File outputDir = null;
-        String outputDirPath = ".";
-        boolean removeAfterwards = true;
-        File checkitConf = new File("conf/cit_tiff.cfg");        
         if(args.length < 2) {
-            System.err.println("Missing arguments. Requires the following arguments:");
-            System.err.println("  1. File with list of ARC files");
-            System.err.println("  2. Script for extracting the files from Emagasinet.");
-            System.err.println("  [OPTIONAL] 3. Script for running the checkit_tiff.");
-            System.err.println("  [OPTIONAL] 4. Path to output directory (default is current directory)");
-            System.err.println("  [OPTIONAL] 5. Where or not to remove the retrieved ARC files afterwards "
-                    + "(default is yes)");
-            System.err.println("  [OPTIONAL] 6. Another configuration for checkit_tiff "
-                    + "(default is in the conf folder)");
-            System.exit(-1);
+            failPrintErrorAndExit();
         } else {
             arcListFile = new File(args[0]);
             retrieveScriptFile = new File(args[1]);
         }
         if(args.length > 2) {
             validationScriptFile = new File(args[2]);
-        }
-        if(args.length > 3) {
-            outputDirPath = args[3];            
-        }
-        if(args.length > 4) {
-            removeAfterwards = args[4].startsWith("y") || args[4].startsWith("Y");
-        }
-        if(args.length > 5) {
-            checkitConf = new File(args[5]);
+            if(args.length > 3) {
+                outputDirPath = args[3];
+                if(args.length > 4) {
+                    removeAfterwards = args[4].startsWith("y") || args[4].startsWith("Y");
+                    if(args.length > 5) {
+                        checkitConf = new File(args[5]);
+                    }
+                }
+            }
         }
         
         if(!arcListFile.isFile()) {
             System.err.println("The file with the list of ARC filenames does not exist at '"
                     + arcListFile.getAbsolutePath() + "'.");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         if(!retrieveScriptFile.isFile()) {
             System.err.println("The retrieve script does not exist at '" + retrieveScriptFile.getAbsolutePath() + "'");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         if(!validationScriptFile.isFile()) {
             System.err.println("The validation script does not exist at '" 
                     + validationScriptFile.getAbsolutePath() + "'");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         if(!checkitConf.isFile()) {
             System.err.println("The checkit_tiff configuration does not exist at '" 
                     + checkitConf.getAbsolutePath() + "'");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         
         outputDir = FileUtils.getDirectory(outputDirPath);
@@ -123,8 +120,23 @@ public class EmagTiffValidator {
     }
     
     /**
+     * Prints the arguments for this method and then exit.
+     */
+    protected static void failPrintErrorAndExit() {
+        System.err.println("Missing arguments. Requires the following arguments:");
+        System.err.println("  1. File with list of ARC files");
+        System.err.println("  2. Script for extracting the files from Emagasinet.");
+        System.err.println("  [OPTIONAL] 3. Script for running the checkit_tiff.");
+        System.err.println("  [OPTIONAL] 4. Path to output directory (default is current directory)");
+        System.err.println("  [OPTIONAL] 5. Where or not to remove the retrieved ARC files afterwards "
+                + "(default is yes)");
+        System.err.println("  [OPTIONAL] 6. Another configuration for checkit_tiff "
+                + "(default is in the conf folder)");
+        System.exit(-1);
+    }
+    
+    /**
      * Extracts the next valid line from the list.
-     * TODO: perhaps make more tests, that the line does not contain invalid characters, etc.
      * @param reader The reader.
      * @return The next valid line, or null when no more line can be read.
      * @throws IOException If it fails to read.

@@ -6,19 +6,22 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TimerTask wrapper for workflows so they can be scheduled in a service.
+ */
 public class SchedulableWorkflowTimerTask extends TimerTask {
 
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(SchedulableWorkflowTimerTask.class);
-    
+
     /** The workflow to schedule.*/
     private final Workflow workflow;
-    
+
     /** The date for the next run of the workflow.*/
     private Date nextRun;
     /** The interval between triggers. */
     private final long interval;
-    
+
     /**
      * Constructor.
      * @param interval The interval between running the workflow.
@@ -29,7 +32,7 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
         this.workflow = workflow;
         nextRun = new Date(System.currentTimeMillis() + interval);
     }
-    
+
     /**
      * @return The date for the next time the encapsulated workflow should run.
      */
@@ -48,6 +51,9 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
         return interval;
     }
 
+    /**
+     * @return The description of this timertask.
+     */
     public String getDescription() {
         return workflow.getDescription();
     }
@@ -81,16 +87,18 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
     public String getName() {
         return workflow.getJobID().toString();
     }
-    
+
+    /**
+     * @return The id of the workflow.
+     */
     public String getWorkflowID() {
         return workflow.getJobID();
     }
 
     @Override
     public void run() {
-        if( nextRun != null && (getNextRun() == null || 
-            getNextRun().getTime() <= System.currentTimeMillis())) {
+        if(nextRun != null && (getNextRun() == null || getNextRun().getTime() <= System.currentTimeMillis())) {
             runJob();
         }
-}
+    }
 }

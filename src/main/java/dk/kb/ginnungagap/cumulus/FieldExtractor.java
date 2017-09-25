@@ -24,8 +24,6 @@ import dk.kb.ginnungagap.cumulus.field.TableField;
 
 /**
  * Class for extracting the values of all the fields of an item according to the layout.
- * 
- * TODO: make logging, etc.
  */
 public class FieldExtractor {
     /** The logger.*/
@@ -262,7 +260,7 @@ public class FieldExtractor {
      * @return The field.
      */
     protected Field extractBinaryField(FieldDefinition fd, Item item) {
-        log.warn("Format: " + fd.getName());
+        log.debug("Extracting the binary value for field: " + fd.getName());
         if(fd.getName().equals("Related Sub Assets") || fd.getName().equals("Related Master Assets")) {
             AssetXRefFieldValue subAssets = item.getAssetXRefValue(fd.getFieldUID());
             

@@ -220,60 +220,7 @@ public class CumulusRecord {
 
         for(Field f : fields.values()) {
             if(!f.isEmpty()) {
-                Element field = doc.createElement("field");
-                rootElement.appendChild(field);
-                field.setAttribute("data-type", f.getType());
-                field.setAttribute("name", f.getName());
-                
-                if(f instanceof StringField) {
-                    StringField sf = (StringField) f;
-                    for(String v : getValues(sf.getStringValue())) {
-                        Element value = doc.createElement("value");
-                        field.appendChild(value);
-                        value.appendChild(doc.createTextNode(v));
-                    }
-                } else if(f instanceof TableField) {
-                    Element table = doc.createElement("table");
-                    field.appendChild(table);
-                    
-                    TableField tf = (TableField) f;
-                    for(Row r : tf.getRows()) {
-                        Element row = doc.createElement("row");
-                        table.appendChild(row);
-                        
-                        for(Map.Entry<String, String> element : r.getElements().entrySet()) {
-                            Element coloumn = doc.createElement("field");
-                            row.appendChild(coloumn);
-                            coloumn.setAttribute("name", element.getKey());
-                            
-                            for(String v : getValues(element.getValue())) {
-                                Element value = doc.createElement("value");
-                                coloumn.appendChild(value);
-                                value.appendChild(doc.createTextNode(v));
-                            }
-                        }
-                    }
-                } else if(f instanceof AssetsField) {
-                    AssetsField af = (AssetsField) f;
-                    for(String n : af.getNames()) {
-                        Element value = doc.createElement("value");
-                        field.appendChild(value);
-                        
-                        Element name = doc.createElement("name");
-                        name.appendChild(doc.createTextNode(n));
-                        value.appendChild(name);
-                        
-                        Element uuid = doc.createElement("uuid");
-                        uuid.appendChild(doc.createTextNode(af.getGuid(n)));
-                        value.appendChild(uuid);
-                        
-                        Element index = doc.createElement("order");
-                        index.appendChild(doc.createTextNode(af.getIndex(n).toString()));
-                        value.appendChild(index);
-                    }
-                } else {
-                    log.warn("Could not handle field: " + f);
-                }
+                addCumulusFieldToMetadataOutput(f, doc, rootElement);
             }
         }
         
@@ -287,6 +234,69 @@ public class CumulusRecord {
         StreamResult result = new StreamResult(cumulusFieldFile);
 
         transformer.transform(source, result);
+    }
+    
+    /**
+     * Adds the given Cumulus field to the given metadata output document.
+     * @param f The Cumulus Field.
+     * @param doc The metadata output document.
+     * @param rootElement The root element for the field.
+     */
+    protected void addCumulusFieldToMetadataOutput(Field f, Document doc, Element rootElement) {
+        Element field = doc.createElement("field");
+        rootElement.appendChild(field);
+        field.setAttribute("data-type", f.getType());
+        field.setAttribute("name", f.getName());
+        
+        if(f instanceof StringField) {
+            StringField sf = (StringField) f;
+            for(String v : getValues(sf.getStringValue())) {
+                Element value = doc.createElement("value");
+                field.appendChild(value);
+                value.appendChild(doc.createTextNode(v));
+            }
+        } else if(f instanceof TableField) {
+            Element table = doc.createElement("table");
+            field.appendChild(table);
+            
+            TableField tf = (TableField) f;
+            for(Row r : tf.getRows()) {
+                Element row = doc.createElement("row");
+                table.appendChild(row);
+                
+                for(Map.Entry<String, String> element : r.getElements().entrySet()) {
+                    Element coloumn = doc.createElement("field");
+                    row.appendChild(coloumn);
+                    coloumn.setAttribute("name", element.getKey());
+                    
+                    for(String v : getValues(element.getValue())) {
+                        Element value = doc.createElement("value");
+                        coloumn.appendChild(value);
+                        value.appendChild(doc.createTextNode(v));
+                    }
+                }
+            }
+        } else if(f instanceof AssetsField) {
+            AssetsField af = (AssetsField) f;
+            for(String n : af.getNames()) {
+                Element value = doc.createElement("value");
+                field.appendChild(value);
+                
+                Element name = doc.createElement("name");
+                name.appendChild(doc.createTextNode(n));
+                value.appendChild(name);
+                
+                Element uuid = doc.createElement("uuid");
+                uuid.appendChild(doc.createTextNode(af.getGuid(n)));
+                value.appendChild(uuid);
+                
+                Element index = doc.createElement("order");
+                index.appendChild(doc.createTextNode(af.getIndex(n).toString()));
+                value.appendChild(index);
+            }
+        } else {
+            log.warn("Could not handle field: " + f);
+        }
     }
     
     /**

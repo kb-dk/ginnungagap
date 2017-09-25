@@ -38,6 +38,7 @@ public class FullValidationStep extends ValidationStep {
      * @param server The Cumulus server.
      * @param catalogName The name of the catalog.
      * @param bitmag The bitrepository where the data must be validated.
+     * @param conf The configuration.
      */
     public FullValidationStep(CumulusServer server, String catalogName, Bitrepository bitmag, Configuration conf) {
         super(server, catalogName, Constants.FieldValues.PRESERVATION_VALIDATION_FULL_CHECK);

@@ -20,7 +20,7 @@ public final class StringUtils {
      * Splits on the comma, ',', and retrieves the element at the given index.
      * @param line The line to split on a comma.
      * @param separator The separating character set.
-     * @param elementIndex The index for the element to select.
+     * @param index The index for the element to select.
      * @return The requested element, or null if it is out-of-bounce.
      */
     public static String split(String line, String separator, int index) {

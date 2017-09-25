@@ -32,7 +32,7 @@ import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
  */
 public abstract class AbstractPreservationStep implements WorkflowStep {
     /** The logger.*/
-    protected static final Logger log = LoggerFactory.getLogger(AbstractPreservationStep.class);
+    protected static Logger log = LoggerFactory.getLogger(AbstractPreservationStep.class);
 
     /** Transformation configuration for the metadata.*/
     protected final TransformationConfiguration conf;
@@ -46,7 +46,7 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
     protected final BitmagPreserver preserver;
     /** The name of the catalog to preserve.*/
     protected final String catalogName;
-    
+
     /**
      * Constructor.
      * @param transConf The configuration for the transformation
@@ -66,13 +66,13 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
         this.preserver = preserver;
         this.catalogName = catalogName;
     }
-    
+
     /**
      * Retrieves the query for the specific implementation of this preservation step.
      * @return The query for retrieving the records from Cumulus.
      */
     protected abstract CumulusQuery getQuery();
-    
+
     @Override
     public void performStep() throws Exception {
         CumulusQuery query = getQuery();
@@ -80,7 +80,7 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
         log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " sub-asset records to be preserved.");
         preserveRecordItems(items, catalogName);
     }
-    
+
     /**
      * Preserves all the record items of the given collection. 
      * @param items The collection of record items to preserve.
@@ -97,8 +97,9 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
                 CumulusRecord record = new CumulusRecord(fe, item);
                 sendRecordToPreservation(record);
             } catch (RuntimeException e) {
-                log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID() 
-                + "'. Something must be seriously wrong with that item!!!\n Trying to handle next item.", e);
+                log.error("Runtime exception caught while trying to handle Cumulus item with ID '" 
+                        + item.getID() + "'. Something must be seriously wrong with that item!!!\n"
+                        + "Trying to handle next item.", e);
             }
         }
     }

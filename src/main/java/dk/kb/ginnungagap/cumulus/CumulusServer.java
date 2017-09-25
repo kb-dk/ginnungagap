@@ -132,7 +132,7 @@ public class CumulusServer {
      * Find the Cumulus record containing a given UUID and belonging to a given catalog.
      * Will only return the first found result. And it will return a null if no results were found. 
      * @param catalogName The name of the catalog, where the Cumulus record is.
-     * @param uuid The UUID of the Cumulus record to find.
+     * @param name The record name of the Cumulus record to find.
      * @return The Cumulus record, or null if no record was found.
      */
     public CumulusRecord findCumulusRecordByName(String catalogName, String name) {

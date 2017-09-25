@@ -21,6 +21,7 @@ public class WorkflowScheduler {
     /** The map between the running timertasks and their names. */
     private Map<String, SchedulableWorkflowTimerTask> intervalTasks = new HashMap<String, 
             SchedulableWorkflowTimerTask>();
+    /** The default value for the schuler.*/
     public static final long SCHEDULE_INTERVAL = 60000;
 
     /** The name of the timer.*/
@@ -37,8 +38,8 @@ public class WorkflowScheduler {
     }
 
     /**
-     * Adds a job for the scheduler to schedule.
-     * @param job The job to schedule.
+     * Adds a workflow for the scheduler to schedule.
+     * @param workflow The job to schedule.
      * @param interval The interval for how often the job should be triggered.
      */
     public void schedule(Workflow workflow, Long interval) {
@@ -100,7 +101,7 @@ public class WorkflowScheduler {
     /**
      * Cancels the job with the given name.
      *
-     * @param jobId The ID of the job to cancel
+     * @param jobID The ID of the job to cancel
      * @return The canceled JobTimerTask.
      */
     public SchedulableWorkflowTimerTask cancelJob(String jobID) {

@@ -37,9 +37,9 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
 public class CumulusFileValidation {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(CumulusFileValidation.class);
-
+    /** The name of the default output file. */
     private static final String DEFAULT_OUTPUT_FILE_PATH = "file_validation.txt";
-    
+    /** The format of the output file.*/
     private static final String OUTPUT_FORMAT = "catalog;uuid;exists";
     
     /**

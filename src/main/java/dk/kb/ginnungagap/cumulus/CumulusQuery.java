@@ -115,7 +115,8 @@ public class CumulusQuery {
     public static CumulusQuery getPreservationSubAssetQuery(String catalogName) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         String query = String.format(
-                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s\nand %s has value\nand %s has no value"),
+                StringUtils.replaceSpacesToTabs(
+                        "%s is %s\nand %s is %s\nand %s is %s\nand %s has value\nand %s has no value"),
                 Constants.FieldNames.PRESERVATION_STATUS,
                 Constants.FieldValues.
                 PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
@@ -263,5 +264,4 @@ public class CumulusQuery {
 
         return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
     }
-
 }

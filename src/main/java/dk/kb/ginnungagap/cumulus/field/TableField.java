@@ -23,8 +23,10 @@ public class TableField extends Field{
      * @param fieldDefinition The definition of the field.
      * @param fieldType The type of field.
      * @param itemCollection The item collection of the contructor.
+     * @param fe The field extractor.
      */
-    public TableField(FieldDefinition fieldDefinition, String fieldType, ItemCollection itemCollection, FieldExtractor fe) {
+    public TableField(FieldDefinition fieldDefinition, String fieldType, ItemCollection itemCollection, 
+            FieldExtractor fe) {
         super(fieldDefinition, fieldType);
         this.rows = new ArrayList<Row>();
         FieldExtractor extractor = new FieldExtractor(itemCollection.getLayout(), fe.getServer(), fe.getCatalog());

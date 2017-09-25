@@ -32,6 +32,12 @@ public class WarcPacker {
 
     /** The content type for the metadata. */
     public static final String METADATA_CONTENT_TYPE = "text/xml";
+    
+    /** The header value for WARC info records.*/
+    protected static final String INFO_RECORD_HEADER = 
+            "description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.html\n"
+                    + "conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n"
+                    + "revision: 1.0.0\n";
 
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
@@ -64,10 +70,7 @@ public class WarcPacker {
     protected void writeWarcinfo() throws YggdrasilException {
         Digest digestor = new Digest(bitmagConf.getAlgorithm());
         StringBuffer payload = new StringBuffer();
-        // TODO: write this in a nicer way.
-        payload.append("description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.html\n");
-        payload.append("conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n");
-        payload.append("revision: 1.0.0\n");
+        payload.append(INFO_RECORD_HEADER);
 
         for(Object key : System.getProperties().keySet()) {
             String value = System.getProperty((String) key);
