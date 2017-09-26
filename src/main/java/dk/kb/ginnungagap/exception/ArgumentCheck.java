@@ -37,8 +37,7 @@ public class ArgumentCheck extends RuntimeException {
      */
     public static void checkNotNull(Object val, String name) {
         if (val == null) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must not be null.");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must not be null.");
         }
     }
 
@@ -53,8 +52,7 @@ public class ArgumentCheck extends RuntimeException {
         checkNotNull(val, name);
 
         if (val.isEmpty()) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must not be an empty string.");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must not be an empty string.");
         }
     }
 
@@ -69,11 +67,9 @@ public class ArgumentCheck extends RuntimeException {
         checkNotNull(val, name);
 
         if (val.isEmpty()) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must not be an empty collection.");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must not be an empty collection.");
         }
     }
-
 
     /**
      * Check if a byte array argument is null or empty.
@@ -86,8 +82,7 @@ public class ArgumentCheck extends RuntimeException {
         checkNotNull(val, name);
 
         if (val.length == 0) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must not be string.");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must not be string.");
         }
     }
 
@@ -100,8 +95,8 @@ public class ArgumentCheck extends RuntimeException {
      */
     public static void checkNotNegativeInt(int num, String name) {
         if (num < 0) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must be non-negative, but is " + num + ".");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must be non-negative, but is " 
+                    + num + ".");
         }
     }
 
@@ -114,8 +109,8 @@ public class ArgumentCheck extends RuntimeException {
      */
     public static void checkNotNegativeLong(long num, String name) {
         if (num < 0) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must be non-negative, but is " + num + ".");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must be non-negative, but is " 
+                    + num + ".");
         }
     }
 
@@ -128,8 +123,7 @@ public class ArgumentCheck extends RuntimeException {
      */
     public static void checkPositiveInt(int num, String name) {
         if (num <= 0) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must be positive, but is " + num + ".");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must be positive, but is " + num + ".");
         }
     }
 
@@ -142,23 +136,7 @@ public class ArgumentCheck extends RuntimeException {
      */
     public static void checkPositiveLong(long num, String name) {
         if (num <= 0) {
-            throw new ArgumentCheck("The value of the variable '" + name
-                    + "' must be positive, but is " + num + ".");
-        }
-    }
-
-    /**
-     * Check if a List argument is not null and the list is not empty.
-     *
-     * @param c argument to check
-     * @param name the name and type of the value being checked.
-     * @throws ArgumentCheck if test fails
-     */
-    public static void checkNotNullOrEmptyCollection(Collection<?> c, String name) {
-        checkNotNull(c, name);
-        if (c.isEmpty()) {
-            throw new ArgumentCheck("The contents of the variable '" + name
-                        + "' must not be empty.");
+            throw new ArgumentCheck("The value of the variable '" + name + "' must be positive, but is " + num + ".");
         }
     }
 
@@ -184,9 +162,7 @@ public class ArgumentCheck extends RuntimeException {
     public static void checkExistsDirectory(File aDir, String name) {
         checkNotNull(aDir, name);
         if (!aDir.isDirectory()) {
-            String message = "The file '" + aDir.getAbsolutePath()
-                             + "' does not exist or is not a directory.";
-            throw new ArgumentCheck(message);
+            throw new ArgumentCheck("The file '" + aDir.getAbsolutePath() + "' does not exist or is not a directory.");
         }
     }
 
@@ -199,10 +175,8 @@ public class ArgumentCheck extends RuntimeException {
     public static void checkExistsNormalFile(File aFile, String name) {
         checkNotNull(aFile, name);
         if (!aFile.isFile()) {
-            String message = "The file '" + aFile.getAbsolutePath()
-                             + "' does not exist or is not a normal file.";
-            throw new ArgumentCheck(message);
+            throw new ArgumentCheck("The file '" + aFile.getAbsolutePath() + "' does not exist or is not a "
+                    + "normal file.");
         }
     }
-
 }

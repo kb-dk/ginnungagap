@@ -38,7 +38,7 @@ public class CumulusQuery {
      */
     public CumulusQuery(String query, EnumSet<FindFlag> findFlags, CombineMode combineMode) {
         ArgumentCheck.checkNotNullOrEmpty(query, "String query");
-        ArgumentCheck.checkNotNullOrEmptyCollection(findFlags, "EnumSet<FindFlag> findFlags");
+        ArgumentCheck.checkNotNullOrEmpty(findFlags, "EnumSet<FindFlag> findFlags");
         ArgumentCheck.checkNotNull(combineMode, "CombineMode combineMode");
         this.query = query;
         this.findFlags = findFlags;

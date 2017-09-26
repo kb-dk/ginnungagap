@@ -3,6 +3,7 @@ package dk.kb.metadata.utils;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import junit.framework.Assert;
@@ -10,6 +11,11 @@ import junit.framework.Assert;
 public class FileIdHandlerTest extends ExtendedTestCase {
 
     String defaultGUID = UUID.randomUUID().toString();
+    
+    @BeforeClass
+    public void setupClass() {
+        FileIdHandler.clean();
+    }
     
     @Test
     public void testHandler() {

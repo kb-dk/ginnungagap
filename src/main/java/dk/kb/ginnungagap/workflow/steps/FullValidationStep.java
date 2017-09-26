@@ -60,10 +60,13 @@ public class FullValidationStep extends ValidationStep {
             File f = bitmag.getFile(warcId, collectionId, null);
             validateWarcFileChecksum(record, f);
             
-            WarcRecord warcRecord = getWarcRecord(f, uuid);
-            
-            validateSize(warcRecord, record);
-            validateRecordChecksum(warcRecord, record);
+            try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(f))) {
+                WarcRecord warcRecord = getWarcRecord(reader, uuid);
+
+                validateSize(warcRecord, record);
+                validateRecordChecksum(warcRecord, record);
+            }
+            setValid(record);
         } catch (IllegalStateException e) {
             String errMsg = "The record '" + record + "' is invalid: " + e.getMessage();
             log.info(errMsg, e);
@@ -83,16 +86,13 @@ public class FullValidationStep extends ValidationStep {
      * @return The WARC record.
      * @throws IOException If an error occurs when reading the WARC file.
      */
-    protected WarcRecord getWarcRecord(File file, String recordId) throws IOException {
-        try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(file))) {
-            for(WarcRecord record : reader) {
-                if(record.header.warcRecordIdStr.contains(recordId)) {
-                    return record;
-                }
+    protected WarcRecord getWarcRecord(WarcReader reader, String recordId) throws IOException {
+        for(WarcRecord record : reader) {
+            if(record.header.warcRecordIdStr.contains(recordId)) {
+                return record;
             }
-            throw new IllegalStateException("Could not find the record '" + recordId + "' in the file '" 
-                    + file.getName() + "'");
         }
+        throw new IllegalStateException("Could not find the record '" + recordId + "' in the WARC file.");
     }
     
     /**
@@ -137,12 +137,14 @@ public class FullValidationStep extends ValidationStep {
         WarcDigest digest;
         try (OutputStream os = new FileOutputStream(tmpFile)) {
             StreamUtils.copyInputStreamToOutputStream(warcRecord.getPayloadContent(), os);
+            os.flush();
+            os.close();
             digest = ChecksumUtils.calculateChecksum(tmpFile, ChecksumUtils.MD5_ALGORITHM);
         } finally {
             tmpFile.delete();
         }
         
-        String warcRecordChecksum = digest.digestString;
+        String warcRecordChecksum = digest.digestString; //warcRecord.computedPayloadDigest.digestString;
         String cumulusRecordChecksum = cumulusRecord.getFieldValue(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
         if(!warcRecordChecksum.contains(cumulusRecordChecksum)) {
             throw new IllegalStateException("The WARC record for '" + cumulusRecord.getUUID() + "' had the checksum '"

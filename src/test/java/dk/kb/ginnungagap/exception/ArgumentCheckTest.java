@@ -7,6 +7,7 @@ import static org.testng.Assert.assertFalse;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -152,13 +153,13 @@ public class ArgumentCheckTest extends ExtendedTestCase {
     @Test(expectedExceptions = ArgumentCheck.class)
     public void testNullOrEmptyCollectionFailure() {
         addDescription("Test that the null or empty collection test failes on an empty collection");
-        ArgumentCheck.checkNotNullOrEmptyCollection(Arrays.asList(), "TEST");
+        ArgumentCheck.checkNotNullOrEmpty(new HashSet<Object>(), "TEST");
     }
     
     @Test
     public void testNullOrEmptyCollectionSuccess() {
         addDescription("Test the null or empty collection test on an non-empty collection");
-        ArgumentCheck.checkNotNullOrEmptyCollection(Arrays.asList(new Object()), "TEST");
+        ArgumentCheck.checkNotNullOrEmpty(Arrays.asList(new Object()), "TEST");
     }
     
     @Test(expectedExceptions = ArgumentCheck.class)

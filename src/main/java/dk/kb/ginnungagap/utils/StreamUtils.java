@@ -43,7 +43,6 @@ public final class StreamUtils {
         }
     }
     
-
     /**
      * Extracts the content of an input stream as lines.
      * @param is The input stream.
