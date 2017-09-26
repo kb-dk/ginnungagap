@@ -105,7 +105,7 @@ public final class MixEnumeratorSelector {
             return ORIENTATION_ROTATED_180;
         } else if (orientation.equalsIgnoreCase("bottom left") || orientation.equals("4")) {
             return ORIENTATION_FLIPPED_ROTATED_180;
-        } else if(orientation.equalsIgnoreCase("left top") | orientation.equals("5")) {
+        } else if(orientation.equalsIgnoreCase("left top") || orientation.equals("5")) {
             return ORIENTATION_FLIPPED_ROTATED_CW_90;
         } else if(orientation.equalsIgnoreCase("right top") || orientation.equals("6")) {
             return ORIENTATION_ROTATED_CCW_90;

@@ -11,7 +11,7 @@ public final class FileIdHandler {
     private FileIdHandler() {}
 
     /** Maps between a GUID and the respective file id. */
-    protected static Map<String, String> fileIds = new HashMap<String, String>();
+    protected static final Map<String, String> fileIds = new HashMap<String, String>();
 
     /**
      * Returns the file id for the respective GUID. If no file id exists for such GUID, then it is created.

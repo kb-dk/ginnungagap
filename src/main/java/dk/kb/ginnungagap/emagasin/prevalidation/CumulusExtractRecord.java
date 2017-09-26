@@ -9,11 +9,11 @@ import dk.kb.metadata.utils.GuidExtrationUtils;
  * Class for extracted entries for Cumulus.
  * It contains the name of the arc file, the uuid, the size and the checksum of the record.
  * The line format is not fixed, so each field must be prefixed with its type, e.g.
- * ** ARCHIVE_FILENAME:$ARCFILE ; Catalog Name: $CATALOG_NAME ; CHECKSUM_ORIGINAL_MASTER: $CHECKSUM ; GUID: $GUID ; ARCHIVE_MD5: $ARCHIVE_MD5; File Data Size: $SIZE
+ *** ARCHIVE_FILENAME:$ARCFILE ; Catalog Name: $CATALOG_NAME ; CHECKSUM_ORIGINAL_MASTER: $CHECKSUM ; GUID: $GUID ; ARCHIVE_MD5: $ARCHIVE_MD5; File Data Size: $SIZE
  * E.g. 
  * 
- * ** Catalog Name:Letters OM;CHECKSUM_ORIGINAL_MASTER:d5565ee032806d722e4a1771d6c24258;ARCHIVE_FILENAME:KBDOMS-20140918154510-03651-dia-prod-dom-02.kb.dk.arc;GUID:Uid:dk:kb:doms:2007-01/8f4102b0-abf0-11e3-aab4-0016357f605f;ARCHIVE_MD5:d5565ee032806d722e4a1771d6c24258;File Data Size:22915330
- * ** ARCHIVE_FILENAME:KBDOMS-20120209144621-00000-dia-prod-dom-01.kb.dk.arc;Catalog Name:Audio;CHECKSUM_ORIGINAL_MASTER:77ad7deafde564b4eb20ac858407ec3d;GUID:Uid:dk:kb:doms:2007-01/4bde6970-523f-11e1-9888-0017a4f603c1;ARCHIVE_MD5:77ad7deafde564b4eb20ac858407ec3d;File Data Size:1680088238
+ *** Catalog Name:Letters OM;CHECKSUM_ORIGINAL_MASTER:d5565ee032806d722e4a1771d6c24258;ARCHIVE_FILENAME:KBDOMS-20140918154510-03651-dia-prod-dom-02.kb.dk.arc;GUID:Uid:dk:kb:doms:2007-01/8f4102b0-abf0-11e3-aab4-0016357f605f;ARCHIVE_MD5:d5565ee032806d722e4a1771d6c24258;File Data Size:22915330
+ *** ARCHIVE_FILENAME:KBDOMS-20120209144621-00000-dia-prod-dom-01.kb.dk.arc;Catalog Name:Audio;CHECKSUM_ORIGINAL_MASTER:77ad7deafde564b4eb20ac858407ec3d;GUID:Uid:dk:kb:doms:2007-01/4bde6970-523f-11e1-9888-0017a4f603c1;ARCHIVE_MD5:77ad7deafde564b4eb20ac858407ec3d;File Data Size:1680088238
  */
 class CumulusExtractRecord {
     /** Name of the arc file.*/

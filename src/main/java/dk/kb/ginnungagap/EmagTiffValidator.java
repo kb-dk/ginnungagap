@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import org.slf4j.Logger;
@@ -105,7 +106,7 @@ public class EmagTiffValidator {
         TiffValidator validator = new TiffValidator(outputDir, validationScriptFile, checkitConf, removeAfterwards);
         
         try (BufferedReader arcListReader = new BufferedReader(new InputStreamReader(new FileInputStream(
-                arcListFile)));) {
+                arcListFile), Charset.defaultCharset()));) {
             String arcFilename;
             while((arcFilename = getNextArcFilename(arcListReader)) != null) {
                 File arcFile = retriever.extractArcFile(arcFilename);

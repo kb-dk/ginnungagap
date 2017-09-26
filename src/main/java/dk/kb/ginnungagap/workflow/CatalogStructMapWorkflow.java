@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -108,16 +109,16 @@ public class CatalogStructMapWorkflow {
         File res = new File(conf.getTransformationConf().getMetadataTempDir(), uuid + ".xml");
         try (FileOutputStream os = new FileOutputStream(res)) {
             boolean failure = false;
-            os.write("<catalog>\n".getBytes());
-            os.write("  <uuid>".getBytes());
-            os.write(uuid.getBytes());
-            os.write("</uuid>\n".getBytes());
-            os.write("  <ie_uuid>".getBytes());
-            os.write(intellectualEntityID.getBytes());
-            os.write("</ie_uuid>\n".getBytes());
-            os.write("  <catalogName>".getBytes());
-            os.write(catalogName.getBytes());
-            os.write("</catalogName>\n".getBytes());
+            os.write("<catalog>\n".getBytes(StandardCharsets.UTF_8));
+            os.write("  <uuid>".getBytes(StandardCharsets.UTF_8));
+            os.write(uuid.getBytes(StandardCharsets.UTF_8));
+            os.write("</uuid>\n".getBytes(StandardCharsets.UTF_8));
+            os.write("  <ie_uuid>".getBytes(StandardCharsets.UTF_8));
+            os.write(intellectualEntityID.getBytes(StandardCharsets.UTF_8));
+            os.write("</ie_uuid>\n".getBytes(StandardCharsets.UTF_8));
+            os.write("  <catalogName>".getBytes(StandardCharsets.UTF_8));
+            os.write(catalogName.getBytes(StandardCharsets.UTF_8));
+            os.write("</catalogName>\n".getBytes(StandardCharsets.UTF_8));
             for(Item item : items) {
                 String recordName = item.getStringValue(recordNameGuid);
                 if(!item.hasValue(recordIntellectualEntityGuid)) {
@@ -125,20 +126,20 @@ public class CatalogStructMapWorkflow {
                     log.warn("Failed extracing intellectual entity for record: " + recordName);
                     continue;
                 }
-                os.write("  <record>\n".getBytes());
-                os.write("    <guid>".getBytes());
-                os.write(item.getStringValue(recordIntellectualEntityGuid).getBytes());
-                os.write("</guid>\n".getBytes());
-                os.write("    <name>".getBytes());
-                os.write(recordName.getBytes());
-                os.write("</name>\n".getBytes());
-                os.write("  </record>\n".getBytes());
+                os.write("  <record>\n".getBytes(StandardCharsets.UTF_8));
+                os.write("    <guid>".getBytes(StandardCharsets.UTF_8));
+                os.write(item.getStringValue(recordIntellectualEntityGuid).getBytes(StandardCharsets.UTF_8));
+                os.write("</guid>\n".getBytes(StandardCharsets.UTF_8));
+                os.write("    <name>".getBytes(StandardCharsets.UTF_8));
+                os.write(recordName.getBytes(StandardCharsets.UTF_8));
+                os.write("</name>\n".getBytes(StandardCharsets.UTF_8));
+                os.write("  </record>\n".getBytes(StandardCharsets.UTF_8));
             }
-            os.write("</catalog>\n".getBytes());
+            os.write("</catalog>\n".getBytes(StandardCharsets.UTF_8));
 
             if(failure) {
                 log.error("Should fail now!");
-//                throw new IllegalStateException("Failed");
+                throw new IllegalStateException("Failed to create the catalog structmap.");
             }
         }
         return res;

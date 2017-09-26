@@ -32,7 +32,7 @@ import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
  */
 public abstract class AbstractPreservationStep implements WorkflowStep {
     /** The logger.*/
-    protected static Logger log = LoggerFactory.getLogger(AbstractPreservationStep.class);
+    protected static final Logger log = LoggerFactory.getLogger(AbstractPreservationStep.class);
 
     /** Transformation configuration for the metadata.*/
     protected final TransformationConfiguration conf;
@@ -164,7 +164,9 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
             os.flush();
         }
 
-        transformer.validate(new FileInputStream(metadataFile));
+        try (InputStream is = new FileInputStream(metadataFile)) {
+            transformer.validate(is);
+        }
         preserver.packMetadataRecordWithoutCumulusReference(metadataFile, 
                 record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID));
     }
@@ -185,7 +187,9 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
             os.flush();
         }
 
-        transformer.validate(new FileInputStream(metadataFile));
+        try (InputStream is = new FileInputStream(metadataFile)) {
+            transformer.validate(is);
+        }
 
         return metadataFile;
     }

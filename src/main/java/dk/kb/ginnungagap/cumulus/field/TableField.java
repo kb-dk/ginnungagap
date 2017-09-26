@@ -50,7 +50,7 @@ public class TableField extends Field{
     /**
      * Class for containing the rows of the table.
      */
-    public class Row {
+    public static class Row {
         /** The map of the elements.*/
         Map<String, String> elements;
         

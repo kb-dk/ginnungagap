@@ -24,8 +24,7 @@ public class FileUtils {
     public static File getDirectory(String path) {
         File res = new File(path);
         if(!res.isDirectory()) {
-            res.mkdirs();
-            if(!res.isDirectory()) {
+            if(!res.mkdirs() && !res.isDirectory()) {
                 throw new IllegalStateException("Cannot instantiate the directory at '" + path + "'.");
             }
         }

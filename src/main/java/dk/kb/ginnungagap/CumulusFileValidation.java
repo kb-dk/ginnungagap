@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.bitrepository.common.utils.FileUtils;
 import org.slf4j.Logger;
@@ -109,8 +110,8 @@ public class CumulusFileValidation {
      */
     protected static void validateCumulusRecordFiles(CumulusServer server, Configuration conf, File outputFile) {
         try (OutputStream out = new FileOutputStream(outputFile)) {
-            out.write(OUTPUT_FORMAT.getBytes());
-            out.write("\n".getBytes());
+            out.write(OUTPUT_FORMAT.getBytes(StandardCharsets.UTF_8));
+            out.write("\n".getBytes(StandardCharsets.UTF_8));
             for(String catalog : conf.getCumulusConf().getCatalogs()) {
                 validateForCatalog(server, catalog, out);
             }
@@ -150,12 +151,12 @@ public class CumulusFileValidation {
         try {
             File f = record.getFile();
             if(f.exists()) {
-                out.write(new String(catalogName + "; " + record.getUUID() + "; FOUND\n").getBytes());
+                out.write((catalogName + "; " + record.getUUID() + "; FOUND\n").getBytes(StandardCharsets.UTF_8));
             } else {
-                out.write(new String(catalogName + "; " + record.getUUID() + "; MISSING\n").getBytes());                
+                out.write((catalogName + "; " + record.getUUID() + "; MISSING\n").getBytes(StandardCharsets.UTF_8));
             }
         } catch (Throwable e) {
-            out.write(new String(catalogName + "; " + record.getUUID() + "; FAILED TO FIND\n").getBytes());
+            out.write((catalogName + "; " + record.getUUID() + "; FAILED TO FIND\n").getBytes(StandardCharsets.UTF_8));
             log.debug("Failed to handle record '" + record + "'", e);
         }
         out.flush();

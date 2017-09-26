@@ -145,10 +145,10 @@ public final class StringUtils {
         if(split.length == 1) {
             return "1";
         }
-        String res = "1";
+        StringBuilder res = new StringBuilder("1");
         for(int i = 0; i < split[1].length(); i++) {
-            res += "0";
+            res.append("0");
         }
-        return res;
+        return res.toString();
     }
 }

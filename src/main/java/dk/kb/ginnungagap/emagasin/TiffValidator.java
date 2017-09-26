@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -187,10 +188,10 @@ public class TiffValidator extends ScriptWrapper {
     protected void writeCsvToOutput(Collection<String> strings) {
         try (OutputStream out = new FileOutputStream(outputFile, true)) {
             for(String s : strings) {
-                out.write(s.getBytes());
-                out.write(";".getBytes());
+                out.write(s.getBytes(StandardCharsets.UTF_8));
+                out.write(";".getBytes(StandardCharsets.UTF_8));
             }
-            out.write("\n".getBytes());
+            out.write("\n".getBytes(StandardCharsets.UTF_8));
             out.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Could not write to the output file", e);

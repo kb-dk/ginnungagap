@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +44,8 @@ public class InputFormat {
      * @param inputFile The CSV file to load.
      */
     protected void loadFile(File inputFile) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), 
+                Charset.defaultCharset()))) {
             String line;
             while((line = reader.readLine()) != null) {
                 String[] split = line.split(";");

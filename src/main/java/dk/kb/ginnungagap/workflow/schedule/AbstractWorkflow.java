@@ -27,7 +27,7 @@ public abstract class AbstractWorkflow implements Workflow {
      * Sets the step for this workflow.
      * @param steps The steps for this workflow.
      */
-    protected void setWorkflowSteps(List<WorkflowStep> steps) {
+    protected synchronized void setWorkflowSteps(List<WorkflowStep> steps) {
         this.steps = new ArrayList<WorkflowStep>(steps);
     }
     
@@ -94,8 +94,10 @@ public abstract class AbstractWorkflow implements Workflow {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        Workflow that = (Workflow) o;
+        if(o == null) return false;
+        if(this == o) return true;
+        if(o instanceof AbstractWorkflow) return false;
+        AbstractWorkflow that = (AbstractWorkflow) o;
 
         if (!jobID.equals(that.getJobID())) return false;
 

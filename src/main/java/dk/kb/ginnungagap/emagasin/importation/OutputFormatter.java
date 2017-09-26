@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.bitrepository.common.utils.FileUtils;
 
@@ -60,13 +61,13 @@ public class OutputFormatter {
             FileUtils.deprecateFile(succesFile);
         }
         try (OutputStream os = new FileOutputStream(succesFile)) {
-            os.write(COLOUMN_NAMES_SUCCES_FILE.getBytes());
+            os.write(COLOUMN_NAMES_SUCCES_FILE.getBytes(StandardCharsets.UTF_8));
         }
         if(failureFile.exists()) {
             FileUtils.deprecateFile(failureFile);
         }        
         try (OutputStream os = new FileOutputStream(failureFile)) {
-            os.write(COLOUMN_NAMES_FAILURE_FILE.getBytes());
+            os.write(COLOUMN_NAMES_FAILURE_FILE.getBytes(StandardCharsets.UTF_8));
         }
     }
     
@@ -81,7 +82,7 @@ public class OutputFormatter {
             sb.append(recordUUIDs.getArcFilename() + ";");
             sb.append(recordUUIDs.getArcRecordUUID() + ";");
             sb.append(recordUUIDs.getCumulusRecordUUID() + "\n");
-            os.write(sb.toString().getBytes());
+            os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IllegalStateException("Issue occured while writing succes for the record '"
                     + recordUUIDs + "'", e);
@@ -101,7 +102,7 @@ public class OutputFormatter {
             sb.append(recordUUIDs.getArcRecordUUID() + ";");
             sb.append(recordUUIDs.getCumulusRecordUUID() + ";");
             sb.append(cause + "\n");
-            os.write(sb.toString().getBytes());
+            os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IllegalStateException("Issue occured while writing failurefor the record '"
                     + recordUUIDs + "'", e);
@@ -122,7 +123,7 @@ public class OutputFormatter {
             sb.append(arcRecordID + ";");
             sb.append(";");
             sb.append(cause + "\n");
-            os.write(sb.toString().getBytes());
+            os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IllegalStateException("Issue occured while writing failure for the unexpected record '"
                     + arcRecordID + "' in arc file '" + arcFilename + "'", e);

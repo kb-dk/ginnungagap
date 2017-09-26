@@ -6,8 +6,6 @@
 
 package dk.kb.ginnungagap.cumulus;
 
-import java.text.SimpleDateFormat;
-
 /**
  * Constants taken from the old KB-DOMS.
  * 
@@ -951,17 +949,6 @@ public interface Constants {
 
         /** The canonical Java value for boolean value true as a String. */
         String TRUE_AS_STRING = Boolean.toString(true);
-
-    }
-
-    /**
-     * This interface exposes various String constants that are used in the
-     * workflow for constructing field values etc.
-     */
-    interface DateConstants {
-        /** The date format used in PUBLICATION_DATE. */
-        SimpleDateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat(
-                "dd-MM-yyyy");
 
     }
 

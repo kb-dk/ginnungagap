@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import dk.kb.ginnungagap.emagasin.prevalidation.ImportPrevalidator;
 import dk.kb.ginnungagap.utils.FileUtils;
@@ -59,9 +60,9 @@ public class EmagPreValidator {
         try {
             ImportPrevalidator prevalidator = new ImportPrevalidator(outputDir);
             BufferedReader cumulusReader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(cumulusExtract)));
+                    new FileInputStream(cumulusExtract), Charset.defaultCharset()));
             BufferedReader emagasinReader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(emagasinExtract)));
+                    new FileInputStream(emagasinExtract), Charset.defaultCharset()));
             prevalidator.compare(emagasinReader, cumulusReader);
         } catch (Exception e) {
             throw new RuntimeException("Failed to prevalidate!", e);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -224,8 +225,8 @@ public class ImportPrevalidator {
      */
     protected void recordValidResult(String line) {
         try (FileOutputStream fos = new FileOutputStream(validFile, true)) {
-            fos.write(line.getBytes());
-            fos.write(NEW_LINE.getBytes());
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
+            fos.write(NEW_LINE.getBytes(StandardCharsets.UTF_8));
             fos.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write valid results", e);
@@ -238,8 +239,8 @@ public class ImportPrevalidator {
      */
     protected void recordInvalidResult(String line) {
         try (FileOutputStream fos = new FileOutputStream(invalidFile, true)) {
-            fos.write(line.getBytes());
-            fos.write(NEW_LINE.getBytes());
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
+            fos.write(NEW_LINE.getBytes(StandardCharsets.UTF_8));
             fos.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write invalid results", e);
@@ -253,8 +254,8 @@ public class ImportPrevalidator {
      */
     protected void recordNotInEmagasinResult(String line) {
         try (FileOutputStream fos = new FileOutputStream(notFoundInEmagasinFile, true)) {
-            fos.write(line.getBytes());
-            fos.write(NEW_LINE.getBytes());
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
+            fos.write(NEW_LINE.getBytes(StandardCharsets.UTF_8));
             fos.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write records not found in Emagasinet", e);
@@ -268,8 +269,8 @@ public class ImportPrevalidator {
      */
     protected void recordNotInCumulusResult(String line) {
         try (FileOutputStream fos = new FileOutputStream(notFoundInCumulusFile, true)) {
-            fos.write(line.getBytes());
-            fos.write(NEW_LINE.getBytes());
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
+            fos.write(NEW_LINE.getBytes(StandardCharsets.UTF_8));
             fos.flush();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write records not found in Cumulus", e);
