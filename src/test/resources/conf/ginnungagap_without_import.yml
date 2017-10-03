@@ -12,6 +12,12 @@ ginnungagap:
     password: ''
     catalogs:
       - "Audio OM"
+  workflow:
+    interval: 3600000
+    workflows:
+      - "PreservationWorkflow"
+      - "ValidationWorkflow"
+      - "ImportationWorkflow"
   transformation:
     xsd_dir: tempDir/scripts/xsd
     xslt_dir: tempDir/scripts/xslt

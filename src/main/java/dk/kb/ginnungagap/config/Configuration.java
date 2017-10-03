@@ -34,6 +34,11 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>password: $password</li>
  *       <li>catalogs: <br/>- $catalog 1<br/>- $catalog 2<br/>- ...</li>
  *     </ul>
+ *     <li>workflow:</li>
+ *     <ul>
+ *       <li>interval: $interval</li>
+ *       <li>workflows: <br/>- $workflow_1<br/>- $workflow_2<br/>- ...</li>
+ *     </ul>
  *     <li>transformation:</li>
  *     <ul>
  *       <li>xsd_dir: $xsd_dir</li>
@@ -99,6 +104,13 @@ public class Configuration {
     /** The cumulus catalogs array leaf-element.*/
     protected static final String CONF_CUMULUS_CATALOGS = "catalogs";
     
+    /** The Workflow node-element.*/
+    protected static final String CONF_WORKFLOW = "workflow";
+    /** The workflow interval leaf-element.*/
+    protected static final String CONF_WORKFLOW_INTERVAL = "interval";
+    /** The workflow names of workflows array leaf-element.*/
+    protected static final String CONF_WORKFLOW_WORKFLOWS = "workflows";
+    
     /** Transformation node-element.*/
     protected static final String CONF_TRANSFORMATION = "transformation";
     /** Transformation XSD directory leaf-element.*/
@@ -128,6 +140,8 @@ public class Configuration {
     protected final CumulusConfiguration cumulusConf;
     /** The configuration for the transformation.*/
     protected final TransformationConfiguration transformationConf;
+    /** The configuration for the workflows*/
+    protected final WorkflowConfiguration workflowConfiguration;
     
     /** The configuration for the conversion. May be null, if no conversion is needed.*/
     protected ImportationConfiguration importConfiguration = null;
@@ -152,11 +166,14 @@ public class Configuration {
                     "Configuration must contain the '" + CONF_BITREPOSITORY+ "' element.");
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_TRANSFORMATION), 
                     "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_WORKFLOW), 
+                    "Configuration must contain the '" + CONF_WORKFLOW + "' element.");
             
             this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
+            this.workflowConfiguration = loadWorkflowConfiguration((Map<String, Object>) confMap.get(CONF_WORKFLOW));
             
             if(confMap.containsKey(CONF_IMPORT)) {
                 this.importConfiguration = loadConversionConfiguration(
@@ -165,7 +182,6 @@ public class Configuration {
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
-            
         }
     }
     
@@ -235,6 +251,23 @@ public class Configuration {
     }
     
     /**
+     * Loads the Cumulus configuration from the 'cumulus' element in the configuration.
+     * @param map The map with the Cumulus configuration.
+     * @return The configuration for the Cumulus server.
+     */
+    protected WorkflowConfiguration loadWorkflowConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_INTERVAL), 
+                "Missing Cumulus element '" + CONF_WORKFLOW_INTERVAL + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_WORKFLOWS), 
+                "Missing Cumulus element '" + CONF_WORKFLOW_WORKFLOWS + "'");
+        
+        int interval = (int) map.get(CONF_WORKFLOW_INTERVAL);
+        List<String> workflows = (List<String>) map.get(CONF_WORKFLOW_WORKFLOWS);
+        
+        return new WorkflowConfiguration(interval, workflows);
+    }
+    
+    /**
      * Loads the Transformation configuration from the 'transformation' element in the configuration.
      * @param map The map with the transformation configuration.
      * @return The configuration for performing the transformation.
@@ -292,9 +325,14 @@ public class Configuration {
         return bitmagConf;
     }
     
-    /** @return The configruation for accessing Cumulus.*/
+    /** @return The configuration for accessing Cumulus.*/
     public CumulusConfiguration getCumulusConf() {
         return cumulusConf;
+    }
+    
+    /** @return The configuration for the workflows.*/
+    public WorkflowConfiguration getWorkflowConf() {
+        return workflowConfiguration;
     }
     
     /** @return The configuration for the transformation.*/

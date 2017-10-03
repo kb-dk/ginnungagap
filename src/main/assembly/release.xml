@@ -12,7 +12,7 @@
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/bin</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/bin/</outputDirectory>
+			<outputDirectory>${file.separator}bin${file.separator}</outputDirectory>
 			<fileMode>0755</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
@@ -24,7 +24,7 @@
 				<include>*.cfg</include>
 			</includes>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/conf/</outputDirectory>
+			<outputDirectory>${file.separator}conf${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
@@ -34,21 +34,21 @@
 				<include>*.xml</include>
 			</includes>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/conf/bitrepository</outputDirectory>
+			<outputDirectory>${file.separator}conf${file.separator}bitrepository</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/scripts/xsd</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/conf/xsd/</outputDirectory>
+			<outputDirectory>${file.separator}conf${file.separator}xsd${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/scripts/xslt</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>/conf/xslt/</outputDirectory>
+			<outputDirectory>${file.separator}conf${file.separator}xslt${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
@@ -58,13 +58,13 @@
 			<includes>
 				<include>*.txt</include>
 			</includes>
-			<outputDirectory>/licenses/</outputDirectory>
+			<outputDirectory>${file.separator}licenses${file.separator}</outputDirectory>
 		</fileSet>
 	</fileSets>
 	<!-- Copy all project dependencies to lib/ -->
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>${file.separator}lib${file.separator}</outputDirectory>
 		</dependencySet>
 	</dependencySets>
 </assembly>

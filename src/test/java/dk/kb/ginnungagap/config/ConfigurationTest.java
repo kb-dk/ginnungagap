@@ -4,6 +4,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -99,7 +100,13 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getCumulusConf().getUserPassword());
         assertNotNull(conf.getCumulusConf().getWriteAccess());
         assertNotNull(conf.getCumulusConf().getCatalogs());
+        assertFalse(conf.getCumulusConf().getCatalogs().isEmpty());
 
+        assertNotNull(conf.getWorkflowConf());
+        assertNotNull(conf.getWorkflowConf().getInterval());
+        assertNotNull(conf.getWorkflowConf().getWorkflows());
+        assertFalse(conf.getWorkflowConf().getWorkflows().isEmpty());
+        
         assertNotNull(conf.getTransformationConf());
         assertNotNull(conf.getTransformationConf().getXsdDir());
         assertNotNull(conf.getTransformationConf().getXsltDir());
@@ -128,7 +135,13 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getCumulusConf().getUserPassword());
         assertNotNull(conf.getCumulusConf().getWriteAccess());
         assertNotNull(conf.getCumulusConf().getCatalogs());
+        assertFalse(conf.getCumulusConf().getCatalogs().isEmpty());
 
+        assertNotNull(conf.getWorkflowConf());
+        assertNotNull(conf.getWorkflowConf().getInterval());
+        assertNotNull(conf.getWorkflowConf().getWorkflows());
+        assertFalse(conf.getWorkflowConf().getWorkflows().isEmpty());
+        
         assertNotNull(conf.getTransformationConf());
         assertNotNull(conf.getTransformationConf().getXsdDir());
         assertNotNull(conf.getTransformationConf().getXsltDir());
