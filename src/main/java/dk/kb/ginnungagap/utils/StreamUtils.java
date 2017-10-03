@@ -26,8 +26,7 @@ public final class StreamUtils {
     public static void copyInputStreamToOutputStream(InputStream in,
             OutputStream out) throws IOException {
         if(in == null || out == null) {
-            throw new IllegalArgumentException("InputStream: " + in 
-                    + ", OutputStream: " + out);
+            throw new IllegalArgumentException("InputStream: " + in + ", OutputStream: " + out);
         }
         
         try {

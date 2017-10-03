@@ -8,6 +8,12 @@ import junit.framework.Assert;
 public class CalendarUtilsTest extends ExtendedTestCase {
 
     @Test
+    public void testConstructor() {
+        CalendarUtils c = new CalendarUtils();
+        Assert.assertNotNull(c);
+    }
+    
+    @Test
     public void testNow() {
         String res = CalendarUtils.nowToText();
         Assert.assertNotNull(res);

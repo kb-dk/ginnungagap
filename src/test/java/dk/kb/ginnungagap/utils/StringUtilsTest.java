@@ -66,4 +66,16 @@ public class StringUtilsTest extends ExtendedTestCase {
         assertFalse(res2.contains(separator1));
         assertTrue(res2.contains(separator2));
     }
+    
+    @Test
+    public void testXmlEncode() {
+        addDescription("Testing the encoding of text into XML values.");
+        String s = "<test this>";
+        assertTrue(s.contains("<"));
+        assertTrue(s.contains(">"));
+        
+        String res = StringUtils.xmlEncode(s);
+        assertFalse(res.contains("<"));
+        assertFalse(res.contains(">"));
+    }
 }

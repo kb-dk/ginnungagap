@@ -23,10 +23,8 @@ public class FileUtils {
      */
     public static File getDirectory(String path) {
         File res = new File(path);
-        if(!res.isDirectory()) {
-            if(!res.mkdirs() && !res.isDirectory()) {
-                throw new IllegalStateException("Cannot instantiate the directory at '" + path + "'.");
-            }
+        if(!res.isDirectory() && !res.mkdirs() && !res.isDirectory()) {
+            throw new IllegalStateException("Cannot instantiate the directory at '" + path + "'.");
         }
         return res;
     }
@@ -51,7 +49,7 @@ public class FileUtils {
             StreamUtils.copyInputStreamToOutputStream(new FileInputStream(from), new FileOutputStream(to));
             from.delete();
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not move the file '" + from.getAbsolutePath() 
+            throw new IllegalStateException("Could not move the file '" + from.getAbsolutePath() 
                     + "' to the location '" + to.getAbsolutePath() + "'", e);
         }
         

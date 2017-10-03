@@ -23,11 +23,16 @@ public interface Constants {
      * This interface exposes String constants that contain names of
      * various Cumulus record fields.
     */
-    public interface FieldNames {
+    interface FieldNames {
         /** The name of the preservation check field.*/
-        String BEVARING_CHECK = "Bevaring_check";
+        String BEVARING_CHECK = "Bevaring_check_type";
         /** The name of the preservation check status field.*/
         String BEVARING_CHECK_STATUS = "Bevaring_check_status";
+
+        /** The name of the preservation check field.*/
+        String BEVARING_IMPORTATION = "Bevaring_Import";
+        /** The name of the preservation check status field.*/
+        String BEVARING_IMPORTATION_STATUS = "Bevaring_Import_status";
 
         /** The name of the title field. */
         String TITEL = "Titel";
@@ -825,6 +830,12 @@ public interface Constants {
         /** The "Integritets fejl" state for the preservation validation field.*/
         String PRESERVATION_VALIDATION_FAILURE = "Integritets fejl";
 
+        /** The "Ingen import" state for the preservation import field.*/
+        String PRESERVATION_IMPORT_NONE = "Ingen import";
+        /** The "Start import af filen" state for the preservation import field.*/
+        String PRESERVATION_IMPORT_START = "Start import af filen";
+        /** The "Import fejlet" state for the preservation import field.*/
+        String PRESERVATION_IMPORT_FAILURE = "Import fejlet";
 
         /** The "OK" value for MASTERTRANSFERSTATUS. */
         String TRANSFER_STATUS_OK = "OK";

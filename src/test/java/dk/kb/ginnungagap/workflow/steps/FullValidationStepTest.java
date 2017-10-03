@@ -1,15 +1,14 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.isNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +20,6 @@ import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.warc.WarcReader;
 import org.jwat.warc.WarcReaderFactory;
 import org.jwat.warc.WarcRecord;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,7 +31,6 @@ import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.yggdrasil.bitmag.Bitrepository;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
 
 public class FullValidationStepTest extends ExtendedTestCase {
 
@@ -97,7 +94,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
-            WarcRecord record = step.getWarcRecord(reader, badUuid);
+            step.getWarcRecord(reader, badUuid);
         }
     }
     
@@ -111,7 +108,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
-            WarcRecord record = step.getWarcRecord(reader, warcRecordId);
+            step.getWarcRecord(reader, warcRecordId);
         }
     }
     
@@ -334,4 +331,5 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verifyZeroInteractions(server);
     }
 
+    
 }

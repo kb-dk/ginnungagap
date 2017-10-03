@@ -315,7 +315,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.8</version>
+        <version>2.9</version>
         <configuration>
           <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
         </configuration>
@@ -323,7 +323,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.14</version>
+        <version>2.17</version>
         <configuration>
           <configLocation>checkstyle.xml</configLocation>
         </configuration>
@@ -331,7 +331,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.5</version>
         <configuration>
            <failOnError>false</failOnError>
            <formats>
@@ -341,9 +341,20 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.8</version>
+        <configuration>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+          <minimumTokens>100</minimumTokens>
+          <targetJdk>1.8</targetJdk>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.7.9</version>
       </plugin>
     </plugins>
   </reporting>

@@ -12,6 +12,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -88,5 +89,56 @@ public class FileUtilsTest extends ExtendedTestCase {
         
         assertNotEquals(to.length(), size1);
         assertEquals(to.length(), size2);
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testMovingFileFailureNoFromFile() throws IOException, InterruptedException {
+        addDescription("Try moving a file when the from-file does not exist.");
+        File from = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        File to = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        
+        FileUtils.moveOrOverrideFile(from, to);        
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testMovingFileFailureCannotWriteToFile() throws IOException, InterruptedException {
+        addDescription("Try moving a file when the to-file destination cannot be written to.");
+        File from = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        
+        File toDir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        try {
+            toDir.setWritable(false);
+            File to = new File(toDir, UUID.randomUUID().toString());
+            FileUtils.moveOrOverrideFile(from, to);        
+        } finally {
+            toDir.setWritable(true);
+        }
+    }
+    
+    @Test
+    public void testGetNewFile() {
+        addDescription("Test the getNewFile method when failure.");
+        File newFile = FileUtils.getNewFile(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        Assert.assertNotNull(newFile);
+        Assert.assertTrue(newFile.isFile());
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testGetNewFileFailureFileAlreadyExists() throws IOException {
+        addDescription("Test the getNewFile method when the file already exists");
+        File newFile = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        FileUtils.getNewFile(newFile.getParentFile(), newFile.getName());
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testGetNewFileFailureCannotWriteToDir() throws IOException {
+        addDescription("Test the getNewFile method when the file already exists");
+        File dir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        try {
+            dir.setWritable(false);
+            FileUtils.getNewFile(dir, UUID.randomUUID().toString());
+        } finally {
+            dir.setWritable(true);
+        }
     }
 }

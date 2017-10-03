@@ -46,11 +46,18 @@
         <xsl:value-of select="field[@name='pbcoreDescription']/value" />
       </xsl:element>
       <!-- pbcore genre -->
-      <xsl:if test="field[@name='pbcoreGenre']">
-        <xsl:element name="pbcore:pbcoreGenre">
-          <xsl:value-of select="field[@name='pbcoreGenre']/value" />
-        </xsl:element>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="field[@name='pbcoreGenre']">
+          <xsl:element name="pbcore:pbcoreGenre">
+            <xsl:value-of select="field[@name='pbcoreGenre']/value" />
+          </xsl:element>
+        </xsl:when>
+        <xsl:when test="field[@name='Genre']">
+          <xsl:element name="pbcore:pbcoreGenre">
+            <xsl:value-of select="field[@name='Genre']/value" />
+          </xsl:element>
+        </xsl:when>
+      </xsl:choose>
       <!-- pbcore audience level -->
       <xsl:if test="field[@name='pbcoreAudienceLevel']">
         <xsl:element name="pbcore:pbcoreAudienceLevel">
@@ -70,60 +77,60 @@
         </xsl:element>
       </xsl:if>
       <!-- pbcore creator element -->
-      <xsl:if test="field[@name='Creator']">
+      <xsl:if test="field[@name='pbcoreCreator']">
         <xsl:element name="pbcore:pbcoreCreator">
           <xsl:element name="pbcore:creator">
-            <xsl:value-of select="field[@name='Creator']/value" />
+            <xsl:value-of select="field[@name='pbcoreCreator']/value" />
           </xsl:element>
-          <xsl:if test="field[@name='creatorRole']">
+          <xsl:if test="field[@name='pbcorecreatorRole']">
             <xsl:element name="pbcore:creatorRole">
-              <xsl:value-of select="field[@name='creatorRole']/value" />
+              <xsl:value-of select="field[@name='pbcorecreatorRole']/value" />
             </xsl:element>
           </xsl:if>
         </xsl:element>
       </xsl:if>
       <!-- pbcore contributor element -->
-      <xsl:if test="field[@name='Contributor']">
+      <xsl:if test="field[@name='pbcoreContributor']">
         <xsl:element name="pbcore:pbcoreContributor">
           <xsl:element name="pbcore:contributor">
-            <xsl:value-of select="field[@name='Contributor']/value" />
+            <xsl:value-of select="field[@name='pbcoreContributor']/value" />
           </xsl:element>
-          <xsl:if test="field[@name='contributorRole']">
+          <xsl:if test="field[@name='pbcorecontributorRole']">
             <xsl:element name="pbcore:contributorRole">
-              <xsl:value-of select="field[@name='contributorRole']/value" />
+              <xsl:value-of select="field[@name='pbcorecontributorRole']/value" />
             </xsl:element>
           </xsl:if>
         </xsl:element>
       </xsl:if>
       <!-- pbcore publisher element -->
-      <xsl:if test="field[@name='Publisher']">
+      <xsl:if test="field[@name='pbcorePublisher']">
         <xsl:element name="pbcore:pbcorePublisher">
           <xsl:element name="pbcore:publisher">
-            <xsl:value-of select="field[@name='Publisher']/value" />
+            <xsl:value-of select="field[@name='pbcorePublisher']/value" />
           </xsl:element>
-          <xsl:if test="field[@name='publisherRole']">
+          <xsl:if test="field[@name='pbcorepublisherRole']">
             <xsl:element name="pbcore:publisherRole">
-              <xsl:value-of select="field[@name='publisherRole']/value" />
+              <xsl:value-of select="field[@name='pbcorepublisherRole']/value" />
             </xsl:element>
           </xsl:if>
         </xsl:element>
       </xsl:if>
       <!-- pbcore rights element -->
-      <xsl:if test="field[@name='rightsSummary'] or field[@name='rightsLink'] or field[@name='rightsEmbedded']">
+      <xsl:if test="field[@name='pbcorerightsSummary'] or field[@name='pbcorerightsLink'] or field[@name='pbcorerightsEmbedded']">
         <xsl:element name="pbcore:pbcoreRightsSummary">
-          <xsl:if test="field[@name='rightsSummary']">
+          <xsl:if test="field[@name='pbcorerightsSummary']">
             <xsl:element name="pbcore:rightsSummary">
-              <xsl:value-of select="field[@name='rightsSummary']/value" />
+              <xsl:value-of select="field[@name='pbcorerightsSummary']/value" />
             </xsl:element>
           </xsl:if>
-          <xsl:if test="field[@name='rightsLink']">
+          <xsl:if test="field[@name='pbcorerightsLink']">
             <xsl:element name="pbcore:rightsLink">
-              <xsl:value-of select="field[@name='rightsLink']/value" />
+              <xsl:value-of select="field[@name='pbcorerightsLink']/value" />
             </xsl:element>
           </xsl:if>
-          <xsl:if test="field[@name='rightsEmbedded']">
+          <xsl:if test="field[@name='pbcorerightsEmbedded']">
             <xsl:element name="pbcore:rightsEmbedded">
-              <xsl:value-of select="field[@name='rightsEmbedded']/value" />
+              <xsl:value-of select="field[@name='pbcorerightsEmbedded']/value" />
             </xsl:element>
           </xsl:if>
         </xsl:element>

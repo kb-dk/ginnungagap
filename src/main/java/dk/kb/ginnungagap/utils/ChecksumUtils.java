@@ -41,28 +41,32 @@ public class ChecksumUtils {
      * Validates that a collection of checksum complete pillar events have the same checksum for the same file. 
      * It will throw an exception if no results are found.
      * @param checksumEvents The checksum complete pillar events to validate. 
-     * @return Whether the events have the same result.
+     * @return The checksum which is agreed upon.
      */
-    public static boolean validateChecksumResults(Collection<ChecksumsCompletePillarEvent> checksumEvents) {
+    public static String getAgreedChecksum(Collection<ChecksumsCompletePillarEvent> checksumEvents) {
         Set<String> filenames = new HashSet<>();
         Set<ChecksumType> csType = new HashSet<>();
         Set<String> checksums = new HashSet<>();
-        boolean success = true;
         for(ChecksumsCompletePillarEvent event : checksumEvents) {
-            if(event.getEventType() == OperationEventType.COMPONENT_COMPLETE) { 
+            if(event.getEventType() == OperationEventType.COMPONENT_COMPLETE) {
                 filenames.add(event.getFileID());
+                filenames.add(event.getChecksums().getChecksumDataItems().get(0).getFileID());
                 csType.add(event.getChecksumType().getChecksumType());
                 checksums.add(Base16Utils.decodeBase16(
                         event.getChecksums().getChecksumDataItems().get(0).getChecksumValue()));
             } else {
-                success = false;
+                throw new IllegalStateException("A component failed to deliver checksum results, "
+                        + "thus not valid result: " + event);
             }
         }
 
         if(checksums.isEmpty()) {
             throw new IllegalStateException("No results -> No WARC file found.");
         }
-        
-        return success && (filenames.size() == 1) && (csType.size() == 1) && (checksums.size() == 1);
+        if(filenames.size() > 1 || csType.size() > 1 || checksums.size() > 1) {
+            throw new IllegalStateException("Too many results; filenames: '" + filenames + "', checksumTypes: '"
+                    + csType + "', checksums: '" + checksums + "'");
+        }
+        return checksums.iterator().next();
     }
 }

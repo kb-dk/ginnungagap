@@ -84,10 +84,8 @@ public class Ginnungagap {
                 printParametersAndExit();
             }
         }
-        if(args.length > 2) {
-            if(args[2].startsWith("y") || args[2].startsWith("Y")) {
-                fileOnly = true;
-            }
+        if(args.length > 2 && (args[2].startsWith("y") || args[2].startsWith("Y"))) {
+            fileOnly = true;
         }
         if(args.length > 4) {
             System.out.println("Maximum 3 arguments; the configuration file, archive-type, file-only. "

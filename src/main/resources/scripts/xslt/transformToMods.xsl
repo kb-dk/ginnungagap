@@ -14,7 +14,7 @@
   <!-- START defining variables -->
   <xsl:variable name="image_uri_base" select="'http://www.kb.dk/imageService'"/>
   
-  <xsl:variable name="type_of_resource" select="'still image'" />
+  <xsl:variable name="type_of_resource" select="''" />
   <xsl:variable name="type_of_event" select="'references'" />
   
   <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />

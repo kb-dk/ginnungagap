@@ -44,13 +44,20 @@ public class SimpleValidationStep extends ValidationStep {
             String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
             String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
             Map<String, ChecksumsCompletePillarEvent> completeEvents = bitmag.getChecksums(warcId, collectionId);
-            if(ChecksumUtils.validateChecksumResults(completeEvents.values())) {
+            String checksumResult = ChecksumUtils.getAgreedChecksum(completeEvents.values());
+            String warcChecksum = record.getFieldValue(Constants.FieldNames.ARCHIVE_MD5);
+            
+            if(checksumResult.equalsIgnoreCase(warcChecksum)) {
                 setValid(record);
             } else {
-                String message = "WARC file exists, but it has an integrity issue. Discovered at: " 
-                        + CalendarUtils.getCurrentDate();
-                setInvalid(record, message);
+                throw new IllegalStateException("Checksums did not match. Expected '" + warcChecksum 
+                        + "', but received '" + checksumResult + "' from the archive.");
             }
+        } catch (IllegalStateException e) {
+            log.info("Failed to validate the WARC file", e);
+            String message = "WARC file exists, but it has an integrity issue. Discovered at: " 
+                    + CalendarUtils.getCurrentDate();
+            setInvalid(record, message);
         } catch (Exception e) {
             String errMsg = "Error when trying to validate record '" + record + "'";
             log.warn(errMsg, e);
