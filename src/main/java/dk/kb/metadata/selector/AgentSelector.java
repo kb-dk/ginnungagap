@@ -1,13 +1,12 @@
 package dk.kb.metadata.selector;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.canto.cumulus.Cumulus;
 
 import dk.kb.metadata.utils.ExceptionUtils;
-import dk.kb.metadata.utils.StringUtils;
 
 /**
  * The selector for agents.
@@ -15,28 +14,28 @@ import dk.kb.metadata.utils.StringUtils;
  */
 public final class AgentSelector {
     /** Private constructor for this Utility class.*/
-    private AgentSelector() {}
+    protected AgentSelector() {}
 
     /** The KB agent.*/
-    private static final String KB_AGENT = "kbDk";
+    protected static final String KB_AGENT = "kbDk";
     /** The metadata generator.*/
-    private static final String KB_AGENT_CBS = "kbDkCumulusBevaringsService";
+    protected static final String KB_AGENT_CBS = "kbDkCumulusBevaringsService";
 
     /** The list of all possible agent names currently defined.*/
-    public static final Set<String> AGENT_NAMES = new HashSet<String>(Arrays.asList(
+    protected static final Collection<String> AGENT_NAMES = Collections.unmodifiableCollection(Arrays.asList(
             KB_AGENT,
             KB_AGENT_CBS));
 
     // The different types of agents.
     /** Internal agent. */
-    private static final String KB_TYPE_INTERNAL = "kbDkInternal";
+    protected static final String KB_TYPE_INTERNAL = "kbDkInternal";
     /** Personal agent.*/
-    private static final String KB_TYPE_PERSONEL = "kbDkPersonel";
+    protected static final String KB_TYPE_PERSONEL = "kbDkPersonel";
     /** Department agent.*/
-    private static final String KB_TYPE_DEPARTMENT = "kbDkDepartment";
+    protected static final String KB_TYPE_DEPARTMENT = "kbDkDepartment";
 
     /** The list of all possible agent types currently defined.*/
-    public static final Set<String> AGENT_TYPES = new HashSet<String>(Arrays.asList(
+    protected static final Collection<String> AGENT_TYPES = Collections.unmodifiableCollection(Arrays.asList(
             KB_TYPE_INTERNAL,
             KB_TYPE_PERSONEL,
             KB_TYPE_DEPARTMENT));
@@ -64,14 +63,6 @@ public final class AgentSelector {
     public static String getAgentValue(String agentName) {
         if(AGENT_NAMES.contains(agentName)) {
             return agentName;
-        }
-
-        if(agentName.contains(":")) {
-            String[] split = agentName.split("[:]");
-            String agent = "kbDk" + StringUtils.encodeAsUpperCamelCase(split[0]);
-            if(AGENT_NAMES.contains(agent)) {
-                return agent;
-            }
         }
 
         IllegalStateException res = new IllegalStateException("The agent named '" + agentName + "' does not exist.");
@@ -102,7 +93,7 @@ public final class AgentSelector {
     /**
      * The version for the ingest agent.
      */
-    private static final String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
+    protected static final String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
 
     /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {

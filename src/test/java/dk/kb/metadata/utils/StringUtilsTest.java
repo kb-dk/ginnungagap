@@ -7,6 +7,18 @@ import org.testng.annotations.Test;
 public class StringUtilsTest extends ExtendedTestCase {
 
     @Test
+    public void testConstructor() {
+        addDescription("Test the constructor.");
+        StringUtils su = new StringUtils();
+        Assert.assertNotNull(su);
+    }
+    
+    @Test
+    public void testSplitOutOfBounds() {
+        Assert.assertNull(StringUtils.split("1, 2, 3, 4", ",", 10));
+    }
+    
+    @Test
     public void testSplitableOnCommaTrue() {
         Assert.assertTrue(StringUtils.splitableOnComma("asfd, fdsa"));
     }

@@ -8,6 +8,13 @@ import org.testng.annotations.Test;
 import junit.framework.Assert;
 
 public class GuidExtractionUtilsTest extends ExtendedTestCase {
+
+    @Test
+    public void testConstructor() {
+        addDescription("Test the constructor.");
+        GuidExtrationUtils geu = new GuidExtrationUtils();
+        Assert.assertNotNull(geu);
+    }
     
     @Test
     public void testExtractUUIDWithoutEndHash() {
@@ -17,5 +24,17 @@ public class GuidExtractionUtilsTest extends ExtendedTestCase {
 
         String uuid = GuidExtrationUtils.extractGuid(url);
         Assert.assertEquals(expectedUuid, uuid);
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testExtractGuidFailureNullArgument() {
+        addDescription("Test the way the extractGuid method fails, when given a null argument");
+        GuidExtrationUtils.extractGuid(null);
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testExtractGuidFailureEmptyStringArgument() {
+        addDescription("Test the way the extractGuid method fails, when given the empty string as argument");
+        GuidExtrationUtils.extractGuid("");
     }
 }

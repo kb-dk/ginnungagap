@@ -7,11 +7,11 @@ import java.util.Map;
  * Keeps track of the file ids for the respective GUIDs.
  */
 public final class FileIdHandler {
-    /** Private constructor for this Utility class.*/
-    private FileIdHandler() {}
+    /** Constructor for this Utility class.*/
+    protected FileIdHandler() {}
 
     /** Maps between a GUID and the respective file id. */
-    protected static final Map<String, String> FILE_IDS = new HashMap<String, String>();
+    private static final Map<String, String> FILE_IDS = new HashMap<String, String>();
 
     /**
      * Returns the file id for the respective GUID. If no file id exists for such GUID, then it is created.
@@ -27,6 +27,13 @@ public final class FileIdHandler {
         return FILE_IDS.get(guid);
     }
 
+    /**
+     * @return The map of file-ids.
+     */
+    public static Map<String, String> getMap() {
+        return FILE_IDS;
+    }
+    
     /**
      * Cleanup data after use (should be called after each transformation).
      */

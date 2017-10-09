@@ -73,7 +73,7 @@ public class PreservationWorkflow extends AbstractWorkflow {
     
     @Override
     public String getDescription() {
-        return "Preserves all ";
+        return "Preserves all the Cumulus records, which have been set to 'ready for long-term preservation'.";
     }
 
     @Override

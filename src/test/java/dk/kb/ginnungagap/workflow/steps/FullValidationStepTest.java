@@ -2,7 +2,6 @@ package dk.kb.ginnungagap.workflow.steps;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,7 +14,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.bitrepository.bitrepositoryelements.FilePart;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.warc.WarcReader;
 import org.jwat.warc.WarcReaderFactory;
@@ -25,12 +23,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 public class FullValidationStepTest extends ExtendedTestCase {
 
@@ -58,24 +56,27 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testGetName() {
         addDescription("Test the GetName method.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         String name = step.getName();
         Assert.assertNotNull(name);
         Assert.assertFalse(name.isEmpty());
+        
+        verifyZeroInteractions(server);
+        verifyZeroInteractions(archive);
     }
     
     @Test
     public void testGetWarcRecordSuccess() throws IOException {
         addDescription("Test the GetWarcRecord method for the success scenario.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
         File exampleWarc = new File(warcPath);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             WarcRecord record = step.getWarcRecord(reader, warcRecordId);
             Assert.assertNotNull(record);
@@ -87,11 +88,11 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testGetWarcRecordFailureBadRecordId() throws IOException {
         addDescription("Test the GetWarcRecord method when given a id, which does not match a record in the warc file.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         String badUuid = UUID.randomUUID().toString();
         File exampleWarc = new File(warcPath);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             step.getWarcRecord(reader, badUuid);
@@ -102,10 +103,10 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testGetWarcRecordFailureMissingFile() throws IOException {
         addDescription("Test the GetWarcRecord method when the file is missing.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         File exampleWarc = new File(UUID.randomUUID().toString());
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             step.getWarcRecord(reader, warcRecordId);
@@ -116,13 +117,13 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateWarcFileChecksumSuccess() {
         addDescription("Test the ValidateWarcFileChecksum method for success scenario.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         
         when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(warcFileChecksum);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         step.validateWarcFileChecksum(record, exampleWarc);
     }
@@ -131,14 +132,14 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateWarcFileChecksumFailureChecksumMismatch() {
         addDescription("Test the ValidateWarcFileChecksum method when the checksums does not match.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         String badChecksum = UUID.randomUUID().toString();
         
         when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(badChecksum);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         step.validateWarcFileChecksum(record, exampleWarc);
     }
@@ -147,13 +148,13 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateSizeSuccess() throws IOException {
         addDescription("Test the ValidateSize method when it has expected size.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
 
         when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(warcRecordSize);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             WarcRecord warcRecord = step.getWarcRecord(reader, warcRecordId);
             step.validateSize(warcRecord, record);
@@ -164,14 +165,14 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateSizeFailure() throws IOException {
         addDescription("Test the ValidateSize method when it does not have the expected size.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         Long badSize = -42L;
 
         when(record.getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE))).thenReturn(badSize);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             WarcRecord warcRecord = step.getWarcRecord(reader, warcRecordId);
         
@@ -183,14 +184,14 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordChecksumSuccess() throws IOException {
         addDescription("Test the ValidateRecordChecksum method when it has the expected checksum.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         
         when(record.getFieldValue(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER))).thenReturn(warcRecordChecksum);        
         when(record.getUUID()).thenReturn(warcRecordId);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             WarcRecord warcRecord = step.getWarcRecord(reader, warcRecordId);
@@ -203,14 +204,14 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordChecksumFailure() throws IOException {
         addDescription("Test the ValidateRecordChecksum method when it does not have the expected checksum.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         
         when(record.getFieldValue(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER))).thenReturn(warcFileChecksum);        
         when(record.getUUID()).thenReturn(warcRecordId);
         
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
 
         try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(exampleWarc))) {
             WarcRecord warcRecord = step.getWarcRecord(reader, warcRecordId);
@@ -223,7 +224,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordSuccess() throws Exception {
         addDescription("Test the ValidateRecord method for the success scenario.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         
@@ -237,13 +238,13 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
-        when(bitmag.getFile(eq(warcId), eq(collectionId), isNull(FilePart.class))).thenReturn(exampleWarc);
+        when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         step.validateRecord(record);
 
-        verify(bitmag).getFile(eq(warcId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
         verify(record).getFieldLongValue(eq(Constants.PreservationFieldNames.FILE_DATA_SIZE));
@@ -263,7 +264,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordFailureValidation() throws Exception {
         addDescription("Test the ValidateRecord method for the scenario when it fails the validation.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
         
@@ -277,13 +278,13 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
-        when(bitmag.getFile(eq(warcId), eq(collectionId), isNull(FilePart.class))).thenReturn(exampleWarc);
+        when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         step.validateRecord(record);
 
-        verify(bitmag).getFile(eq(warcId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
@@ -301,7 +302,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordFailureRetrievingFile() throws Exception {
         addDescription("Test the ValidateRecord method for the scenario when it fails the validation.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(UUID.randomUUID().toString());
         
@@ -312,13 +313,13 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
-        when(bitmag.getFile(eq(warcId), eq(collectionId), isNull(FilePart.class))).thenReturn(exampleWarc);
+        when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
-        FullValidationStep step = new FullValidationStep(server, catalogName, bitmag, conf);
+        FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
         step.validateRecord(record);
 
-        verify(bitmag).getFile(eq(warcId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));

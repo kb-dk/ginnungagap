@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
  * Transformation utilities for MODS transformations.
  * Extracted from deprecate COP project.
  * 
+ *******************************************************
+ * 
  * Utility klasse der skal hjælpe med at parse data
  * fra cumulus, og skabe mods objekter. Hvis nogen regler
  * ikke er overholdt logges dette. Logmeddelelen skal 
@@ -32,14 +34,12 @@ public class TransformUtils {
     private static final String LANG_SEPARATOR = "|";
 
     /** Whether it is a non-transliteration.*/
-    private static final int IS_NON_TRANSLITERATION = 0;
-
+    protected static final int IS_NON_TRANSLITERATION = 0;
     /** Whether it is a transliteration.*/
-    private static final int IS_TRANSLITERATION_REX = 1;
-
-
+    protected static final int IS_TRANSLITERATION_REX = 1;
     /** Unknown.*/
-    private static final int IS_RSS = 2;
+    protected static final int IS_RSS = 2;
+    
     /**
      * Dummy constructor, for at tilfredsstille checkstyle :-(.
      */
@@ -51,9 +51,9 @@ public class TransformUtils {
      * @return Værdien, med cumulus regler overholdt.
      */
     public static String getCumulusVal(String val){       
-        if(val.indexOf(LANG_SEPARATOR)>-1){
-            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR)+1
-                    , val.length()), IS_NON_TRANSLITERATION).trim();
+        if(val.indexOf(LANG_SEPARATOR) > -1){
+            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1, val.length()), 
+                    IS_NON_TRANSLITERATION).trim();
         } else {
             return applyRules(val, IS_NON_TRANSLITERATION).trim();
         }    
@@ -64,9 +64,9 @@ public class TransformUtils {
      * @return The field value, without the language prefix.
      */
     public static String getCumulusSimpleVal(String val){
-        if(val.indexOf(LANG_SEPARATOR)>-1){
-            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR)+1
-                    , val.length()), IS_RSS).trim();
+        if(val.indexOf(LANG_SEPARATOR) > -1){
+            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1, val.length()), 
+                    IS_RSS).trim();
         } else {
             return applyRules(val, IS_RSS).trim();
         }     
@@ -224,7 +224,6 @@ public class TransformUtils {
         } else {   
             return val;
         }
-
     }
 }
 

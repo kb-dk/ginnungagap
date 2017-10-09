@@ -13,13 +13,13 @@ import org.jwat.warc.WarcRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 /**
  * Workflow step for simple validation of a specific Cumulus catalog.
@@ -28,8 +28,8 @@ public class FullValidationStep extends ValidationStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(FullValidationStep.class);
 
-    /** The Bitmag client*/
-    protected final Bitrepository bitmag;
+    /** The Bitrepository archive.*/
+    protected final Archive archive;
     /** The configuration.*/
     protected final Configuration conf;
     
@@ -37,12 +37,12 @@ public class FullValidationStep extends ValidationStep {
      * Constructor.
      * @param server The Cumulus server.
      * @param catalogName The name of the catalog.
-     * @param bitmag The bitrepository where the data must be validated.
+     * @param archive The bitrepository archive where the data must be validated.
      * @param conf The configuration.
      */
-    public FullValidationStep(CumulusServer server, String catalogName, Bitrepository bitmag, Configuration conf) {
+    public FullValidationStep(CumulusServer server, String catalogName, Archive archive, Configuration conf) {
         super(server, catalogName, Constants.FieldValues.PRESERVATION_VALIDATION_FULL_CHECK);
-        this.bitmag = bitmag;
+        this.archive = archive;
         this.conf = conf;
     }
 
@@ -57,7 +57,7 @@ public class FullValidationStep extends ValidationStep {
             String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
             String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
             String uuid = record.getUUID();
-            File f = bitmag.getFile(warcId, collectionId, null);
+            File f = archive.getFile(warcId, collectionId);
             validateWarcFileChecksum(record, f);
             
             try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(f))) {

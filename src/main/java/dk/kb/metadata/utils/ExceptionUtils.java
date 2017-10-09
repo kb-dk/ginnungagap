@@ -8,6 +8,9 @@ import java.util.List;
  * Utility class for exceptions.
  */
 public class ExceptionUtils {
+    
+    /** Constructor.*/
+    protected ExceptionUtils() {}
 
     /** The list of exceptions.*/
     private static List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
@@ -38,9 +41,12 @@ public class ExceptionUtils {
     /**
      * If a single exception is caught, then it is returned.
      * More than one exception will be put in the stacktrace of a generic exception.
-     * @return The caught exception(s).
+     * @return The caught exception(s). Or null if no exceptions have been caught.
      */
     public static Exception retrieveFailure() {
+        if(exceptions.size() < 1) {
+            return null;
+        }
         if(exceptions.size() == 1) {
             return exceptions.get(0);
         }

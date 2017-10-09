@@ -19,6 +19,22 @@ public interface Archive {
     boolean uploadFile(File file, String collectionId);
     
     /**
+     * Retrieve the file from the archive.
+     * @param warcId The id of the WARC file to retrieve.
+     * @param collectionId The collection, where the file must be located.
+     * @return The file.
+     */
+    File getFile(String warcId, String collectionId);
+    
+    /**
+     * Retrieve the checksum of a file in the archive.
+     * @param warcId The id of a WARC file in the archive.
+     * @param collectionId The collection with the file to have its checksum calculated.
+     * @return The checksum of the file.
+     */
+    String getChecksum(String warcId, String collectionId);
+    
+    /**
      * Shutdown the archive, or any connections required for accessing the archive.
      */
     void shutdown();

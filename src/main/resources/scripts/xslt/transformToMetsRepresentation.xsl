@@ -18,8 +18,6 @@
   <xsl:include href="transformToPbCore.xsl"/>
   <xsl:include href="transformToPremis.xsl"/>
  
-  <xsl:variable name="FILE_GUID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />
-  
   <xsl:variable name="MODS-ID" select="'Mods'" />
   <xsl:variable name="PBCORE-DESCRIPTION-ID" select="'PBCoreDescription'" />
   <xsl:variable name="MODS-RIGHTS-ID" select="'ModsRights'" />
@@ -38,7 +36,7 @@
   <xsl:template name="mets_generator">
     <mets:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd">
       <xsl:attribute name="TYPE">
-        <xsl:value-of select="'File'" />
+        <xsl:value-of select="'Representation'" />
       </xsl:attribute>
       <xsl:attribute name="OBJID">
         <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />

@@ -2,6 +2,9 @@ package dk.kb.ginnungagap.archive;
 
 import java.io.File;
 
+import org.jwat.warc.WarcDigest;
+
+import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 
 /**
@@ -30,5 +33,18 @@ public class LocalArchive implements Archive {
     @Override
     public void shutdown() {
         // Do nothing!!!
+    }
+
+    @Override
+    public File getFile(String warcId, String collectionId) {
+        File collectionDir = FileUtils.getDirectory(new File(archiveBaseDir, collectionId).getAbsolutePath());
+        return new File(collectionDir, warcId);
+    }
+
+    @Override
+    public String getChecksum(String warcId, String collectionId) {
+        WarcDigest digest = ChecksumUtils.calculateChecksum(getFile(warcId, collectionId), 
+                ChecksumUtils.MD5_ALGORITHM);
+        return digest.digestString;
     }
 }

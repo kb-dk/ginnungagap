@@ -2530,23 +2530,8 @@
   <!-- START typeOfResource -->
   <xsl:template name="mods_typeOfResource">
     <xsl:element name="mods:typeOfResource">
-      <xsl:choose>
-        <xsl:when test="field[@name='Materialebetegnelse']">
-          <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='Materialebetegnelse']/value, $type_of_resource)" />
-        </xsl:when>
-        <xsl:when test="field[@name='Resourcedescription']">
-          <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='Resourcedescription']/value, $type_of_resource)" />
-        </xsl:when>
-        <xsl:when test="field[@name='Generel materialebetegnelse']">
-          <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='Generel materialebetegnelse']/value, $type_of_resource)" />
-        </xsl:when>
-        <xsl:when test="field[@name='General Resourcedescription']">
-          <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='General Resourcedescription']/value, $type_of_resource)" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$type_of_resource" />
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='Materialebetegnelse']/value, 
+          field[@name='Resourcedescription']/value, field[@name='Generel materialebetegnelse']/value, field[@name='General Resourcedescription']/value)" />
     </xsl:element>
   </xsl:template>
   <!-- END typeOfResource -->

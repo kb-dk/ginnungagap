@@ -11,8 +11,8 @@ import java.util.UUID;
  * The manager for the identifiers.
  */
 public final class IdentifierManager {
-    /** Private constructor for this utility class.*/
-    private IdentifierManager() {}
+    /** Constructor for this utility class.*/
+    protected IdentifierManager() {}
 
     /** The mapping between the different file ids and their event identifiers.*/
     private static Map<String, String> eventIdentifierMap = new HashMap<String, String>();

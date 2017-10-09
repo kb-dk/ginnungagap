@@ -1,51 +1,24 @@
 package dk.kb.ginnungagap.workflow;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import com.canto.cumulus.Asset;
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.FieldDefinition;
-import com.canto.cumulus.FieldTypes;
-import com.canto.cumulus.GUID;
 import com.canto.cumulus.Item;
-import com.canto.cumulus.Layout;
 import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.constants.CombineMode;
 import com.canto.cumulus.constants.FindFlag;
-import com.canto.cumulus.fieldvalue.AssetReference;
-import com.canto.cumulus.fieldvalue.StringEnumFieldValue;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
@@ -56,7 +29,6 @@ import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
 import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
-import junit.framework.Assert;
 
 public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
 

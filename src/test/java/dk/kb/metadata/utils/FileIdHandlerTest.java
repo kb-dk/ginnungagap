@@ -18,12 +18,19 @@ public class FileIdHandlerTest extends ExtendedTestCase {
     }
     
     @Test
+    public void testConstructor() {
+        addDescription("Test the constructor.");
+        FileIdHandler fih = new FileIdHandler();
+        Assert.assertNotNull(fih);
+    }
+    
+    @Test
     public void testHandler() {
-        Assert.assertEquals(0, FileIdHandler.FILE_IDS.size());
+        Assert.assertEquals(0, FileIdHandler.getMap().size());
         String res = FileIdHandler.getFileID(defaultGUID);
         Assert.assertEquals(res, FileIdHandler.getFileID(defaultGUID));
-        Assert.assertEquals(1, FileIdHandler.FILE_IDS.size());
+        Assert.assertEquals(1, FileIdHandler.getMap().size());
         FileIdHandler.clean();
-        Assert.assertEquals(0, FileIdHandler.FILE_IDS.size());
+        Assert.assertEquals(0, FileIdHandler.getMap().size());
     }
 }

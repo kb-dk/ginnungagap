@@ -3,7 +3,6 @@ package dk.kb.ginnungagap.workflow.steps;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.bitrepository.bitrepositoryelements.FilePart;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -26,14 +24,13 @@ import com.canto.cumulus.Item;
 import com.canto.cumulus.Layout;
 import com.canto.cumulus.RecordItemCollection;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
 
 public class ImportationStepTest extends ExtendedTestCase {
 
@@ -65,9 +62,9 @@ public class ImportationStepTest extends ExtendedTestCase {
     public void testGetName() {
         addDescription("Test the GetName method.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
-        ImportationStep step = new ImportationStep(server, bitmag, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
 
         String name = step.getName();
         Assert.assertNotNull(name);
@@ -78,11 +75,11 @@ public class ImportationStepTest extends ExtendedTestCase {
     public void testImportRecordSuccess() throws Exception {
         addDescription("Test the importation of a record for the succes scenario.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
         File outFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
-        ImportationStep step = new ImportationStep(server, bitmag, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
@@ -91,7 +88,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         when(record.getUUID()).thenReturn(recordGuid);
         when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(outFile.getAbsolutePath());
         
-        when(bitmag.getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class))).thenReturn(new File(warcResourcePath));
+        when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
         
         step.importRecord(record);
 
@@ -105,8 +102,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).setNewAssetReference(any(File.class));
         verifyNoMoreInteractions(record);
 
-        verify(bitmag).getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcFileId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
 
         verifyZeroInteractions(server);
     }
@@ -115,11 +112,11 @@ public class ImportationStepTest extends ExtendedTestCase {
     public void testImportRecordFailedToFindWarcRecord() throws Exception {
         addDescription("Test the importation of a record, when it cannot find the given warc record.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
         String sillyId = UUID.randomUUID().toString();
         
-        ImportationStep step = new ImportationStep(server, bitmag, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
@@ -127,7 +124,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
-        when(bitmag.getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class))).thenReturn(new File(warcResourcePath));
+        when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
         
         step.importRecord(record);
 
@@ -139,8 +136,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verifyNoMoreInteractions(record);
 
-        verify(bitmag).getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcFileId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
 
         verifyZeroInteractions(server);
     }
@@ -149,11 +146,11 @@ public class ImportationStepTest extends ExtendedTestCase {
     public void testImportRecordFailedToGetWarcFileFromArchive() throws Exception {
         addDescription("Test the importation of a record, when it cannot retrieve the WARC file from the archive.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
         String sillyId = UUID.randomUUID().toString();
         
-        ImportationStep step = new ImportationStep(server, bitmag, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
@@ -161,7 +158,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
-        when(bitmag.getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class))).thenThrow(new YggdrasilException("This must fail!!"));
+        when(archive.getFile(eq(warcFileId), eq(collectionId))).thenThrow(new IllegalStateException("This must fail!!"));
         
         step.importRecord(record);
 
@@ -173,8 +170,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verifyNoMoreInteractions(record);
 
-        verify(bitmag).getFile(eq(warcFileId), eq(collectionId), isNull(FilePart.class));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getFile(eq(warcFileId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
 
         verifyZeroInteractions(server);
     }
@@ -183,9 +180,9 @@ public class ImportationStepTest extends ExtendedTestCase {
     public void testPerformStepWithNoRecords() throws Exception {
         addDescription("Test the importation of a record, when it cannot retrieve the WARC file from the archive.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
-        ImportationStep step = new ImportationStep(server, bitmag, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
         
         RecordItemCollection ric = mock(RecordItemCollection.class);
         Layout layout = mock(Layout.class);
@@ -196,7 +193,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         step.performStep();
         
-        verifyZeroInteractions(bitmag);
+        verifyZeroInteractions(archive);
         
         verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);

@@ -4,8 +4,8 @@ package dk.kb.metadata.utils;
  * Utility class for String operations.
  */
 public final class StringUtils {
-    /** Private constructor for this utility class.*/
-    private StringUtils() {}
+    /** Constructor for this utility class.*/
+    protected StringUtils() {}
 
     /**
      * Validates whether it is possible to split on a comma, ','.

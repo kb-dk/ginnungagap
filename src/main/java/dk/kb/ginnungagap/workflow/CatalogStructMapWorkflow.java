@@ -103,7 +103,7 @@ public class CatalogStructMapWorkflow {
         FieldExtractor fieldExtractor = new FieldExtractor(items.getLayout(), cumulusServer, catalogName);
         GUID recordIntellectualEntityGuid = fieldExtractor.getFieldGUID(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-        GUID recordNameGuid = fieldExtractor.getFieldGUID("Record Name");
+        GUID recordNameGuid = fieldExtractor.getFieldGUID(Constants.FieldNames.RECORD_NAME);
         
         String uuid = UUID.randomUUID().toString();
         File res = new File(conf.getTransformationConf().getMetadataTempDir(), uuid + ".xml");

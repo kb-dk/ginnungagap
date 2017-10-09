@@ -1,17 +1,13 @@
 package dk.kb.ginnungagap.workflow.steps;
 
-import java.util.Map;
-
-import org.bitrepository.access.getchecksums.conversation.ChecksumsCompletePillarEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.metadata.utils.CalendarUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 /**
  * Workflow step for simple validation of a specific Cumulus catalog.
@@ -19,18 +15,18 @@ import dk.kb.yggdrasil.bitmag.Bitrepository;
 public class SimpleValidationStep extends ValidationStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(SimpleValidationStep.class);
-    /** The Bitmag client*/
-    protected final Bitrepository bitmag;
+    /** The Bitrepository client.*/
+    protected final Archive archive;
 
     /**
      * Constructor.
      * @param server The Cumulus server.
      * @param catalogName The name of the catalog.
-     * @param bitmag The bitrepository where the data must be validated.
+     * @param archive The bitrepository archive where the data must be validated.
      */
-    public SimpleValidationStep(CumulusServer server, String catalogName, Bitrepository bitmag) {
+    public SimpleValidationStep(CumulusServer server, String catalogName, Archive archive) {
         super(server, catalogName, Constants.FieldValues.PRESERVATION_VALIDATION_SIMPLE_CHECK);
-        this.bitmag = bitmag;
+        this.archive = archive;
     }
 
     @Override
@@ -43,8 +39,7 @@ public class SimpleValidationStep extends ValidationStep {
         try {
             String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
             String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
-            Map<String, ChecksumsCompletePillarEvent> completeEvents = bitmag.getChecksums(warcId, collectionId);
-            String checksumResult = ChecksumUtils.getAgreedChecksum(completeEvents.values());
+            String checksumResult = archive.getChecksum(warcId, collectionId);
             String warcChecksum = record.getFieldValue(Constants.FieldNames.ARCHIVE_MD5);
             
             if(checksumResult.equalsIgnoreCase(warcChecksum)) {

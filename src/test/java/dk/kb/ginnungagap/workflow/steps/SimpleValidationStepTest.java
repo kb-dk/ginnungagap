@@ -8,25 +8,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import org.bitrepository.access.getchecksums.conversation.ChecksumsCompletePillarEvent;
-import org.bitrepository.bitrepositoryelements.ChecksumDataForChecksumSpecTYPE;
-import org.bitrepository.bitrepositoryelements.ChecksumSpecTYPE;
-import org.bitrepository.bitrepositoryelements.ChecksumType;
-import org.bitrepository.bitrepositoryelements.ResultingChecksums;
-import org.bitrepository.common.utils.Base16Utils;
-import org.bitrepository.common.utils.CalendarUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 public class SimpleValidationStepTest extends ExtendedTestCase {
 
@@ -39,9 +30,9 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
     public void testGetName() {
         addDescription("Test the GetName method.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         
-        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, bitmag);
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
 
         String name = step.getName();
         Assert.assertNotNull(name);
@@ -52,37 +43,23 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordSuccess() throws Exception {
         addDescription("Test the ValidateRecord method for the success scenario.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
-        String pillarId = "TEST-PILLAR-ID-" + UUID.randomUUID().toString();
-        ChecksumSpecTYPE checksumType = new ChecksumSpecTYPE();
-        checksumType.setChecksumType(ChecksumType.MD5);
 
         when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(warcFileChecksum);
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         
-        ResultingChecksums checksumResults = new ResultingChecksums();
-        ChecksumDataForChecksumSpecTYPE checksumResult = new ChecksumDataForChecksumSpecTYPE();
-        checksumResult.setCalculationTimestamp(CalendarUtils.getNow());
-        checksumResult.setFileID(warcId);
-        checksumResult.setChecksumValue(Base16Utils.encodeBase16(warcFileChecksum));
-        checksumResults.getChecksumDataItems().add(checksumResult);
-        ChecksumsCompletePillarEvent checksumEvents = new ChecksumsCompletePillarEvent(pillarId, collectionId, checksumResults, checksumType, false);
-        checksumEvents.setFileID(warcId);
-        Map<String, ChecksumsCompletePillarEvent> resultMap = new HashMap<>();
-        resultMap.put(pillarId, checksumEvents);
-        
-        when(bitmag.getChecksums(eq(warcId), eq(collectionId))).thenReturn(resultMap);
+        when(archive.getChecksum(eq(warcId), eq(collectionId))).thenReturn(warcFileChecksum);
 
-        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, bitmag);
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
         step.validateRecord(record);
 
-        verify(bitmag).getChecksums(eq(warcId), eq(collectionId));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getChecksum(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));
@@ -99,41 +76,25 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordFailureValidation() throws Exception {
         addDescription("Test the ValidateRecord method for the scenario when it fails the validation.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         
-        String badChecksum = UUID.randomUUID().toString();
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
-        String pillarId = "TEST-PILLAR-ID-" + UUID.randomUUID().toString();
-        ChecksumSpecTYPE checksumType = new ChecksumSpecTYPE();
-        checksumType.setChecksumType(ChecksumType.MD5);
-
+        
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
-        
-        ResultingChecksums checksumResults = new ResultingChecksums();
-        ChecksumDataForChecksumSpecTYPE checksumResult = new ChecksumDataForChecksumSpecTYPE();
-        checksumResult.setCalculationTimestamp(CalendarUtils.getNow());
-        checksumResult.setFileID(warcId);
-        checksumResult.setChecksumValue(Base16Utils.encodeBase16(badChecksum));
-        checksumResults.getChecksumDataItems().add(checksumResult);
-        ChecksumsCompletePillarEvent checksumEvents = new ChecksumsCompletePillarEvent(pillarId, collectionId, checksumResults, checksumType, false);
-        checksumEvents.setFileID(warcId);
-        Map<String, ChecksumsCompletePillarEvent> resultMap = new HashMap<>();
-        resultMap.put(pillarId, checksumEvents);
-        
-        when(bitmag.getChecksums(eq(warcId), eq(collectionId))).thenReturn(resultMap);
 
-        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, bitmag);
+        when(archive.getChecksum(eq(warcId), eq(collectionId))).thenThrow(new IllegalStateException("CHECKSUM FAILURE."));
+
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
         step.validateRecord(record);
 
-        verify(bitmag).getChecksums(eq(warcId), eq(collectionId));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getChecksum(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
@@ -146,7 +107,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
     public void testValidateRecordFailureRetrievingFile() throws Exception {
         addDescription("Test the ValidateRecord method for the scenario when it throws an error during validation.");
         CumulusServer server = mock(CumulusServer.class);
-        Bitrepository bitmag = mock(Bitrepository.class);
+        Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
 
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
@@ -155,13 +116,13 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
         when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
         
-        when(bitmag.getChecksums(eq(warcId), eq(collectionId))).thenThrow(new RuntimeException("YOU MUST FAIL HERE!!!"));
+        when(archive.getChecksum(eq(warcId), eq(collectionId))).thenThrow(new RuntimeException("YOU MUST FAIL HERE!!!"));
 
-        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, bitmag);
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
         step.validateRecord(record);
 
-        verify(bitmag).getChecksums(eq(warcId), eq(collectionId));
-        verifyNoMoreInteractions(bitmag);
+        verify(archive).getChecksum(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
         verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));

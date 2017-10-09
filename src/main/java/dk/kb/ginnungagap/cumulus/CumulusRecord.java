@@ -72,7 +72,7 @@ public class CumulusRecord {
      */
     public CumulusRecord(FieldExtractor fe, Item item) {
         this.fe = fe;
-        this.item = item;        
+        this.item = item;
     }
     
     /**
@@ -350,8 +350,12 @@ public class CumulusRecord {
      * This must be the checksum of the resource record in the packaged WARC file.
      */
     public void initChecksumField() {
-        WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
+        if(getFieldValueOrNull(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER) != null) {
+            return;
+        }
+        
         try {
+            WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
             GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
             item.setStringValue(metadataPackageIdGuid, md5Digest.digestString);
             item.save();
@@ -398,7 +402,9 @@ public class CumulusRecord {
             item.setStringValue(qaErrorGuid, status);
             item.save();
         } catch (Exception e) {
-            log.error("Could not set preservation failure state for status '" + status + "'", e);
+            String errMsg = "Could not set preservation failure state for status '" + status + "'";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
         }
     }
 
@@ -416,8 +422,10 @@ public class CumulusRecord {
             GUID qaErrorGuid = fe.getFieldGUID(Constants.FieldNames.QA_ERROR);
             item.setStringValue(qaErrorGuid, "");
             item.save();
-        } catch (Exception e) {
-            log.error("Could not set preservation complete", e);
+        } catch(Exception e) {
+            String errMsg = "Could not set preservation complete";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
         }
     }
     
@@ -446,18 +454,18 @@ public class CumulusRecord {
      */
     public String getMetadataGUID() {
         if(metadataGuid == null) {
-            try {
-                metadataGuid = getFieldValueOrNull(Constants.PreservationFieldNames.METADATA_GUID);
-                if(metadataGuid == null) {
+            metadataGuid = getFieldValueOrNull(Constants.PreservationFieldNames.METADATA_GUID);
+            if(metadataGuid == null) {
+                try {
                     metadataGuid = UUID.randomUUID().toString();
+                    GUID metadataIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATA_GUID);
+                    item.setStringValue(metadataIdGuid, metadataGuid);
+                    item.save();
+                } catch (Exception e) {
+                    String errMsg = "Could not set the package id for the metadata.";
+                    log.error(errMsg, e);
+                    throw new IllegalStateException(errMsg, e);
                 }
-                GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATA_GUID);
-                item.setStringValue(metadataPackageIdGuid, metadataGuid);
-                item.save();
-            } catch (Exception e) {
-                String errMsg = "Could not set the package id for the metadata.";
-                log.error(errMsg, e);
-                throw new IllegalStateException(errMsg, e);
             }
         }
 

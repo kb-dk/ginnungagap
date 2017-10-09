@@ -3,6 +3,9 @@ package dk.kb.ginnungagap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -24,7 +27,10 @@ import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
+import dk.kb.ginnungagap.workflow.ImportWorkflow;
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
+import dk.kb.ginnungagap.workflow.ValidationWorkflow;
+import dk.kb.ginnungagap.workflow.schedule.Workflow;
 
 /**
  * Class for instantiating the Ginnungagap workflow.
@@ -126,19 +132,50 @@ public class Ginnungagap {
             } else {
                 BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
-                PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), 
-                        cumulusServer, transformer, representationTransformer, preserver);
-
-                System.out.println("Starting workflow");
-                workflow.start();
-
-                preserver.uploadAll();
+                Collection<Workflow> workflows = instantiateWorkflows(conf, cumulusServer, transformer, 
+                        representationTransformer, preserver, archive);
+                for(Workflow workflow : workflows) {
+                    log.info("Starting workflow: " + workflow.getJobID() + " : " + workflow.getDescription());
+                    workflow.start();                    
+                }
             }
         } finally {
             System.out.println("Finished!");
             Cumulus.CumulusStop();
             archive.shutdown();
         }
+    }
+    
+    /**
+     * Instantiates the workflows.
+     * @param conf The configuration.
+     * @param server The Cumulus server.
+     * @param transformer The transformer.
+     * @param representationTransformer The representation transformer.
+     * @param preserver The bitmag preserver for packaging the data.
+     * @param archive The bitrepository archive.
+     * @return The list of workflows to be run.
+     */
+    public static Collection<Workflow> instantiateWorkflows(Configuration conf, CumulusServer server, 
+            MetadataTransformer transformer, MetadataTransformer representationTransformer, 
+            BitmagPreserver preserver, Archive archive) {
+        List<Workflow> res = new ArrayList<Workflow>();
+        for(String workflowName : conf.getWorkflowConf().getWorkflows()) {
+            if(workflowName.contains(PreservationWorkflow.class.getName())) {
+                res.add(new PreservationWorkflow(conf.getTransformationConf(), server, transformer, 
+                        representationTransformer, preserver));
+            } else if(workflowName.contains(ImportWorkflow.class.getName())) {
+                log.warn("The workflow '" + workflowName + "' cannot be instanted yet, due to missing fields.");
+//                res.add(new ImportWorkflow(conf, server, archive));
+            } else if(workflowName.contains(ValidationWorkflow.class.getName())) {
+                log.warn("The workflow '" + workflowName + "' cannot be instanted yet, due to missing fields.");
+//                res.add(new ValidationWorkflow(conf, server, archive));
+            } else {
+                throw new IllegalStateException("Cannot instantiate a workflow with name: "
+                        + workflowName);
+            }
+        }
+        return res;
     }
     
     /**

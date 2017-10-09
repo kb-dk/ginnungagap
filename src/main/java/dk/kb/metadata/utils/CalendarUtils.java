@@ -13,8 +13,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * Utility class for calendar issues.
  */
 public final class CalendarUtils {
-    /** Private constructor to prevent instantiation of utility class. */
-    private CalendarUtils() {}
+    /** constructor to prevent instantiation of utility class. */
+    protected CalendarUtils() {}
 
     /** A single instance of the DatatypeFactory to prevent overlap from recreating it too often.*/
     private static DatatypeFactory factory = null;

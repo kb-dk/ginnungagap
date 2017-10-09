@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
@@ -24,7 +25,6 @@ import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.metadata.utils.CalendarUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 /**
  * The workflow step for importing Cumulus record asset files from the archive.
@@ -35,20 +35,20 @@ public class ImportationStep implements WorkflowStep {
 
     /** Cumulus server.*/
     protected final CumulusServer server;
-    /** The Bitmag client*/
-    protected final Bitrepository bitmag;
+    /** The Bitrepository archive.*/
+    protected final Archive archive;
     /** The name of the catalog to check for records for importation.*/
     protected final String catalogName;
     
     /**
      * Constructor.
      * @param server The Cumulus server.
-     * @param bitmag The bitrepository.
+     * @param archive The bitrepository archive.
      * @param catalogName The name of the catalog to validate.
      */
-    public ImportationStep(CumulusServer server, Bitrepository bitmag, String catalogName) {
+    public ImportationStep(CumulusServer server, Archive archive, String catalogName) {
         this.server = server;
-        this.bitmag = bitmag;
+        this.archive = archive;
         this.catalogName = catalogName;
     }
     
@@ -74,7 +74,7 @@ public class ImportationStep implements WorkflowStep {
             String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
             String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
             String uuid = record.getUUID();
-            File f = bitmag.getFile(warcId, collectionId, null);
+            File f = archive.getFile(warcId, collectionId);
             
             try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(f))) {
                 WarcRecord warcRecord = getWarcRecord(reader, uuid);

@@ -16,7 +16,7 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
  */
 public class TableField extends Field{
     /** The rows of the table.*/
-    List<Row> rows;
+    protected final List<Row> rows;
     
     /**
      * Constructor.

@@ -347,12 +347,11 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
 
         verify(item).getStringEnumValue(any(GUID.class));
         verify(item).setStringEnumValue(any(GUID.class), any(StringEnumFieldValue.class));
-        verify(item, times(3)).setStringValue(any(GUID.class), anyString());
+        verify(item, times(2)).setStringValue(any(GUID.class), anyString());
         verify(item).getDisplayString();
-        verify(item, times(8)).getStringValue(any(GUID.class));
-        verify(item, times(3)).save();
-        verify(item).getAssetReferenceValue(any(GUID.class));
-        verify(item, times(7)).hasValue(any(GUID.class));
+        verify(item, times(9)).getStringValue(any(GUID.class));
+        verify(item, times(2)).save();
+        verify(item, times(8)).hasValue(any(GUID.class));
         verifyNoMoreInteractions(item);
         
         verify(layout, times(8)).iterator();

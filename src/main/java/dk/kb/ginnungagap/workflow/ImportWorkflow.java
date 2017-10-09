@@ -3,12 +3,12 @@ package dk.kb.ginnungagap.workflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.ImportationStep;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
 
 /**
  * Workflow for validating the records.
@@ -24,19 +24,25 @@ public class ImportWorkflow extends AbstractWorkflow {
     protected final Configuration conf;
     /** The Cumulus Server.*/
     protected final CumulusServer server;
-    /** The Bitmag client*/
-    protected final Bitrepository bitmag;
+    /** The Bitrepository archive.*/
+    protected final Archive archive;
+    
+    /** The description of this workflow.*/
+    protected static final String WORKFLOW_DESCRIPTION = "Performs the importation of Cumulus records "
+            + "asset file from the archive.";
+    /** The name of this workflow.*/
+    protected static final String WORKFLOW_NAME = "Importation Workflow";
     
     /**
      * Constructor.
      * @param conf The configuration.
      * @param server The Cumulus server.
-     * @param bitmag The Bitrepository client.
+     * @param archive The Bitrepository archive.
      */
-    public ImportWorkflow(Configuration conf, CumulusServer server, Bitrepository bitmag) {
+    public ImportWorkflow(Configuration conf, CumulusServer server, Archive archive) {
         this.conf = conf;
         this.server = server;
-        this.bitmag = bitmag;
+        this.archive = archive;
         
         initialiseSteps();
     }
@@ -47,7 +53,7 @@ public class ImportWorkflow extends AbstractWorkflow {
     protected void initialiseSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
-            steps.add(new ImportationStep(server, bitmag, catalogName));
+            steps.add(new ImportationStep(server, archive, catalogName));
         }
         
         setWorkflowSteps(steps);
@@ -55,11 +61,11 @@ public class ImportWorkflow extends AbstractWorkflow {
 
     @Override
     public String getDescription() {
-        return "Performs the importation of Cumulus records asset file from the archive.";
+        return WORKFLOW_DESCRIPTION;
     }
 
     @Override
     public String getJobID() {
-        return "'Importation Workflow";
+        return WORKFLOW_NAME;
     }
 }

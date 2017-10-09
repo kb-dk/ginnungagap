@@ -1,9 +1,9 @@
 package dk.kb.metadata.selector;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import dk.kb.metadata.utils.ExceptionUtils;
 
@@ -17,14 +17,15 @@ import dk.kb.metadata.utils.ExceptionUtils;
  */
 public final class MixEnumeratorSelector {
     /** Private constructor for this Utility class.*/
-    private MixEnumeratorSelector() {}
+    protected MixEnumeratorSelector() {}
     
     // --------------------------
     // EXIF VERSION
     // --------------------------
     
     /** The collection of possible EXIF versions accepted by the MIX standard.*/
-    public static final Set<String> EXIF_VERSIONS = new HashSet<String>(Arrays.asList("0220", "0221", "0230"));
+    protected static final Collection<String> EXIF_VERSIONS = Collections.unmodifiableCollection(
+            Arrays.asList("0220", "0221", "0230"));
 
     /**
      * Extracts a exif version based on the value of a Cumulus field.
@@ -62,27 +63,27 @@ public final class MixEnumeratorSelector {
             8               Left side   Bottom                          normal, rotated cw 90°
      */
     /** 1               Top         Left side                       normal* */
-    private static final String ORIENTATION_NORMAL = "normal*";
+    protected static final String ORIENTATION_NORMAL = "normal*";
     /** 2*              Top         Right side   (Flipped)          normal, image flipped */
-    private static final String ORIENTATION_FLIPPED = "normal, image flipped";
+    protected static final String ORIENTATION_FLIPPED = "normal, image flipped";
     /** 3               Bottom      Right side                      normal, rotated 180° */
-    private static final String ORIENTATION_ROTATED_180 = "normal, rotated 180°";
+    protected static final String ORIENTATION_ROTATED_180 = "normal, rotated 180°";
     /** 4*              Bottom      Left side    (Flipped)          normal, image flipped, rotated 180° */
-    private static final String ORIENTATION_FLIPPED_ROTATED_180 = "normal, image flipped, rotated 180°";
+    protected static final String ORIENTATION_FLIPPED_ROTATED_180 = "normal, image flipped, rotated 180°";
     /** 5*              Left side   Top          (Flipped)          normal, image flipped, rotated cw 90° */
-    private static final String ORIENTATION_FLIPPED_ROTATED_CW_90 = "normal, image flipped, rotated cw 90°";
+    protected static final String ORIENTATION_FLIPPED_ROTATED_CW_90 = "normal, image flipped, rotated cw 90°";
     /** 6               Right side  Top                             normal, rotated ccw 90° */
-    private static final String ORIENTATION_ROTATED_CCW_90 = "normal, rotated ccw 90°";
+    protected static final String ORIENTATION_ROTATED_CCW_90 = "normal, rotated ccw 90°";
     /** 7*              Right side  Bottom       (Flipped)          normal, image flipped, rotated ccw 90° */
-    private static final String ORIENTATION_FLIPPED_ROTATED_CCW_90 = "normal, image flipped, rotated ccw 90°";
+    protected static final String ORIENTATION_FLIPPED_ROTATED_CCW_90 = "normal, image flipped, rotated ccw 90°";
     /** 8               Left side   Bottom                          normal, rotated cw 90° */
-    private static final String ORIENTATION_ROTATED_90 = "normal, rotated cw 90°";
+    protected static final String ORIENTATION_ROTATED_90 = "normal, rotated cw 90°";
     /** Only alternative value! */
-    private static final String ORIENTATION_UNKNOWN = "unknown";
+    protected static final String ORIENTATION_UNKNOWN = "unknown";
 
     /** The collection of possible values for the orientation.*/
-    private static final Set<String> ORIENTATIONS = new HashSet<String>(Arrays.asList(ORIENTATION_NORMAL, 
-            ORIENTATION_FLIPPED, ORIENTATION_ROTATED_180, ORIENTATION_FLIPPED_ROTATED_180, 
+    protected static final Collection<String> ORIENTATIONS = Collections.unmodifiableCollection(Arrays.asList(
+            ORIENTATION_NORMAL, ORIENTATION_FLIPPED, ORIENTATION_ROTATED_180, ORIENTATION_FLIPPED_ROTATED_180, 
             ORIENTATION_FLIPPED_ROTATED_CW_90, ORIENTATION_ROTATED_CCW_90, 
             ORIENTATION_FLIPPED_ROTATED_CCW_90, ORIENTATION_ROTATED_90, ORIENTATION_UNKNOWN));
 
@@ -127,22 +128,22 @@ public final class MixEnumeratorSelector {
     // --------------------------
 
     /** Metering mode value: Average */
-    private static final String METERING_MODE_AVERAGE = "Average";
+    protected static final String METERING_MODE_AVERAGE = "Average";
     /** Metering mode value: Center weighted average */
-    private static final String METERING_MODE_CENTER_WEIGHTED_AVERAGE = "Center weighted average";
+    protected static final String METERING_MODE_CENTER_WEIGHTED_AVERAGE = "Center weighted average";
     /** Metering mode value: Spot */
-    private static final String METERING_MODE_SPOT = "Spot";
+    protected static final String METERING_MODE_SPOT = "Spot";
     /** Metering mode value: Multispot */
-    private static final String METERING_MODE_MULTISPOT = "Multispot";
+    protected static final String METERING_MODE_MULTISPOT = "Multispot";
     /** Metering mode value: Pattern */
-    private static final String METERING_MODE_PATTERN = "Pattern";
+    protected static final String METERING_MODE_PATTERN = "Pattern";
     /** Metering mode value: Partial */
-    private static final String METERING_MODE_PARTIAL = "Partial";
+    protected static final String METERING_MODE_PARTIAL = "Partial";
 
     /** The collection of possible values for the field 'mix:meteringMode'.*/
-    private static final Set<String> METERING_MODE_RESTRICTION = new HashSet<String>(Arrays.asList(
-            METERING_MODE_AVERAGE,METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, METERING_MODE_MULTISPOT, 
-            METERING_MODE_PATTERN, METERING_MODE_PARTIAL));
+    protected static final Collection<String> METERING_MODE_RESTRICTION = Collections.unmodifiableCollection(
+            Arrays.asList(METERING_MODE_AVERAGE,METERING_MODE_CENTER_WEIGHTED_AVERAGE, METERING_MODE_SPOT, 
+                    METERING_MODE_MULTISPOT, METERING_MODE_PATTERN, METERING_MODE_PARTIAL));
 
     /**
      * Figures out whether the MeteringMode field is valid.
@@ -227,31 +228,31 @@ public final class MixEnumeratorSelector {
     // --------------------------
 
     /** Exposure program value for not defined.*/
-    public static final String EXPOSURE_PROGRAM_NOT_DEFINED = "Not defined";
+    protected static final String EXPOSURE_PROGRAM_NOT_DEFINED = "Not defined";
     /** Exposure program value for manual.*/
-    public static final String EXPOSURE_PROGRAM_MANUEL = "Manual";
+    protected static final String EXPOSURE_PROGRAM_MANUEL = "Manual";
     /** Exposure program value for normal program.*/
-    public static final String EXPOSURE_PROGRAM_NORMAL_PROGRAM = "Normal program";
+    protected static final String EXPOSURE_PROGRAM_NORMAL_PROGRAM = "Normal program";
     /** Exposure program value for aperture priority.*/
-    public static final String EXPOSURE_PROGRAM_APERTURE_PRIORITY = "Aperture priority";
+    protected static final String EXPOSURE_PROGRAM_APERTURE_PRIORITY = "Aperture priority";
     /** Exposure program value for shutter priority.*/
-    public static final String EXPOSURE_PROGRAM_SHUTTER_PRIORITY = "Shutter priority";
+    protected static final String EXPOSURE_PROGRAM_SHUTTER_PRIORITY = "Shutter priority";
     /** Exposure program value for creative program (biased toward depth of field).*/
-    public static final String EXPOSURE_PROGRAM_CREATIVE_PROGRAM = "Creative program (biased toward depth of field)";
+    protected static final String EXPOSURE_PROGRAM_CREATIVE_PROGRAM = "Creative program (biased toward depth of field)";
     /** Exposure program value for action program (biased toward fast shutter speed).*/
-    public static final String EXPOSURE_PROGRAM_ACTION_PROGRAM = "Action program (biased toward fast shutter speed)";
+    protected static final String EXPOSURE_PROGRAM_ACTION_PROGRAM = "Action program (biased toward fast shutter speed)";
     /** Exposure program value for portrait mode (for closeup photos with the background out of focus).*/
-    public static final String EXPOSURE_PROGRAM_PORTRAIT_MODE = 
+    protected static final String EXPOSURE_PROGRAM_PORTRAIT_MODE = 
             "Portrait mode (for closeup photos with the background out of focus)";
     /** Exposure program value for landscape mode (for landscape photos with the background in focus).*/
-    public static final String EXPOSURE_PROGRAM_LANDSCAPE_MODE = 
+    protected static final String EXPOSURE_PROGRAM_LANDSCAPE_MODE = 
             "Landscape mode (for landscape photos with the background in focus)";
     
     /** Collection of all possible exposure values.*/
-    public static final List<String> EXPOSURE_PROGRAMS = Arrays.asList(EXPOSURE_PROGRAM_NOT_DEFINED, 
-            EXPOSURE_PROGRAM_MANUEL,EXPOSURE_PROGRAM_NORMAL_PROGRAM, EXPOSURE_PROGRAM_APERTURE_PRIORITY, 
-            EXPOSURE_PROGRAM_SHUTTER_PRIORITY,EXPOSURE_PROGRAM_CREATIVE_PROGRAM, EXPOSURE_PROGRAM_ACTION_PROGRAM, 
-            EXPOSURE_PROGRAM_PORTRAIT_MODE, EXPOSURE_PROGRAM_LANDSCAPE_MODE);
+    protected static final List<String> EXPOSURE_PROGRAMS = Collections.unmodifiableList(Arrays.asList(
+            EXPOSURE_PROGRAM_NOT_DEFINED, EXPOSURE_PROGRAM_MANUEL, EXPOSURE_PROGRAM_NORMAL_PROGRAM, 
+            EXPOSURE_PROGRAM_APERTURE_PRIORITY, EXPOSURE_PROGRAM_SHUTTER_PRIORITY, EXPOSURE_PROGRAM_CREATIVE_PROGRAM, 
+            EXPOSURE_PROGRAM_ACTION_PROGRAM, EXPOSURE_PROGRAM_PORTRAIT_MODE, EXPOSURE_PROGRAM_LANDSCAPE_MODE));
     
     /**
      * Converts the Cumulus field for exposure program to a valid value for the MIX field.
@@ -288,15 +289,15 @@ public final class MixEnumeratorSelector {
     // --------------------------
 
     /** Light source value for daylight.*/
-    public static final String LIGHT_SOURCE_DAYLIGHT = "Daylight";
+    protected static final String LIGHT_SOURCE_DAYLIGHT = "Daylight";
     /** Light source value for flash.*/
-    public static final String LIGHT_SOURCE_FLASH = "Flash";
+    protected static final String LIGHT_SOURCE_FLASH = "Flash";
     /** Light source value for other light source.*/
-    public static final String LIGHT_SOURCE_OTHER_LIGHT_SOURCE = "other light source";
+    protected static final String LIGHT_SOURCE_OTHER_LIGHT_SOURCE = "other light source";
     
     /** Collection of all possible light sources.*/
-    public static final List<String> LIGHT_SOURCES = Arrays.asList(LIGHT_SOURCE_DAYLIGHT, LIGHT_SOURCE_FLASH,
-            LIGHT_SOURCE_OTHER_LIGHT_SOURCE);
+    protected static final List<String> LIGHT_SOURCES = Collections.unmodifiableList(Arrays.asList(
+            LIGHT_SOURCE_DAYLIGHT, LIGHT_SOURCE_FLASH, LIGHT_SOURCE_OTHER_LIGHT_SOURCE));
     
     /**
      * Converts the Cumulus field for light source to a valid value for the MIX field.

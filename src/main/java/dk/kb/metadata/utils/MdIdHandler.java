@@ -10,8 +10,8 @@ import java.util.Map;
  * the other metadata formats.
  */
 public final class MdIdHandler {
-    /** Private constructor for this utility class.*/
-    private MdIdHandler() {}
+    /** Constructor for this utility class.*/
+    protected MdIdHandler() {}
 
     /** Container for the ids for the MD objects for different documents with different ids.*/
     private static Map<String, List<String>> mdIds = new HashMap<String, List<String>>();

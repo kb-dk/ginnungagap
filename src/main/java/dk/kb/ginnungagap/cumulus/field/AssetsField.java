@@ -65,7 +65,7 @@ public class AssetsField extends Field {
      */
     @Override
     public boolean isEmpty() {
-        if(assetNames != null && !assetNames.isEmpty()) {
+        if(!assetNames.isEmpty()) {
             return false;
         }
         return true;
