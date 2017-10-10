@@ -206,15 +206,11 @@
             </xsl:choose>
           </xsl:element>
           <!-- imageProducer NDD id="8.2.2" -->
-          <xsl:if test="field[@name='Creator'] or field[@name='Byline'] or 
-          field[@name='Owner'] or field[@name='Source']">
+          <xsl:if test="field[@name='Creator'] or field[@name='Owner'] or field[@name='Source']">
             <xsl:element name="mix:imageProducer">
               <xsl:choose>
                 <xsl:when test="field[@name='Creator']">
                   <xsl:value-of select="field[@name='Creator']/value" />
-                </xsl:when>
-                <xsl:when test="field[@name='Byline']">
-                  <xsl:value-of select="field[@name='Byline']/value" />
                 </xsl:when>
                 <xsl:when test="field[@name='Owner']">
                   <xsl:value-of select="field[@name='Owner']/value" />
@@ -260,24 +256,6 @@
               </xsl:element>
             </xsl:for-each>
           </xsl:element>
-          
-          <!-- ScanningSystemSoftware NDD id="8.3.5" -->
-<!--           <xsl:if test="field[@name='creatingApplication']"> -->
-<!--             <xsl:element name="mix:ScanningSystemSoftware"> -->
-<!--               <xsl:for-each select="field[@name='creatingApplication']/value"> -->
-<!--                 scanningeSoftwareName NDD id="8.3.5.1" -->
-<!--                 <xsl:element name="mix:scanningSoftwareName"> -->
-<!--                   <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 0)" /> -->
-<!--                 </xsl:element> -->
-<!--                 scanningSoftwareVersion NDD id="8.3.5.2" -->
-<!--                 <xsl:if test="java:dk.kb.metadata.utils.StringUtils.splitableOnComma(.)"> -->
-<!--                   <xsl:element name="mix:scanningSoftwareVersionNo"> -->
-<!--                     <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.splitOnComma(., 1)" /> -->
-<!--                   </xsl:element> -->
-<!--                 </xsl:if> -->
-<!--               </xsl:for-each> -->
-<!--             </xsl:element> -->
-<!--           </xsl:if> -->
         </xsl:element>
         <!-- End mix/ImageCaptureMetadata/ScannerCapture -->
 
@@ -448,7 +426,6 @@
                     <xsl:value-of select="field[@name='Focal Length [mm]']/value" />
                   </xsl:element>
                 </xsl:if>
-                              
               </xsl:element>
             </xsl:element>
           </xsl:element>

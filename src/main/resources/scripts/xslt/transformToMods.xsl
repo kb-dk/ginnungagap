@@ -162,7 +162,7 @@
       </xsl:element>
     </xsl:for-each>
     
-    <xsl:for-each select="field[@name='Copyright Notits']/value">
+    <xsl:for-each select="field[@name='Copyright Notice']/value">
       <xsl:element name="mods:accessCondition">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:call-template name="cumulus_get_value" />
@@ -176,7 +176,7 @@
     <xsl:for-each select="field[@name='DK5']/value">
       <xsl:element name="mods:classification">
         <xsl:attribute name="authority">
-          <xsl:value-of select="DK5" />
+          <xsl:value-of select="'DK5'" />
         </xsl:attribute>
         <xsl:value-of select="." />
       </xsl:element>
@@ -293,7 +293,7 @@
       </xsl:when>
     </xsl:choose>
     
-    <!-- Scannenummer || Scan number -->
+    <!-- Scannenummer || Scan Number -->
     <xsl:choose>
       <xsl:when test="field[@name='Scannenummer']">
         <xsl:element name="mods:identifier">
@@ -303,12 +303,12 @@
           <xsl:value-of select="field[@name='Scannenummer']/value" />
         </xsl:element>
       </xsl:when>
-      <xsl:when test="field[@name='Scan number']">
+      <xsl:when test="field[@name='Scan Number']">
         <xsl:element name="mods:identifier">
           <xsl:attribute name="type">
             <xsl:value-of select="'Scan number'" />
           </xsl:attribute>
-          <xsl:value-of select="field[@name='Scan number']/value" />
+          <xsl:value-of select="field[@name='Scan Number']/value" />
         </xsl:element>
       </xsl:when>
     </xsl:choose>
@@ -1806,7 +1806,13 @@
       </xsl:element>
       
       <!-- record origin -->
-      <xsl:for-each select="field[@name='Aleph ID']/value">
+      <xsl:for-each select="field[@name='Aleph_ID']/value">
+        <xsl:element name="mods:recordOrigin">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:value-of select="." />
+        </xsl:element>
+      </xsl:for-each>
+      <xsl:for-each select="field[@name='AlephID']/value">
         <xsl:element name="mods:recordOrigin">
           <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:value-of select="." />
@@ -2130,7 +2136,7 @@
     </xsl:for-each>
     
     <!-- Målestok || Scale 
-         with both 'Målestok' and 'Scale' as genre.-->
+         with both 'Målestok' and 'Scale' as scale.-->
     <xsl:if test="field[@name='Målestok'] or field[@name='Scale']">
       <xsl:element name="mods:subject">
         <xsl:choose>
@@ -2530,8 +2536,11 @@
   <!-- START typeOfResource -->
   <xsl:template name="mods_typeOfResource">
     <xsl:element name="mods:typeOfResource">
-      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(field[@name='Materialebetegnelse']/value, 
-          field[@name='Resourcedescription']/value, field[@name='Generel materialebetegnelse']/value, field[@name='General Resourcedescription']/value)" />
+      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(
+          field[@name='Materialebetegnelse']/value, 
+          field[@name='Resourcedescription']/value, 
+          field[@name='Generel materialebetegnelse']/value, 
+          field[@name='General Resourcedescription']/value)" />
     </xsl:element>
   </xsl:template>
   <!-- END typeOfResource -->

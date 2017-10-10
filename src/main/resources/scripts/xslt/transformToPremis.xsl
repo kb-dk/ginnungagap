@@ -320,8 +320,12 @@
     <xsl:value-of select="'UUID'" />
   </xsl:template>
   
-  <xsl:template name="premis_representation_identifier_value">
+  <xsl:template name="premis_identifier_value">
     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='METADATA GUID']/value)" />
+  </xsl:template>
+
+  <xsl:template name="premis_representation_identifier_value">
+        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />
   </xsl:template>
 
   <xsl:template name="premis_agent_identifier_type">
@@ -362,7 +366,7 @@
           <xsl:call-template name="premis_representation_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:objectIdentifierValue">
-          <xsl:call-template name="premis_representation_identifier_value" />
+          <xsl:call-template name="premis_identifier_value" />
         </xsl:element>
       </xsl:element>
       <!-- END 1.1 objectIdentifier -->
