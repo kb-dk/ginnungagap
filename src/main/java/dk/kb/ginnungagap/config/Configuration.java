@@ -143,7 +143,7 @@ public class Configuration {
     /** The configuration for the workflows*/
     protected final WorkflowConfiguration workflowConfiguration;
     
-    /** The configuration for the conversion. May be null, if no conversion is needed.*/
+    /** The configuration for the importation from E-magasinet. May be null, if no conversion is needed.*/
     protected ImportationConfiguration importConfiguration = null;
     
     /**

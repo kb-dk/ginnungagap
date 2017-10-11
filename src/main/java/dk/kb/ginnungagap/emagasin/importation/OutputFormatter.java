@@ -13,6 +13,8 @@ import org.bitrepository.common.utils.FileUtils;
  * The successes imported records will be written to the successfile, 
  * and the failed imported records will be written to the failurefile along with the reason for the failure.
  * 
+ * TODO use CSV parser, e.g. opencsv.
+ * 
  * Both files will be in CSV format;
  * Successfile with following 3 coloumns:
  * ARC-file; ARC-record-uuid; Cumulus-record-UUID

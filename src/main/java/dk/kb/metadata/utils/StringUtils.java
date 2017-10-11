@@ -17,7 +17,7 @@ public final class StringUtils {
     }
     
     /**
-     * Splits on the comma, ',', and retrieves the element at the given index.
+     * Splits on the separator string, and retrieves the element at the given index.
      * @param line The line to split on a comma.
      * @param separator The separating character set.
      * @param index The index for the element to select.

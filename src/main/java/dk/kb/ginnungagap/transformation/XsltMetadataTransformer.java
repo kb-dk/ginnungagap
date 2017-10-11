@@ -125,9 +125,8 @@ public class XsltMetadataTransformer implements MetadataTransformer {
      * Will only retrieve each schema location once.
      * @param metadata The XML metadata input stream.
      * @return The collection of unique schemalocations.
-     * @throws IOException If the input stream cannot be loaded as XML objects.
      */
-    public Collection<String> getMetadataStandards(InputStream metadata) throws IOException {
+    public Collection<String> getMetadataStandards(InputStream metadata) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -135,8 +134,8 @@ public class XsltMetadataTransformer implements MetadataTransformer {
             Document document = builder.parse(metadata);
 
             return getNamespaceLocation(document);
-        } catch(ParserConfigurationException | SAXException e) {
-            throw new IOException("Could not extract the metadata standards.", e);
+        } catch(Exception e) {
+            throw new IllegalStateException("Could not extract the metadata standards.", e);
         }
     }
     

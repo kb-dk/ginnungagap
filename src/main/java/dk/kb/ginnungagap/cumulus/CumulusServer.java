@@ -115,8 +115,6 @@ public class CumulusServer {
             return null;
         }
         
-        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
-        
         FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
 
         Iterator<Item> iterator = items.iterator();
@@ -129,7 +127,7 @@ public class CumulusServer {
     }
     
     /**
-     * Find the Cumulus record containing a given UUID and belonging to a given catalog.
+     * Find the Cumulus record containing a given record name and belonging to a given catalog.
      * Will only return the first found result. And it will return a null if no results were found. 
      * @param catalogName The name of the catalog, where the Cumulus record is.
      * @param name The record name of the Cumulus record to find.
@@ -144,8 +142,6 @@ public class CumulusServer {
             log.warn("Could not find any records for the record name: '" + name + "'. Returning a null");            
             return null;
         }
-        
-        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
         
         FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
 

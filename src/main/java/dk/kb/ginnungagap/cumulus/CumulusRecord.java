@@ -133,7 +133,8 @@ public class CumulusRecord {
     /**
      * Extracts the long value of the field with the given name.
      * If multiple fields have the given field name, then only the value of one of the fields are returned.
-     * The result is in Long format.
+     * The result has type Long.
+     * It will throw an exception, if the field does not have an value.
      * @param fieldname The name for the field. 
      * @return The long value of the field. 
      */
@@ -145,7 +146,7 @@ public class CumulusRecord {
     /**
      * Retrieves the string value of a field (also non-string fields, except tables, pictures and audio).
      * @param fieldname The name of the field.
-     * @return The string value of the field.
+     * @return The string value of the field. Or null, if the field is missing, empty, or unhandled data-type.
      */
     public String getFieldValueForNonStringField(String fieldname) {
         return fe.getStringValueForField(fieldname, item);

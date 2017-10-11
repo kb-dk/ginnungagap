@@ -125,6 +125,7 @@ public class FieldExtractor {
      * Extracts the value of a specific field from the given item.
      * @param fd The definition of the field.
      * @param item The item to have its field value extracted.
+     * @param ignoreEmptyFields Whether or not to ignore empty fields.
      * @return The string value of the field. If the field is not natively string, then it is
      * converted into a string.
      */

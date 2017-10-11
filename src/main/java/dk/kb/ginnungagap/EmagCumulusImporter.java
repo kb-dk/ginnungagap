@@ -8,7 +8,6 @@ import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.emagasin.EmagImportation;
 import dk.kb.ginnungagap.emagasin.EmagasinRetriever;
-import dk.kb.ginnungagap.emagasin.TiffValidator;
 import dk.kb.ginnungagap.emagasin.importation.InputFormat;
 import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
 
@@ -24,16 +23,11 @@ import dk.kb.ginnungagap.emagasin.importation.OutputFormatter;
  * 2. The CSV file with the ARC-filename, ARC-record-guid, Cumulus-record-guid, and catalog-name.
  * 3. [OPTIONAL] path to TIFF validation script
  *   - Default is 'bin/run_checkit_tiff.sh'
- * 4. [OPTIONAL] path to CheckIT configuration
- *   - Default is 'conf/cit_tiff.cfg'
  * 
  * Run as commmand, e.g. :
  * dk.kb.ginningagap.EmagConversion conf/ginnungagap.yml records-list.csv retrieve_arc_files.sh
  */
 public class EmagCumulusImporter {
-    /** Constant for not removing files after they have been validated.*/
-    private static final boolean DO_NOT_REMOVE_FILES_AFTER_VALIDATION = false;
-    
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
@@ -57,7 +51,7 @@ public class EmagCumulusImporter {
 
         Configuration conf = getConfiguration(confPath);
         
-        File outputDir = getOutputDir(conf.getImportationConfiguration().getTempDir());
+        File outputDir = conf.getImportationConfiguration().getTempDir();
         
         File recordListFile = getRecordListFile(recordListPath);
         
@@ -111,19 +105,6 @@ public class EmagCumulusImporter {
     }
     
     /**
-     * Retrieves the output directory.
-     * @param outputDirPath The path to the output directory.
-     * @return The output directory.
-     */
-    protected static File getOutputDir(File outputDir) {
-        if(!outputDir.isDirectory()) {
-            System.err.println("Invalid output directory '" + outputDir.getAbsolutePath() + "'");
-            argumentErrorExit();
-        }
-        return outputDir;
-    }
-    
-    /**
      * Creates the configuration.
      * @param configurationFilePath The path to the configuration.
      * @return The configuration.
@@ -158,28 +139,5 @@ public class EmagCumulusImporter {
             argumentErrorExit();
         }
         return new EmagasinRetriever(arcRetrievalScriptFile, outputDir);
-    }
-    
-    /**
-     * Instantiates the TIFF validator.
-     * @param scriptPath The path to the script for validating the TIFF files.
-     * @param confPath The CheckIT configuration path.
-     * @param outputDir The output directory.
-     * @return The validator.
-     */
-    protected static TiffValidator getTiffValidator(String scriptPath, String confPath, File outputDir) {
-        File script = new File(scriptPath);
-        if(!script.isFile()) {
-            System.err.println("Cannot find the script for validating tiff files '" + script.getAbsolutePath() + "'.");
-            argumentErrorExit();
-        }
-        File conf = new File(confPath);
-        if(!conf.isFile()) {
-            System.err.println("Cannot find the configuration for validating tiff files '" + conf.getAbsolutePath() 
-                    + "'.");
-            argumentErrorExit();
-        }
-        
-        return new TiffValidator(outputDir, script, conf, DO_NOT_REMOVE_FILES_AFTER_VALIDATION);
     }
 }

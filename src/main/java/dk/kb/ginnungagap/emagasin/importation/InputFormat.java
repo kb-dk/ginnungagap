@@ -41,6 +41,7 @@ public class InputFormat {
     
     /**
      * Load the file.
+     * TODO: look at opencsv for reading the file instead?
      * @param inputFile The CSV file to load.
      */
     protected void loadFile(File inputFile) {

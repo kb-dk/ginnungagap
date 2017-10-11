@@ -199,7 +199,7 @@ public class CumulusQuery {
      */
     public static CumulusQuery getQueryForSpecificRecordName(String catalogName, String name) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
-        ArgumentCheck.checkNotNullOrEmpty(name, "String uuid");
+        ArgumentCheck.checkNotNullOrEmpty(name, "String name");
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s"),
                 Constants.FieldNames.RECORD_NAME,
@@ -242,7 +242,7 @@ public class CumulusQuery {
      * catalog.
      * 
      * The records which have the registration state 'registration finished', they must belong to the given catalog, 
-     * and the must have the given value for the preservation validation field.
+     * and they must have the given value for the preservation validation field.
      * 
      * @param catalogName The name of the catalog.
      * @param value The expected value for the preservation validation field.

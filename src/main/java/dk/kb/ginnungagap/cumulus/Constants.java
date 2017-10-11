@@ -134,12 +134,10 @@ public interface Constants {
          */
         String ARCHIVE_MD5 = "ARCHIVE_MD5";
  
-        /** Used for what. ??? 
-         * FIXME: Check this with TLR. */
+        /** The name of the field for Asset Reference. */
         String ASSET_REFERENCE = "Asset Reference";
         
-        /** Used for what. ??? 
-         * FIXME: Check this with TLR. */
+        /** The name of the field for the Catalog name. */
         String CATALOG_NAME = "Catalog Name";
         
         /** Used for what. ??? 

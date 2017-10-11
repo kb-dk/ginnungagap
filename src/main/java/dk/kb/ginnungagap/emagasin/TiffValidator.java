@@ -87,7 +87,7 @@ public class TiffValidator extends ScriptWrapper {
                 validateArcRecordIfTiff(arcRecord, uid);
                 writeCsvToOutput(Arrays.asList("Success", uid));
             } catch (RunScriptException e) {
-                log.debug("Invalid tiff record", e);
+                log.warn("Invalid tiff record", e);
                 writeValidationFailure(uid, e);                
             }
         }
@@ -97,7 +97,7 @@ public class TiffValidator extends ScriptWrapper {
      * Validate the ARC record, if it is a TIFF file.
      * @param arcRecord The arc record.
      * @param uid The UUID of the record.
-     * @throws IOException If it fails to extract the ARC record of
+     * @throws IOException If it fails to extract the ARC record.
      * @throws RunScriptException If a failure occurs while running the script. 
      */
     public void validateArcRecordIfTiff(ArchiveRecord arcRecord, String uid) throws IOException, RunScriptException {

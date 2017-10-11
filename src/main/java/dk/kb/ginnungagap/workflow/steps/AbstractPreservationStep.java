@@ -140,10 +140,9 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
     /**
      * Preserve the representation part of a master asset as its own METS.
      * @param record The Cumulus record.
-     * @throws IOException 
-     * @throws FileNotFoundException 
+     * @throws IOException If an issue occurs when writing or preserving the Master asset metadata.
      */
-    protected void preserveMasterAsset(CumulusRecord record) throws FileNotFoundException, IOException {
+    protected void preserveMasterAsset(CumulusRecord record) throws IOException {
         String origMetadataGuid = record.getMetadataGUID();
         String representationMetadataGuid = UUID.randomUUID().toString();
         String combinedMetadataGuid = origMetadataGuid + "##" + representationMetadataGuid;
@@ -197,6 +196,7 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
     /**
      * Finds the metadata standards used in the metadata file, and set it as the value for the corresponding field 
      * in the cumulus record.
+     * TODO: fininsh implementation, when the Cumulus field is implemented.
      * @param record The cumulus record where the metadata standards are written to.
      * @param metadataFile The file with the metadata.
      * @throws IOException If it fails to read the metadata standards from the metadata file.

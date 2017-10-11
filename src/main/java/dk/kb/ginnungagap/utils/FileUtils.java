@@ -36,12 +36,8 @@ public class FileUtils {
      * @param to The file to move to.
      */
     public static void moveOrOverrideFile(File from, File to) {
-        ArgumentCheck.checkNotNull(from, "File from");
+        ArgumentCheck.checkExistsNormalFile(from, "File from");
         ArgumentCheck.checkNotNull(to, "File to");
-        
-        if(!from.isFile()) {
-            throw new IllegalArgumentException("No file to move from location '" + from.getAbsolutePath() + "'");
-        }
         
         long moveDate = from.lastModified();
         

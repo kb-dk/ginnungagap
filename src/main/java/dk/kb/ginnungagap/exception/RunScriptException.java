@@ -18,7 +18,7 @@ public class RunScriptException extends Exception {
     /**
      * Constructor.
      * @param msg The message of the exception.
-     * @param cause The cause of the exceptino
+     * @param cause The cause of the exception.
      */
     public RunScriptException(String msg, Throwable cause) {
         super(msg, cause);

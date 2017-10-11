@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class CalendarUtils {
     /**
-     * Retrieves the current date format as 
+     * Retrieves the current date format as the ISO-8601 date time format.
      * @return The text for now.
      */
     public static String nowToText() {
