@@ -17,6 +17,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class FileUtilsTest extends ExtendedTestCase {
@@ -91,7 +92,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         assertEquals(to.length(), size2);
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testMovingFileFailureNoFromFile() throws IOException, InterruptedException {
         addDescription("Try moving a file when the from-file does not exist.");
         File from = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
