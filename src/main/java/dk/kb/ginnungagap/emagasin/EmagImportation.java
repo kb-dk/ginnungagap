@@ -171,6 +171,7 @@ public class EmagImportation {
     protected void importFileToCumulusRecord(CumulusRecord record, File contentFile) {
         String oldPath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
         String newPath = conf.getImportationConfiguration().getSubstitute().substitute(oldPath);
+        log.debug("Importing file for record '" + record.getUUID() + "': " + oldPath + " -> " + newPath);
         File newFile = new File(newPath);
         FileUtils.getDirectory(newFile.getParent());
         FileUtils.moveOrOverrideFile(contentFile, newFile);
@@ -214,8 +215,8 @@ public class EmagImportation {
     protected void reportNotFoundRecords() {
         for(String arcFilename : inputFormat.getArcFilenames()) {
             Collection<RecordUUIDs> notFound = inputFormat.getNotFoundRecordsForArcFile(arcFilename);
-            for(RecordUUIDs r : notFound) {
-                outputFormat.writeFailure(r, "Not found.");
+            for(RecordUUIDs record : notFound) {
+                outputFormat.writeFailure(record, "Not found.");
             }
         }
     }
