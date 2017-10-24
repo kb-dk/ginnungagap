@@ -94,7 +94,9 @@ public class EmagImportation {
                 handleArcFile(arcFile);
                 arcFile.delete();
             } catch (Exception e) {
-                outputFormat.writeFailure(arcFilename, "", "Issue occurd handling the ARC-file: " + e.getMessage());
+                String errMsg = "Issue occurd handling the ARC-file: " + arcFilename;
+                log.warn(errMsg, e);
+                outputFormat.writeFailure(arcFilename, "", errMsg + " -> " + e.getMessage());
             }
         }
         reportNotFoundRecords();
