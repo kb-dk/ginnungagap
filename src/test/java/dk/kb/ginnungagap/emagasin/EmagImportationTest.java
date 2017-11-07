@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.emagasin;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -120,6 +121,8 @@ public class EmagImportationTest extends ExtendedTestCase {
         verify(record).updateAssetReference();
         verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
         verify(record).getFieldValue(eq(Constants.FieldNames.FILE_FORMAT));
+        verify(record).getUUID();
+        verify(record).setNewAssetReference(any(File.class));
         verifyNoMoreInteractions(record);
     }
     

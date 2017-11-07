@@ -175,9 +175,9 @@ public class EmagImportation {
         File newFile = new File(newPath);
         FileUtils.getDirectory(newFile.getParent());
         FileUtils.moveOrOverrideFile(contentFile, newFile);
-        if(!oldPath.equals(newPath)) {
-            record.setNewAssetReference(newFile);
-        }
+//        if(!oldPath.equals(newPath)) {
+        record.setNewAssetReference(newFile);
+//        }
         record.updateAssetReference();
     }
     
