@@ -94,7 +94,9 @@ public class EmagImportation {
                 handleArcFile(arcFile);
                 arcFile.delete();
             } catch (Exception e) {
-                outputFormat.writeFailure(arcFilename, "", "Issue occurd handling the ARC-file: " + e.getMessage());
+                String errMsg = "Issue occurd handling the ARC-file: " + arcFilename;
+                log.warn(errMsg, e);
+                outputFormat.writeFailure(arcFilename, "", errMsg + " -> " + e.getMessage());
             }
         }
         reportNotFoundRecords();
@@ -169,12 +171,13 @@ public class EmagImportation {
     protected void importFileToCumulusRecord(CumulusRecord record, File contentFile) {
         String oldPath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
         String newPath = conf.getImportationConfiguration().getSubstitute().substitute(oldPath);
+        log.debug("Importing file for record '" + record.getUUID() + "': " + oldPath + " -> " + newPath);
         File newFile = new File(newPath);
         FileUtils.getDirectory(newFile.getParent());
         FileUtils.moveOrOverrideFile(contentFile, newFile);
-        if(!oldPath.equals(newPath)) {
-            record.setNewAssetReference(newFile);
-        }
+//        if(!oldPath.equals(newPath)) {
+        record.setNewAssetReference(newFile);
+//        }
         record.updateAssetReference();
     }
     
@@ -212,8 +215,8 @@ public class EmagImportation {
     protected void reportNotFoundRecords() {
         for(String arcFilename : inputFormat.getArcFilenames()) {
             Collection<RecordUUIDs> notFound = inputFormat.getNotFoundRecordsForArcFile(arcFilename);
-            for(RecordUUIDs r : notFound) {
-                outputFormat.writeFailure(r, "Not found.");
+            for(RecordUUIDs record : notFound) {
+                outputFormat.writeFailure(record, "Not found.");
             }
         }
     }
