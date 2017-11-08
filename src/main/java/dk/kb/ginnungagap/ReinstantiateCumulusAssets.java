@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,12 @@ import dk.kb.metadata.utils.GuidExtrationUtils;
  * Receives the following arguments:
  * 1. Configuration file.
  * 2. The catalog, which must have its record assets reinstantiated.
- * 3. [OPTIONAL] input file, with a list of the GUID for the records to have the assets reinstantiated.
+ * 3. The input file, with a list of the GUID for the records to have the assets reinstantiated.
  *   - If no list is given, then it will reinstantiate all cumulus record assets.
+ * 4. [Optional] Whether to run on all files.
  * 
  * e.g.
- * dk.kb.ginningagap.ReinstantiateCumulusAssets conf/ginnungagap.yml CATALOG recordList.txt
+ * dk.kb.ginningagap.ReinstantiateCumulusAssets conf/ginnungagap.yml CATALOG recordList.txt "No"
  */
 public class ReinstantiateCumulusAssets {
     /** The logger.*/
@@ -45,32 +47,37 @@ public class ReinstantiateCumulusAssets {
      */
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
-        String confPath;
+        String confPath = null;
         String catalogName = null;
         String filePath = null;
-        if(args.length < 2) {
-            confPath = System.getenv("GINNUNGAGAP_CONF_FILE");
-            if(confPath == null || confPath.isEmpty()) {
-                failPrintErrorAndExit();
-            }
+        if(args.length < 3) {
+            failPrintErrorAndExit();
         } else {
             confPath = args[0];
             catalogName = args[1];
-        }
-        if(args.length > 2) {
             filePath = args[2];
+        }
+        boolean runOnAll = false;
+        if(args.length > 3) {
+            if(args[3].startsWith("Y") || args[3].startsWith("y")) {
+                runOnAll = true;
+                log.info("Running on all files in the catalog '" + catalogName + "'");
+            } else {
+                log.info("Not running on all files in the catalog '" + catalogName + "'");
+            }
         }
         
         File confFile = new File(confPath);
         if(!confFile.isFile()) {
             System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
-            System.exit(-1);
+            failPrintErrorAndExit();
         }
         Configuration conf = new Configuration(confFile);
 
-        File inputFile = null;
-        if(new File(filePath).exists()) {
-            inputFile = new File(filePath);
+        File inputFile = new File(filePath);
+        if(!runOnAll && !inputFile.exists()) {
+            System.err.println("Cannot find the input file '" + confFile.getAbsolutePath() + "'.");
+            failPrintErrorAndExit();
         }
         
         Cumulus.CumulusStart();
@@ -78,10 +85,10 @@ public class ReinstantiateCumulusAssets {
             CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
 
             System.out.println("Starting workflow");
-            if(inputFile != null) {
-                reinstantiateListOfCumulusAssets(cumulusServer, catalogName, inputFile);
-            } else {
+            if(runOnAll) {
                 reinstantiateAllCumulusAssets(cumulusServer, catalogName);
+            } else {
+                reinstantiateListOfCumulusAssets(cumulusServer, catalogName, inputFile);
             }
         } finally {
             System.out.println("Finished!");
@@ -96,9 +103,10 @@ public class ReinstantiateCumulusAssets {
         System.err.println("Missing arguments. At least two arguments:");
         System.err.println(" * 1. Configuration file.");
         System.err.println(" * 2. The catalog, which must have its record assets reinstantiated.");
-        System.err.println(" * 3. [OPTIONAL] input file, with a list of the GUID for the records to "
+        System.err.println(" * 3. The input file, with a list of the GUID for the records to "
                 + "have the assets reinstantiated.");
-        System.err.println(" *   - If no list is given, then it will reinstantiate all cumulus record assets.");
+        System.err.println(" * 4. [Optional] Whether to run on all files (YES/NO)");
+        System.err.println(" *   - default no");
         System.exit(-1);        
     }
     
@@ -110,7 +118,8 @@ public class ReinstantiateCumulusAssets {
      */
     protected static void reinstantiateListOfCumulusAssets(CumulusServer server, String catalogName, File inputFile) {
         log.info("Reinstantiating the asset of the records from the file : " + inputFile.getAbsolutePath());
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), 
+                StandardCharsets.UTF_8))) {
             String line;
             while((line = reader.readLine()) != null) {
                 String uuid = GuidExtrationUtils.extractGuid(line);

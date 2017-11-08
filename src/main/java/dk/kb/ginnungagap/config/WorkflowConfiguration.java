@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+
 /**
  * Class for the workflow configuration.
  */
@@ -20,6 +22,7 @@ public class WorkflowConfiguration {
      * @param interval The interval for running the workflows.
      */
     public WorkflowConfiguration(int interval, Collection<String> workflows) {
+        ArgumentCheck.checkNotNullOrEmpty(workflows, "List<String> workflows");
         this.workflows = Collections.unmodifiableList(new ArrayList<String>(workflows));
         this.interval = interval;
     }

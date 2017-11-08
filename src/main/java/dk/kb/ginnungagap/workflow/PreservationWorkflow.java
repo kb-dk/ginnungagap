@@ -60,10 +60,10 @@ public class PreservationWorkflow extends AbstractWorkflow {
     protected void initialiseSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
         for(String catalogName : server.getCatalogNames()) {
-            steps.add(new PreserveSubAssetStep(conf, server, transformer, representationTransformer, preserver, 
-                    catalogName));
-            steps.add(new PreserveMasterAssetStep(conf, server, transformer, representationTransformer, preserver, 
-                    catalogName));
+//            steps.add(new PreserveSubAssetStep(conf, server, transformer, representationTransformer, preserver, 
+//                    catalogName));
+//            steps.add(new PreserveMasterAssetStep(conf, server, transformer, representationTransformer, preserver, 
+//                    catalogName));
             steps.add(new PreserveAllStep(conf, server, transformer, representationTransformer, preserver, 
                     catalogName));
         }

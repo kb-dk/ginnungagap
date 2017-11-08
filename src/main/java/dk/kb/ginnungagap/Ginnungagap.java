@@ -62,6 +62,11 @@ public class Ginnungagap {
     /** Archive parameter for the bitrepository archive.*/
     public static final String ARCHIVE_BITMAG = "bitmag";
     
+    /** The name of the default transformation file.*/
+    public static final String TRANSFORMATION_FILE_NAME = "transformToMets.xsl";
+    /** The name of the representation transformation file.*/
+    public static final String REPRESENTATION_TRANSFORMATION_FILE_NAME = "transformToMetsRepresentation.xsl";
+    
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
@@ -105,9 +110,16 @@ public class Ginnungagap {
         }
 
         Configuration conf = new Configuration(confFile);
-        File xsltFile = new File(conf.getTransformationConf().getXsltDir(), "transformToMets.xsl");
+        File xsltFile = new File(conf.getTransformationConf().getXsltDir(), TRANSFORMATION_FILE_NAME);
         if(!xsltFile.isFile()) {
             System.err.println("Missing transformation file '" + xsltFile.getAbsolutePath() + "'");
+            printParametersAndExit();
+        }
+
+        File representationXsltFile = new File(conf.getTransformationConf().getXsltDir(), 
+                REPRESENTATION_TRANSFORMATION_FILE_NAME);
+        if(!representationXsltFile.isFile()) {
+            System.err.println("Missing transformation file '" + representationXsltFile.getAbsolutePath() + "'");
             printParametersAndExit();
         }
 
@@ -124,8 +136,7 @@ public class Ginnungagap {
         CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
         try {
             MetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
-            MetadataTransformer representationTransformer = new XsltMetadataTransformer(
-                    new File(conf.getTransformationConf().getXsltDir(), "transformToRepresentationMets.xsl"));
+            MetadataTransformer representationTransformer = new XsltMetadataTransformer(representationXsltFile);
                     
             if(fileOnly) {
                 extractFilesOnly(cumulusServer, conf, transformer);
@@ -139,8 +150,11 @@ public class Ginnungagap {
                     workflow.start();                    
                 }
             }
-        } finally {
             System.out.println("Finished!");
+        } catch (Exception e) {
+            System.out.println("Failed!");
+            throw e;
+        } finally {
             Cumulus.CumulusStop();
             archive.shutdown();
         }
@@ -161,13 +175,13 @@ public class Ginnungagap {
             BitmagPreserver preserver, Archive archive) {
         List<Workflow> res = new ArrayList<Workflow>();
         for(String workflowName : conf.getWorkflowConf().getWorkflows()) {
-            if(workflowName.contains(PreservationWorkflow.class.getName())) {
+            if(workflowName.equalsIgnoreCase(PreservationWorkflow.class.getSimpleName())) {
                 res.add(new PreservationWorkflow(conf.getTransformationConf(), server, transformer, 
                         representationTransformer, preserver));
-            } else if(workflowName.contains(ImportWorkflow.class.getName())) {
+            } else if(workflowName.equalsIgnoreCase(ImportWorkflow.class.getSimpleName())) {
                 log.warn("The workflow '" + workflowName + "' cannot be instanted yet, due to missing fields.");
 //                res.add(new ImportWorkflow(conf, server, archive));
-            } else if(workflowName.contains(ValidationWorkflow.class.getName())) {
+            } else if(workflowName.equalsIgnoreCase(ValidationWorkflow.class.getSimpleName())) {
                 log.warn("The workflow '" + workflowName + "' cannot be instanted yet, due to missing fields.");
 //                res.add(new ValidationWorkflow(conf, server, archive));
             } else {

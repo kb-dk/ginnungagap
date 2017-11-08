@@ -76,7 +76,7 @@ public abstract class AbstractPreservationStep implements WorkflowStep {
     public void performStep() throws Exception {
         CumulusQuery query = getQuery();
         RecordItemCollection items = server.getItems(catalogName, query);
-        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " sub-asset records to be preserved.");
+        log.info("Catalog '" + catalogName + "' had " + items.getItemCount() + " records to be preserved.");
         preserveRecordItems(items, catalogName);
     }
 

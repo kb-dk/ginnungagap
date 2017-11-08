@@ -89,8 +89,7 @@ public class CumulusQuery {
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
                 Constants.FieldNames.PRESERVATION_STATUS,
-                Constants.FieldValues.
-                PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
@@ -118,8 +117,7 @@ public class CumulusQuery {
                 StringUtils.replaceSpacesToTabs(
                         "%s is %s\nand %s is %s\nand %s is %s\nand %s has value\nand %s has no value"),
                 Constants.FieldNames.PRESERVATION_STATUS,
-                Constants.FieldValues.
-                PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
@@ -147,8 +145,7 @@ public class CumulusQuery {
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s\nand %s has value"),
                 Constants.FieldNames.PRESERVATION_STATUS,
-                Constants.FieldValues.
-                PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
