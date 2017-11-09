@@ -22,7 +22,7 @@ public abstract class AbstractWorkflow implements Workflow {
 
     /** The steps of this workflow.*/
     protected List<WorkflowStep> steps = null;
-    
+
     /**
      * Sets the step for this workflow.
      * @param steps The steps for this workflow.
@@ -30,15 +30,19 @@ public abstract class AbstractWorkflow implements Workflow {
     protected synchronized void setWorkflowSteps(List<WorkflowStep> steps) {
         this.steps = new ArrayList<WorkflowStep>(steps);
     }
-    
+
     @Override
     public final synchronized void start() {
-        if(steps == null || steps.isEmpty()) {
-            log.warn("No workflow steps defined! Cannot run workflow: " + getJobID());
-            return;
-        }
-        for(WorkflowStep step : steps) {
-            performStep(step);
+        try {
+            if(steps == null || steps.isEmpty()) {
+                log.warn("No workflow steps defined! Cannot run workflow: " + getJobID());
+                return;
+            }
+            for(WorkflowStep step : steps) {
+                performStep(step);
+            }
+        } finally {
+            currentState = WorkflowState.NOT_RUNNING;
         }
     }
 
@@ -59,7 +63,7 @@ public abstract class AbstractWorkflow implements Workflow {
             }
         }
     }
-    
+
     /**
      * For telling that the workflow has finished its task.
      */
@@ -67,7 +71,7 @@ public abstract class AbstractWorkflow implements Workflow {
         this.currentState = WorkflowState.NOT_RUNNING;
         this.currentStep = null;
     }
-    
+
     @Override
     public WorkflowState currentState() {
         return currentState;

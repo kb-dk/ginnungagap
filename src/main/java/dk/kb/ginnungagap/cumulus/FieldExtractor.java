@@ -117,7 +117,6 @@ public class FieldExtractor {
                 res.put(f.getName(), f.getStringValue());
             }
         }
-        System.err.println("GNU: " + res);
         return res;
     }
     

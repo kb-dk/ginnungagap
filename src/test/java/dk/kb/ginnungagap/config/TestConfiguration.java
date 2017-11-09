@@ -8,7 +8,6 @@ public class TestConfiguration extends Configuration {
     TransformationConfiguration transConf;
     BitmagConfiguration bmConf;
     CumulusConfiguration cConf;
-    ImportationConfiguration importConf;
     
     public TestConfiguration(File confFile) {
         super(confFile);
@@ -53,17 +52,5 @@ public class TestConfiguration extends Configuration {
     }
     public void setCumulusConf(CumulusConfiguration cConf) {
         this.cConf = cConf;
-    }
-    
-    
-    @Override
-    public ImportationConfiguration getImportationConfiguration() {
-        if(this.importConf != null) {
-            return importConf;
-        }
-        return super.getImportationConfiguration();
-    }
-    public void setImportationConf(ImportationConfiguration iConf) {
-        this.importConf = iConf;
     }
 }

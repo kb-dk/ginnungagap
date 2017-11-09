@@ -70,12 +70,6 @@
           <xsl:value-of select="field[@name='pbcoreAudienceRating']/value" />
         </xsl:element>
       </xsl:if>
-      <!-- pbcore annotation -->
-      <xsl:if test="field[@name='pbcoreAnnotation']">
-        <xsl:element name="pbcore:pbcoreAnnotation">
-          <xsl:value-of select="field[@name='pbcoreAnnotation']/value" />
-        </xsl:element>
-      </xsl:if>
       <!-- pbcore creator element -->
       <xsl:if test="field[@name='pbcoreCreator']">
         <xsl:element name="pbcore:pbcoreCreator">
@@ -117,22 +111,30 @@
       </xsl:if>
       <!-- pbcore rights element -->
       <xsl:if test="field[@name='pbcorerightsSummary'] or field[@name='pbcorerightsLink'] or field[@name='pbcorerightsEmbedded']">
-        <xsl:element name="pbcore:pbcoreRightsSummary">
-          <xsl:if test="field[@name='pbcorerightsSummary']">
+        <xsl:if test="field[@name='pbcorerightsSummary']">
+          <xsl:element name="pbcore:pbcoreRightsSummary">
             <xsl:element name="pbcore:rightsSummary">
               <xsl:value-of select="field[@name='pbcorerightsSummary']/value" />
             </xsl:element>
-          </xsl:if>
-          <xsl:if test="field[@name='pbcorerightsLink']">
-            <xsl:element name="pbcore:rightsLink">
-              <xsl:value-of select="field[@name='pbcorerightsLink']/value" />
-            </xsl:element>
-          </xsl:if>
-          <xsl:if test="field[@name='pbcorerightsEmbedded']">
-            <xsl:element name="pbcore:rightsEmbedded">
+            <xsl:if test="field[@name='pbcorerightsLink']">
+              <xsl:element name="pbcore:rightsLink">
+                <xsl:value-of select="field[@name='pbcorerightsLink']/value" />
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="field[@name='pbcorerightsEmbedded']">
+          <xsl:element name="pbcore:pbcoreRightsSummary">
+            <xsl:element name="pbcore:rightsSummary">
               <xsl:value-of select="field[@name='pbcorerightsEmbedded']/value" />
             </xsl:element>
-          </xsl:if>
+          </xsl:element>
+        </xsl:if>
+      </xsl:if>
+      <!-- pbcore annotation -->
+      <xsl:if test="field[@name='pbcoreAnnotation']">
+        <xsl:element name="pbcore:pbcoreAnnotation">
+          <xsl:value-of select="field[@name='pbcoreAnnotation']/value" />
         </xsl:element>
       </xsl:if>
     </pbcore:pbcoreDescriptionDocument>

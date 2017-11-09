@@ -64,7 +64,7 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
      */
     public void runJob() {
         try {
-            if (workflow.currentState().equals(WorkflowState.NOT_RUNNING)) {
+            if(workflow.currentState().equals(WorkflowState.NOT_RUNNING)) {
                 log.info("Starting job: " + workflow.getJobID());
                 workflow.setCurrentState(WorkflowState.WAITING);
                 workflow.start();

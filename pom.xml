@@ -4,7 +4,7 @@
 
   <groupId>dk.kb</groupId>
   <artifactId>ginnungagap</artifactId>
-  <version>1.2.0-RC3</version>
+  <version>1.2.1-RC1</version>
   <packaging>jar</packaging>
 
   <name>ginnungagap</name>
@@ -22,7 +22,6 @@
     <assembly.conf.env.file>GINNUNGAGAP_CONF_FILE</assembly.conf.env.file>
     <assembly.conf.env.file.ref>${GINNUNGAGAP_CONF_FILE}</assembly.conf.env.file.ref>
     <assembly.main.class.name>dk.kb.ginnungagap.Ginnungagap</assembly.main.class.name>
-    <assembly.prevalidate.class.name>dk.kb.ginnungagap.EmagPreValidator</assembly.prevalidate.class.name>
   </properties>
 
   <dependencies>

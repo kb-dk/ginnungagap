@@ -113,8 +113,6 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
-        
-        assertNull(conf.getImportationConfiguration());
     }
     
     @Test
@@ -148,10 +146,6 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
-        
-        assertNotNull(conf.getImportationConfiguration());
-        assertNotNull(conf.getImportationConfiguration().getScriptFile());
-        assertNotNull(conf.getImportationConfiguration().getTempDir());
     }
     
     @Test(expectedExceptions = ArgumentCheck.class)

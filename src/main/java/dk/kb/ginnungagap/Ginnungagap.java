@@ -31,6 +31,7 @@ import dk.kb.ginnungagap.workflow.ImportWorkflow;
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 import dk.kb.ginnungagap.workflow.ValidationWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.Workflow;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowScheduler;
 
 /**
  * Class for instantiating the Ginnungagap workflow.
@@ -145,15 +146,12 @@ public class Ginnungagap {
 
                 Collection<Workflow> workflows = instantiateWorkflows(conf, cumulusServer, transformer, 
                         representationTransformer, preserver, archive);
-                for(Workflow workflow : workflows) {
-                    log.info("Starting workflow: " + workflow.getJobID() + " : " + workflow.getDescription());
-                    workflow.start();                    
-                }
+                runWorkflows(workflows, conf.getWorkflowConf().getInterval());
             }
             System.out.println("Finished!");
         } catch (Exception e) {
             System.out.println("Failed!");
-            throw e;
+            throw new RuntimeException("Unexpected failure.", e);
         } finally {
             Cumulus.CumulusStop();
             archive.shutdown();
@@ -170,7 +168,7 @@ public class Ginnungagap {
      * @param archive The bitrepository archive.
      * @return The list of workflows to be run.
      */
-    public static Collection<Workflow> instantiateWorkflows(Configuration conf, CumulusServer server, 
+    protected static Collection<Workflow> instantiateWorkflows(Configuration conf, CumulusServer server, 
             MetadataTransformer transformer, MetadataTransformer representationTransformer, 
             BitmagPreserver preserver, Archive archive) {
         List<Workflow> res = new ArrayList<Workflow>();
@@ -238,6 +236,32 @@ public class Ginnungagap {
                     log.error("Runtime exception caught while trying to handle Cumulus item with ID '" + item.getID()
                             + "'. ", e);
                 }
+            }
+        }
+    }
+    
+    /**
+     * Running the workflows continuously at the given interval.
+     * If the interval was non-positive, then they are only run once.
+     * @param workflows The workflows to run.
+     * @param interval The interval between running the workflows. If non-positive, then only run once.
+     * @throws InterruptedException If the scheduling fails.
+     */
+    protected static void runWorkflows(Collection<Workflow> workflows, long interval) throws InterruptedException {
+        if(interval > 0) {
+            WorkflowScheduler scheduler = new WorkflowScheduler();
+            for(Workflow workflow : workflows) {
+                log.info("Scheduling workflow: " + workflow.getJobID() + " : " + workflow.getDescription() 
+                        + ", at the interval " + interval + " milliseconds");
+                scheduler.schedule(workflow, interval);
+            }
+            synchronized(scheduler) {
+                scheduler.wait();
+            }
+        } else {
+            for(Workflow workflow : workflows) {
+                log.info("Single run of workflow: " + workflow.getJobID() + " : " + workflow.getDescription());
+                workflow.start();                    
             }
         }
     }

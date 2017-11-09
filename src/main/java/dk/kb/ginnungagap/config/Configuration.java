@@ -121,15 +121,6 @@ public class Configuration {
     protected static final String CONF_TRANSFORMATION_REQUIRED_FIELDS_FILE = "required_fields_file";
     /** Transformation metadata temp file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
-
-    /** Importation node-element.*/
-    protected static final String CONF_IMPORT = "import";
-    /** Conversion temp-dir leaf-element.*/
-    protected static final String CONF_IMPORT_TEMP_DIR = "temp_dir";
-    /** Conversion script file leaf-element.*/
-    protected static final String CONF_IMPORT_SCRIPT_FILE = "script_file";
-    /** Conversion script file leaf-element.*/
-    protected static final String CONF_IMPORT_SUBSTITUTE = "substitute";
     
     /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
@@ -142,9 +133,6 @@ public class Configuration {
     protected final TransformationConfiguration transformationConf;
     /** The configuration for the workflows*/
     protected final WorkflowConfiguration workflowConfiguration;
-    
-    /** The configuration for the importation from E-magasinet. May be null, if no conversion is needed.*/
-    protected ImportationConfiguration importConfiguration = null;
     
     /**
      * Constructor.
@@ -174,11 +162,6 @@ public class Configuration {
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
             this.workflowConfiguration = loadWorkflowConfiguration((Map<String, Object>) confMap.get(CONF_WORKFLOW));
-            
-            if(confMap.containsKey(CONF_IMPORT)) {
-                this.importConfiguration = loadConversionConfiguration(
-                        (Map<String, Object>) confMap.get(CONF_IMPORT));
-            }
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
@@ -299,27 +282,6 @@ public class Configuration {
         return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, requiredFields);
     }
     
-    /**
-     * Loads the Conversion configuration from the 'conversion' element in the configuration.
-     * @param map The map with the Conversion configuration.
-     * @return The configuration for the conversion.
-     */
-    protected ImportationConfiguration loadConversionConfiguration(Map<String, Object> map) {
-        ArgumentCheck.checkTrue(map.containsKey(CONF_IMPORT_TEMP_DIR), 
-                "Missing Conversion element '" + CONF_IMPORT_TEMP_DIR + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_IMPORT_SCRIPT_FILE), 
-                "Missing Conversion element '" + CONF_IMPORT_SCRIPT_FILE + "'");
-
-        File tempDir = FileUtils.getDirectory((String) map.get(CONF_IMPORT_TEMP_DIR));
-        File scriptFile = new File((String) map.get(CONF_IMPORT_SCRIPT_FILE));
-        List<Map<String, String>> subs = (List<Map<String, String>>) map.get(CONF_IMPORT_SUBSTITUTE);
-        
-        ArgumentCheck.checkExistsDirectory(tempDir, "temp dir");
-        ArgumentCheck.checkExistsNormalFile(scriptFile, "script");
-
-        return new ImportationConfiguration(tempDir, scriptFile, subs);
-    }
-    
     /** @return The configuration for the bitrepository.*/
     public BitmagConfiguration getBitmagConf() {
         return bitmagConf;
@@ -338,10 +300,5 @@ public class Configuration {
     /** @return The configuration for the transformation.*/
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
-    }
-    
-    /** @return The configuration for the importation. May be null, if no importation is needed.*/
-    public ImportationConfiguration getImportationConfiguration() {
-        return importConfiguration;
     }
 }

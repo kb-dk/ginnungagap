@@ -66,7 +66,7 @@ public class CumulusTest extends ExtendedTestCase {
     @AfterClass
     public void stop() {
         Cumulus.CumulusStop();
-        TestFileUtils.tearDown();
+//        TestFileUtils.tearDown();
     }
 
     //    @Test
@@ -108,12 +108,11 @@ public class CumulusTest extends ExtendedTestCase {
         //        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
         //                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
 
-        String catalogName = "Letters OM";
-        String query = "GUID\tcontains\ta05d8e80-6d63-11df-8c95-0016357f605f"
-                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
-        EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
+        String catalogName = "Samlingsbilleder";
+//        String uuid = "3db6d7d0-721b-11de-80ef-0016357f605f";
+        String uuid = "2d95a980-721b-11de-80ef-0016357f605f";
 
-        RecordItemCollection items = server.getItems(catalogName, new CumulusQuery(query, flags, CombineMode.FIND_NEW));
+        RecordItemCollection items = server.getItems(catalogName, CumulusQuery.getQueryForSpecificUUID(catalogName, uuid));
         System.err.println("Number of items: " + items.getItemCount());
 
         RequiredFields rf = new RequiredFields(Arrays.asList("CHECKSUM_ORIGINAL_MASTER"), Arrays.asList("Preservation_status"));
@@ -133,7 +132,23 @@ public class CumulusTest extends ExtendedTestCase {
             //            System.err.println("Has QA_error: " + map.containsKey("QA_error"));
             //            System.err.println("Is QA_error writable: " + map.get("QA_error").isFieldEditable());
 
-            CumulusRecord cr = new CumulusRecord(fe, item);
+            CumulusRecord record = new CumulusRecord(fe, item);
+//            record.initRelatedIntellectualEntityObjectIdentifier();
+//            record.resetMetadataGuid();
+//            
+//            String origMetadataGuid = record.getMetadataGUID();
+//            String representationMetadataGuid = UUID.randomUUID().toString();
+//            String combinedMetadataGuid = origMetadataGuid + "##" + representationMetadataGuid;
+//            record.setStringValueInField(Constants.PreservationFieldNames.METADATA_GUID, combinedMetadataGuid);
+//
+//            String origIntellectualGuid = record.getFieldValue(
+//                    Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+//            if(!origIntellectualGuid.contains("##")) {
+//                String representationIntellectualGuid = UUID.randomUUID().toString();
+//                String combinedIntellectualGuid = origIntellectualGuid + "##" + representationIntellectualGuid;
+//                record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY, 
+//                        combinedIntellectualGuid);
+//            }
             //            cr.validateRequiredFields(rf);
             //            cr.setPreservationMetadataPackage("Metadata Package");
             //            cr.setPreservationResourcePackage("Resource Package");
@@ -142,8 +157,8 @@ public class CumulusTest extends ExtendedTestCase {
 
             File cumulusMetadataFile = new File(outputDir, item.getID() + ".xml");
             File metsMetadataFile = new File(outputDir, item.getID() + ".mets.xml");
-            cr.getMetadata(cumulusMetadataFile);
-            XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
+            record.getMetadata(cumulusMetadataFile);
+            XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl"));
 
             transformer.transformXmlMetadata(new FileInputStream(cumulusMetadataFile), new FileOutputStream(metsMetadataFile));
             //            StreamUtils.copy(cr.getMetadata(new File(outputDir, item.getID() + "_fields.xml")), new FileOutputStream(outputFile));

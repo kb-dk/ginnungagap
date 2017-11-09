@@ -25,7 +25,7 @@ public class WorkflowScheduler {
     public static final long SCHEDULE_INTERVAL = 60000;
 
     /** The name of the timer.*/
-    private static final String TIMER_NAME = "Service Scheduler";
+    private static final String TIMER_NAME = "Cumulus Bevaring Service Scheduler";
     /** Whether the timer is a daemon.*/
     private static final boolean TIMER_IS_DAEMON = true;
     /** A timer delay of 0 seconds.*/
