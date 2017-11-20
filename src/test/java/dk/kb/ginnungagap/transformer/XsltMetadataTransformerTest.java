@@ -131,12 +131,16 @@ public class XsltMetadataTransformerTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testStuff() throws Exception {
-        addDescription("Test the catalog structmap transformation");
-        File xmlFile = new File("/home/jolf/test/ginnungagap-1.2.0-RC4/tempDir/metadata/29394769-e77c-4eff-86d8-9f507158af4b_raw.xml");
-
+    public void testRepresentation() throws Exception {
+        addDescription("Test the transformation for a representation");
+        File xmlFile = new File("src/test/resources/test_representation.raw.xml");
+        File representationXsltFile = new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl");
+//        File representationXsltFile = new File("src/main/resources/scripts/xslt/transformToMets.xsl");
+        
         assertTrue(xmlFile.isFile());
-        XsltMetadataTransformer transformer = new XsltMetadataTransformer(xsltFile);
+        assertTrue(representationXsltFile.isFile());
+        
+        XsltMetadataTransformer transformer = new XsltMetadataTransformer(representationXsltFile);
         
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
         

@@ -15,6 +15,7 @@
   
   <xsl:variable name="id" select="record/field[@name='objectIdentifierValue']/value"/>
   <xsl:variable name="PREMIS_LOCATION" select="'http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd'" />
+  <xsl:variable name="PREMIS_VERSION" select="'3.0'" />
 
   <xsl:template name="premis_preservation">
     <!-- Preservation level for bit safety. -->
@@ -119,12 +120,12 @@
   </xsl:template>
   
   <xsl:template name="premis_object">
-    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:file</xsl:attribute>
       <!-- START 1.1 objectIdentifier -->
       <xsl:element name="premis:objectIdentifier">
         <xsl:element name="premis:objectIdentifierType">
-          <xsl:call-template name="premis_object_identifier_type" />
+          <xsl:call-template name="premis_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:objectIdentifierValue">
           <xsl:call-template name="premis_object_identifier_value" />
@@ -249,8 +250,8 @@
     </premis:object>
   </xsl:template>
   
-  <xsl:template name="premis_event">
-    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}">
+  <xsl:template name="premis_event_for_file">
+    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
       <!-- eventIdentifier -->
       <xsl:element name="premis:eventIdentifier">
         <xsl:element name="premis:eventIdentifierType">
@@ -299,33 +300,104 @@
       <!-- linkingObjectIdentifier -->
       <xsl:element name="premis:linkingObjectIdentifier">
         <xsl:element name="premis:linkingObjectIdentifierType">
-          <xsl:call-template name="premis_object_identifier_type" />
+          <xsl:call-template name="premis_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:linkingObjectIdentifierValue">
           <xsl:call-template name="premis_object_identifier_value" />
         </xsl:element>
       </xsl:element>
+      <xsl:element name="premis:linkingObjectIdentifier">
+        <xsl:element name="premis:linkingObjectIdentifierType">
+          <xsl:call-template name="premis_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:linkingObjectIdentifierValue">
+          <xsl:call-template name="premis_identifier_value" />
+        </xsl:element>
+      </xsl:element>
     </premis:event>
   </xsl:template>
   
-  <xsl:template name="premis_object_identifier_type">
+  <xsl:template name="premis_event_for_representation">
+    <premis:event xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
+      <!-- eventIdentifier -->
+      <xsl:element name="premis:eventIdentifier">
+        <xsl:element name="premis:eventIdentifierType">
+          <xsl:call-template name="premis_event_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:eventIdentifierValue">
+         <xsl:call-template name="premis_event_identifier_value" />
+        </xsl:element>
+      </xsl:element>
+      
+      <!-- eventType -->
+      <xsl:element name="premis:eventType">
+        <xsl:choose>
+          <xsl:when test="field[@name='eventType']">
+            <xsl:value-of select="field[@name='eventType']/value" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'ingestion'" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+      
+      <!-- date time -->
+      <xsl:element name="premis:eventDateTime">
+        <xsl:choose>
+          <xsl:when test="field[@name='eventDateTime']">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+                'EEE MMM dd HH:mm:ss z yyyy',field[@name='eventDateTime']/value)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+      
+      <!-- linkingAgentIdentifier -->
+      <xsl:element name="premis:linkingAgentIdentifier">
+        <xsl:element name="premis:linkingAgentIdentifierType">
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentType()" />
+        </xsl:element>
+        <xsl:element name="premis:linkingAgentIdentifierValue">
+          <xsl:value-of select="java:dk.kb.metadata.selector.AgentSelector.getApiAgentValue()" />
+        </xsl:element>
+      </xsl:element>
+      
+      <!-- linkingObjectIdentifier -->
+      <xsl:element name="premis:linkingObjectIdentifier">
+        <xsl:element name="premis:linkingObjectIdentifierType">
+          <xsl:call-template name="premis_identifier_type" />
+        </xsl:element>
+        <xsl:element name="premis:linkingObjectIdentifierValue">
+          <xsl:call-template name="premis_representation_identifier_value" />
+        </xsl:element>
+      </xsl:element>
+    </premis:event>
+  </xsl:template>
+  
+  <xsl:template name="premis_identifier_type">
     <xsl:value-of select="'UUID'" />
   </xsl:template>
   
   <xsl:template name="premis_object_identifier_value">
     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
   </xsl:template>
-
-  <xsl:template name="premis_representation_identifier_type">
-    <xsl:value-of select="'UUID'" />
-  </xsl:template>
   
   <xsl:template name="premis_identifier_value">
-    <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='METADATA GUID']/value)" />
+    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0)" />
   </xsl:template>
 
   <xsl:template name="premis_representation_identifier_value">
-        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />
+    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />
+  </xsl:template>
+
+  <xsl:template name="premis_intellectual_entity_for_file">
+    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 0)" />
+  </xsl:template>
+
+  <xsl:template name="premis_intellectual_entity_for_representation">
+    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1)" />
   </xsl:template>
 
   <xsl:template name="premis_agent_identifier_type">
@@ -353,17 +425,16 @@
   </xsl:template>
   
   <xsl:template name="premis_rights_identifier_value">
-<!--     <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='rightsStatementIdentifierValue']/value)" /> -->
     <xsl:value-of select="'rightsStatementIdentifierValue'" />
   </xsl:template>  
   
-  <xsl:template name="premis_relationship">
-    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+  <xsl:template name="premis_relationship_for_file">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
       <!-- START 1.1 objectIdentifier -->
       <xsl:element name="premis:objectIdentifier">
         <xsl:element name="premis:objectIdentifierType">
-          <xsl:call-template name="premis_representation_identifier_type" />
+          <xsl:call-template name="premis_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:objectIdentifierValue">
           <xsl:call-template name="premis_identifier_value" />
@@ -385,10 +456,10 @@
         </xsl:element>
         <xsl:element name="premis:relatedObjectIdentifier">
           <xsl:element name="premis:relatedObjectIdentifierType">
-            <xsl:value-of select="'UUID'" />
+            <xsl:call-template name="premis_identifier_type" />
           </xsl:element>
           <xsl:element name="premis:relatedObjectIdentifierValue">
-            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 0)" />
+            <xsl:call-template name="premis_intellectual_entity_for_file" />
           </xsl:element>
         </xsl:element>
       </xsl:element>
@@ -396,13 +467,13 @@
     </premis:object>
   </xsl:template>
   
-    <xsl:template name="premis_relationship_representation">
-    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+  <xsl:template name="premis_relationship_for_representation">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
       <!-- START 1.1 objectIdentifier -->
       <xsl:element name="premis:objectIdentifier">
         <xsl:element name="premis:objectIdentifierType">
-          <xsl:call-template name="premis_representation_identifier_type" />
+          <xsl:call-template name="premis_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:objectIdentifierValue">
           <xsl:call-template name="premis_representation_identifier_value" />
@@ -424,10 +495,10 @@
         </xsl:element>
         <xsl:element name="premis:relatedObjectIdentifier">
           <xsl:element name="premis:relatedObjectIdentifierType">
-            <xsl:value-of select="'UUID'" />
+            <xsl:call-template name="premis_identifier_type" />
           </xsl:element>
           <xsl:element name="premis:relatedObjectIdentifierValue">
-            <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1)" />
+            <xsl:call-template name="premis_intellectual_entity_for_representation" />
           </xsl:element>
         </xsl:element>
       </xsl:element>
@@ -437,12 +508,12 @@
   
   <!-- Template for the premis for a catalog -->
   <xsl:template name="premis_intellectual_entity_catalog">
-    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}">
+    <premis:object xsi:schemaLocation="{$PREMIS_LOCATION}" version="{$PREMIS_VERSION}">
       <xsl:attribute name="type" namespace="http://www.w3.org/2001/XMLSchema-instance">premis:representation</xsl:attribute>
       <!-- START 1.1 objectIdentifier -->
       <xsl:element name="premis:objectIdentifier">
         <xsl:element name="premis:objectIdentifierType">
-          <xsl:value-of select="'UUID'" />
+          <xsl:call-template name="premis_identifier_type" />
         </xsl:element>
         <xsl:element name="premis:objectIdentifierValue">
           <xsl:value-of select="uuid" />
@@ -469,6 +540,4 @@
       <!-- END 1.13 relationship -->
     </premis:object>
   </xsl:template>
-  
-  
 </xsl:stylesheet> 

@@ -41,7 +41,7 @@
         <xsl:value-of select="'File'" />
       </xsl:attribute>
       <xsl:attribute name="OBJID">
-        <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='METADATA GUID']/value)" />
+        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0)" />
       </xsl:attribute>
       <xsl:attribute name="PROFILE">
         <xsl:value-of select="java:dk.kb.metadata.Constants.getProfileURL()" />
@@ -95,6 +95,7 @@
       <!-- END metsHdr -->
       
       <!-- START dmdSec -->
+      <!-- Add MODS -->
       <xsl:element name="mets:dmdSec">
         <xsl:attribute name="CREATED">
           <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
@@ -102,7 +103,6 @@
         <xsl:attribute name="ID">
           <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($MODS-ID)" />
         </xsl:attribute>
-        <!-- Embed MODS here -->
         <xsl:element name="mets:mdWrap">
           <xsl:attribute name="MDTYPE">
             <xsl:value-of select="'MODS'" />
@@ -226,7 +226,7 @@
               <xsl:value-of select="'PREMIS:EVENT'" />
             </xsl:attribute>
             <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_event" />
+              <xsl:call-template name="premis_event_for_file" />
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -243,7 +243,7 @@
               <xsl:value-of select="'PREMIS'" />
             </xsl:attribute>
             <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_relationship" />
+              <xsl:call-template name="premis_relationship_for_file" />
             </xsl:element>
           </xsl:element>
         </xsl:element>

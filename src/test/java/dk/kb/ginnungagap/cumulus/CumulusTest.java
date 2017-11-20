@@ -102,12 +102,6 @@ public class CumulusTest extends ExtendedTestCase {
 
     @Test(enabled = false)
     public void testPrintingToXml() throws Exception {
-        //        int catalogId = server.getServer().findCatalogID(catalogName);
-        //        Catalog catalog = server.getServer().openCatalog(catalogId);
-
-        //        String query = "" + Constants.FieldNames.PRESERVATION_STATUS + "\tis\t" + Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL
-        //                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
-
         String catalogName = "Samlingsbilleder";
 //        String uuid = "3db6d7d0-721b-11de-80ef-0016357f605f";
         String uuid = "2d95a980-721b-11de-80ef-0016357f605f";
@@ -156,11 +150,14 @@ public class CumulusTest extends ExtendedTestCase {
             //            cr.setPreservationFinished();
 
             File cumulusMetadataFile = new File(outputDir, item.getID() + ".xml");
-            File metsMetadataFile = new File(outputDir, item.getID() + ".mets.xml");
+            File fileMetsMetadataFile = new File(outputDir, item.getID() + ".file.mets.xml");
+            File representationMetsMetadataFile = new File(outputDir, item.getID() + ".representation.mets.xml");
             record.getMetadata(cumulusMetadataFile);
-            XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl"));
+            XsltMetadataTransformer representaitonTransformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl"));
+            XsltMetadataTransformer fileTransformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
 
-            transformer.transformXmlMetadata(new FileInputStream(cumulusMetadataFile), new FileOutputStream(metsMetadataFile));
+            fileTransformer.transformXmlMetadata(new FileInputStream(cumulusMetadataFile), new FileOutputStream(fileMetsMetadataFile));
+            representaitonTransformer.transformXmlMetadata(new FileInputStream(cumulusMetadataFile), new FileOutputStream(representationMetsMetadataFile));
             //            StreamUtils.copy(cr.getMetadata(new File(outputDir, item.getID() + "_fields.xml")), new FileOutputStream(outputFile));
         }
 

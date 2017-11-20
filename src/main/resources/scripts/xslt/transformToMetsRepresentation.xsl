@@ -149,7 +149,7 @@
               <xsl:value-of select="'PREMIS:EVENT'" />
             </xsl:attribute>
             <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_event" />
+              <xsl:call-template name="premis_event_for_representation" />
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -166,7 +166,7 @@
               <xsl:value-of select="'PREMIS'" />
             </xsl:attribute>
             <xsl:element name="mets:xmlData">
-              <xsl:call-template name="premis_relationship_representation" />
+              <xsl:call-template name="premis_relationship_for_representation" />
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -197,7 +197,7 @@
                 <xsl:value-of select="'URN'" />
               </xsl:attribute>
               <xsl:attribute name="xlink:href">
-                <xsl:value-of select="concat('urn:uuid:', java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0))" />
+                <xsl:value-of select="concat('urn:uuid:', java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1))" />
               </xsl:attribute>
             </xsl:element>
           </xsl:element>

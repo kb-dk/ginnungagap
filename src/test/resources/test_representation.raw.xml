@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?><record>
+    <field data-type="string" name="Flash Mode">
+        <value>Flash not used, No strobe return detection function, No flash function, No red-eye reduction mode</value>
+    </field>
+    <field data-type="enumerator" name="Samlingsbilleder - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="enumerator" name="Department">
+        <value>KOB: Kort- og Billedafdelingen</value>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Image</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>180c971559f4e7527b9c24895b3f8f44</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>43850</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:bevaring</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Klar til langtidsbevaring</value>
+    </field>
+    <field data-type="enumerator" name="Status">
+        <value>Ubehandlet</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Portrætsamlingen, Fibiger, Mathilde</value>
+    </field>
+    <field data-type="string" name="Image Orientation">
+        <value>Top left</value>
+    </field>
+    <field data-type="enumerator" name="Color Model">
+        <value>RGB Color</value>
+    </field>
+    <field data-type="string" name="Forfatter">
+        <value>Sylvest Jensen (1910-1959)</value>
+    </field>
+    <field data-type="string" name="Orientation">
+        <value>Portrait</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="Contrast">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="LCSH">
+        <value>sh85105182</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Fri Nov 17 13:09:47 CET 2017</value>
+    </field>
+    <field data-type="string" name="Gain Control">
+        <value>None</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Note">
+        <value>Efter daguerreotypi</value>
+        <value>Neg. 36510</value>
+        <value>Dia, farve 5x7: 36510</value>
+        <value>1850?</value>
+    </field>
+    <field data-type="string" name="LastCmdInitiated">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@dd151f</value>
+    </field>
+    <field data-type="string" name="Person">
+        <value>Fibiger, Mathilde (1830-1872) forfatter, kvindesagsforkæmper</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Images DP</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1247703165</value>
+    </field>
+    <field data-type="string" name="Mastertransferstatus">
+        <value>OK</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2009-07-16 02:13:38</value>
+    </field>
+    <field data-type="string" name="URL">
+        <value>http://www.kb.dk/da/nb/materialer/billeder/index.html</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>49</value>
+    </field>
+    <field data-type="enumerator" name="Generel materialebetegnelse">
+        <value>Billede, Todimensionalt billedmateriale </value>
+    </field>
+    <field data-type="string" name="Copyright Notice">
+        <value>Det Kongelig Bibliotek</value>
+    </field>
+    <field data-type="enumerator" name="Pageorientation">
+        <value>LTR</value>
+    </field>
+    <field data-type="integer" name="Color Channels">
+        <value>3</value>
+    </field>
+    <field data-type="string" name="Opstilling">
+        <value>Billedsamlingen. Danske portrætter. Mathilde Fibiger. 8°</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_DISPLAY_COPY">
+        <value>b5c7432ab8fa50298cab4c3e69a4c664</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="date" name="Captured Date">
+        <value>Thu Apr 23 13:20:52 CEST 2009</value>
+    </field>
+    <field data-type="double" name="Image Height">
+        <value>4.37</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>online_master_arkiv_7</value>
+    </field>
+    <field data-type="string" name="URL-tekst">
+        <value>Det Kongelige Biblioteks billedsamling</value>
+    </field>
+    <field data-type="integer" name="Registrationdate">
+        <value>-550665216</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>0fa08886-d4c1-4410-94e0-55b775ac42a0##4c214aea-1726-4879-b507-1f95541b8845</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>true</value>
+    </field>
+    <field data-type="double" name="Vertical Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="enumerator" name="Genre">
+        <value>Portræt og person</value>
+    </field>
+    <field data-type="string" name="White Balance Mode">
+        <value>Auto white balance</value>
+    </field>
+    <field data-type="string" name="Compression">
+        <value>Uncompressed</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>non-archival\Images\BILLED\2009\apr\kendis</value>
+    </field>
+    <field data-type="string" name="creatingApplication">
+        <value>Adobe Photoshop CS Windows</value>
+    </field>
+    <field data-type="enumerator" name="Copyright">
+        <value>Billedet er muligvis beskyttet af loven om ophavsret</value>
+    </field>
+    <field data-type="enumerator" name="Materialebetegnelse">
+        <value>Fotografi</value>
+    </field>
+    <field data-type="enumerator" name="Ejerskab_farve">
+        <value>-65281</value>
+    </field>
+    <field data-type="string" name="PublishedByVersion">
+        <value>Publication workflow of iteration 9. Class = dk.kb.doms.components.workflow.iteration9.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.5 $;Publish without QA version = $Revision: 1.2 $;productionRoot = /Images;undoRoot = /online_master_arkiv_7/undo/Images;publishNonArchivalRoot = /online_master_arkiv_7/non-archival/Images;productionRoot = /Images;</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>uki</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>ke003045.tif</value>
+    </field>
+    <field data-type="string" name="ICC Profile Name">
+        <value>Adobe RGB (1998)</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Fri Apr 24 09:24:47 CEST 2009</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>Uid:dk:kb:doms:2007-01/2d95a980-721b-11de-80ef-0016357f605f</value>
+    </field>
+    <field data-type="double" name="Horizontal Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Samlingsbilleder</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Thu Jul 16 18:12:45 CEST 2009</value>
+    </field>
+    <field data-type="enumerator" name="Role">
+        <value>Photographer</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>175</value>
+    </field>
+    <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
+        <value>a56e6bd2-dbb7-4d44-91f9-a828e14aa2f8##353df426-3d53-43a8-bb34-d0816d8af711</value>
+    </field>
+    <field data-type="string" name="Titel">
+        <value>Mathilde Fibiger</value>
+    </field>
+    <field data-type="string" name="XMP Metadata">
+        <value>&amp;lt;?xpacket begin='﻿' id='W5M0MpCehiHzreSzNTczkc9d'?&amp;gt;</value>
+        <value>&amp;lt;x:xmpmeta xmlns:x='adobe:ns:meta/' x:xmptk='XMP toolkit 3.0-28, framework 1.6'&amp;gt;</value>
+        <value>&amp;lt;rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:iX='http://ns.adobe.com/iX/1.0/'&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:exif='http://ns.adobe.com/exif/1.0/'&amp;gt;</value>
+        <value>  &amp;lt;exif:ColorSpace&amp;gt;4294967295&amp;lt;/exif:ColorSpace&amp;gt;</value>
+        <value>  &amp;lt;exif:PixelXDimension&amp;gt;1317&amp;lt;/exif:PixelXDimension&amp;gt;</value>
+        <value>  &amp;lt;exif:PixelYDimension&amp;gt;1748&amp;lt;/exif:PixelYDimension&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:pdf='http://ns.adobe.com/pdf/1.3/'&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:photoshop='http://ns.adobe.com/photoshop/1.0/'&amp;gt;</value>
+        <value>  &amp;lt;photoshop:History&amp;gt;&amp;lt;/photoshop:History&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:tiff='http://ns.adobe.com/tiff/1.0/'&amp;gt;</value>
+        <value>  &amp;lt;tiff:XResolution&amp;gt;4000000/10000&amp;lt;/tiff:XResolution&amp;gt;</value>
+        <value>  &amp;lt;tiff:YResolution&amp;gt;4000000/10000&amp;lt;/tiff:YResolution&amp;gt;</value>
+        <value>  &amp;lt;tiff:ResolutionUnit&amp;gt;2&amp;lt;/tiff:ResolutionUnit&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:xap='http://ns.adobe.com/xap/1.0/'&amp;gt;</value>
+        <value>  &amp;lt;xap:CreateDate&amp;gt;2009-04-23T13:20:52+01:00&amp;lt;/xap:CreateDate&amp;gt;</value>
+        <value>  &amp;lt;xap:ModifyDate&amp;gt;2009-04-23T13:20:52+01:00&amp;lt;/xap:ModifyDate&amp;gt;</value>
+        <value>  &amp;lt;xap:MetadataDate&amp;gt;2009-04-23T13:20:52+01:00&amp;lt;/xap:MetadataDate&amp;gt;</value>
+        <value>  &amp;lt;xap:CreatorTool&amp;gt;Adobe Photoshop CS Windows&amp;lt;/xap:CreatorTool&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:stRef='http://ns.adobe.com/xap/1.0/sType/ResourceRef#'</value>
+        <value>  xmlns:xapMM='http://ns.adobe.com/xap/1.0/mm/'&amp;gt;</value>
+        <value>  &amp;lt;xapMM:DerivedFrom rdf:parseType='Resource'&amp;gt;</value>
+        <value>   &amp;lt;stRef:instanceID&amp;gt;uuid:ed52ad52-2a6f-11de-8add-e654be43cf48&amp;lt;/stRef:instanceID&amp;gt;</value>
+        <value>   &amp;lt;stRef:documentID&amp;gt;adobe:docid:photoshop:8a7e5864-2a6f-11de-8add-e654be43cf48&amp;lt;/stRef:documentID&amp;gt;</value>
+        <value>  &amp;lt;/xapMM:DerivedFrom&amp;gt;</value>
+        <value>  &amp;lt;xapMM:DocumentID&amp;gt;adobe:docid:photoshop:cd700ff5-2ff8-11de-ab6e-fdec3a2f4820&amp;lt;/xapMM:DocumentID&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value> &amp;lt;rdf:Description rdf:about='uuid:cd700ff6-2ff8-11de-ab6e-fdec3a2f4820'</value>
+        <value>  xmlns:dc='http://purl.org/dc/elements/1.1/'&amp;gt;</value>
+        <value>  &amp;lt;dc:format&amp;gt;image/tiff&amp;lt;/dc:format&amp;gt;</value>
+        <value> &amp;lt;/rdf:Description&amp;gt;</value>
+        <value/>
+        <value>&amp;lt;/rdf:RDF&amp;gt;</value>
+        <value>&amp;lt;/x:xmpmeta&amp;gt;</value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                       </value>
+        <value>&amp;lt;?xpacket end='w'?&amp;gt;</value>
+    </field>
+    <field data-type="integer" name="Bits Per Channel">
+        <value>8</value>
+    </field>
+    <field data-type="string" name="Software">
+        <value>Adobe Photoshop CS Windows</value>
+    </field>
+    <field data-type="date" name="IPTC Date Created">
+        <value>Thu Apr 23 13:20:52 CEST 2009</value>
+    </field>
+    <field data-type="integer" name="Unix File Identifier">
+        <value>-1696921785</value>
+    </field>
+    <field data-type="binary" name="Asset Reference">
+        <value>dia-prod-cdb-01.kb.dk:/online_master_arkiv_7/non-archival/Images/BILLED/2009/apr/kendis/ke003045.tif</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>ke003045.tif</value>
+    </field>
+    <field data-type="binary" name="Related Sub Assets">
+        <value>
+            <name>ke003046.tif</name>
+            <uuid>8253aa08-d0c6-4b85-879d-df7bed6b908c</uuid>
+            <order>2</order>
+        </value>
+    </field>
+    <field data-type="integer" name="Horizontal Pixels">
+        <value>1317</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Confidentiality">
+        <value>confidentialityMin</value>
+    </field>
+    <field data-type="string" name="LastCmdSucceeded">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@dd151f</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>7061082</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Logical">
+        <value>logicalStrategyTechnical</value>
+    </field>
+    <field data-type="enumerator" name="Cataloging language">
+        <value>da</value>
+    </field>
+    <field data-type="string" name="Color Space">
+        <value>Uncalibrated</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>dia-prod-cdb-01.kb.dk</value>
+    </field>
+    <field data-type="string" name="PublicationDate">
+        <value>16-07-2009</value>
+    </field>
+    <field data-type="string" name="Saturation">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="Sharpness">
+        <value>Normal</value>
+    </field>
+    <field data-type="integer" name="compositionLevel">
+        <value>23</value>
+    </field>
+    <field data-type="integer" name="Vertical Pixels">
+        <value>1748</value>
+    </field>
+    <field data-type="double" name="Image Width">
+        <value>3.2925</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="long" name="Asset Data Size (Long)">
+        <value>7061082</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Thu Jul 16 18:12:45 CEST 2009</value>
+    </field>
+    <field data-type="string" name="Subject Distance Range">
+        <value>Unknown</value>
+    </field>
+    <field data-type="string" name="Exposure Mode">
+        <value>Auto exposure</value>
+    </field>
+    <field data-type="string" name="Scene Capture Type">
+        <value>Standard</value>
+    </field>
+    <field data-type="string" name="Custom Rendered">
+        <value>Normal process</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_BitSafety">
+        <value>bitSafetyMin</value>
+    </field>
+</record>

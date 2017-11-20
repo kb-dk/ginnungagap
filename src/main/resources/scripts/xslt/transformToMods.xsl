@@ -1965,10 +1965,10 @@
           <xsl:value-of select="'host'" />
         </xsl:attribute>
         <xsl:element name="mods:identifier">
-          <xsl:value-of select="field[@name='URL']/value" />
           <xsl:attribute name="type">
             <xsl:value-of select="'URL'" />
           </xsl:attribute>
+          <xsl:value-of select="field[@name='URL']/value" />
         </xsl:element>
         
         <xsl:for-each select="field[@name='URL-tekst']/value">

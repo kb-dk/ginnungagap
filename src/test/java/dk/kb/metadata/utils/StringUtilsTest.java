@@ -13,9 +13,9 @@ public class StringUtilsTest extends ExtendedTestCase {
         Assert.assertNotNull(su);
     }
     
-    @Test
+    @Test(expectedExceptions = IllegalStateException.class)
     public void testSplitOutOfBounds() {
-        Assert.assertNull(StringUtils.split("1, 2, 3, 4", ",", 10));
+        StringUtils.split("1, 2, 3, 4", ",", 10);
     }
     
     @Test
@@ -37,9 +37,9 @@ public class StringUtilsTest extends ExtendedTestCase {
         Assert.assertEquals(StringUtils.splitOnComma(testLine, 1), suffix);
     }
     
-    @Test
+    @Test(expectedExceptions = IllegalStateException.class)
     public void testSplitOnCommaFail() {
-        Assert.assertNull(StringUtils.splitOnComma("asdf-fdsa", 10));
+        StringUtils.splitOnComma("asdf-fdsa", 10);
     }
     
     @Test
@@ -61,9 +61,9 @@ public class StringUtilsTest extends ExtendedTestCase {
         Assert.assertEquals(StringUtils.splitOnSlash(testLine, 1), suffix);
     }
     
-    @Test
+    @Test(expectedExceptions = IllegalStateException.class)
     public void testSplitOnSlashFail() {
-        Assert.assertNull(StringUtils.splitOnSlash("asdf-fdsa", 10));
+        StringUtils.splitOnSlash("asdf-fdsa", 10);
     }
     
     @Test

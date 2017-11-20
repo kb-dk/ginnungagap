@@ -21,13 +21,14 @@ public final class StringUtils {
      * @param line The line to split on a comma.
      * @param separator The separating character set.
      * @param index The index for the element to select.
-     * @return The requested element, or null if it is out-of-bounce.
+     * @return The requested element, or throw an exception if out-of-bounce.
      */
     public static String split(String line, String separator, int index) {
         String[] split = line.split(separator);
 
-        if(index > split.length) {
-            return null;
+        if(index >= split.length) {
+            throw new IllegalStateException("Could not extract #" + index + " element when using '" + separator 
+                    + "' for separating the line: " + line);
         }
 
         return split[index];
@@ -37,13 +38,14 @@ public final class StringUtils {
      * Splits on the comma, ',', and retrieves the element at the given index.
      * @param line The line to split on a comma.
      * @param elementIndex The index for the element to select.
-     * @return The requested element, or null if it is out-of-bounce.
+     * @return The requested element, or throw an exception if out-of-bounce.
      */
     public static String splitOnComma(String line, int elementIndex) {
         String[] split = line.split(", ");
 
-        if(elementIndex > split.length) {
-            return null;
+        if(elementIndex >= split.length) {
+            throw new IllegalStateException("Could not extract #" + elementIndex 
+                    + " element when comma separating the line: " + line);
         }
 
         return split[elementIndex];
@@ -67,8 +69,9 @@ public final class StringUtils {
     public static String splitOnSlash(String line, int elementIndex) {
         String[] split = line.split("/");
 
-        if(elementIndex > split.length) {
-            return null;
+        if(elementIndex >= split.length) {
+            throw new IllegalStateException("Could not extract #" + elementIndex 
+                    + " element when slash separating the line: " + line);
         }
 
         return split[elementIndex];

@@ -274,7 +274,8 @@ public class FieldExtractor {
             AssetsField res = new AssetsField(fd, getFieldTypeName(fd.getFieldType()));
             for(String name : names) {
                 CumulusRecord cr = server.findCumulusRecordByName(catalog, name);
-                res.addAsset(name, cr.getMetadataGUID());
+                cr.initRelatedIntellectualEntityObjectIdentifier();
+                res.addAsset(name, cr.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
             }
             
             return res;
