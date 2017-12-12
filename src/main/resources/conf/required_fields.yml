@@ -1,15 +1,21 @@
 required_fields:
   base:
     - GUID
+    - Record Name
     - KB Samling
     - preservationLevelValue_Confidentiality
     - preservationLevelValue_Logical
     - preservationLevelValue_BitSafety
+    - compositionLevel
   writable:
-#    - CHECKSUM_ORGINAL_MASTER 
+    - CHECKSUM_ORIGINAL_MASTER
+    - ARCHIVE_MD5
     - Preservation_status
     - QA_error
     - METADATA GUID
     - METADATA PACKAGE ID
     - RESOURCE PACKAGE ID
     - relatedObjectIdentifierValue_intellectualEntity
+    - Representation metadata guid
+    - Representation intellectual guid
+    - Bevarings metadata

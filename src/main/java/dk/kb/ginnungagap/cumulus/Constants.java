@@ -18,11 +18,9 @@ package dk.kb.ginnungagap.cumulus;
  * conf/spring.
  */
 public interface Constants {
-
     /**
-     * This interface exposes String constants that contain names of
-     * various Cumulus record fields.
-    */
+     * The name of the Cumulus fields, which are used.
+     */
     interface FieldNames {
         /** The name of the preservation check field.*/
         String BEVARING_CHECK = "Bevaring_check_type";
@@ -34,6 +32,85 @@ public interface Constants {
         /** The name of the preservation check status field.*/
         String BEVARING_IMPORTATION_STATUS = "Bevaring_Import_status";
 
+        /** Name of the field containing the preservation status of the record. */
+        String PRESERVATION_STATUS = "Preservation_status";    
+        
+        /** The name of the field containing the name of the file
+         * where the original master of this record has been stored in 
+         * long term preservation.
+         */
+        String ARCHIVE_FILENAME = "ARCHIVE_FILENAME";
+        
+        /** The name of the field containing the checksum of the file
+         * which has been stored in long term preservation.
+         */
+        String ARCHIVE_MD5 = "ARCHIVE_MD5";
+ 
+        /** The package id for the resource. To be used instead of ARCHIVE_FILENAME*/
+        String RESOURCEPACKAGEID = "RESOURCE PACKAGE ID"; 
+        /** The package id for the metadata (METS) */
+        String METADATAPACKAGEID = "METADATA PACKAGE ID"; 
+        /** The package id for the representation METADATA. NOTE: this is no longer used!*/
+        
+        String BEVARINGS_METADATA = "Bevarings metadata";
+        
+        /** the ID of the collection which the object should belong to. */
+        String COLLECTIONID = "KB Samling";
+        
+        /** The GUID for the metadata stored as part of the record data in LTP. */
+        String METADATA_GUID = "METADATA GUID";
+        
+        /** String constant for the field. */ 
+        String RELATED_SUB_ASSETS = "Related Sub Assets";
+        
+        /** Name of the field containing the related object identifier value for the intellectual entity.*/
+        String RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY = "relatedObjectIdentifierValue_intellectualEntity";
+        
+        /** The UUID of the intellectual entity of the representation.*/
+        String REPRESENTATION_INTELLECTUAL_ENTITY_UUID = "Representation intellectual guid";
+        
+        /** The UUID of the metadata for the representation.*/
+        String REPRESENTATION_METADATA_GUID = "Representation metadata guid";
+    
+        /** Name of the field for the Global Unique IDentifier. */
+        String GUID = "GUID";
+
+        /** Name of the field for user-readable QA error messages. */
+        String QA_ERROR = "QA_error";
+        
+        /** Name of the field containing the checksum of the original master. */
+        String CHECKSUM_ORIGINAL_MASTER = "CHECKSUM_ORIGINAL_MASTER";
+ 
+        /** The name of the record (usually the original name of the file). */
+        String RECORD_NAME = "Record Name";
+        
+        /** The name of the field that determines if a record in prod is ready for publication. */
+        String REGISTRATIONSTATE = "Registrationstate";
+
+        /** String constant for the field. */ 
+        String RELATED_MASTER_ASSETS = "Related Master Assets";
+        
+        /** The name of the field for the Catalog name. */
+        String CATALOG_NAME = "Catalog Name";
+        
+        /** String constant for the field. */ 
+        String FILE_DATA_SIZE = "File Data Size";
+        
+        /** The name of the field for Asset Reference. */
+        String ASSET_REFERENCE = "Asset Reference";
+        
+        /** The file format identifier (mimetype). */
+        String FILE_FORMAT_IDENTIFIER = "File Format Identifier";
+        
+        /** The file format. */
+        String FILE_FORMAT = "File Format";
+        
+    }
+    
+    /**
+     * The name of the Cumulus fields, which are no longer used directly.
+     */
+    interface DeprecatedFieldNames {
         /** The name of the title field. */
         String TITEL = "Titel";
 
@@ -49,12 +126,6 @@ public interface Constants {
         /** The name of the color profile field. */
         String ICC_PROFILE = "ICC Profile Name";
 
-        /**
-         * The name of the field that determines if a record in prod is ready
-         * for publication.
-         */
-        String REGISTRATIONSTATE = "Registrationstate";
-
         /** Name of field for initiated commands. */
         String LAST_CMD_INITIATED = "LastCmdInitiated";
 
@@ -64,23 +135,14 @@ public interface Constants {
         /** Name of the field that holds Cumulus's own (integer) ID. */
         String ASSET_IDENTIFIER = "Asset Identifier";
 
-        /** Name of the field for the Global Unique IDentifier. */
-        String GUID = "GUID";
-
         /** Name of the field containing the datetime of publication. */
         String PUBLICATION_DATE = "PublicationDate";
 
-        /** Name of the field for user-readable QA error messages. */
-        String QA_ERROR = "QA_error";
-        
         /** Name of the field for system-readable QA error status. */
         String QA_STATUS = "QA_status";
 
         /** Name of the field containing the last workflow that was applied. */
         String PUBLISHED_BY_VERSION = "PublishedByVersion";
-        
-        /** The file format. */
-        String FILE_FORMAT = "File Format";
         
         /** String constant for the field. */ 
         String BITS_PER_CHANNEL = "Bits Per Channel";
@@ -98,11 +160,6 @@ public interface Constants {
         String UNDO = "Undo";
         
         /**
-         * Name of the field containing the preservation status of the record.
-         */
-        String PRESERVATION_STATUS = "Preservation_status";    
-        
-        /**
          * Name of the field containing the name of the production catalog the
          * record originally came from.
          */
@@ -114,31 +171,12 @@ public interface Constants {
          */
         String COMPRESSION = "Compression";
 
-        /** Name of the field containing the name of the Publication 
-         * Catalog.
-         */
+        /** Name of the field containing the name of the Publication Catalog. */
         String PUBLICATION_CATALOG = "Publication_catalog";
         
         /** Not used. ??? 
          * FIXME: Check this with TLR. */
         String PUBLISHED = "Published";
-        
-        /** The name of the field containing the name of the file
-         * where the original master of this record has been stored in 
-         * long term preservation.
-         */
-        String ARCHIVE_FILENAME = "ARCHIVE_FILENAME";
-        
-        /** The name of the field containing the checksum of the file
-         * which has been stored in long term preservation.
-         */
-        String ARCHIVE_MD5 = "ARCHIVE_MD5";
- 
-        /** The name of the field for Asset Reference. */
-        String ASSET_REFERENCE = "Asset Reference";
-        
-        /** The name of the field for the Catalog name. */
-        String CATALOG_NAME = "Catalog Name";
         
         /** Used for what. ??? 
          * FIXME: Check this with TLR. */
@@ -148,34 +186,8 @@ public interface Constants {
          * FIXME: Check this with TLR. */
         String QA_SW_VERSION = "QA_sw_version";
         
-        /** Used for what. ??? 
-         * FIXME: Check this with TLR. */
-        String RECORD_NAME = "Record Name";
-        
-        /** 
-         * Name of the field containing the checksum of the original master.
-         */
-        String CHECKSUM_ORIGINAL_MASTER = "CHECKSUM_ORIGINAL_MASTER";
- 
-        /** 
-         * Name of the field containing the checksum of the display copy.
-         */
+        /** Name of the field containing the checksum of the display copy. */
         String CHECKSUM_DISPLAY_COPY = "CHECKSUM_DISPLAY_COPY";
-        
-        /** Name of the field containing the related object identifier value for the intellectual entity.*/
-        String RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY = "relatedObjectIdentifierValue_intellectualEntity";
-    }
-           
-        
-    /**
-     * This interface exposes String constants that contain names of
-     * various Cumulus record fields used for long term preservation.
-     * 
-     * Note: Some strings defined in Constants.FieldNames may be repeated here!
-    */
-    interface PreservationFieldNames {
-    
-        /** ca. 200 Cumulus metadate fieldnames, mostly technical.  */
         
         /** String constant for the field. */ 
         String CATEGORIES = "Categories";
@@ -191,12 +203,6 @@ public interface Constants {
         
         /** String constant for the field. */ 
         String HORIZONTAL_PIXELS = "Horizontal Pixels";
-        
-        /** String constant for the field. */ 
-        String COMPRESSION = "Compression";
-        
-        /** String constant for the field. */ 
-        String LABEL = "Label";
         
         /** String constant for the field. */ 
         String VIDEO_CODEC = "Video Codec";
@@ -254,9 +260,6 @@ public interface Constants {
         
         /** String constant for the field. */ 
         String CONTACT_INFO_CITY = "Contact Info City";
-        
-        /** String constant for the field. */ 
-        String PUBLICATION_CATALOG = "Publication_catalog";
         
         /** String constant for the field. */ 
         String APERTURE_AS_STRING = "Aperture (String)";
@@ -385,13 +388,7 @@ public interface Constants {
         String LANGUAGE = "Language";
         
         /** String constant for the field. */ 
-        String RELATED_MASTER_ASSETS = "Related Master Assets";
-        
-        /** String constant for the field. */ 
         String REFERENCE_SERVICE = "Reference Service";
-        
-        /** String constant for the field. */ 
-        String RELATED_SUB_ASSETS = "Related Sub Assets";
         
         /** String constant for the field. */ 
         String ANNOTATION = "Annotation";
@@ -535,9 +532,6 @@ public interface Constants {
         String EXPOSURE_TIME_AS_STRING = "Exposure Time (String)";
         
         /** String constant for the field. */ 
-        String QA_SW_VERSION = "QA_sw_version";
-        
-        /** String constant for the field. */ 
         String FILEFORMAT_VALID = "Fileformat_valid";
         
         /** String constant for the field. */ 
@@ -604,11 +598,6 @@ public interface Constants {
         String MPEG_VERSION_VIDEO = "MPEG Version Video";
         
         /** String constant for the field. */ 
-        String CATALOG_NAME = "Catalog Name";
-        
-        /** String constant for the field. */ 
-        // This happens to be the name of the field that this
-        // constant codifies the String for.
         String ID = "ID";
         
         /** String constant for the field. */ 
@@ -688,13 +677,7 @@ public interface Constants {
         String STREGKODE = "Stregkode";
         
         /** String constant for the field. */ 
-        String ASSET_REFERENCE = "Asset Reference";
-        
-        /** String constant for the field. */ 
         String PAGETYPE = "Pagetype";
-        
-        /** String constant for the field. */ 
-        String FILE_DATA_SIZE = "File Data Size";
         
         /** String constant for the field. */ 
         String FOCAL_LENGTH_35MM_FILM_MM = "Focal Length 35mm Film [mm]";
@@ -725,9 +708,6 @@ public interface Constants {
         
         /** String constant for the field. */ 
         String NOTES = "Notes";
-        
-        /** String constant for the field. */ 
-        String PUBLISHED = "Published";
         
         /** String constant for the field. */ 
         String THUMBNAIL = "Thumbnail";
@@ -788,29 +768,6 @@ public interface Constants {
         
         /** String constant for the field. */ 
         String EXIF_VERSION = "EXIF Version";
-        
-        /** String constant for the field. */ 
-        String RECORD_NAME = "Record Name";
-        
-        /** The intellectual entity identifier. */
-        String INTELLECTUAL_ENTITY_IDENTIFIER = "linkingIntellectualEntityIdentifierValue";
-        
-        /** The GUID for the metadata stored as part of the record data in LTP. */
-        String METADATA_GUID = "METADATA GUID";
-        
-        /** The GUID for the representation metadata. */
-        String REPRESENTATION_METADATA_GUID = "REPRESENTATION METADATA GUID";
-        
-        // Use the concept of "package id" instead of "filename
-        /** The package id for the resource. To be used instead of ARCHIVE_FILENAME*/
-        String RESOURCEPACKAGEID = "RESOURCE PACKAGE ID"; 
-        /** The package id for the metadata (METS) */
-        String METADATAPACKAGEID = "METADATA PACKAGE ID"; 
-        /** The package id for the representation METADATA. NOTE: this is no longer used!*/
-//        String REPRESENTATIONPACKAGEID = "REPRESENTATION PACKAGE ID";
-        
-        /** the ID of the collection which the object should belong to. */
-        String COLLECTIONID = "KB Samling";
     }
     
     /**
@@ -837,10 +794,8 @@ public interface Constants {
 
         /** The "OK" value for MASTERTRANSFERSTATUS. */
         String TRANSFER_STATUS_OK = "OK";
-
         /** The "FAILED" value for MASTERTRANSFERSTATUS. */
         String TRANSFER_STATUS_FAILED = "FAILED";
-
         /** The "IN PROGRESS" value for MASTERTRANSFERSTATUS. */
         String TRANSFER_STATUS_STARTED = "STARTED";
 

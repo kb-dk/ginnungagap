@@ -113,6 +113,8 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
+        assertNotNull(conf.getTransformationConf().getMetadataTempDir());
+        assertTrue(conf.getTransformationConf().getMetadataTempDir().isDirectory());
     }
     
     @Test

@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.workflow;
+package dk.kb.ginnungagap.integration;
 
 import static org.mockito.Mockito.mock;
 
@@ -11,6 +11,7 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
 import com.canto.cumulus.Item;
@@ -28,7 +29,7 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
-import dk.kb.ginnungagap.transformation.XsltMetadataTransformer;
+import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 
 public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
 
@@ -73,29 +74,29 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
     }
     
 //    @Test
-    public void testStuff() throws Exception {
-        
-        XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
-        XsltMetadataTransformer representationTransformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl"));
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-
-        
-        PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
-        String query = "GUID\tcontains\ta05d8e80-6d63-11df-8c95-0016357f605f"
-                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
-        EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
-
-        RecordItemCollection items = server.getItems(catalogName, new CumulusQuery(query, flags, CombineMode.FIND_NEW));
-
-        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
-        
-        
-        for(Item item : items) {
-            CumulusRecord record = new TestCumulusRecord(fe, item);
-//            workflow.sendRecordToPreservation(record);
-        }
-
-    }
+//    public void testStuff() throws Exception {
+//        
+//        XsltMetadataTransformer transformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMets.xsl"));
+//        XsltMetadataTransformer representationTransformer = new XsltMetadataTransformer(new File("src/main/resources/scripts/xslt/transformToMetsRepresentation.xsl"));
+//        BitmagPreserver preserver = mock(BitmagPreserver.class);
+//
+//        
+//        PreservationWorkflow workflow = new PreservationWorkflow(conf.getTransformationConf(), server, transformer, representationTransformer, preserver);
+//        String query = "GUID\tcontains\ta05d8e80-6d63-11df-8c95-0016357f605f"
+//                + "\nand\t" + Constants.FieldNames.CATALOG_NAME + "\tis\t" + catalogName;
+//        EnumSet<FindFlag> flags = EnumSet.of(FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);
+//
+//        RecordItemCollection items = server.getItems(catalogName, new CumulusQuery(query, flags, CombineMode.FIND_NEW));
+//
+//        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
+//        
+//        
+//        for(Item item : items) {
+//            CumulusRecord record = new TestCumulusRecord(fe, item);
+////            workflow.sendRecordToPreservation(record);
+//        }
+//
+//    }
     
     class TestCumulusRecord extends CumulusRecord {
 

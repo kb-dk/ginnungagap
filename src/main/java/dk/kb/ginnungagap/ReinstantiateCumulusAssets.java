@@ -11,14 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.metadata.utils.GuidExtrationUtils;
 
 /**
@@ -36,7 +34,7 @@ import dk.kb.metadata.utils.GuidExtrationUtils;
  * e.g.
  * dk.kb.ginningagap.ReinstantiateCumulusAssets conf/ginnungagap.yml CATALOG recordList.txt "No"
  */
-public class ReinstantiateCumulusAssets {
+public class ReinstantiateCumulusAssets extends AbstractMain {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(ReinstantiateCumulusAssets.class);
     
@@ -58,41 +56,39 @@ public class ReinstantiateCumulusAssets {
             filePath = args[2];
         }
         boolean runOnAll = false;
-        if(args.length > 3) {
-            if(args[3].startsWith("Y") || args[3].startsWith("y")) {
-                runOnAll = true;
-                log.info("Running on all files in the catalog '" + catalogName + "'");
-            } else {
-                log.info("Not running on all files in the catalog '" + catalogName + "'");
-            }
-        }
-        
-        File confFile = new File(confPath);
-        if(!confFile.isFile()) {
-            System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
-            failPrintErrorAndExit();
-        }
-        Configuration conf = new Configuration(confFile);
 
-        File inputFile = new File(filePath);
-        if(!runOnAll && !inputFile.exists()) {
-            System.err.println("Cannot find the input file '" + confFile.getAbsolutePath() + "'.");
-            failPrintErrorAndExit();
-        }
-        
-        Cumulus.CumulusStart();
         try {
-            CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
-
-            System.out.println("Starting workflow");
-            if(runOnAll) {
-                reinstantiateAllCumulusAssets(cumulusServer, catalogName);
-            } else {
-                reinstantiateListOfCumulusAssets(cumulusServer, catalogName, inputFile);
+            if(args.length > 3) {
+                isYes(args[3]);
             }
-        } finally {
-            System.out.println("Finished!");
-            Cumulus.CumulusStop();
+
+            Configuration conf = instantiateConfiguration(confPath);
+
+            File inputFile = new File(filePath);
+            if(!runOnAll && !inputFile.exists()) {
+                System.err.println("Cannot find the input file '" + inputFile.getAbsolutePath() + "'.");
+                failPrintErrorAndExit();
+            }
+
+            Cumulus.CumulusStart();
+            try {
+                CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
+
+                System.out.println("Starting workflow");
+                if(runOnAll) {
+                    log.info("Running on all records for catalog '" + catalogName + "'.");
+                    reinstantiateAllCumulusAssets(cumulusServer, catalogName);
+                } else {
+                    log.info("Running on the records from file '" + inputFile.getAbsolutePath() + "'");
+                    reinstantiateListOfCumulusAssets(cumulusServer, catalogName, inputFile);
+                }
+            } finally {
+                System.out.println("Finished!");
+                Cumulus.CumulusStop();
+            }
+        } catch (IllegalArgumentException e) {
+            log.warn("Argument failure.", e);
+            failPrintErrorAndExit();
         }
     }
     
@@ -139,10 +135,8 @@ public class ReinstantiateCumulusAssets {
     protected static void reinstantiateAllCumulusAssets(CumulusServer server, String catalogName) {
         log.info("Reinstantiating the asset of all records in catalog: " + catalogName);
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
-        RecordItemCollection items = server.getItems(catalogName, query);
-        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
-        for(Item item : items) {
-            CumulusRecord record = new CumulusRecord(fe, item);
+        CumulusRecordCollection items = server.getItems(catalogName, query);
+        for(CumulusRecord record : items) {
             reinstantiateRecord(record);
         }
     }

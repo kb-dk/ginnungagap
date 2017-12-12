@@ -9,17 +9,20 @@ import dk.kb.ginnungagap.utils.FileUtils;
 
 /**
  * A local archive, which just places the files in a local 'archive' folder with subfolder for each collection.
- * TODO: Set option/variable for where to archive.
  */
 public class LocalArchive implements Archive {
     /** The base archiving directory. Get sub-directory for each collection.*/
     protected final File archiveBaseDir;
     
+    /** The default path for the local archive.*/
+    public static final String DEFAULT_PATH = "archive";
+    
     /**
      * Constructor.
+     * @param path The path to the directory.
      */
-    public LocalArchive() {
-        this.archiveBaseDir = FileUtils.getDirectory("archive");
+    public LocalArchive(String path) {
+        this.archiveBaseDir = FileUtils.getDirectory(path);
     }
     
     @Override

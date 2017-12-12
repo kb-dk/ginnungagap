@@ -38,6 +38,10 @@ public class FieldExtractor {
     /** The catalog for this extraction.*/
     protected final String catalog;
     
+    /** The mapping between the field names and their GUIDs.
+     * It is used for optimization, so we don't have to locate a field GUID every time we use the field.*/
+    protected final Map<String, GUID> fieldGuids;
+    
     /**
      * Constructor.
      * @param layout The field-layout for the extractor.
@@ -48,6 +52,7 @@ public class FieldExtractor {
         this.layout = layout;
         this.server = server;
         this.catalog = catalog;
+        this.fieldGuids = new HashMap<String, GUID>();
     }
 
     /**
@@ -162,7 +167,7 @@ public class FieldExtractor {
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringValue(fd.getFieldUID()));
         case FieldTypes.FieldTypeBinary:
-            log.warn("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
+            log.debug("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
                 + ", tries to extracts it as the path of the Asset Reference");
             return extractBinaryField(fd, item);
         case FieldTypes.FieldTypeAudio:
@@ -174,7 +179,7 @@ public class FieldExtractor {
                     + ", an empty string returned for field " + fd.getName());
             return new StringField(fd, getFieldTypeName(fd.getFieldType()),  "");
         case FieldTypes.FieldTypeTable:
-            return new TableField(fd, getFieldTypeName(fd.getFieldType()),  item.getTableValue(fd.getFieldUID()), this);
+            return new TableField(fd, getFieldTypeName(fd.getFieldType()), item.getTableValue(fd.getFieldUID()), this);
         }
 
         throw new IllegalStateException("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
@@ -224,9 +229,14 @@ public class FieldExtractor {
      * @return The GUID, or null if not found.
      */
     public GUID getFieldGUID(String fieldName) {
+        if(fieldGuids.containsKey(fieldName)) {
+            return fieldGuids.get(fieldName);
+        }
         for(FieldDefinition fd : layout) {
             if(fd.getName().equalsIgnoreCase(fieldName)) {
-                return fd.getFieldUID();
+                GUID guid = fd.getFieldUID();
+                fieldGuids.put(fieldName, guid);
+                return guid;
             }
         }
         
@@ -274,8 +284,9 @@ public class FieldExtractor {
             AssetsField res = new AssetsField(fd, getFieldTypeName(fd.getFieldType()));
             for(String name : names) {
                 CumulusRecord cr = server.findCumulusRecordByName(catalog, name);
-                cr.initRelatedIntellectualEntityObjectIdentifier();
-                res.addAsset(name, cr.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+                cr.initIntellectualEntityUUID();
+                res.addAsset(name, cr.getFieldValue(
+                        Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
             }
             
             return res;

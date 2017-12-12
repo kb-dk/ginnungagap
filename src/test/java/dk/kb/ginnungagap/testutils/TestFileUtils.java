@@ -70,8 +70,14 @@ public class TestFileUtils {
         
         FileUtils.retrieveSubDirectory(confDir, "bitrepository");
         File scriptDir = FileUtils.retrieveSubDirectory(tempDir, "scripts");
-        FileUtils.retrieveSubDirectory(scriptDir, "xsd");
-        FileUtils.retrieveSubDirectory(scriptDir, "xslt");
+        File xsdDir = FileUtils.retrieveSubDirectory(scriptDir, "xsd");
+        for(File f : new File("src/main/resources/scripts/xsd/").listFiles()) {
+            FileUtils.copyFile(f, new File(xsdDir, f.getName()));
+        }
+        File xsltDir = FileUtils.retrieveSubDirectory(scriptDir, "xslt");
+        for(File f : new File("src/main/resources/scripts/xslt/").listFiles()) {
+            FileUtils.copyFile(f, new File(xsltDir, f.getName()));
+        }
 
         return new TestConfiguration(new File(confDir, "ginnungagap.yml"));
     }

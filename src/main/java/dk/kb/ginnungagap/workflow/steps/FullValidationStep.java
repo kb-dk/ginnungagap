@@ -54,8 +54,8 @@ public class FullValidationStep extends ValidationStep {
     @Override
     protected void validateRecord(CumulusRecord record) {
         try {
-            String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
-            String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
+            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCEPACKAGEID);
+            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTIONID);
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             validateWarcFileChecksum(record, f);
@@ -117,7 +117,7 @@ public class FullValidationStep extends ValidationStep {
      * @param cumulusRecord The Cumulus record.
      */
     protected void validateSize(WarcRecord warcRecord, CumulusRecord cumulusRecord) {
-        long cumulusSize = cumulusRecord.getFieldLongValue(Constants.PreservationFieldNames.FILE_DATA_SIZE);
+        long cumulusSize = cumulusRecord.getFieldLongValue(Constants.FieldNames.FILE_DATA_SIZE);
         long warcSize = warcRecord.getPayload().getTotalLength();
         if(cumulusSize != warcSize) {
             throw new IllegalStateException("Cumulus record expected the size '" + cumulusSize 

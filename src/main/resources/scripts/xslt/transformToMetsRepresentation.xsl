@@ -197,7 +197,7 @@
                 <xsl:value-of select="'URN'" />
               </xsl:attribute>
               <xsl:attribute name="xlink:href">
-                <xsl:value-of select="concat('urn:uuid:', java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1))" />
+                <xsl:value-of select="concat('urn:uuid:', java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 0))" />
               </xsl:attribute>
             </xsl:element>
           </xsl:element>

@@ -1,35 +1,81 @@
 package dk.kb.ginnungagap.transformation;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
+
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.metadata.Cleaner;
+import dk.kb.yggdrasil.xslt.XslErrorListener;
+import dk.kb.yggdrasil.xslt.XslTransformer;
+import dk.kb.yggdrasil.xslt.XslUriResolver;
 
 /**
- * Interface for the metadata transformer.
+ * Transforms XML metadata through XSLT scripts.
  */
-public interface MetadataTransformer {
+public class MetadataTransformer {
+    /** The XSLT file with the XML transformation.*/
+    protected final File xsltFile;
+    /** The XSL transformer.*/
+    protected final XslTransformer xslTransformer;
+
+    /**
+     * Constructor.
+     * @param xsltFile The XSLT file for the transformation.
+     */
+    public MetadataTransformer(File xsltFile) {
+        ArgumentCheck.checkExistsNormalFile(xsltFile, "File xsltFile");
+        try {
+            this.xsltFile = xsltFile;
+            this.xslTransformer = XslTransformer.getTransformer(xsltFile);
+        } catch (TransformerConfigurationException e) {
+            throw new ArgumentCheck("Cannot instantiate a XSL transformer from the file '" + xsltFile + "'.", e);
+        }
+    }
 
     /**
      * Transforms metadata, and deliver the content into a file. 
      * @param metadata The stream with metadata.
      * @param out Where the output must be delivered.
      */
-    void transformXmlMetadata(InputStream metadata, OutputStream out);
+    public void transformXmlMetadata(InputStream metadata, OutputStream out) {
+        transform(metadata, out, xslTransformer);
+    }
     
     /**
-     * Validates the transformed metadata.
-     * @param is The metadata input stream.
-     * @throws IOException If an IO exception occurs when trying to validate the metadata.
-     * If the validation itself fails, then an IllegalStateException will be thrown instead.
+     * Performs the transformation of the metadata based on the given xsl transformation.
+     * @param xmlFile The metadata input stream.
+     * @param out The output stream where the transformed metadata is delivered.
+     * @param transformer The transformer for the metadata.
      */
-    void validate(InputStream is) throws IOException;
-    
-    /**
-     * Retrieves the metadata standards of a transformed metadata input-stream. 
-     * @param is The input stream to the transformed metadata.
-     * @return The list of standards used within the transformed metadata.
-     * @throws IOException If it fails to read the input-stream or extract the name of the metadata standards.
-     */
-    Collection<String> getMetadataStandards(InputStream is) throws IOException;
+    protected void transform(InputStream xmlFile, OutputStream out, XslTransformer transformer) {
+        try {
+            Cleaner.cleanStuff();
+
+            XslUriResolver uriResolver = new XslUriResolver();
+            XslErrorListener errorListener = new XslErrorListener();
+
+            Source source = new StreamSource(xmlFile);
+            byte[] bytes = transformer.transform(source, uriResolver, errorListener);
+
+            out.write(bytes);
+            out.flush();
+            
+            if(errorListener.hasErrors()) {
+                throw new IllegalStateException("Failed transformation: fatal errors: " + errorListener.fatalErrors 
+                        + ", and other errors: " + errorListener.errors + ", and warnings: " + errorListener.warnings);
+            }
+        } catch (TransformerException e) {
+            throw new IllegalStateException("Could not perform the transformation of the metadata", e);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not deliver the transformed metadata to the output stream.", e);
+        }
+        
+    }
 }

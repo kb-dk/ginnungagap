@@ -6,6 +6,7 @@ import java.util.Collection;
 /**
  * Checks for argument validity.
  */
+@SuppressWarnings("serial")
 public class ArgumentCheck extends RuntimeException {
 
     /**
@@ -63,6 +64,7 @@ public class ArgumentCheck extends RuntimeException {
      * @param name the name and type of the value being checked
      * @throws ArgumentCheck if test fails
      */
+    @SuppressWarnings("rawtypes")
     public static void checkNotNullOrEmpty(Collection val, String name) {
         checkNotNull(val, name);
 

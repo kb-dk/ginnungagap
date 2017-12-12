@@ -6,10 +6,12 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class StringUtilsTest extends ExtendedTestCase {
@@ -77,5 +79,23 @@ public class StringUtilsTest extends ExtendedTestCase {
         String res = StringUtils.xmlEncode(s);
         assertFalse(res.contains("<"));
         assertFalse(res.contains(">"));
+    }
+    
+    @Test
+    public void testIsNullOrEmptyWhenNull() {
+        addDescription("Test the isNullOrEmpty when the string is null");
+        Assert.assertTrue(StringUtils.isNullOrEmpty(null));
+    }
+    
+    @Test
+    public void testIsNullOrEmptyWhenEmpty() {
+        addDescription("Test the isNullOrEmpty when the string is empty");
+        Assert.assertTrue(StringUtils.isNullOrEmpty(""));
+    }
+    
+    @Test
+    public void testIsNullOrEmptyWhenNeither() {
+        addDescription("Test the isNullOrEmpty when the string has content");
+        Assert.assertFalse(StringUtils.isNullOrEmpty(UUID.randomUUID().toString()));
     }
 }

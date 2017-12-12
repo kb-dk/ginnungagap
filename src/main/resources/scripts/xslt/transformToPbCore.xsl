@@ -11,7 +11,7 @@
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
   <xsl:template name="pbcore_description">
-    <pbcore:pbcoreDescriptionDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html https://raw.githubusercontent.com/WGBH/PBCore_2.1/master/pbcore-2.1.xsd" version="2.1">
+    <pbcore:pbcoreDescriptionDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html http://v2.pbcore.org/xsd/pbcore-2.0.xsd">
       <!-- pbcore asset type -->
       <xsl:if test="field[@name='pbcoreAssetType']">
         <xsl:element name="pbcore:pbcoreAssetType">
@@ -141,7 +141,7 @@
   </xsl:template>
 
   <xsl:template name="pbcore_instantiation">
-    <pbcore:pbcoreInstiationDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html https://raw.githubusercontent.com/WGBH/PBCore_2.1/master/pbcore-2.1.xsd" version="2.1">
+    <pbcore:pbcoreInstiationDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html http://v2.pbcore.org/xsd/pbcore-2.0.xsd">
       <!-- instatiation identifier = pbcore identifier (required) -->
       <xsl:element name="pbcore:instantiationIdentifier">
         <xsl:value-of select="field[@name='pbcoreIdentifier']/value" />

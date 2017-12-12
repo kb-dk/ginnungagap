@@ -122,8 +122,8 @@ public class CumulusQuery {
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
                 catalogName,
-                Constants.PreservationFieldNames.RELATED_MASTER_ASSETS,
-                Constants.PreservationFieldNames.RELATED_SUB_ASSETS);
+                Constants.FieldNames.RELATED_MASTER_ASSETS,
+                Constants.FieldNames.RELATED_SUB_ASSETS);
         EnumSet<FindFlag> findFlags = EnumSet.of(
                 FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
                 FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
@@ -150,7 +150,7 @@ public class CumulusQuery {
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
                 catalogName,
-                Constants.PreservationFieldNames.RELATED_SUB_ASSETS);
+                Constants.FieldNames.RELATED_SUB_ASSETS);
         EnumSet<FindFlag> findFlags = EnumSet.of(
                 FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
                 FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    

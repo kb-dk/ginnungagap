@@ -11,6 +11,7 @@ import org.bitrepository.client.eventhandler.OperationEvent.OperationEventType;
 import org.bitrepository.common.utils.Base16Utils;
 import org.jwat.warc.WarcDigest;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
 
@@ -28,6 +29,7 @@ public class ChecksumUtils {
      * @return The checksum of the file wrapped in a WarcDigest.
      */
     public static WarcDigest calculateChecksum(File file, String algorithm) {
+        ArgumentCheck.checkExistsNormalFile(file, "File file");
         try {
             Digest digestor = new Digest(algorithm);
             return digestor.getDigestOfFile(file);

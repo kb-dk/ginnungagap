@@ -89,16 +89,13 @@ public class WarcPacker {
      * Pack a record into the Warc file.
      * @param record The record from Cumulus.
      * @param resourceFile The Cumulus Asset file for the record.
-     * @param metadataFile The file with the transformed metadata.
      */
-    public synchronized void packRecord(CumulusRecord record, File resourceFile, File metadataFile) {
+    public synchronized void packRecordAssetFile(CumulusRecord record, File resourceFile) {
         ContentType contentType = getContentType(record);
         WarcDigest blockDigest = ChecksumUtils.calculateChecksum(resourceFile, bitmagConf.getAlgorithm());
 
-        Uri resourceUUID = packResource(resourceFile, blockDigest, contentType, record.getUUID());
-        packMetadata(metadataFile, resourceUUID);
-
-        packagedRecords.add(record);
+        packResource(resourceFile, blockDigest, contentType, record.getUUID());
+        addRecordToPackagedList(record);
     }
     
     /**
@@ -107,29 +104,28 @@ public class WarcPacker {
      * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
-    protected Uri packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, String uuid) {
+    protected void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, String uuid) {
         try (InputStream in = new FileInputStream(resourceFile)) {
-            Uri res = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
+            Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
             log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the record received "
-                    + "the URI:" + res + "'");
-            return res;
+                    + "the URI:" + uri + "'");
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
     }
-
+    
     /**
      * Packages a metadata file.
      * @param metadataFile The file with the metadata. The name of the file must be the same 
      * as the UUID of the metadata record.
-     * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
+     * @param refersTo Value for the refers-to elements in the warc record header. This may be null.
      */
-    protected void packMetadata(File metadataFile, Uri resourceUUID) {
+    protected void packMetadata(File metadataFile, Uri refersTo) {
         try (InputStream in = new FileInputStream(metadataFile)) {
             Digest digestor = new Digest(bitmagConf.getAlgorithm());
             WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
             warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
-                    ContentType.parseContentType(METADATA_CONTENT_TYPE), resourceUUID, blockDigest, 
+                    ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
                     metadataFile.getName());
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
@@ -169,9 +165,10 @@ public class WarcPacker {
      */
     public void reportSucces(WarcDigest checksumDigest) {
         for(CumulusRecord r : packagedRecords) {
-            r.setStringValueInField(Constants.PreservationFieldNames.METADATAPACKAGEID, warcWrapper.getWarcFileId());
-            r.setStringValueInField(Constants.PreservationFieldNames.RESOURCEPACKAGEID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.FieldNames.METADATAPACKAGEID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.FieldNames.RESOURCEPACKAGEID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
+            // TODO: tilføj tid for bevaring
             r.setPreservationFinished();
         }
     }
@@ -185,14 +182,35 @@ public class WarcPacker {
             r.setPreservationFailed(reason);
         }
     }
+    
+    /**
+     * Adds the record to the list of packaged records, unless it already is part of the list.
+     * @param record The record 
+     */
+    public void addRecordToPackagedList(CumulusRecord record) {
+        if(!packagedRecords.contains(record)) {
+            packagedRecords.add(record);
+        }
+    }
 
     /**
      * Retrieve the content type for the Cumulus record.
+     * Use the field 'FILE FORMAT IDENTIFIER'. If empty try to decode the 'FILE FORMAT'. Otherwise binary.
      * @param record The record.
      * @return The content type.
      */
     protected ContentType getContentType(CumulusRecord record) {
-        // TODO this part!
-        return ContentType.parseContentType("application/binary");
+        ContentType res = ContentType.parseContentType(record.getFieldValueOrNull(
+                Constants.FieldNames.FILE_FORMAT_IDENTIFIER));
+        
+        if(res == null) {
+            String format = record.getFieldValueOrNull(Constants.FieldNames.FILE_FORMAT);
+            if(format != null && format.startsWith("TIFF")) {
+                res = ContentType.parseContentType("image/tiff");
+            }
+            res = ContentType.parseContentType("application/binary");
+        }
+
+        return res;
     }
 }

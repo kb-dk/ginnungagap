@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -20,15 +21,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.canto.cumulus.Item;
-import com.canto.cumulus.Layout;
-import com.canto.cumulus.RecordItemCollection;
-
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
@@ -83,8 +81,8 @@ public class ImportationStepTest extends ExtendedTestCase {
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(recordGuid);
         when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(outFile.getAbsolutePath());
         
@@ -93,8 +91,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record, times(2)).getUUID();
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_NONE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -120,8 +118,8 @@ public class ImportationStepTest extends ExtendedTestCase {
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
@@ -129,8 +127,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record).getUUID();
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -154,8 +152,8 @@ public class ImportationStepTest extends ExtendedTestCase {
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenThrow(new IllegalStateException("This must fail!!"));
@@ -163,8 +161,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record).getUUID();
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.PreservationFieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -184,12 +182,10 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         ImportationStep step = new ImportationStep(server, archive, catalogName);
         
-        RecordItemCollection ric = mock(RecordItemCollection.class);
-        Layout layout = mock(Layout.class);
-        when(ric.getLayout()).thenReturn(layout);
-        when(ric.iterator()).thenReturn((new ArrayList<Item>()).iterator());
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         
-        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(ric);
+        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
+        when(items.iterator()).thenReturn(new ArrayList<CumulusRecord>().iterator());
         
         step.performStep();
         
@@ -197,5 +193,40 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
+        
+        verify(items).iterator();
+        verifyNoMoreInteractions(items);
+    }
+    
+    @Test
+    public void testPerformStepWithOneBadRecord() throws Exception {
+        addDescription("Test the importation of a bad record, which fails when trying to import.");
+        CumulusServer server = mock(CumulusServer.class);
+        Archive archive = mock(Archive.class);
+        
+        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        
+        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
+        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenThrow(new RuntimeException("MUST FAIL"));
+        
+        step.performStep();
+        
+        verifyZeroInteractions(archive);
+        
+        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+        verifyNoMoreInteractions(server);
+        
+        verify(items).iterator();
+        verifyNoMoreInteractions(items);
+        
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
+                eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
+        verifyNoMoreInteractions(record);
     }
 }

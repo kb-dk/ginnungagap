@@ -12,16 +12,13 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.GUID;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
-
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
+import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 
 /**
@@ -79,7 +76,7 @@ public class CatalogStructMapWorkflow {
                     OutputStream out = new FileOutputStream(structmapFile)) {
                 transformer.transformXmlMetadata(in, out);
             }
-            preserver.packMetadataRecordWithoutCumulusReference(structmapFile, collectionID);
+            preserver.packRepresentationMetadata(structmapFile, collectionID);
         } catch (IOException e) {
             throw new IllegalStateException("Could not extract Cumulus", e);
         }
@@ -99,11 +96,7 @@ public class CatalogStructMapWorkflow {
      */
     protected File extractGuidsAndFileIDsForCatalog() throws IOException {
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
-        RecordItemCollection items = cumulusServer.getItems(catalogName, query);
-        FieldExtractor fieldExtractor = new FieldExtractor(items.getLayout(), cumulusServer, catalogName);
-        GUID recordIntellectualEntityGuid = fieldExtractor.getFieldGUID(
-                Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-        GUID recordNameGuid = fieldExtractor.getFieldGUID(Constants.FieldNames.RECORD_NAME);
+        CumulusRecordCollection items = cumulusServer.getItems(catalogName, query);
         
         String uuid = UUID.randomUUID().toString();
         File res = new File(conf.getTransformationConf().getMetadataTempDir(), uuid + ".xml");
@@ -119,16 +112,18 @@ public class CatalogStructMapWorkflow {
             os.write("  <catalogName>".getBytes(StandardCharsets.UTF_8));
             os.write(catalogName.getBytes(StandardCharsets.UTF_8));
             os.write("</catalogName>\n".getBytes(StandardCharsets.UTF_8));
-            for(Item item : items) {
-                String recordName = item.getStringValue(recordNameGuid);
-                if(!item.hasValue(recordIntellectualEntityGuid)) {
+            for(CumulusRecord record : items) {
+                String recordName = record.getFieldValue(Constants.FieldNames.RECORD_NAME);
+                String recordIntellectualEntity = record.getFieldValueOrNull(
+                        Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+                if(recordIntellectualEntity == null) {
                     failure = true;
                     log.warn("Failed extracing intellectual entity for record: " + recordName);
                     continue;
                 }
                 os.write("  <record>\n".getBytes(StandardCharsets.UTF_8));
                 os.write("    <guid>".getBytes(StandardCharsets.UTF_8));
-                os.write(item.getStringValue(recordIntellectualEntityGuid).getBytes(StandardCharsets.UTF_8));
+                os.write(recordIntellectualEntity.getBytes(StandardCharsets.UTF_8));
                 os.write("</guid>\n".getBytes(StandardCharsets.UTF_8));
                 os.write("    <name>".getBytes(StandardCharsets.UTF_8));
                 os.write(recordName.getBytes(StandardCharsets.UTF_8));
@@ -138,7 +133,6 @@ public class CatalogStructMapWorkflow {
             os.write("</catalog>\n".getBytes(StandardCharsets.UTF_8));
 
             if(failure) {
-                log.error("Should fail now!");
                 throw new IllegalStateException("Failed to create the catalog structmap.");
             }
         }

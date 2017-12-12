@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Catalog;
-import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server;
 
@@ -88,14 +87,14 @@ public class CumulusServer {
      * @param query The query for finding the desired items.
      * @return The collection of record items.
      */
-    public RecordItemCollection getItems(String catalogName, CumulusQuery query) {
+    public CumulusRecordCollection getItems(String catalogName, CumulusQuery query) {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         ArgumentCheck.checkNotNull(query, "CumulusQuery query");
         Catalog catalog = getCatalog(catalogName);
         RecordItemCollection recordCollection = catalog.newRecordItemCollection(true);
         recordCollection.find(query.getQuery(), query.getFindFlags(), query.getCombineMode(),
                 query.getLocale());
-        return recordCollection;
+        return new CumulusRecordCollection(recordCollection, this, catalogName);
     }
     
     /**
@@ -109,21 +108,8 @@ public class CumulusServer {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         ArgumentCheck.checkNotNullOrEmpty(uuid, "String uuid");
         CumulusQuery query = CumulusQuery.getQueryForSpecificUUID(catalogName, uuid);
-        RecordItemCollection items = getItems(catalogName, query);
-        if(items == null || !items.iterator().hasNext()) {
-            log.warn("Could not find any records for UUID: '" + uuid + "'. Returning a null");            
-            return null;
-        }
         
-        FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
-
-        Iterator<Item> iterator = items.iterator();
-        CumulusRecord res = new CumulusRecord(fe, iterator.next());
-        if(iterator.hasNext()) {
-            log.warn("More than one record found for '" + uuid + "'. Only using the first found.");
-        }
-        
-        return res;
+        return getSpecificRecord(query, catalogName);
     }
     
     /**
@@ -137,20 +123,30 @@ public class CumulusServer {
         ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
         ArgumentCheck.checkNotNullOrEmpty(name, "String uuid");
         CumulusQuery query = CumulusQuery.getQueryForSpecificRecordName(catalogName, name);
-        RecordItemCollection items = getItems(catalogName, query);
+        
+        return getSpecificRecord(query, catalogName);
+    }
+    
+    /**
+     * Extracts one CumulusRecord with the given query.
+     * If none are found, then null is returned. 
+     * If multiple are found, then only the first is returned.
+     * @param query The query for the finding the CumulusRecord.
+     * @param catalogName The name of the catalog.
+     * @return The CumulusRecord, or null if none found.
+     */
+    protected CumulusRecord getSpecificRecord(CumulusQuery query, String catalogName) {
+        CumulusRecordCollection items = getItems(catalogName, query);
         if(items == null || !items.iterator().hasNext()) {
-            log.warn("Could not find any records for the record name: '" + name + "'. Returning a null");            
+            log.warn("Could not find any records with query: '" + query + "'. Returning a null");            
             return null;
         }
-        
-        FieldExtractor fe = new FieldExtractor(items.getLayout(), this, catalogName);
 
-        Iterator<Item> iterator = items.iterator();
-        CumulusRecord res = new CumulusRecord(fe, iterator.next());
+        Iterator<CumulusRecord> iterator = items.iterator();
+        CumulusRecord res = iterator.next();
         if(iterator.hasNext()) {
-            log.warn("More than one record found for '" + name + "'. Only using the first found.");
+            log.warn("More than one record found for query: '" + query + "'. Only using the first found.");
         }
-        
         return res;
-    }
+    }    
 }

@@ -7,8 +7,8 @@ ginnungagap:
     temp_dir: tempDir/warcs
     algorithm: SHA-1
   cumulus:
-    server_url: cumulus-core-test-01.kb.dk
-    username: audio-adm
+    server_url: cumulus-test-01.kb.dk
+    username: user
     password: ''
     catalogs:
       - "Audio OM"
@@ -17,7 +17,7 @@ ginnungagap:
     workflows:
       - "PreservationWorkflow"
       - "ValidationWorkflow"
-      - "ImportationWorkflow"
+      - "ImportWorkflow"
   transformation:
     xsd_dir: tempDir/scripts/xsd
     xslt_dir: tempDir/scripts/xslt

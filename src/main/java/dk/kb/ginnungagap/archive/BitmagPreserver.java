@@ -1,9 +1,11 @@
 package dk.kb.ginnungagap.archive;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,10 @@ public class BitmagPreserver {
     protected final Archive archive;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
-    
+
     /** Mapping between active warc packers and their collection.*/
     protected final Map<String, WarcPacker> warcPackerForCollection;
-    
+
     /**
      * Constructor.
      * @param archive The archive where the data should be sent.
@@ -40,7 +42,7 @@ public class BitmagPreserver {
         this.warcPackerForCollection = new HashMap<String, WarcPacker>();
         this.bitmagConf = bitmagConf;
     }
-    
+
     /**
      * Retrieves the Warc packer for a given Bitrepository collection.
      * If no Warc packer exists for the given Bitrepository collection, then a new one is created.
@@ -53,32 +55,42 @@ public class BitmagPreserver {
         }
         return warcPackerForCollection.get(collectionId);
     }
-    
+
     /**
-     * Pack a record along with its transformed metadata.
-     * @param record The record to preserve.
-     * @param metadataFile The transformed metadata for the record, which should also be preserved.
+     * Packages the Asset File of a Cumulus record.
+     * @param record The record to package.
      */
-    public void packRecord(CumulusRecord record, File metadataFile) {
-        String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
-        WarcPacker wp = getWarcPacker(collectionId);
+    public void packRecordResource(CumulusRecord record) {
+        WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
         File resourceFile = record.getFile();
-        wp.packRecord(record, resourceFile, metadataFile);
-        checkConditions();
+        wp.packRecordAssetFile(record, resourceFile);
     }
     
     /**
-     * Pack a record with a specific resource-file along with its transformed metadata.
-     * This is especially thought for the conversion.
-     * @param record The cumulus record to preserve.
-     * @param resourceFile The resource file, when not using the Cumulus-record asset file.
-     * @param metadataFile The transformed metadata for the record, which should be preserved.
+     * PAckages the metadata of a given Cumulus Record
+     * @param record The Cumulus Record for the metadata.
+     * @param metadataFile The file with the transformed metadata for the Cumulus Record.
      */
-    public void packRecordWithNonAssetResource(CumulusRecord record, File resourceFile, File metadataFile) {
-        String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
-        WarcPacker wp = getWarcPacker(collectionId);
-        wp.packRecord(record, resourceFile, metadataFile);
-        checkConditions();
+    public void packRecordMetadata(CumulusRecord record, File metadataFile) {
+        try {
+            WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
+            String fileGuid = record.getFieldValue(Constants.FieldNames.GUID);
+
+            Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
+            wp.packMetadata(metadataFile, refersToUri);
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("Could not package metadata.", e);
+        }
+    }
+    
+    /**
+     * Packages the metadata of a representation. 
+     * @param metadataFile The file with the metadata.
+     * @param collectionID The ID of the preservation collection, where the metadata must be preserved.
+     */
+    public void packRepresentationMetadata(File metadataFile, String collectionID) {
+        WarcPacker wp = getWarcPacker(collectionID);
+        wp.packMetadata(metadataFile, null);        
     }
     
     /**
@@ -93,18 +105,7 @@ public class BitmagPreserver {
             }
         }
     }
-    
-    /**
-     * Packs a metadata file, where the name of the file will become the WARC-record uuid,
-     * The metadata is expected to be in XML format.
-     * @param metadataFile The XML file with the metadata to preserve.
-     * @param collectionID The id of the collection, where the WARC file will be preserved.
-     */
-    public void packMetadataRecordWithoutCumulusReference(File metadataFile, String collectionID) {
-        WarcPacker wp = getWarcPacker(collectionID);
-        wp.packMetadata(metadataFile, null);
-    }
-    
+
     /**
      * Uploads all warc files to their given collection.
      */
@@ -113,7 +114,7 @@ public class BitmagPreserver {
             uploadWarcFile(collectionId);
         }
     }
-    
+
     /**
      * Performs the upload of the warc file for the given collection.
      * @param collectionId The id of the collection to upload to.
@@ -122,9 +123,9 @@ public class BitmagPreserver {
         log.info("Uploading warc file for collection '" + collectionId + "'");
         WarcPacker wp = warcPackerForCollection.get(collectionId);
         wp.close();
-        
+
         WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
-        
+
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
         if(uploadSucces) {
             wp.reportSucces(checksumDigest);

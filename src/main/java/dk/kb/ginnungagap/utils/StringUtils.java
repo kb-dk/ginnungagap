@@ -55,4 +55,13 @@ public class StringUtils {
         s = s.replace(">", "&gt;");
         return s;
     }
+    
+    /**
+     * Checks whether or not a given string is either null or empty.
+     * @param s The string to check.
+     * @return True if the string is null or empty, false otherwise.
+     */
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
 }

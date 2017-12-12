@@ -37,4 +37,13 @@ public class GuidExtractionUtilsTest extends ExtendedTestCase {
         addDescription("Test the way the extractGuid method fails, when given the empty string as argument");
         GuidExtrationUtils.extractGuid("");
     }
+    
+    @Test
+    public void testExtractGuidContainingHash() {
+        addDescription("Test the extractGuid method, when the GUID contains a hash (#)");
+        String prefix = UUID.randomUUID().toString();
+        String suffix = UUID.randomUUID().toString();
+        String guid = GuidExtrationUtils.extractGuid(prefix + "#" + suffix);
+        Assert.assertEquals(guid, prefix);
+    }
 }

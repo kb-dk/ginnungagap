@@ -65,6 +65,9 @@ public class CumulusRecord {
     /** The guid for the metadata record. It is created and stored the first time it is needed. */
     protected String metadataGuid;
     
+    /** The ID of the collection where the record should be preserved.*/
+    protected String preservationCollectionID;
+    
     /**
      * Constructor.
      * @param fe The field extractor.
@@ -76,11 +79,18 @@ public class CumulusRecord {
     }
     
     /**
-     * Initializes the fields, which must be initialized 
+     * Initializes the fields required for the preservation. 
      */
-    public void initFields() {
+    public void initFieldsForPreservation() {
         initChecksumField();
-        initRelatedIntellectualEntityObjectIdentifier();
+        initIntellectualEntityUUID();
+    }
+    
+    /**
+     * Initializes the fields required for the preservation of the representation.
+     */
+    public void initRepresentationFields() {
+        initRepresentationIntellectualEntityUUID();
     }
     
     /**
@@ -88,7 +98,16 @@ public class CumulusRecord {
      */
     public void resetMetadataGuid() {
         metadataGuid = UUID.randomUUID().toString();
-        setStringValueInField(Constants.PreservationFieldNames.METADATA_GUID, metadataGuid);
+        setStringValueInField(Constants.FieldNames.METADATA_GUID, metadataGuid);
+    }
+    
+    /**
+     * Sets a new metadata GUID for the representation of this record.
+     */
+    public void resetRepresentationMetadataGuid() {
+        String representationMetadataGuid = UUID.randomUUID().toString();
+        setStringValueInField(Constants.FieldNames.REPRESENTATION_METADATA_GUID, 
+                representationMetadataGuid);
     }
 
     /**
@@ -302,8 +321,8 @@ public class CumulusRecord {
     
     /**
      * The given value is formatted and split into lines.
-     * @param value
-     * @return
+     * @param value The multi-lined value, which should be split into individual values.
+     * @return Get values as an array.
      */
     protected String[] getValues(String value) {
         String encodedValue = StringUtils.xmlEncode(value);
@@ -355,36 +374,34 @@ public class CumulusRecord {
             return;
         }
         
-        try {
-            WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
-            GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
-            item.setStringValue(metadataPackageIdGuid, md5Digest.digestString);
-            item.save();
-        } catch (Exception e) {
-            String errMsg = "Could not set the checksum for the file.";
-            log.error(errMsg, e);
-            throw new IllegalStateException(errMsg, e);
-        }
+        WarcDigest md5Digest = ChecksumUtils.calculateChecksum(getFile(), ChecksumUtils.MD5_ALGORITHM);
+        GUID metadataPackageIdGuid = fe.getFieldGUID(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER);
+        setStringValueInField(metadataPackageIdGuid, md5Digest.digestString);
     }
     
     /**
      * Initializes the value in the related object identifier value for the intellectual entity.
      */
-    public void initRelatedIntellectualEntityObjectIdentifier() {
-        try {
-            GUID relatedIntellectualEntityGuid = fe.getFieldGUID(
-                    Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-            if(item.hasValue(relatedIntellectualEntityGuid)) {
-                log.debug("Already has a value for the related intellectual object");
-            } else {
-                item.setStringValue(relatedIntellectualEntityGuid, UUID.randomUUID().toString());
-                item.save();
-            }
-        } catch (Exception e) {
-            String errMsg = "Could not set or retrieve the Cumulus field: " 
-                    + Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY;
-            log.error(errMsg, e);
-            throw new IllegalStateException(errMsg, e);
+    protected void initIntellectualEntityUUID() {
+        GUID relatedIntellectualEntityGuid = fe.getFieldGUID(
+                Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+        if(item.hasValue(relatedIntellectualEntityGuid)) {
+            log.trace("Already has a value for the related intellectual object");
+        } else {
+            setStringValueInField(relatedIntellectualEntityGuid, UUID.randomUUID().toString());
+        }
+    }
+    
+    /**
+     * Initializes the value for the intellectual entity of the representation.
+     */
+    protected void initRepresentationIntellectualEntityUUID() {
+        GUID relatedIntellectualEntityGuid = fe.getFieldGUID(
+                Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
+        if(item.hasValue(relatedIntellectualEntityGuid)) {
+            log.trace("Already has a value for the related intellectual object of the representation");
+        } else {
+            setStringValueInField(relatedIntellectualEntityGuid, UUID.randomUUID().toString());
         }
     }
     
@@ -436,15 +453,25 @@ public class CumulusRecord {
      * @param value The new value of the field.
      */
     public void setStringValueInField(String fieldName, String value) {
+        GUID fieldGuid = fe.getFieldGUID(fieldName);
+        setStringValueInField(fieldGuid, value);
+    }
+    
+    /**
+     * Sets the value of the field with the given GUID.
+     * @param fieldGuid The GUID of the field.
+     * @param value The new value for the field.
+     */
+    protected void setStringValueInField(GUID fieldGuid, String value) {
         try {
-            GUID fieldGuid = fe.getFieldGUID(fieldName);
             item.setStringValue(fieldGuid, value);
             item.save();
         } catch (Exception e) {
-            String errMsg = "Could not set the value '" + value + "' for the field '" + fieldName + "'";
+            String errMsg = "Could not set the value '" + value + "' for the field '" + fieldGuid + "'";
             log.error(errMsg, e);
             throw new IllegalStateException(errMsg, e);
         }
+        
     }
 
     /**
@@ -455,11 +482,11 @@ public class CumulusRecord {
      */
     public String getMetadataGUID() {
         if(metadataGuid == null) {
-            metadataGuid = getFieldValueOrNull(Constants.PreservationFieldNames.METADATA_GUID);
+            metadataGuid = getFieldValueOrNull(Constants.FieldNames.METADATA_GUID);
             if(metadataGuid == null) {
                 try {
                     metadataGuid = UUID.randomUUID().toString();
-                    GUID metadataIdGuid = fe.getFieldGUID(Constants.PreservationFieldNames.METADATA_GUID);
+                    GUID metadataIdGuid = fe.getFieldGUID(Constants.FieldNames.METADATA_GUID);
                     item.setStringValue(metadataIdGuid, metadataGuid);
                     item.save();
                 } catch (Exception e) {
@@ -472,13 +499,24 @@ public class CumulusRecord {
 
         return metadataGuid;
     }
+    
+    /**
+     * Retrieves the preservation collection ID.
+     * @return The preservation collection ID.
+     */
+    public String getPreservationCollectionID() {
+        if(preservationCollectionID == null) {
+            preservationCollectionID = getFieldValue(Constants.FieldNames.COLLECTIONID);
+        }
+        return preservationCollectionID;
+    }
 
     /**
      * Checks whether the record has any sub-assets, and thus whether it is a master-asset.
      * @return Whether or not this is record is a master-asset.
      */
     public boolean isMasterAsset() {
-        GUID fieldGuid = fe.getFieldGUID(Constants.PreservationFieldNames.RELATED_SUB_ASSETS);
+        GUID fieldGuid = fe.getFieldGUID(Constants.FieldNames.RELATED_SUB_ASSETS);
         return item.hasValue(fieldGuid);
     }
     

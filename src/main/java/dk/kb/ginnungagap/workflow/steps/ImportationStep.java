@@ -12,15 +12,12 @@ import org.jwat.warc.WarcRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
-
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
@@ -56,10 +53,8 @@ public class ImportationStep implements WorkflowStep {
     public void performStep() throws Exception {
         CumulusQuery query = CumulusQuery.getQueryForPreservationImportation(catalogName);
         
-        RecordItemCollection items = server.getItems(catalogName, query);
-        FieldExtractor fe = new FieldExtractor(items.getLayout(), server, catalogName);
-        for(Item item : items) {
-            CumulusRecord record = new CumulusRecord(fe, item);
+        CumulusRecordCollection items = server.getItems(catalogName, query);
+        for(CumulusRecord record : items) {
             importRecord(record);
         }
     }
@@ -71,8 +66,8 @@ public class ImportationStep implements WorkflowStep {
      */
     protected void importRecord(CumulusRecord record) {
         try {
-            String warcId = record.getFieldValue(Constants.PreservationFieldNames.RESOURCEPACKAGEID);
-            String collectionId = record.getFieldValue(Constants.PreservationFieldNames.COLLECTIONID);
+            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCEPACKAGEID);
+            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTIONID);
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             

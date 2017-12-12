@@ -3,100 +3,84 @@ package dk.kb.ginnungagap.transformation;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.StringUtils;
-import dk.kb.metadata.Cleaner;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.xslt.XmlEntityResolver;
 import dk.kb.yggdrasil.xslt.XmlErrorHandler;
 import dk.kb.yggdrasil.xslt.XmlValidationResult;
 import dk.kb.yggdrasil.xslt.XmlValidator;
-import dk.kb.yggdrasil.xslt.XslErrorListener;
-import dk.kb.yggdrasil.xslt.XslTransformer;
-import dk.kb.yggdrasil.xslt.XslUriResolver;
 
 /**
- * Transforms XML metadata through XSLT scripts.
+ * Handler for the metadata transformers.
  */
-public class XsltMetadataTransformer implements MetadataTransformer {
-    /** The XSLT file with the XML transformation.*/
-    protected final File xsltFile;
-    /** The XSL transformer.*/
-    protected final XslTransformer xslTransformer;
+public class MetadataTransformationHandler {
+    
+    /** The name for the transformation script for catalog structmaps.*/
+    public static final String TRANSFORMATION_SCRIPT_FOR_CATALOG_STRUCTMAP = "transformCatalogStructmap.xsl";
+    /** The name for the transformation script for default METS transformation.*/
+    public static final String TRANSFORMATION_SCRIPT_FOR_METS = "transformToMets.xsl";
+    /** The name for the transformation script for representation METS.*/
+    public static final String TRANSFORMATION_SCRIPT_FOR_REPRESENTATION = "transformToMetsRepresentation.xsl";
+    /** The name for the transformation script for KB-IDs intellectuel entity metadata.*/
+    public static final String TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY = "transformToKbId.xsl";
+    
+    /** Mapping between the name of the transformations and their transformers.*/
+    protected final Map<String, MetadataTransformer> transformers;
+    /** The directory with the XSLT files.*/
+    protected final File xsltDir;
+    
     /** The xml validator.*/
     protected final XmlValidator xmlValidator;
 
+    
     /**
      * Constructor.
-     * @param xsltFile The XSLT file for the transformation.
+     * @param xsltDir The directory with the XSLT transformation scripts. 
      */
-    public XsltMetadataTransformer(File xsltFile) {
-        ArgumentCheck.checkExistsNormalFile(xsltFile, "File xsltFile");
-        try {
-            this.xsltFile = xsltFile;
-            this.xslTransformer = XslTransformer.getTransformer(xsltFile);
-            this.xmlValidator = new XmlValidator();
-        } catch (TransformerConfigurationException e) {
-            throw new ArgumentCheck("Cannot instantiate a XSL transformer from the file '" + xsltFile + "'.", e);
-        }
-    }
-
-    @Override
-    public void transformXmlMetadata(InputStream xmlFile, OutputStream out) {
-        transform(xmlFile, out, xslTransformer);
+    public MetadataTransformationHandler(File xsltDir) {
+        ArgumentCheck.checkExistsDirectory(xsltDir, "File xsltDir");
+        this.xsltDir = xsltDir;
+        this.transformers = new HashMap<String, MetadataTransformer>();
+        this.xmlValidator = new XmlValidator();
     }
     
     /**
-     * Performs the transformation of the metadata based on the given xsl transformation.
-     * @param xmlFile The metadata input stream.
-     * @param out The output stream where the transformed metadata is delivered.
-     * @param transformer The transformer for the metadata.
+     * Retrieves the metadata transformer with the given name.
+     * @param name The name of the transformation.
+     * @return The transformer.
      */
-    protected void transform(InputStream xmlFile, OutputStream out, XslTransformer transformer) {
-        try {
-            Cleaner.cleanStuff();
-
-            XslUriResolver uriResolver = new XslUriResolver();
-            XslErrorListener errorListener = new XslErrorListener();
-
-            Source source = new StreamSource(xmlFile);
-            byte[] bytes = transformer.transform(source, uriResolver, errorListener);
-
-            out.write(bytes);
-            out.flush();
-            
-            if(errorListener.hasErrors()) {
-                throw new IllegalStateException("Failed transformation: fatal errors: " + errorListener.fatalErrors 
-                        + ", and other errors: " + errorListener.errors + ", and warnings: " + errorListener.warnings);
+    public MetadataTransformer getTransformer(String name) {
+        if(!transformers.containsKey(name)) {
+            File xsltFile = new File(xsltDir, name);
+            if(!xsltFile.exists()) {
+                throw new IllegalArgumentException("The XSLT file '" + xsltFile.getAbsolutePath() + 
+                        "' does not exist.");
             }
-        } catch (TransformerException e) {
-            throw new IllegalStateException("Could not perform the transformation of the metadata", e);
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not deliver the transformed metadata to the output stream.", e);
-        }
-        
+            transformers.put(name, new MetadataTransformer(xsltFile));
+        } 
+        return transformers.get(name);
     }
-
+    
+    
     /**
-     * Validates a metadata file.
-     * @param metadata The inputstream with the metadata to validate.
-     * @throws IOException If it fails to validate.
+     * Validates the transformed metadata.
+     * @param metadata The metadata input stream.
+     * @throws IOException If an IO exception occurs when trying to validate the metadata.
+     * If the validation itself fails, then an IllegalStateException will be thrown instead.
      */
     public void validate(InputStream metadata) throws IOException {
         XmlEntityResolver entityResolver = null;

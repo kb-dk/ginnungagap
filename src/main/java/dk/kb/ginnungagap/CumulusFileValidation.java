@@ -11,14 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 
 /**
  * Class for instantiating the Cumulus File Validation.
@@ -35,13 +33,20 @@ import dk.kb.ginnungagap.cumulus.FieldExtractor;
  * e.g.
  * dk.kb.ginningagap.CumulusFileValidation conf/ginnungagap.yml output.txt
  */
-public class CumulusFileValidation {
+public class CumulusFileValidation extends AbstractMain {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(CumulusFileValidation.class);
     /** The name of the default output file. */
     private static final String DEFAULT_OUTPUT_FILE_PATH = "file_validation.txt";
     /** The format of the output file.*/
     private static final String OUTPUT_FORMAT = "catalog;uuid;exists";
+
+    /** The output result message when the file is found.*/
+    protected static final String OUTPUT_RES_FOUND = "FOUND";
+    /** The output result message when the file is not found.*/
+    protected static final String OUTPUT_RES_MISSING = "MISSING";
+    /** The output result message when an error occurs.*/
+    protected static final String OUTPUT_RES_ERROR = "FAILED TO FIND";
     
     /**
      * Main method. 
@@ -49,14 +54,11 @@ public class CumulusFileValidation {
      * One argument is required; the configuration file, and any other arguments will be ignored.
      */
     public static void main(String ... args) {
-        // How do you instantiate the primordial void ??
-
-        String confPath;
+        // How do you instantiate any part of the primordial void ??
+        
+        String confPath = null;
         if(args.length < 1) {
-            confPath = System.getenv("GINNUNGAGAP_CONF_FILE");
-            if(confPath == null || confPath.isEmpty()) {
-                failPrintErrorAndExit();
-            }
+            failPrintErrorAndExit();
         } else {
             confPath = args[0];
         }
@@ -66,30 +68,41 @@ public class CumulusFileValidation {
         } else {
             outputFilePath = DEFAULT_OUTPUT_FILE_PATH;
         }
-        
-        File confFile = new File(confPath);
-        if(!confFile.isFile()) {
-            System.err.println("Cannot find the configuration file '" + confFile.getAbsolutePath() + "'.");
-            System.exit(-1);
-        }
-        Configuration conf = new Configuration(confFile);
 
+        File outputFile = getOutputFile(outputFilePath);
+
+        try {
+            Configuration conf = instantiateConfiguration(confPath);
+
+
+            Cumulus.CumulusStart();
+            try {
+                CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
+
+                System.out.println("Starting workflow");
+                validateCumulusRecordFiles(cumulusServer, conf, outputFile);
+            } finally {
+                System.out.println("Finished!");
+                Cumulus.CumulusStop();
+            }
+        } catch (IllegalArgumentException e) {
+            log.warn("Argument failure.", e);
+            failPrintErrorAndExit();
+        }
+    }
+    
+    /**
+     * Retrieves the output file.
+     * @param outputFilePath The path to the output file.
+     * @return The output file.
+     */
+    protected static File getOutputFile(String outputFilePath) {
         File outputFile = new File(outputFilePath);
         if(outputFile.exists()) {
             FileUtils.deprecateFile(outputFile);
             outputFile = new File(outputFilePath);
         }
-        
-        Cumulus.CumulusStart();
-        try {
-            CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
-
-            System.out.println("Starting workflow");
-            validateCumulusRecordFiles(cumulusServer, conf, outputFile);
-        } finally {
-            System.out.println("Finished!");
-            Cumulus.CumulusStop();
-        }
+        return outputFile;
     }
     
     /**
@@ -97,7 +110,7 @@ public class CumulusFileValidation {
      */
     protected static void failPrintErrorAndExit() {
         System.err.println("Missing arguments. At least two arguments:");
-        System.err.println("  * 1. Configuration file.");
+        System.err.println(" * 1. Configuration file.");
         System.err.println(" * 2. [OPTIONAL] output file (default is: 'file_validation.txt' in current folder)");
         System.exit(-1);        
     }
@@ -116,7 +129,7 @@ public class CumulusFileValidation {
                 validateForCatalog(server, catalog, out);
             }
         } catch (IOException e) {
-            log.warn("Failed to validate cumulus record", e);
+            throw new IllegalStateException("Failed to validate cumulus record", e);
         }
     }
     
@@ -126,17 +139,12 @@ public class CumulusFileValidation {
      * @param catalogName The name of the catalog.
      * @param out The output stream for the validation results.
      */
-    protected static void validateForCatalog(CumulusServer server, String catalogName, OutputStream out) {
+    protected static void validateForCatalog(CumulusServer server, String catalogName, OutputStream out) 
+            throws IOException {
         CumulusQuery query = CumulusQuery.getQueryForAllInCatalog(catalogName);
-        RecordItemCollection collection = server.getItems(catalogName, query);
-        FieldExtractor fe = new FieldExtractor(collection.getLayout(), server, catalogName);
-        for(Item item : collection) {
-            CumulusRecord record = new CumulusRecord(fe, item);
-            try {
-                checkRecord(record, catalogName, out);
-            } catch (IOException e) {
-                log.error("Failed to handle record '" + record + "'", e);
-            }
+        CumulusRecordCollection collection = server.getItems(catalogName, query);
+        for(CumulusRecord record : collection) {
+            checkRecord(record, catalogName, out);
         }
     }
     
@@ -151,12 +159,15 @@ public class CumulusFileValidation {
         try {
             File f = record.getFile();
             if(f.exists()) {
-                out.write((catalogName + "; " + record.getUUID() + "; FOUND\n").getBytes(StandardCharsets.UTF_8));
+                out.write((catalogName + "; " + record.getUUID() + "; " + OUTPUT_RES_FOUND + "\n").getBytes(
+                        StandardCharsets.UTF_8));
             } else {
-                out.write((catalogName + "; " + record.getUUID() + "; MISSING\n").getBytes(StandardCharsets.UTF_8));
+                out.write((catalogName + "; " + record.getUUID() + "; " + OUTPUT_RES_MISSING + "\n").getBytes(
+                        StandardCharsets.UTF_8));
             }
         } catch (Throwable e) {
-            out.write((catalogName + "; " + record.getUUID() + "; FAILED TO FIND\n").getBytes(StandardCharsets.UTF_8));
+            out.write((catalogName + "; " + record.getUUID() + "; " + OUTPUT_RES_ERROR + "\n").getBytes(
+                    StandardCharsets.UTF_8));
             log.debug("Failed to handle record '" + record + "'", e);
         }
         out.flush();

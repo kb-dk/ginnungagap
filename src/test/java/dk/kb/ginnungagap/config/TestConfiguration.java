@@ -8,6 +8,7 @@ public class TestConfiguration extends Configuration {
     TransformationConfiguration transConf;
     BitmagConfiguration bmConf;
     CumulusConfiguration cConf;
+    WorkflowConfiguration wConf;
     
     public TestConfiguration(File confFile) {
         super(confFile);
@@ -52,5 +53,16 @@ public class TestConfiguration extends Configuration {
     }
     public void setCumulusConf(CumulusConfiguration cConf) {
         this.cConf = cConf;
+    }
+    
+    @Override
+    public WorkflowConfiguration getWorkflowConf() {
+        if(this.wConf != null) {
+            return wConf;
+        }
+        return super.getWorkflowConf();
+    }
+    public void setWorkflowConf(WorkflowConfiguration wConf) {
+        this.wConf = wConf;
     }
 }
