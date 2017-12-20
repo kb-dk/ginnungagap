@@ -31,15 +31,14 @@ public interface Constants {
         String BEVARING_IMPORTATION = "Bevaring_Import";
         /** The name of the preservation check status field.*/
         String BEVARING_IMPORTATION_STATUS = "Bevaring_Import_status";
-
-        /** Name of the field containing the preservation status of the record. */
-        String PRESERVATION_STATUS = "Preservation_status";    
         
-        /** The name of the field containing the name of the file
-         * where the original master of this record has been stored in 
-         * long term preservation.
-         */
-        String ARCHIVE_FILENAME = "ARCHIVE_FILENAME";
+        /** The name of the preservation date field.*/
+        String BEVARINGS_DATO = "Bevarings dato";
+        /** The name of the field for the metadata standards used.*/
+        String BEVARINGS_METADATA = "Bevarings metadata";
+        
+        /** Name of the field containing the preservation status of the record. */
+        String PRESERVATION_STATUS = "Preservation_status";
         
         /** The name of the field containing the checksum of the file
          * which has been stored in long term preservation.
@@ -50,9 +49,6 @@ public interface Constants {
         String RESOURCEPACKAGEID = "RESOURCE PACKAGE ID"; 
         /** The package id for the metadata (METS) */
         String METADATAPACKAGEID = "METADATA PACKAGE ID"; 
-        /** The package id for the representation METADATA. NOTE: this is no longer used!*/
-        
-        String BEVARINGS_METADATA = "Bevarings metadata";
         
         /** the ID of the collection which the object should belong to. */
         String COLLECTIONID = "KB Samling";
@@ -102,15 +98,17 @@ public interface Constants {
         /** The file format identifier (mimetype). */
         String FILE_FORMAT_IDENTIFIER = "File Format Identifier";
         
-        /** The file format. */
-        String FILE_FORMAT = "File Format";
-        
+        /** The name of the file format. */
+        String FORMAT_NAME = "formatName";
     }
     
     /**
      * The name of the Cumulus fields, which are no longer used directly.
      */
     interface DeprecatedFieldNames {
+        /** The file format. */
+        String FILE_FORMAT = "File Format";
+        
         /** The name of the title field. */
         String TITEL = "Titel";
 

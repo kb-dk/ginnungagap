@@ -126,7 +126,10 @@
         <value>-550665216</value>
     </field>
     <field data-type="string" name="METADATA GUID">
-        <value>0fa08886-d4c1-4410-94e0-55b775ac42a0##4c214aea-1726-4879-b507-1f95541b8845</value>
+        <value>0fa08886-d4c1-4410-94e0-55b775ac42a0</value>
+    </field>
+    <field data-type="string" name="Representation metadata guid">
+        <value>4c214aea-1726-4879-b507-1f95541b8845</value>
     </field>
     <field data-type="boolean" name="Published">
         <value>true</value>
@@ -192,7 +195,10 @@
         <value>175</value>
     </field>
     <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
-        <value>a56e6bd2-dbb7-4d44-91f9-a828e14aa2f8##353df426-3d53-43a8-bb34-d0816d8af711</value>
+        <value>a56e6bd2-dbb7-4d44-91f9-a828e14aa2f8</value>
+    </field>
+    <field data-type="string" name="Representation intellectual guid">
+        <value>353df426-3d53-43a8-bb34-d0816d8af711</value>
     </field>
     <field data-type="string" name="Titel">
         <value>Mathilde Fibiger</value>

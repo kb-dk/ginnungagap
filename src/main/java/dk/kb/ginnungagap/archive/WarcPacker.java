@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -95,7 +96,6 @@ public class WarcPacker {
         WarcDigest blockDigest = ChecksumUtils.calculateChecksum(resourceFile, bitmagConf.getAlgorithm());
 
         packResource(resourceFile, blockDigest, contentType, record.getUUID());
-        addRecordToPackagedList(record);
     }
     
     /**
@@ -164,11 +164,12 @@ public class WarcPacker {
      * @param checksumDigest The digest for the whole WARC file.
      */
     public void reportSucces(WarcDigest checksumDigest) {
+        Date now = new Date();
         for(CumulusRecord r : packagedRecords) {
             r.setStringValueInField(Constants.FieldNames.METADATAPACKAGEID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.RESOURCEPACKAGEID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
-            // TODO: tilføj tid for bevaring
+            r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
             r.setPreservationFinished();
         }
     }
@@ -204,7 +205,7 @@ public class WarcPacker {
                 Constants.FieldNames.FILE_FORMAT_IDENTIFIER));
         
         if(res == null) {
-            String format = record.getFieldValueOrNull(Constants.FieldNames.FILE_FORMAT);
+            String format = record.getFieldValueOrNull(Constants.FieldNames.FORMAT_NAME);
             if(format != null && format.startsWith("TIFF")) {
                 res = ContentType.parseContentType("image/tiff");
             }

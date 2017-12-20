@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -471,7 +472,23 @@ public class CumulusRecord {
             log.error(errMsg, e);
             throw new IllegalStateException(errMsg, e);
         }
-        
+    }
+    
+    /**
+     * Sets the date value for the given date field.
+     * @param fieldName The name of the field.
+     * @param dateValue The new date value for the field.
+     */
+    public void setDateValueInField(String fieldName, Date dateValue) {
+        GUID fieldGuid = fe.getFieldGUID(fieldName);
+        try {
+            item.setDateValue(fieldGuid, dateValue);
+            item.save();
+        } catch (Exception e) {
+            String errMsg = "Could not set the date value '" + dateValue + "' for the field '" + fieldName + "'";
+            log.error(errMsg, e);
+            throw new IllegalStateException(errMsg, e);
+        }        
     }
 
     /**

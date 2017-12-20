@@ -64,6 +64,7 @@ public class BitmagPreserver {
         WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
         File resourceFile = record.getFile();
         wp.packRecordAssetFile(record, resourceFile);
+        wp.addRecordToPackagedList(record);
     }
     
     /**
@@ -78,6 +79,7 @@ public class BitmagPreserver {
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
             wp.packMetadata(metadataFile, refersToUri);
+            wp.addRecordToPackagedList(record);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Could not package metadata.", e);
         }
@@ -128,6 +130,7 @@ public class BitmagPreserver {
 
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
         if(uploadSucces) {
+            log.info("Successfully uploaded the WARC file '" + wp.getWarcFile().getName() + "'"); 
             wp.reportSucces(checksumDigest);
         } else {
             log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "

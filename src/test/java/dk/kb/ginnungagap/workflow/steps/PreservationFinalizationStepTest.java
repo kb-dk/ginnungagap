@@ -6,6 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,5 +37,20 @@ public class PreservationFinalizationStepTest extends ExtendedTestCase {
         String name = step.getName();
         Assert.assertNotNull(name);
         Assert.assertFalse(name.isEmpty());
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testPerformStepFailure() throws Exception {
+        addDescription("Test the performStep method when it fails");
+        BitmagPreserver preserver = mock(BitmagPreserver.class);
+        PreservationFinalizationStep step = new PreservationFinalizationStep(preserver);
+        
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                throw new RuntimeException("This must fail");
+            }
+        }).when(preserver).uploadAll();
+        step.performStep();
     }
 }

@@ -385,19 +385,19 @@
   </xsl:template>
   
   <xsl:template name="premis_identifier_value">
-    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0)" />
+    <xsl:value-of select="field[@name='METADATA GUID']/value" />
   </xsl:template>
 
   <xsl:template name="premis_representation_identifier_value">
-    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 1)" />
+    <xsl:value-of select="field[@name='Representation metadata guid']/value" />
   </xsl:template>
 
   <xsl:template name="premis_intellectual_entity_for_file">
-    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 0)" />
+    <xsl:value-of select="field[@name='relatedObjectIdentifierValue_intellectualEntity']/value" />
   </xsl:template>
 
   <xsl:template name="premis_intellectual_entity_for_representation">
-    <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='relatedObjectIdentifierValue_intellectualEntity']/value, '##', 1)" />
+    <xsl:value-of select="field[@name='Representation intellectual guid']/value" />
   </xsl:template>
 
   <xsl:template name="premis_agent_identifier_type">

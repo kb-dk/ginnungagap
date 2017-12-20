@@ -41,7 +41,7 @@
         <xsl:value-of select="'File'" />
       </xsl:attribute>
       <xsl:attribute name="OBJID">
-        <xsl:value-of select="java:dk.kb.metadata.utils.StringUtils.split(field[@name='METADATA GUID']/value, '##', 0)" />
+        <xsl:value-of select="field[@name='METADATA GUID']/value" />
       </xsl:attribute>
       <xsl:attribute name="PROFILE">
         <xsl:value-of select="java:dk.kb.metadata.Constants.getProfileURL()" />

@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -16,7 +18,9 @@ import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.Constants;
+import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 
 public class SimpleValidationStepTest extends ExtendedTestCase {
@@ -132,5 +136,21 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         verifyNoMoreInteractions(record);
         
         verifyZeroInteractions(server);
+    }
+    
+    @Test
+    public void testPerformStep() throws Exception {
+        addDescription("Test the perform step method");
+        CumulusServer server = mock(CumulusServer.class);
+        Archive archive = mock(Archive.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+        
+        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(items);
+        
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
+
+        step.performStep();
     }
 }

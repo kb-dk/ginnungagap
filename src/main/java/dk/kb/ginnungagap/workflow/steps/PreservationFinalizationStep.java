@@ -1,5 +1,8 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 
@@ -8,6 +11,8 @@ import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
  * Uploads all the WARC files, which has been created during the other steps of the preservation workflow. 
  */
 public class PreservationFinalizationStep implements WorkflowStep {
+    /** The logger.*/
+    private static final Logger log = LoggerFactory.getLogger(PreservationFinalizationStep.class);
     /** The Bitmag preservation component.*/
     protected final BitmagPreserver preserver;
     
@@ -26,6 +31,11 @@ public class PreservationFinalizationStep implements WorkflowStep {
 
     @Override
     public void performStep() throws Exception {
-        preserver.uploadAll();
+        try {
+            preserver.uploadAll();
+        } catch (Throwable e) {
+            log.error("Failed to update the packaged files.", e);
+            throw new IllegalStateException("Failed to finalize the preservation.", e);
+        }
     }
 }
