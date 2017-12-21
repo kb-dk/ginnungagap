@@ -1,35 +1,24 @@
 package dk.kb.ginnungagap.integration;
 
-import static org.mockito.Mockito.mock;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.EnumSet;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
 import com.canto.cumulus.Item;
-import com.canto.cumulus.RecordItemCollection;
-import com.canto.cumulus.constants.CombineMode;
-import com.canto.cumulus.constants.FindFlag;
 
-import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 
 public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
 

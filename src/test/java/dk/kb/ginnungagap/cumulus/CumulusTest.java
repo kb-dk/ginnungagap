@@ -3,34 +3,18 @@ package dk.kb.ginnungagap.cumulus;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.FieldDefinition;
-import com.canto.cumulus.Item;
 import com.canto.cumulus.ItemCollection;
-import com.canto.cumulus.RecordItemCollection;
 import com.canto.cumulus.Server.CatalogInfo;
-import com.canto.cumulus.constants.CombineMode;
-import com.canto.cumulus.constants.FindFlag;
 
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;

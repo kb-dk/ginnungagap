@@ -85,6 +85,40 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
+        String notTheExpectedChecksum = UUID.randomUUID().toString();
+
+        when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(warcFileChecksum);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+
+        when(archive.getChecksum(eq(warcId), eq(collectionId))).thenReturn(notTheExpectedChecksum);
+
+        SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
+        step.validateRecord(record);
+
+        verify(archive).getChecksum(eq(warcId), eq(collectionId));
+        verifyNoMoreInteractions(archive);
+        
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+                eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
+        verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
+        verifyNoMoreInteractions(record);
+        
+        verifyZeroInteractions(server);
+    }
+    
+    @Test
+    public void testValidateRecordFailureNoChecksum() throws Exception {
+        addDescription("Test the ValidateRecord method for the scenario when it fails to get the checksum for the validation.");
+        CumulusServer server = mock(CumulusServer.class);
+        Archive archive = mock(Archive.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        
+        String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
+        String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
         
         when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
         when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);

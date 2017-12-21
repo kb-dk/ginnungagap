@@ -14,15 +14,20 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
+import org.jwat.common.Uri;
+import org.jwat.warc.WarcDigest;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.TestBitmagConfiguration;
+import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
@@ -32,6 +37,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
     
     File metadataFile;
     File resourceFile;
+    File warcFile;
     
     String collectionId = "Test-collection-id";
     String recordId = "TEST-RECORD-ID";
@@ -47,6 +53,10 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         File origResourceFile = new File("src/test/resources/test-resource.txt");
         resourceFile = new File(TestFileUtils.getTempDir(), origResourceFile.getName());
         FileUtils.copyFile(origResourceFile, resourceFile);
+        
+        File origWarcFile = new File("src/test/resources/warc/warcexample.warc");
+        warcFile = new File(TestFileUtils.getTempDir(), origWarcFile.getName());
+        FileUtils.copyFile(origWarcFile, warcFile);
     }
     
     @BeforeMethod
@@ -68,118 +78,162 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.checkConditions();
     }
     
-//    @Test
-//    public void testPreservingRecord() throws Exception {
-//        addDescription("Test preserving a record, which is too small for automatic upload");
-//        BitmagArchive archive = mock(BitmagArchive.class);
-//        
-//        CumulusRecord record = mock(CumulusRecord.class);
-//        when(record.getFieldValue(anyString())).thenReturn(collectionId);
-//        when(record.getFile()).thenReturn(resourceFile);
-//        when(record.getUUID()).thenReturn(recordId);
-//
-//        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
-//
-//        addStep("Pack the record and its metadata", 
-//                "Should be placed in the WARC file, but the warc file should not be uploaded yet (not large enough)");
-//        preserver.packRecordAssetFile(record, metadataFile);
-//        
-//        assertFalse(preserver.warcPackerForCollection.isEmpty());
-//        assertTrue(preserver.warcPackerForCollection.containsKey(collectionId));
-//
-//        File warcFile = preserver.warcPackerForCollection.get(collectionId).getWarcFile();
-//        
-//        assertTrue(warcFile.exists());
-//        assertEquals(bitmagConf.getTempDir().getAbsolutePath(), warcFile.getParentFile().getAbsolutePath());
-//        
-//        verify(record, times(1)).getFile();
-//        verify(record, times(1)).getFieldValue(anyString());
-//        verify(record, times(1)).getUUID();
-//        verifyNoMoreInteractions(record);
-//        
-//        verifyZeroInteractions(archive);
-//        
-//        addStep("Upload all warc files", 
-//                "The archive should receive the warc-file.");
-//        preserver.uploadAll();
-//        verify(archive).uploadFile(eq(warcFile), eq(collectionId));
-//        verifyNoMoreInteractions(archive);
-//    }
-//    
-//    @Test
-//    public void testPreservingRecordWithUpload() throws Exception {
-//        addDescription("Test preserving a record which is large enough for automatic upload.");
-//        BitmagArchive archive = mock(BitmagArchive.class);
-//        when(archive.uploadFile(any(File.class), anyString())).thenReturn(true);
-//        
-//        CumulusRecord record = mock(CumulusRecord.class);
-//        when(record.getFieldValue(anyString())).thenReturn(collectionId);
-//        when(record.getFile()).thenReturn(resourceFile);
-//        when(record.getUUID()).thenReturn(recordId);
-//        
-//        bitmagConf.setWarcFileSizeLimit(40000);
-//
-//        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
-//
-//        addStep("Pack the record and the default metadata", 
-//                "Should be placed in the WARC file, but the warc file should not be uploaded yet (not large enough)");
-//        preserver.packRecordAssetFile(record, metadataFile);
-//        
-//        assertFalse(preserver.warcPackerForCollection.isEmpty());
-//        assertTrue(preserver.warcPackerForCollection.containsKey(collectionId));
-//
-//        File warcFile = preserver.warcPackerForCollection.get(collectionId).getWarcFile();
-//        
-//        assertTrue(warcFile.exists());
-//        assertEquals(bitmagConf.getTempDir().getAbsolutePath(), warcFile.getParentFile().getAbsolutePath());
-//        
-//        verify(record, times(1)).getFile();
-//        verify(record, times(1)).getFieldValue(anyString());
-//        verify(record, times(1)).getUUID();
-//        verifyNoMoreInteractions(record);
-//        
-//        verifyZeroInteractions(archive);
-//
-//        addStep("Pack record again, now with larger metadata file.", "Should perform the upload");
-//        File newMetadataFile = TestFileUtils.createFileWithContent(createString(bitmagConf.getWarcFileSizeLimit()));
-//        preserver.packRecordAssetFile(record, newMetadataFile);
-//
-//        verify(archive).uploadFile(eq(warcFile), eq(collectionId));
-//        verifyNoMoreInteractions(archive);        
-//    }
-//    
-//    @Test
-//    public void testPreservingRecordWithUploadFailure() throws Exception {
-//        addDescription("Test preserving a record which is large enough for automatic upload.");
-//        BitmagArchive archive = mock(BitmagArchive.class);
-//        when(archive.uploadFile(any(File.class), anyString())).thenReturn(false);
-//        
-//        CumulusRecord record = mock(CumulusRecord.class);
-//        when(record.getFieldValue(anyString())).thenReturn(collectionId);
-//        when(record.getFile()).thenReturn(resourceFile);
-//        when(record.getUUID()).thenReturn(recordId);
-//        
-//        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
-//
-//        addStep("Pack the record and the default metadata", 
-//                "Should be placed in the WARC file, but the warc file should not be uploaded yet (not large enough)");
-//        preserver.packRecordAssetFile(record, metadataFile);
-//        File warcFile = preserver.getWarcPacker(collectionId).getWarcFile();
-//        preserver.uploadAll();
-//        
-//        assertTrue(preserver.warcPackerForCollection.isEmpty());
-//        assertTrue(warcFile.isFile(), "Should not remove the warc-file when failure.");
-//        
-//        verify(archive).uploadFile(any(File.class), anyString());
-//    }
-    
-    protected String createString(int minSize) {
-        StringBuilder res = new StringBuilder();
+    @Test
+    public void testGetWarcPacker() {
+        addDescription("Test that a Warc packer will be reused");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
         
-        while(res.length() < minSize) {
-            res.append("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZæøåÆØÅ");
-        }
-        
-        return res.toString();
+        WarcPacker packer = preserver.getWarcPacker(collectionId);
+        Assert.assertEquals(packer, preserver.getWarcPacker(collectionId));
     }
+    
+    @Test
+    public void testPackRecordResource() {
+        addDescription("Test packing a Cumulus record resource");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFile()).thenReturn(resourceFile);
+        
+        preserver.packRecordResource(record);
+        
+        verifyZeroInteractions(archive);
+        
+        verify(wp).packRecordAssetFile(eq(record), eq(resourceFile));
+        verify(wp).addRecordToPackagedList(eq(record));
+        verifyNoMoreInteractions(wp);
+        
+        verify(record).getPreservationCollectionID();
+        verify(record).getFile();
+        verifyNoMoreInteractions(record);
+    }
+    
+    @Test
+    public void testPackRecordMetadataSuccess() {
+        addDescription("Test packing a Cumulus record metadata");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.GUID))).thenReturn(UUID.randomUUID().toString());
+        
+        preserver.packRecordMetadata(record, metadataFile);
+        
+        verifyZeroInteractions(archive);
+        
+        verify(wp).packMetadata(eq(metadataFile), any(Uri.class));
+        verify(wp).addRecordToPackagedList(eq(record));
+        verifyNoMoreInteractions(wp);
+        
+        verify(record).getPreservationCollectionID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.GUID));
+        verifyNoMoreInteractions(record);
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testPackRecordMetadataFailure() {
+        addDescription("Test packing a Cumulus record metadata, when the GUID cannot be put into a URI.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.GUID))).thenReturn("THIS IS NOT POSSIBLE TO PUT INTO A URI #\\/");
+        
+        preserver.packRecordMetadata(record, metadataFile);
+    }
+    
+    @Test
+    public void testPackRepresentationMetadata() {
+        addDescription("Test packing the representaiton metadata.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        
+        preserver.packRepresentationMetadata(metadataFile, collectionId);
+        
+        verifyZeroInteractions(archive);
+        
+        verify(wp).packMetadata(eq(metadataFile), eq(null));
+        verifyNoMoreInteractions(wp);
+    }
+    
+    @Test
+    public void testCheckConditionsWhenNotReady() {
+        addDescription("Test the method for checking the conditions on the WarcPacker, when it is not ready.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        when(wp.getSize()).thenReturn(0L);
+        
+        preserver.checkConditions();
+        
+        verifyZeroInteractions(archive);
+        
+        verify(wp).getSize();
+        verifyNoMoreInteractions(wp);
+    }
+    
+    @Test
+    public void testCheckConditionsWhenReady() {
+        addDescription("Test the method for checking the conditions on the WarcPacker, when it is ready and successfully uploaded to the archive.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        when(wp.getSize()).thenReturn(Long.MAX_VALUE);
+        when(wp.getWarcFile()).thenReturn(warcFile);
+        when(archive.uploadFile(any(File.class), anyString())).thenReturn(true);
+        
+        preserver.checkConditions();
+        
+        verify(archive).uploadFile(any(File.class), anyString());
+        verifyNoMoreInteractions(archive);
+        
+        verify(wp).getSize();
+        verify(wp, times(3)).getWarcFile();
+        verify(wp).close();
+        verify(wp).reportSucces(any(WarcDigest.class));
+        verifyNoMoreInteractions(wp);
+    }
+    
+    @Test
+    public void testUploadAll() {
+        addDescription("Test the uploadAll method, when it fails to upload to archive.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        when(wp.getWarcFile()).thenReturn(warcFile);
+        when(archive.uploadFile(any(File.class), anyString())).thenReturn(false);
+        
+        preserver.uploadAll();
+        
+        verify(archive).uploadFile(any(File.class), anyString());
+        verifyNoMoreInteractions(archive);
+        
+        verify(wp, times(3)).getWarcFile();
+        verify(wp).close();
+        verify(wp).reportFailure(anyString());
+        verifyNoMoreInteractions(wp);
+    }   
 }

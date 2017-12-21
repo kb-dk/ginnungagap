@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.testutils;
 import java.security.Permission;
 
 public class TestSystemUtils {
+    @SuppressWarnings("serial")
     public static class ExitTrappedException extends SecurityException { }
 
     public static void forbidSystemExitCall() {
