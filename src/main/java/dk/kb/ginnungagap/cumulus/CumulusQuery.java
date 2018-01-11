@@ -100,6 +100,37 @@ public class CumulusQuery {
 
         return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
     }
+
+    /**
+     * Creates the query for the extraction of cumulus record which should have its preservation updated.
+     * This basically means all the records, which have a newer last-modified timestamp than their preservation date.
+     * The given number of days are the retention period for beginning to look for updates.
+     * 
+     * @param catalogName The name of the catalog.
+     * @param numberOfDays The number of days for the date fields to be updated.
+     * @return The Cumulus query.
+     */
+    public static CumulusQuery getPreservationUpdateQuery(String catalogName, Integer numberOfDays) {
+        ArgumentCheck.checkNotNullOrEmpty(catalogName, "String catalogName");
+        String query = String.format(
+                StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s\nand %s prior to %s"
+                        + "\nand %s after %s"),
+                Constants.FieldNames.PRESERVATION_STATUS,
+                Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED,
+                Constants.FieldNames.REGISTRATIONSTATE,
+                Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
+                Constants.FieldNames.CATALOG_NAME,
+                catalogName,
+                Constants.FieldNames.BEVARINGS_DATO,
+                "$today-" + numberOfDays.toString(),
+                Constants.FieldNames.ITEM_MODIFICATION_DATE,
+                "$today-" + numberOfDays.toString());
+        EnumSet<FindFlag> findFlags = EnumSet.of(
+                FindFlag.FIND_MISSING_FIELDS_ARE_ERROR, 
+                FindFlag.FIND_MISSING_STRING_LIST_VALUES_ARE_ERROR);    
+
+        return new CumulusQuery(query, findFlags, CombineMode.FIND_NEW);
+    }
     
     /**
      * The default query for extracting the preservation ready items from a given catalog, which are sub-assets

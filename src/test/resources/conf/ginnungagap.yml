@@ -18,6 +18,7 @@ ginnungagap:
       - "PreservationWorkflow"
       - "ValidationWorkflow"
       - "ImportWorkflow"
+      - "UpdatePreservationWorkflow"
   transformation:
     xsd_dir: tempDir/scripts/xsd
     xslt_dir: tempDir/scripts/xslt

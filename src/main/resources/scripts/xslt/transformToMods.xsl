@@ -17,7 +17,7 @@
   <xsl:variable name="type_of_resource" select="''" />
   <xsl:variable name="type_of_event" select="'references'" />
   
-  <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />
+  <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
   
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.6'" />

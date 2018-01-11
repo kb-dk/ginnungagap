@@ -17,7 +17,7 @@ import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.metadata.utils.GuidExtrationUtils;
+import dk.kb.metadata.utils.GuidExtractionUtils;
 
 /**
  * Class for reinstantiating the Cumulus Record Assets.
@@ -118,7 +118,7 @@ public class ReinstantiateCumulusAssets extends AbstractMain {
                 StandardCharsets.UTF_8))) {
             String line;
             while((line = reader.readLine()) != null) {
-                String uuid = GuidExtrationUtils.extractGuid(line);
+                String uuid = GuidExtractionUtils.extractGuid(line);
                 CumulusRecord record = server.findCumulusRecord(catalogName, uuid);
                 reinstantiateRecord(record);
             }

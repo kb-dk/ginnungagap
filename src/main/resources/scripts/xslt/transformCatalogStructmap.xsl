@@ -121,7 +121,7 @@
                 <xsl:value-of select="name" />
               </xsl:attribute>
               <xsl:attribute name="CONTENTIDS">
-                <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(guid)" />
+                <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(guid)" />
               </xsl:attribute>
             </xsl:element>
           </xsl:for-each>

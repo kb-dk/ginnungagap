@@ -381,7 +381,7 @@
   </xsl:template>
   
   <xsl:template name="premis_object_identifier_value">
-    <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
+    <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(field[@name='GUID']/value)" />
   </xsl:template>
   
   <xsl:template name="premis_identifier_value">

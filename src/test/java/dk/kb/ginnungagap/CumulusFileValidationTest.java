@@ -36,6 +36,7 @@ import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollectionTest;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
@@ -166,30 +167,33 @@ public class CumulusFileValidationTest extends ExtendedTestCase {
         verifyNoMoreInteractions(record);
     }
     
-//    @Test
-//    public void testValidateCumulusRecordFiles() throws Exception {
-//        CumulusServer server = mock(CumulusServer.class);
-//        TestConfiguration conf = TestFileUtils.createTempConf();
-//        File outputFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()); 
-//        
-//        RecordItemCollection items = mock(RecordItemCollection.class);
-//        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(new CumulusRecordCollection(items, server, conf.getCumulusConf().getCatalogs().get(0)));
-//        Layout layout = mock(Layout.class);
-//        when(items.getLayout()).thenReturn(layout);
-//        when(items.iterator()).thenReturn(new ArrayList<Item>().iterator());
-//        
-//        CumulusFileValidation.validateCumulusRecordFiles(server, conf, outputFile);
-//        
-//        verify(server).getItems(anyString(), any(CumulusQuery.class));
-//        verifyNoMoreInteractions(server);
-//        
-//        verify(items).getLayout();
-//        verify(items).iterator();
-//        verifyNoMoreInteractions(items);
-//        
-//        verifyZeroInteractions(layout);
-//    }
-//    
+    @Test
+    public void testValidateCumulusRecordFiles() throws Exception {
+        CumulusServer server = mock(CumulusServer.class);
+        TestConfiguration conf = TestFileUtils.createTempConf();
+        File outputFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()); 
+        File resourceFile = new File("src/test/resources/test-resource.txt");
+        
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(items);
+        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+        when(record.getFile()).thenReturn(resourceFile);
+        when(record.getUUID()).thenReturn(UUID.randomUUID().toString());
+        
+        CumulusFileValidation.validateCumulusRecordFiles(server, conf, outputFile);
+        
+        verify(server).getItems(anyString(), any(CumulusQuery.class));
+        verifyNoMoreInteractions(server);
+        
+        verify(items).iterator();
+        verifyNoMoreInteractions(items);
+        
+        verify(record).getFile();
+        verify(record).getUUID();
+        verifyNoMoreInteractions(record);
+    }
+    
     @Test(expectedExceptions = IllegalStateException.class)
     public void testValidateCumulusRecordFilesFailure() throws Exception {
         CumulusServer server = mock(CumulusServer.class);

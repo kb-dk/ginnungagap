@@ -16,7 +16,7 @@
   <xsl:include href="transformToMods.xsl"/>
   <xsl:include href="transformToPremis.xsl"/>
   
-  <xsl:variable name="FILE_GUID" select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(record/field[@name='GUID']/value)" />
+  <xsl:variable name="FILE_GUID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
   
   <xsl:template match="record">
     <xsl:call-template name="mets_representation_relationship" />

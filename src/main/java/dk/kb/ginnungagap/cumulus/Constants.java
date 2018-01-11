@@ -98,8 +98,11 @@ public interface Constants {
         /** The file format identifier (mimetype). */
         String FILE_FORMAT_IDENTIFIER = "File Format Identifier";
         
-        /** The name of the file format. */
+        /** The name of the file format field. */
         String FORMAT_NAME = "formatName";
+        
+        /** The name of the field for the Item Modification Date*/
+        String ITEM_MODIFICATION_DATE = "Item Modification Date";
     }
     
     /**

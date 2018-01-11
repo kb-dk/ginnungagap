@@ -34,7 +34,7 @@
         <xsl:value-of select="'Representation'" />
       </xsl:attribute>
       <xsl:attribute name="OBJID">
-        <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='REPRESENTATION METADATA GUID']/value)" />
+        <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(field[@name='REPRESENTATION METADATA GUID']/value)" />
       </xsl:attribute>
       <xsl:attribute name="PROFILE">
         <xsl:value-of select="java:dk.kb.metadata.Constants.getProfileURL()" />

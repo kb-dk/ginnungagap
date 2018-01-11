@@ -14,6 +14,7 @@ import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.metadata.utils.GuidExtractionUtils;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
@@ -75,7 +76,7 @@ public class BitmagPreserver {
     public void packRecordMetadata(CumulusRecord record, File metadataFile) {
         try {
             WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
-            String fileGuid = record.getFieldValue(Constants.FieldNames.GUID);
+            String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
             wp.packMetadata(metadataFile, refersToUri);

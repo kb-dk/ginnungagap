@@ -34,7 +34,7 @@ import dk.kb.ginnungagap.utils.StringUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 
 /**
- * Abstract class for the preservation steps.
+ * The preservation step.
  */
 public class PreservationStep implements WorkflowStep {
     /** The logger.*/

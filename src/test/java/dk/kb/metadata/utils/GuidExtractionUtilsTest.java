@@ -12,7 +12,7 @@ public class GuidExtractionUtilsTest extends ExtendedTestCase {
     @Test
     public void testConstructor() {
         addDescription("Test the constructor.");
-        GuidExtrationUtils geu = new GuidExtrationUtils();
+        GuidExtractionUtils geu = new GuidExtractionUtils();
         Assert.assertNotNull(geu);
     }
     
@@ -22,20 +22,20 @@ public class GuidExtractionUtilsTest extends ExtendedTestCase {
         String expectedUuid = UUID.randomUUID().toString();
         String url = "prefix://" + expectedUuid;
 
-        String uuid = GuidExtrationUtils.extractGuid(url);
+        String uuid = GuidExtractionUtils.extractGuid(url);
         Assert.assertEquals(expectedUuid, uuid);
     }
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testExtractGuidFailureNullArgument() {
         addDescription("Test the way the extractGuid method fails, when given a null argument");
-        GuidExtrationUtils.extractGuid(null);
+        GuidExtractionUtils.extractGuid(null);
     }
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testExtractGuidFailureEmptyStringArgument() {
         addDescription("Test the way the extractGuid method fails, when given the empty string as argument");
-        GuidExtrationUtils.extractGuid("");
+        GuidExtractionUtils.extractGuid("");
     }
     
     @Test
@@ -43,7 +43,7 @@ public class GuidExtractionUtilsTest extends ExtendedTestCase {
         addDescription("Test the extractGuid method, when the GUID contains a hash (#)");
         String prefix = UUID.randomUUID().toString();
         String suffix = UUID.randomUUID().toString();
-        String guid = GuidExtrationUtils.extractGuid(prefix + "#" + suffix);
+        String guid = GuidExtractionUtils.extractGuid(prefix + "#" + suffix);
         Assert.assertEquals(guid, prefix);
     }
 }

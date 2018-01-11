@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.jwat.common.ContentType;
@@ -34,12 +33,6 @@ public class WarcPacker {
     /** The content type for the metadata. */
     public static final String METADATA_CONTENT_TYPE = "text/xml";
     
-    /** The header value for WARC info records.*/
-    protected static final String INFO_RECORD_HEADER = 
-            "description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.html\n"
-                    + "conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n"
-                    + "revision: 1.0.0\n";
-
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
     /** The records which has been packaged in the warc file.*/
@@ -71,14 +64,15 @@ public class WarcPacker {
     protected void writeWarcinfo() throws YggdrasilException {
         Digest digestor = new Digest(bitmagConf.getAlgorithm());
         StringBuffer payload = new StringBuffer();
-        payload.append(INFO_RECORD_HEADER);
+        payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
 
-        for(Object key : System.getProperties().keySet()) {
+        for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
             String value = System.getProperty((String) key);
             payload.append((String) key + ": " + value + "\n");
         }
-        for(Map.Entry<String, String> property : System.getenv().entrySet()) {
-            payload.append(property.getKey() + ": " + property.getValue() + "\n");
+        for(String key : WarcInfoConstants.ENV_VARIABLES) {
+            String value = System.getenv().get(key);
+            payload.append(key + ": " + value + "\n");
         }
         
         byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
@@ -208,8 +202,9 @@ public class WarcPacker {
             String format = record.getFieldValueOrNull(Constants.FieldNames.FORMAT_NAME);
             if(format != null && format.startsWith("TIFF")) {
                 res = ContentType.parseContentType("image/tiff");
+            } else {
+                res = ContentType.parseContentType("application/binary");
             }
-            res = ContentType.parseContentType("application/binary");
         }
 
         return res;

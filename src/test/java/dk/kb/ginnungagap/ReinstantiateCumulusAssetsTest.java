@@ -1,7 +1,6 @@
 package dk.kb.ginnungagap;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -17,14 +16,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.canto.cumulus.GUID;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.Layout;
-import com.canto.cumulus.RecordItemCollection;
-
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollectionTest;
+import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
@@ -106,6 +100,30 @@ public class ReinstantiateCumulusAssetsTest extends ExtendedTestCase {
         
         verify(server).findCumulusRecord(eq(catalogName), eq(recordId));
         verifyNoMoreInteractions(server);
+        
+        verify(record).getFile();
+        verify(record).setNewAssetReference(eq(testInputFile));
+        verifyNoMoreInteractions(record);
+    }
+    
+    @Test
+    public void testReinstantiateAllCumulusAssets() {
+        CumulusServer server = mock(CumulusServer.class);
+        String catalogName = UUID.randomUUID().toString();
+        CumulusRecord record = mock(CumulusRecord.class);
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+        
+        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
+        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+        when(record.getFile()).thenReturn(testInputFile);
+        
+        ReinstantiateCumulusAssets.reinstantiateAllCumulusAssets(server, catalogName);
+        
+        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+        verifyNoMoreInteractions(server);
+        
+        verify(items).iterator();
+        verifyNoMoreInteractions(items);
         
         verify(record).getFile();
         verify(record).setNewAssetReference(eq(testInputFile));

@@ -24,7 +24,7 @@
           </xsl:element>
           <!-- objectIdentifierValue NDD id="6.1.2" -->
           <xsl:element name="mix:objectIdentifierValue">
-            <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtrationUtils.extractGuid(field[@name='GUID']/value)" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(field[@name='GUID']/value)" />
           </xsl:element>
         </xsl:element>
         

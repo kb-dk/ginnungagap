@@ -3,9 +3,9 @@ package dk.kb.metadata.utils;
 /**
  * Handles the extraction of GUIDs from the potentially old and invalid format.
  */
-public final class GuidExtrationUtils {
+public final class GuidExtractionUtils {
     /** Constructor for this Utility class.*/
-    protected GuidExtrationUtils() {}
+    protected GuidExtractionUtils() {}
 
     /**
      * Method for extracting the part of the KB-GUID which is valid as a 'xs:ID' standardized guid.
