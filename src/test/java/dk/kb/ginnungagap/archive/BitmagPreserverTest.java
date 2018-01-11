@@ -199,6 +199,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getSize()).thenReturn(Long.MAX_VALUE);
         when(wp.getWarcFile()).thenReturn(warcFile);
+        when(wp.hasContent()).thenReturn(true);
         when(archive.uploadFile(any(File.class), anyString())).thenReturn(true);
         
         preserver.checkConditions();
@@ -210,18 +211,20 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(wp, times(3)).getWarcFile();
         verify(wp).close();
         verify(wp).reportSucces(any(WarcDigest.class));
+        verify(wp).hasContent();
         verifyNoMoreInteractions(wp);
     }
     
     @Test
-    public void testUploadAll() {
-        addDescription("Test the uploadAll method, when it fails to upload to archive.");
+    public void testUploadAllWhenItHasContent() {
+        addDescription("Test the uploadAll method, when the warc-packer has content.");
         Archive archive = mock(Archive.class);
         BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
         
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getWarcFile()).thenReturn(warcFile);
+        when(wp.hasContent()).thenReturn(true);
         when(archive.uploadFile(any(File.class), anyString())).thenReturn(false);
         
         preserver.uploadAll();
@@ -232,6 +235,29 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(wp, times(3)).getWarcFile();
         verify(wp).close();
         verify(wp).reportFailure(anyString());
+        verify(wp).hasContent();
+        verifyNoMoreInteractions(wp);
+    }   
+    
+    @Test
+    public void testUploadAllWhenItHasNoContent() {
+        addDescription("Test the uploadAll method, when the warc-packer does not have content.");
+        Archive archive = mock(Archive.class);
+        BitmagPreserver preserver = new BitmagPreserver(archive, bitmagConf);
+        
+        WarcPacker wp = mock(WarcPacker.class);
+        preserver.warcPackerForCollection.put(collectionId, wp);
+        when(wp.getWarcFile()).thenReturn(warcFile);
+        when(wp.hasContent()).thenReturn(false);
+        when(archive.uploadFile(any(File.class), anyString())).thenReturn(false);
+        
+        preserver.uploadAll();
+        
+        verifyZeroInteractions(archive);
+        
+        verify(wp).getWarcFile();
+        verify(wp).close();
+        verify(wp).hasContent();
         verifyNoMoreInteractions(wp);
     }   
 }

@@ -30,7 +30,7 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
     public SchedulableWorkflowTimerTask(long interval, Workflow workflow) {
         this.interval = interval;
         this.workflow = workflow;
-        nextRun = new Date(System.currentTimeMillis() + interval);
+        nextRun = new Date(System.currentTimeMillis());
     }
 
     /**

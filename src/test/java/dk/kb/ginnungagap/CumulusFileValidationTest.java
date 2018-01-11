@@ -2,19 +2,15 @@ package dk.kb.ginnungagap;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -22,22 +18,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.canto.cumulus.Asset;
-import com.canto.cumulus.CumulusException;
-import com.canto.cumulus.FieldDefinition;
-import com.canto.cumulus.GUID;
-import com.canto.cumulus.Item;
-import com.canto.cumulus.Layout;
-import com.canto.cumulus.RecordItemCollection;
-import com.canto.cumulus.exceptions.UnresolvableAssetReferenceException;
-import com.canto.cumulus.fieldvalue.AssetReference;
-
 import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollectionTest;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
@@ -206,67 +190,5 @@ public class CumulusFileValidationTest extends ExtendedTestCase {
         } finally {
             TestFileUtils.getTempDir().setWritable(true);
         }
-    }
-    
-//    @Test
-//    public void testValidateForCatalog() throws IOException, CumulusException, UnresolvableAssetReferenceException {
-//        CumulusServer server = mock(CumulusServer.class);
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        String catalogName = UUID.randomUUID().toString();
-//        
-//        RecordItemCollection items = mock(RecordItemCollection.class);
-//        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(new CumulusRecordCollection(items, server, catalogName));
-//        Layout layout = mock(Layout.class);
-//        when(items.getLayout()).thenReturn(layout);
-//        Item item = mock(Item.class);
-//        when(items.iterator()).thenReturn(Arrays.asList(item).iterator());
-//        
-//        FieldDefinition guidField = mock(FieldDefinition.class);
-//        GUID guidGuid = mock(GUID.class);
-//        when(guidField.getName()).thenReturn(Constants.FieldNames.GUID);
-//        when(guidField.getFieldUID()).thenReturn(guidGuid);
-//        
-//        when(item.getStringValue(any(GUID.class))).thenReturn(UUID.randomUUID().toString());
-//        
-//        Collection<FieldDefinition> fields = Arrays.asList(guidField);
-//        when(layout.iterator()).thenReturn(fields.iterator()).thenReturn(fields.iterator()).thenReturn(fields.iterator()).thenReturn(fields.iterator());
-//
-//        
-//        AssetReference assetReference = mock(AssetReference.class);
-//        when(item.getAssetReferenceValue(eq(GUID.UID_REC_ASSET_REFERENCE))).thenReturn(assetReference);
-//        Asset asset = mock(Asset.class);
-//        when(assetReference.getAsset(eq(false))).thenReturn(asset);
-//        when(asset.getAsFile()).thenReturn(testConf);
-//        
-//        CumulusFileValidation.validateForCatalog(server, catalogName, out);
-//        
-//        addStep("Check the output", "Contains the file");
-//        Assert.assertTrue(out.toString().contains(CumulusFileValidation.OUTPUT_RES_FOUND));
-//        
-//        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
-//        verifyNoMoreInteractions(server);
-//        
-//        verify(items).getLayout();
-//        verify(items).iterator();
-//        verifyNoMoreInteractions(items);
-//        
-//        verify(layout).iterator();
-//        verifyNoMoreInteractions(layout);
-//        
-//        verify(item).getStringValue(any(GUID.class));
-//        verify(item).getAssetReferenceValue(eq(GUID.UID_REC_ASSET_REFERENCE));
-//        verifyNoMoreInteractions(item);
-//        
-//        verify(guidField).getName();
-//        verify(guidField).getFieldUID();
-//        verifyNoMoreInteractions(guidField);
-//        
-//        verifyZeroInteractions(guidGuid);
-//        
-//        verify(assetReference).getAsset(eq(false));
-//        verifyNoMoreInteractions(assetReference);
-//        
-//        verify(asset).getAsFile();
-//        verifyNoMoreInteractions(asset);
-//    }
+    }    
 }

@@ -123,10 +123,15 @@ public class BitmagPreserver {
      * @param collectionId The id of the collection to upload to.
      */
     protected void uploadWarcFile(String collectionId) {
-        log.info("Uploading warc file for collection '" + collectionId + "'");
         WarcPacker wp = warcPackerForCollection.get(collectionId);
         wp.close();
+        if(!wp.hasContent()) {
+            log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
+            wp.getWarcFile().delete();
+            return;
+        }
 
+        log.info("Uploading warc file for collection '" + collectionId + "'");
         WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
 
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);

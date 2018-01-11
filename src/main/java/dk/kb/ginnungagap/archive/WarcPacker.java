@@ -39,6 +39,9 @@ public class WarcPacker {
     protected final List<CumulusRecord> packagedRecords;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
+    
+    /** Whether or not the current WARC file has any content besides the warc-info.*/
+    protected boolean hasContent;
 
     /**
      * Constructor.
@@ -51,6 +54,7 @@ public class WarcPacker {
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             writeWarcinfo();
+            this.hasContent = false;
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
         }
@@ -66,13 +70,19 @@ public class WarcPacker {
         StringBuffer payload = new StringBuffer();
         payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
 
+        payload.append("\n");
         for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
             String value = System.getProperty((String) key);
-            payload.append((String) key + ": " + value + "\n");
+            if(value != null && !value.isEmpty()) {
+                payload.append(key + ": " + value + "\n");
+            }
         }
+        payload.append("\n");
         for(String key : WarcInfoConstants.ENV_VARIABLES) {
             String value = System.getenv().get(key);
-            payload.append(key + ": " + value + "\n");
+            if(value != null && !value.isEmpty()) {
+                payload.append(key + ": " + value + "\n");
+            }
         }
         
         byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
@@ -103,6 +113,7 @@ public class WarcPacker {
             Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
             log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the record received "
                     + "the URI:" + uri + "'");
+            hasContent = true;
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
@@ -121,6 +132,7 @@ public class WarcPacker {
             warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
                     ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
                     metadataFile.getName());
+            hasContent = true;
         } catch (Exception e) {
             throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
         }
@@ -138,6 +150,14 @@ public class WarcPacker {
      */
     public File getWarcFile() {
         return warcWrapper.getWarcFile();
+    }
+    
+    /**
+     * Returns true if the WARC file contains other records than the WARC-info.
+     * @return whether or not any content has been written to the WARC file or not.
+     */
+    public boolean hasContent() {
+        return hasContent;
     }
 
     /**
