@@ -4,6 +4,7 @@ package dk.kb.ginnungagap.workflow.schedule;
  * States for a workflow.
  */
 public enum WorkflowState {
+    
     /** When the workflow is not running.*/
     NOT_RUNNING("Not running"),
     /** When the workflow is waiting to be run.*/

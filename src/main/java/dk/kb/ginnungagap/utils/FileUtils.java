@@ -43,7 +43,7 @@ public class FileUtils {
         
         try {
             StreamUtils.copyInputStreamToOutputStream(new FileInputStream(from), new FileOutputStream(to));
-            from.delete();
+            deleteFile(from);
         } catch (IOException e) {
             throw new IllegalStateException("Could not move the file '" + from.getAbsolutePath() 
                     + "' to the location '" + to.getAbsolutePath() + "'", e);
@@ -52,6 +52,20 @@ public class FileUtils {
         if(to.lastModified() + MILLIS_PER_SECOND < moveDate) {
             throw new IllegalStateException("Moved file is older than time for moving (" + to.lastModified() 
                     + " < " + moveDate + ")");
+        }
+    }
+    
+    /**
+     * Delete method, which validates that the file is actually not present afterwards.
+     * @param f The file to delete.
+     */
+    public static void deleteFile(File f) {
+        if(!f.exists()) {
+            return;
+        }
+        boolean success = f.delete();
+        if(!success) {
+            throw new IllegalStateException("Could not delete the file '" + f.getAbsolutePath() + "'");
         }
     }
     

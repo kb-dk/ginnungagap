@@ -142,4 +142,46 @@ public class FileUtilsTest extends ExtendedTestCase {
             dir.setWritable(true);
         }
     }
+    
+    @Test
+    public void testDeleteFileSuccess() throws Exception {
+        addDescription("Test deleting a file successfully.");
+        File f = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        Assert.assertTrue(f.exists());
+        Assert.assertTrue(f.isFile());
+        
+        FileUtils.deleteFile(f);
+
+        Assert.assertFalse(f.exists());
+        Assert.assertFalse(f.isFile());
+    }
+
+    @Test
+    public void testDeleteFileOnNonExistingFile() throws Exception {
+        addDescription("Test deleting a file which does not exist.");
+        File f = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        Assert.assertFalse(f.exists());
+        Assert.assertFalse(f.isFile());
+        
+        FileUtils.deleteFile(f);
+
+        Assert.assertFalse(f.exists());
+        Assert.assertFalse(f.isFile());
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testDeleteFileFailure() throws Exception {
+        addDescription("Test deleting a file which are not allowed to be deleted.");
+        File f = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        Assert.assertTrue(f.exists());
+        Assert.assertTrue(f.isFile());
+        
+        try {
+            f.getParentFile().setWritable(false);
+            FileUtils.deleteFile(f);
+        } finally {
+            f.getParentFile().setWritable(true);
+            Assert.assertTrue(f.delete());
+        }
+    }
 }

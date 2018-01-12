@@ -108,6 +108,8 @@ public class Configuration {
     protected static final String CONF_WORKFLOW = "workflow";
     /** The workflow interval leaf-element.*/
     protected static final String CONF_WORKFLOW_INTERVAL = "interval";
+    /** The workflow update retention in days leaf-element.*/
+    protected static final String CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS = "update_retention_in_days";
     /** The workflow names of workflows array leaf-element.*/
     protected static final String CONF_WORKFLOW_WORKFLOWS = "workflows";
     
@@ -245,9 +247,10 @@ public class Configuration {
                 "Missing Cumulus element '" + CONF_WORKFLOW_WORKFLOWS + "'");
         
         int interval = (int) map.get(CONF_WORKFLOW_INTERVAL);
+        Integer updateRetentionInDays = (Integer) map.get(CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS);
         List<String> workflows = (List<String>) map.get(CONF_WORKFLOW_WORKFLOWS);
         
-        return new WorkflowConfiguration(interval, workflows);
+        return new WorkflowConfiguration(interval, updateRetentionInDays, workflows);
     }
     
     /**

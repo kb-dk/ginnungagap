@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.bitmag.Bitrepository;
 import dk.kb.yggdrasil.bitmag.BitrepositoryConfig;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
@@ -40,7 +41,7 @@ public class BitmagArchive implements Archive {
         boolean success = bitrepository.uploadFile(file, collectionId);
         if(success) {
             log.debug("Deleting file '" + file.getName() + "' after success upload to the bitrepository.");
-            file.delete();
+            FileUtils.deleteFile(file);
         }
         return success;
     }

@@ -19,6 +19,7 @@ import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 
 /**
@@ -141,7 +142,7 @@ public class FullValidationStep extends ValidationStep {
             os.close();
             digest = ChecksumUtils.calculateChecksum(tmpFile, ChecksumUtils.MD5_ALGORITHM);
         } finally {
-            tmpFile.delete();
+            FileUtils.deleteFile(tmpFile);
         }
         
         String warcRecordChecksum = digest.digestString; //warcRecord.computedPayloadDigest.digestString;

@@ -16,9 +16,9 @@ public abstract class AbstractWorkflow implements Workflow {
     /** The jobID. */
     protected String jobID;
     /** The current state of the workflow. */
-    private WorkflowState currentState = WorkflowState.NOT_RUNNING;
+    protected WorkflowState currentState = WorkflowState.NOT_RUNNING;
     /** The current step running.*/
-    private WorkflowStep currentStep = null;
+    protected WorkflowStep currentStep = null;
 
     /** The steps of this workflow.*/
     protected List<WorkflowStep> steps = null;
@@ -42,7 +42,7 @@ public abstract class AbstractWorkflow implements Workflow {
                 performStep(step);
             }
         } finally {
-            currentState = WorkflowState.NOT_RUNNING;
+            finish();
         }
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractWorkflow implements Workflow {
                 step.performStep();
             } catch (Exception e) {
                 log.error("Failure in step: '" + step.getName() + "'.", e);
-                throw new RuntimeException("Failed to run step " + step.getName(), e);
+                throw new IllegalStateException("Failed to run step " + step.getName(), e);
             }
         }
     }

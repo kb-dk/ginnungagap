@@ -13,25 +13,44 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
 public class WorkflowConfiguration {
     /** The time interval between running the interval.*/
     protected final int interval;
+    /** The update preservation retention period in days.*/
+    protected final int updateRetentionInDays;
     /** The list of workflow names.*/
     protected final List<String> workflows;
-    
+
+    /** The default update retention; 180 days ~ 6 months.*/
+    protected static final int DEFAULT_UPDATE_RETENTION = 180;
+
     /**
      * Constructor.
-     * @param workflows The names of the workflows.
      * @param interval The interval for running the workflows.
+     * @param updateRetentionInDays The update preservation retention period in days.
+     * This may be null, but it will then have the default value.
+     * @param workflows The names of the workflows.
      */
-    public WorkflowConfiguration(int interval, Collection<String> workflows) {
+    public WorkflowConfiguration(int interval, Integer updateRetentionInDays, Collection<String> workflows) {
         ArgumentCheck.checkNotNullOrEmpty(workflows, "List<String> workflows");
         this.workflows = Collections.unmodifiableList(new ArrayList<String>(workflows));
         this.interval = interval;
+        if(updateRetentionInDays != null && updateRetentionInDays > 0) {
+            this.updateRetentionInDays = updateRetentionInDays;
+        } else {
+            this.updateRetentionInDays = DEFAULT_UPDATE_RETENTION;
+        }
     }
-        
+
     /**
      * @return The interval between running the workflows.
      */
     public long getInterval() {
         return interval;
+    }
+
+    /**
+     * @return The update preservation retention period in days.
+     */
+    public int getUpdateRetentionInDays() {
+        return updateRetentionInDays;
     }
 
     /**

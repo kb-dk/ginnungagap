@@ -143,7 +143,7 @@ public class Ginnungagap extends AbstractMain {
                 res.add(new ValidationWorkflow(conf, server, archive));
             } else if(workflowName.equalsIgnoreCase(UpdatePreservationWorkflow.class.getSimpleName())) {
                 res.add(new UpdatePreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, 
-                        preserver, NUMBER_OF_DAYS_FOR_UPDATE));
+                        preserver, conf.getWorkflowConf().getUpdateRetentionInDays()));
             } else {
                 throw new IllegalStateException("Cannot instantiate a workflow with name: "
                         + workflowName);

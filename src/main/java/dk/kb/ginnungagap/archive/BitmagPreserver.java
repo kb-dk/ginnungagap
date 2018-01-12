@@ -14,6 +14,7 @@ import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.Constants;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.metadata.utils.GuidExtractionUtils;
 
 /**
@@ -127,7 +128,7 @@ public class BitmagPreserver {
         wp.close();
         if(!wp.hasContent()) {
             log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
-            wp.getWarcFile().delete();
+            FileUtils.deleteFile(wp.getWarcFile());
             return;
         }
 
