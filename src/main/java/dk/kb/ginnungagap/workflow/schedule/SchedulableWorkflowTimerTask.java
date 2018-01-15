@@ -15,12 +15,12 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
     private static final Logger log = LoggerFactory.getLogger(SchedulableWorkflowTimerTask.class);
 
     /** The workflow to schedule.*/
-    private final Workflow workflow;
+    protected final Workflow workflow;
 
     /** The date for the next run of the workflow.*/
-    private Date nextRun;
+    protected Date nextRun;
     /** The interval between triggers. */
-    private final long interval;
+    protected final long interval;
 
     /**
      * Constructor.
@@ -62,7 +62,7 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
      * Runs the job.
      * Resets the date for the next run of the job.
      */
-    public void runJob() {
+    protected void runJob() {
         try {
             if(workflow.currentState().equals(WorkflowState.NOT_RUNNING)) {
                 log.info("Starting job: " + workflow.getJobID());
@@ -77,6 +77,7 @@ public class SchedulableWorkflowTimerTask extends TimerTask {
                 return;
             }
         } catch (Throwable e) {
+            workflow.setCurrentState(WorkflowState.ABORTED);
             log.error("Fault barrier for '" + workflow.getJobID() + "' caught unexpected exception.", e);
         }
     }
