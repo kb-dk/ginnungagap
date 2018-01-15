@@ -30,6 +30,12 @@ public class PreservationWorkflow extends AbstractWorkflow {
     /** The bitrepository preserver.*/
     private final BitmagPreserver preserver;
 
+    /** The description of this workflow.*/
+    protected static final String WORKFLOW_DESCRIPTION = "Preserves all the Cumulus records, which have been set "
+            + "to 'ready for long-term preservation'.";
+    /** The name of this workflow.*/
+    protected static final String WORKFLOW_NAME = "Preservation Workflow";
+    
     /**
      * Constructor.
      * @param transConf The configuration for the transformation
@@ -40,6 +46,7 @@ public class PreservationWorkflow extends AbstractWorkflow {
      */
     public PreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
             MetadataTransformationHandler transformationHandler, BitmagPreserver preserver) {
+        super(WORKFLOW_NAME);
         this.conf = transConf;
         this.server = server;
         this.transformationHandler = transformationHandler;
@@ -62,11 +69,11 @@ public class PreservationWorkflow extends AbstractWorkflow {
     
     @Override
     public String getDescription() {
-        return "Preserves all the Cumulus records, which have been set to 'ready for long-term preservation'.";
+        return WORKFLOW_DESCRIPTION;
     }
 
     @Override
     public String getJobID() {
-        return "Preservation Workflow";
+        return WORKFLOW_NAME;
     }
 }

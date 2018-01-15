@@ -2,6 +2,7 @@ package dk.kb.ginnungagap.workflow.schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public abstract class AbstractWorkflow implements Workflow {
     private static final Logger log = LoggerFactory.getLogger(AbstractWorkflow.class);
 
     /** The jobID. */
-    protected String jobID;
+    protected final String jobID;
     /** The current state of the workflow. */
     protected WorkflowState currentState = WorkflowState.NOT_RUNNING;
     /** The current step running.*/
@@ -22,7 +23,15 @@ public abstract class AbstractWorkflow implements Workflow {
 
     /** The steps of this workflow.*/
     protected List<WorkflowStep> steps = null;
-
+    
+    /**
+     * Constructor.
+     * @param name The name of the workflow.
+     */
+    protected AbstractWorkflow(String name) {
+        this.jobID = name + "-" + UUID.randomUUID().toString();
+    }
+    
     /**
      * Sets the step for this workflow.
      * @param steps The steps for this workflow.
@@ -100,7 +109,7 @@ public abstract class AbstractWorkflow implements Workflow {
     public boolean equals(Object o) {
         if(o == null) return false;
         if(this == o) return true;
-        if(o instanceof AbstractWorkflow) return false;
+        if(!(o instanceof AbstractWorkflow)) return false;
         AbstractWorkflow that = (AbstractWorkflow) o;
 
         if (!jobID.equals(that.getJobID())) return false;

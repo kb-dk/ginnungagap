@@ -40,6 +40,7 @@ public class ImportWorkflow extends AbstractWorkflow {
      * @param archive The Bitrepository archive.
      */
     public ImportWorkflow(Configuration conf, CumulusServer server, Archive archive) {
+        super(WORKFLOW_NAME);
         this.conf = conf;
         this.server = server;
         this.archive = archive;
