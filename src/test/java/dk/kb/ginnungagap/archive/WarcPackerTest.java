@@ -127,8 +127,8 @@ public class WarcPackerTest extends ExtendedTestCase {
         wp.packagedRecords.add(record);
         wp.reportSucces(digest);
         
-        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATAPACKAGEID), anyString());
-        verify(record).setStringValueInField(eq(Constants.FieldNames.RESOURCEPACKAGEID), anyString());
+        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_PACKAGE_ID), anyString());
+        verify(record).setStringValueInField(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID), anyString());
         verify(record).setStringValueInField(eq(Constants.FieldNames.ARCHIVE_MD5), anyString());
         verify(record).setDateValueInField(eq(Constants.FieldNames.BEVARINGS_DATO), any(Date.class));
         verify(record).setPreservationFinished();

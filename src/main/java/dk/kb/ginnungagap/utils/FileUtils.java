@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
@@ -13,6 +15,8 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
 public class FileUtils {
     /** The number of milliseconds per second. */
     protected static final long MILLIS_PER_SECOND = 1000L;
+    /** The deprecation suffix.*/
+    protected static final String DEPRECATION_SUFFIX = ".old";
     
     /**
      * Retrieves the directory at the given path.
@@ -35,7 +39,7 @@ public class FileUtils {
      * @param from The file to move from.
      * @param to The file to move to.
      */
-    public static void moveOrOverrideFile(File from, File to) {
+    public static void forceMove(File from, File to) {
         ArgumentCheck.checkExistsNormalFile(from, "File from");
         ArgumentCheck.checkNotNull(to, "File to");
         
@@ -52,6 +56,40 @@ public class FileUtils {
         if(to.lastModified() + MILLIS_PER_SECOND < moveDate) {
             throw new IllegalStateException("Moved file is older than time for moving (" + to.lastModified() 
                     + " < " + moveDate + ")");
+        }
+    }
+    
+    /**
+     * Moves a file 'from' to the given destination file 'to'.
+     * If 'to' already exists, then it is deprecated.
+     * @param from The file to be moved.
+     * @param to The destination of the file.
+     */
+    public static void deprecateMove(File from, File to) {
+        ArgumentCheck.checkExistsNormalFile(from, "File from");
+        ArgumentCheck.checkNotNull(to, "File to");
+        
+        if(to.exists()) {
+            deprecateFile(to);
+        }
+        forceMove(from, to);
+    }
+    
+    /**
+     * Deprecate a file. This is done by adding the suffix '.old' to the filename.
+     * Also, if another file exists on the deprecation position, then that file is also deprecated. 
+     * @param f The file to deprecate.
+     */
+    public static void deprecateFile(File f) {
+        ArgumentCheck.checkExistsNormalFile(f, "File f");        
+        File newFile = new File(f.getAbsolutePath() + DEPRECATION_SUFFIX);
+        if(newFile.exists()) {
+            deprecateFile(newFile);
+        }
+        try {
+            Files.move(f.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not deprecate the file '" + f.getAbsolutePath() + "'.", e);
         }
     }
     
@@ -85,7 +123,7 @@ public class FileUtils {
      * @param name The name of the new file.
      * @return The new file.
      */
-    public static File getNewFile(File dir, String name) {
+    public static File createNewFile(File dir, String name) {
         File res = new File(dir, name);
         try {
             if(!res.createNewFile()) {

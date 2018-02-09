@@ -70,7 +70,7 @@ public class BitmagPreserver {
     }
     
     /**
-     * PAckages the metadata of a given Cumulus Record
+     * Packages the metadata of a given Cumulus Record
      * @param record The Cumulus Record for the metadata.
      * @param metadataFile The file with the transformed metadata for the Cumulus Record.
      */

@@ -21,6 +21,7 @@ import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.workflow.ImportWorkflow;
@@ -114,7 +115,7 @@ public class Ginnungagap extends AbstractMain {
                 Cumulus.CumulusStop();
                 archive.shutdown();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (ArgumentCheck e) {
             log.warn("Argument failure.", e);
             printParametersAndExit();
         }
@@ -215,7 +216,15 @@ public class Ginnungagap extends AbstractMain {
                 scheduler.schedule(workflow, interval);
             }
             synchronized(scheduler) {
-                scheduler.wait();
+                boolean run = true;
+                while(run) {
+                    try {
+                        scheduler.wait();
+                        run = false;
+                    } catch (InterruptedException e) {
+                        log.warn("Scheduler was interrupted when running the workflows. Trying to continue.", e);
+                    }
+                }
             }
         } else {
             for(Workflow workflow : workflows) {

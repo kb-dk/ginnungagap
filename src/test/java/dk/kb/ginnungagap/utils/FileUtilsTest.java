@@ -78,7 +78,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         long size1 = from.length();
         File to = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
-        FileUtils.moveOrOverrideFile(from, to);
+        FileUtils.forceMove(from, to);
         
         assertEquals(to.length(), size1);
         
@@ -86,7 +86,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         long size2 = from.length();
         assertNotEquals(size1, size2);
         
-        FileUtils.moveOrOverrideFile(from, to);
+        FileUtils.forceMove(from, to);
         
         assertNotEquals(to.length(), size1);
         assertEquals(to.length(), size2);
@@ -98,7 +98,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         File from = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         File to = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
-        FileUtils.moveOrOverrideFile(from, to);        
+        FileUtils.forceMove(from, to);        
     }
     
     @Test(expectedExceptions = IllegalStateException.class)
@@ -110,7 +110,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         try {
             toDir.setWritable(false);
             File to = new File(toDir, UUID.randomUUID().toString());
-            FileUtils.moveOrOverrideFile(from, to);        
+            FileUtils.forceMove(from, to);        
         } finally {
             toDir.setWritable(true);
         }
@@ -119,7 +119,7 @@ public class FileUtilsTest extends ExtendedTestCase {
     @Test
     public void testGetNewFile() {
         addDescription("Test the getNewFile method when failure.");
-        File newFile = FileUtils.getNewFile(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        File newFile = FileUtils.createNewFile(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         Assert.assertNotNull(newFile);
         Assert.assertTrue(newFile.isFile());
     }
@@ -128,7 +128,7 @@ public class FileUtilsTest extends ExtendedTestCase {
     public void testGetNewFileFailureFileAlreadyExists() throws IOException {
         addDescription("Test the getNewFile method when the file already exists");
         File newFile = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
-        FileUtils.getNewFile(newFile.getParentFile(), newFile.getName());
+        FileUtils.createNewFile(newFile.getParentFile(), newFile.getName());
     }
     
     @Test(expectedExceptions = IllegalStateException.class)
@@ -137,7 +137,7 @@ public class FileUtilsTest extends ExtendedTestCase {
         File dir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         try {
             dir.setWritable(false);
-            FileUtils.getNewFile(dir, UUID.randomUUID().toString());
+            FileUtils.createNewFile(dir, UUID.randomUUID().toString());
         } finally {
             dir.setWritable(true);
         }

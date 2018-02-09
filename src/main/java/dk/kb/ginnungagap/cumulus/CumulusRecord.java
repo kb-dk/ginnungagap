@@ -39,6 +39,7 @@ import dk.kb.ginnungagap.cumulus.field.TableField;
 import dk.kb.ginnungagap.cumulus.field.TableField.Row;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.StringUtils;
+import dk.kb.metadata.utils.GuidExtractionUtils;
 
 /**
  * Record from Cumulus.
@@ -63,8 +64,10 @@ public class CumulusRecord {
     /** The Cumulus record item.*/
     protected final Item item;
 
-    /** The guid for the metadata record. It is created and stored the first time it is needed. */
+    /** The GUID for the metadata record. It is created and stored the first time it is needed. */
     protected String metadataGuid;
+    /** The GUID for the file and the Cumulus record. It is created and stored the first time it is needed.*/
+    protected String guid = null;
     
     /** The ID of the collection where the record should be preserved.*/
     protected String preservationCollectionID;
@@ -115,11 +118,15 @@ public class CumulusRecord {
      * @return The identifier for this record.
      */
     public String getUUID() {
-        String res = getFieldValue(Constants.FieldNames.GUID);
-        if(res.contains("/")) {
-            res = res.substring(res.lastIndexOf("/")+1, res.length());
+        if(guid == null) {
+            try {
+                guid = GuidExtractionUtils.extractGuid(getFieldValue(Constants.FieldNames.GUID));
+            } catch (RuntimeException e) {
+                guid = "GUID COULD NOT BE EXTRACTED!";
+                throw e;
+            }
         }
-        return res;
+        return guid;
     }
 
     /**
@@ -523,7 +530,7 @@ public class CumulusRecord {
      */
     public String getPreservationCollectionID() {
         if(preservationCollectionID == null) {
-            preservationCollectionID = getFieldValue(Constants.FieldNames.COLLECTIONID);
+            preservationCollectionID = getFieldValue(Constants.FieldNames.COLLECTION_ID);
         }
         return preservationCollectionID;
     }

@@ -14,6 +14,7 @@ ginnungagap:
       - "Audio OM"
   workflow:
     interval: 3600000
+    retain_dir: tempDir/retain
     workflows:
       - "PreservationWorkflow"
       - "ValidationWorkflow"

@@ -9,6 +9,7 @@ import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagArchive;
 import dk.kb.ginnungagap.archive.LocalArchive;
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 
@@ -50,7 +51,7 @@ public abstract class AbstractMain {
         }
         
         if(!archiveType.equalsIgnoreCase(ARCHIVE_LOCAL) && !archiveType.equalsIgnoreCase(ARCHIVE_BITMAG)) {
-            throw new IllegalArgumentException("Unable to comply with archive type '" + archiveType 
+            throw new ArgumentCheck("Unable to comply with archive type '" + archiveType 
                     + "'. Only accepts '" + ARCHIVE_LOCAL + "' or '" + ARCHIVE_BITMAG + "'.");
         }
 
@@ -69,14 +70,9 @@ public abstract class AbstractMain {
      * @return The configuration.
      */
     protected static Configuration instantiateConfiguration(String path) {
-        if(path == null || path.isEmpty()) {
-            throw new IllegalArgumentException("Invalid path for configuration file.");
-        }
+        ArgumentCheck.checkNotNullOrEmpty(path, "String path");
         File confFile = new File(path);
-        if(!confFile.isFile()) {
-            throw new IllegalArgumentException("Cannot find the configuration file '" 
-                    + confFile.getAbsolutePath() + "'.");
-        }
+        ArgumentCheck.checkExistsNormalFile(confFile, "File confFile");
         
         return new Configuration(confFile);
     }
@@ -128,6 +124,6 @@ public abstract class AbstractMain {
         if(arg.startsWith("n") || arg.startsWith("N")) {
             return false;
         }
-        throw new IllegalArgumentException("Could not determine whether yes or no for argument: " + arg);
+        throw new ArgumentCheck("Could not determine whether yes or no for argument: " + arg);
     }
 }

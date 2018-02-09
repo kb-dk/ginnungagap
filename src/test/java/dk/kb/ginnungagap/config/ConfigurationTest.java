@@ -183,7 +183,7 @@ public class ConfigurationTest extends ExtendedTestCase {
     public void testWorkflowConfigurationWithValidUpdateRetention() {
         addDescription("The creating the WorkflowConfiguration with a valid update retention");
         int updateRetention = 1234;
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, Arrays.asList("TEST WORKFLOW"));
+        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
         
         assertEquals(workflow.getUpdateRetentionInDays(), updateRetention);
     }
@@ -191,7 +191,7 @@ public class ConfigurationTest extends ExtendedTestCase {
     @Test
     public void testWorkflowConfigurationWithoutUpdateRetention() {
         addDescription("The creating the WorkflowConfiguration where the update retention is null");
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, null, Arrays.asList("TEST WORKFLOW"));
+        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, null, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
         
         assertEquals(workflow.getUpdateRetentionInDays(), WorkflowConfiguration.DEFAULT_UPDATE_RETENTION);
     }
@@ -200,7 +200,7 @@ public class ConfigurationTest extends ExtendedTestCase {
     public void testWorkflowConfigurationWithInvalidUpdateRetention() {
         addDescription("The creating the WorkflowConfiguration with an invalid update retention");
         int updateRetention = -1234;
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, Arrays.asList("TEST WORKFLOW"));
+        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
         
         assertFalse(workflow.getUpdateRetentionInDays() == updateRetention);
         assertEquals(workflow.getUpdateRetentionInDays(), WorkflowConfiguration.DEFAULT_UPDATE_RETENTION);

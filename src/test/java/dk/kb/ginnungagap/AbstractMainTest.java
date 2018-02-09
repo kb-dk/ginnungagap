@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.yggdrasil.exceptions.ArgumentCheck;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 
 public class AbstractMainTest extends ExtendedTestCase {
 
@@ -59,7 +59,7 @@ public class AbstractMainTest extends ExtendedTestCase {
         Assert.assertFalse(AbstractMain.isYes("Nope"));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testIsYesFailure() {
         Assert.assertFalse(AbstractMain.isYes("THIS IS NOT A YES OR NO"));
     }
@@ -82,17 +82,17 @@ public class AbstractMainTest extends ExtendedTestCase {
         AbstractMain.instantiateConfiguration(conf.getAbsolutePath());
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testInstantiateConfigurationFailureNull() {
         AbstractMain.instantiateConfiguration(null);
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testInstantiateConfigurationFailureEmpty() {
         AbstractMain.instantiateConfiguration("");
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testInstantiateConfigurationFailureMissing() {
         AbstractMain.instantiateConfiguration("tempDir/NOT_A_FILE" + UUID.randomUUID().toString());
     }
@@ -132,7 +132,7 @@ public class AbstractMainTest extends ExtendedTestCase {
         AbstractMain.instantiateArchive("", conf);
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testInstantiateArchiveFailure() {
         AbstractMain.instantiateArchive("THIS IS NOT A VALID ARCHIVE TYPE", conf);
     }

@@ -55,8 +55,8 @@ public class FullValidationStep extends ValidationStep {
     @Override
     protected void validateRecord(CumulusRecord record) {
         try {
-            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCEPACKAGEID);
-            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTIONID);
+            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
+            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             validateWarcFileChecksum(record, f);

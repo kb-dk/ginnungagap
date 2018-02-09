@@ -29,6 +29,7 @@ import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 
 public class ImportationStepTest extends ExtendedTestCase {
 
@@ -44,11 +45,13 @@ public class ImportationStepTest extends ExtendedTestCase {
     Configuration conf;
     String collectionId = "test-collection-id-" + UUID.randomUUID().toString();
     String catalogName = "test-catalog-name";
+    File retainDir;
 
     @BeforeClass
     public void setupClass() {
         TestFileUtils.setup();
         conf = TestFileUtils.createTempConf();
+        retainDir = FileUtils.getDirectory(TestFileUtils.getTempDir(), "retainDir");
     }
 
     @AfterClass
@@ -62,7 +65,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
 
         String name = step.getName();
         Assert.assertNotNull(name);
@@ -77,12 +80,12 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         File outFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(recordGuid);
         when(record.getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE))).thenReturn(outFile.getAbsolutePath());
         
@@ -91,8 +94,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record, times(2)).getUUID();
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_NONE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -114,12 +117,12 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         String sillyId = UUID.randomUUID().toString();
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
@@ -127,8 +130,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record).getUUID();
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -148,12 +151,12 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         String sillyId = UUID.randomUUID().toString();
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
 
         CumulusRecord record = mock(CumulusRecord.class);
 
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcFileId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcFileId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(sillyId);
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenThrow(new IllegalStateException("This must fail!!"));
@@ -161,8 +164,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         step.importRecord(record);
 
         verify(record).getUUID();
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
@@ -180,7 +183,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         
@@ -204,14 +207,14 @@ public class ImportationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         
-        ImportationStep step = new ImportationStep(server, archive, catalogName);
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
         
         when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenThrow(new RuntimeException("MUST FAIL"));
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenThrow(new RuntimeException("MUST FAIL"));
         
         step.performStep();
         
@@ -223,7 +226,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(items).iterator();
         verifyNoMoreInteractions(items);
         
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());

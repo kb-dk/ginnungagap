@@ -15,6 +15,7 @@ ginnungagap:
   workflow:
     interval: 3600000
     update_retention_in_days: 180
+    retain_dir: tempDir/retain
     workflows:
       - "PreservationWorkflow"
       - "ValidationWorkflow"

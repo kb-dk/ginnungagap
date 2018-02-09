@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
@@ -34,7 +33,7 @@ public class MetadataTransformer {
         try {
             this.xsltFile = xsltFile;
             this.xslTransformer = XslTransformer.getTransformer(xsltFile);
-        } catch (TransformerConfigurationException e) {
+        } catch (TransformerException e) {
             throw new ArgumentCheck("Cannot instantiate a XSL transformer from the file '" + xsltFile + "'.", e);
         }
     }
@@ -76,6 +75,5 @@ public class MetadataTransformer {
         } catch (IOException e) {
             throw new IllegalStateException("Could not deliver the transformed metadata to the output stream.", e);
         }
-        
     }
 }

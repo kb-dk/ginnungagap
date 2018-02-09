@@ -95,15 +95,10 @@ public class CumulusRecordTest extends ExtendedTestCase {
         when(item.getStringValue(eq(fieldGuid))).thenReturn(uuid1);
         assertEquals(record.getUUID(), uuid1);
 
-        addStep("Test with a prefix to the UUID, separated by '/'", "The prefix should be removed.");
-        String uuid2 = UUID.randomUUID().toString();        
-        when(item.getStringValue(eq(fieldGuid))).thenReturn(UUID.randomUUID().toString() + "/" + uuid2);
-        assertEquals(record.getUUID(), uuid2);
-        
-        verify(fe, times(2)).getFieldGUID(eq(Constants.FieldNames.GUID));
+        verify(fe).getFieldGUID(eq(Constants.FieldNames.GUID));
         verifyNoMoreInteractions(fe);
         
-        verify(item, times(2)).getStringValue(eq(fieldGuid));
+        verify(item).getStringValue(eq(fieldGuid));
         verifyNoMoreInteractions(item);
     }
     

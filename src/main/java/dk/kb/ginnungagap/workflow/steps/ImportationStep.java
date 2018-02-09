@@ -36,17 +36,21 @@ public class ImportationStep implements WorkflowStep {
     protected final Archive archive;
     /** The name of the catalog to check for records for importation.*/
     protected final String catalogName;
+    /** The retain directory, where existing files will be placed, so they are not overridden.*/
+    protected final File retainDir;
     
     /**
      * Constructor.
      * @param server The Cumulus server.
      * @param archive The bitrepository archive.
      * @param catalogName The name of the catalog to validate.
+     * @param retainDir The directory to place existing files, so they will not be overridden.
      */
-    public ImportationStep(CumulusServer server, Archive archive, String catalogName) {
+    public ImportationStep(CumulusServer server, Archive archive, String catalogName, File retainDir) {
         this.server = server;
         this.archive = archive;
         this.catalogName = catalogName;
+        this.retainDir = retainDir;
     }
     
     @Override
@@ -66,8 +70,8 @@ public class ImportationStep implements WorkflowStep {
      */
     protected void importRecord(CumulusRecord record) {
         try {
-            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCEPACKAGEID);
-            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTIONID);
+            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
+            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             
@@ -97,8 +101,21 @@ public class ImportationStep implements WorkflowStep {
     protected void importFile(CumulusRecord record, File file) {
         String filePath = record.getFieldValueForNonStringField(Constants.FieldNames.ASSET_REFERENCE);
         File f = new File(filePath);
-        FileUtils.moveOrOverrideFile(file, f);
+        deprecateFile(f);
+        FileUtils.forceMove(file, f);
         record.setNewAssetReference(f);
+    }
+    
+    /**
+     * Deprecates a file, if it already exists.
+     * @param f The file move to the retain directory, if it already exists.
+     */
+    protected void deprecateFile(File f) {
+        if(!f.exists()) {
+            return;
+        }
+        File newFile = new File(retainDir, f.getAbsolutePath());
+        FileUtils.deprecateMove(f, newFile);
     }
     
     /**

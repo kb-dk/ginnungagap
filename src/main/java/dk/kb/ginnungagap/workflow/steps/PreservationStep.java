@@ -96,18 +96,18 @@ public class PreservationStep implements WorkflowStep {
         }
         for(CumulusRecord record : items) {
             try {
-                log.debug("Initiating preservation on '" + record.toString() + "'");
+                log.debug("Initiating preservation on record '" + record.getUUID() + "'");
                 sendRecordToPreservation(record);
             } catch (RuntimeException e) {
                 log.error("Runtime exception caught while trying to handle Cumulus record '" 
-                        + record + "'. Something must be seriously wrong with that item!!!\n"
+                        + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);
             }
         }
     }
 
     /**
-     * Preserves the record, and if it is a master-asset, then it is 
+     * Preserves the record, and if it is a master-asset, then the representation is also preserved.
      * @param record The given Cumulus record to preserve.
      */
     protected void sendRecordToPreservation(CumulusRecord record) {
@@ -147,7 +147,7 @@ public class PreservationStep implements WorkflowStep {
      * Preserves the metadata of a Cumulus record.
      * Transformes the metadata
      * @param record The Cumulus record.
-     * @throws IOException
+     * @throws IOException If it fails to read or write metadata.
      */
     protected void preserveMetadata(CumulusRecord record) throws IOException {
         File metadataFile = transformAndValidateMetadata(record);
@@ -160,7 +160,7 @@ public class PreservationStep implements WorkflowStep {
      * Preserve the intellectual entity for the Cumulus record.
      * @param record The record to have its intellectual entity preserved.
      */
-    protected void preserveIntellectuelEntity(CumulusRecord record) {
+    protected void preserveIntellectuelEntity(CumulusRecord record) throws IOException {
         String ieUUID = record.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         String metadataUUID = record.getMetadataGUID();
         String fileUUID = record.getUUID();
@@ -194,8 +194,9 @@ public class PreservationStep implements WorkflowStep {
     /**
      * Preserve the intellectual entity for the Cumulus record.
      * @param record The record to have its intellectual entity preserved.
+     * @throws IOException If it fails to write the metadata file.
      */
-    protected void preserveRepresentationIntellectuelEntity(CumulusRecord record) {
+    protected void preserveRepresentationIntellectuelEntity(CumulusRecord record) throws IOException {
         String ieUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
         String metadataUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_METADATA_GUID);
         transformAndPreserveIntellectualEntity(ieUUID, metadataUUID, null, record);
@@ -206,27 +207,24 @@ public class PreservationStep implements WorkflowStep {
      * @param ieUUID The UUID for the intellectual entity.
      * @param metadataUUID The UUID for the metadata object.
      * @param fileUUID The UUID for the file. This may be null.
+     * @throws IOException If it fails to write the metadata file.
      */
     protected void transformAndPreserveIntellectualEntity(String ieUUID, String metadataUUID, String fileUUID, 
-            CumulusRecord record) {
-        try {
-            File ieRawFile = createIErawFile(ieUUID, metadataUUID, fileUUID);
-            File metadataFile = new File(conf.getMetadataTempDir(), ieUUID);
-            try (OutputStream os = new FileOutputStream(metadataFile);
-                    InputStream in = new FileInputStream(ieRawFile)) {
-                MetadataTransformer transformer = transformationHandler.getTransformer(
-                        MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
-                transformer.transformXmlMetadata(in, os);
-                os.flush();
-            }
-
-            try (InputStream is = new FileInputStream(metadataFile)) {
-                transformationHandler.validate(is);
-            }
-            preserver.packRepresentationMetadata(metadataFile, record.getPreservationCollectionID());
-        } catch(IOException e) {
-            throw new IllegalStateException("Issue when transforming and preserving the IntellectualEntity.", e);
+            CumulusRecord record) throws IOException {
+        File ieRawFile = createIErawFile(ieUUID, metadataUUID, fileUUID);
+        File metadataFile = new File(conf.getMetadataTempDir(), ieUUID);
+        try (OutputStream os = new FileOutputStream(metadataFile);
+                InputStream in = new FileInputStream(ieRawFile)) {
+            MetadataTransformer transformer = transformationHandler.getTransformer(
+                    MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
+            transformer.transformXmlMetadata(in, os);
+            os.flush();
         }
+
+        try (InputStream is = new FileInputStream(metadataFile)) {
+            transformationHandler.validate(is);
+        }
+        preserver.packRepresentationMetadata(metadataFile, record.getPreservationCollectionID());
     }
     
     /**

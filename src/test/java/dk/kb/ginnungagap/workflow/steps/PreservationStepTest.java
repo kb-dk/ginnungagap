@@ -133,7 +133,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         
         verify(record).initFieldsForPreservation();
         verify(record).setPreservationFailed(anyString());
-        verify(record).getUUID();
+        verify(record, times(2)).getUUID();
         verifyNoMoreInteractions(record);
     }
 
@@ -152,7 +152,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         
         when(record.getMetadataGUID()).thenReturn(recordGuid);
         when(record.getMetadata(any(File.class))).thenReturn(new FileInputStream(new File(testRecordMetadataPath)));
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
         when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
         when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(UUID.randomUUID().toString());
@@ -219,7 +219,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         
         when(record.getMetadataGUID()).thenReturn(recordGuid);
         when(record.getMetadata(any(File.class))).thenReturn(new FileInputStream(new File(testRecordMetadataPath)));
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
         when(record.isMasterAsset()).thenReturn(false);
         
@@ -288,7 +288,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         verifyNoMoreInteractions(record);
     }
     
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test(expectedExceptions = IOException.class)
     public void testTransformAndPreserveIntellectualEntityFailureIERawFile() throws IOException {
         addDescription("Test the transformAndPreserveIntellectualEntity method when the IE raw file cannot be read");
         CumulusServer server = mock(CumulusServer.class);
@@ -311,7 +311,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         }
     }
     
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test(expectedExceptions = IOException.class)
     public void testTransformAndPreserveIntellectualEntityFailureWriteIEMetadataFile() throws IOException {
         addDescription("Test the TransformAndPreserveIntellectualEntity method when the IE metadata file cannot be written");
         CumulusServer server = mock(CumulusServer.class);
@@ -334,7 +334,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         }
     }
     
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test(expectedExceptions = IOException.class)
     public void testTransformAndPreserveIntellectualEntityFailureReadIEMetadataFile() throws IOException {
         addDescription("Test the TransformAndPreserveIntellectualEntity method when the IE metadata file cannot be written");
         CumulusServer server = mock(CumulusServer.class);

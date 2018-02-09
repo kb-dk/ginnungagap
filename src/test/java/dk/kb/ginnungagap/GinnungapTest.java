@@ -124,7 +124,7 @@ public class GinnungapTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
 
         TestConfiguration conf = TestFileUtils.createTempConf();
-        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, Arrays.asList(ImportWorkflow.class.getSimpleName()));
+        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, TestFileUtils.getTempDir(), Arrays.asList(ImportWorkflow.class.getSimpleName()));
         conf.setWorkflowConf(wConf);
         
         Collection<Workflow> workflows = Ginnungagap.instantiateWorkflows(conf, server, transformationHandler, preserver, archive);
@@ -142,7 +142,7 @@ public class GinnungapTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
 
         TestConfiguration conf = TestFileUtils.createTempConf();
-        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, Arrays.asList(ValidationWorkflow.class.getSimpleName()));
+        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, TestFileUtils.getTempDir(), Arrays.asList(ValidationWorkflow.class.getSimpleName()));
         conf.setWorkflowConf(wConf);
         
         Collection<Workflow> workflows = Ginnungagap.instantiateWorkflows(conf, server, transformationHandler, preserver, archive);
@@ -160,7 +160,7 @@ public class GinnungapTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
 
         TestConfiguration conf = TestFileUtils.createTempConf();
-        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, Arrays.asList(PreservationWorkflow.class.getSimpleName()));
+        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, TestFileUtils.getTempDir(), Arrays.asList(PreservationWorkflow.class.getSimpleName()));
         conf.setWorkflowConf(wConf);
         
         Collection<Workflow> workflows = Ginnungagap.instantiateWorkflows(conf, server, transformationHandler, preserver, archive);
@@ -178,7 +178,7 @@ public class GinnungapTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
 
         TestConfiguration conf = TestFileUtils.createTempConf();
-        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, Arrays.asList("THIS IS NOT A VALID WORKFLOW NAME"));
+        WorkflowConfiguration wConf = new WorkflowConfiguration(-1, 180, TestFileUtils.getTempDir(), Arrays.asList("THIS IS NOT A VALID WORKFLOW NAME"));
         conf.setWorkflowConf(wConf);
         
         Ginnungagap.instantiateWorkflows(conf, server, transformationHandler, preserver, archive);

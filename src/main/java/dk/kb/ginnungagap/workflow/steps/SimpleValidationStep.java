@@ -37,8 +37,8 @@ public class SimpleValidationStep extends ValidationStep {
     @Override
     protected void validateRecord(CumulusRecord record) {
         try {
-            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCEPACKAGEID);
-            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTIONID);
+            String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
+            String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
             String checksumResult = archive.getChecksum(warcId, collectionId);
             String warcChecksum = record.getFieldValue(Constants.FieldNames.ARCHIVE_MD5);
             

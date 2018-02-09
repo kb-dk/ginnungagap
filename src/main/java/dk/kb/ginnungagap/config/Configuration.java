@@ -9,7 +9,6 @@ import java.util.Map;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.utils.YamlTools;
 
 /**
@@ -37,6 +36,8 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *     <li>workflow:</li>
  *     <ul>
  *       <li>interval: $interval</li>
+ *       <li>update_retention_in_days: $update_retention_in_days (optional)</li>
+ *       <li>retain_dir: $retain_dir</li>
  *       <li>workflows: <br/>- $workflow_1<br/>- $workflow_2<br/>- ...</li>
  *     </ul>
  *     <li>transformation:</li>
@@ -45,23 +46,6 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>xslt_dir: $xslt_dir</li>
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
- *     </ul>
- *     <li>import:</li>
- *     <ul>
- *       <li>temp_dir: $temp_dir</li>
- *       <li>script_file: $script_file</li>
- *       <li>substitute:<br/> -$sub1_name 
- *       <ul>
- *         <li>from: $from1</li>
- *         <li>to: $to1</li>
- *       </ul>
- *       - $sub2_name
- *       <ul>
- *         <li>from: $from2</li>
- *         <li>to: $to2</li>
- *       </ul>
- *       - ...
- *       </li>
  *     </ul>
  *   </ul>
  * </ul>
@@ -108,8 +92,10 @@ public class Configuration {
     protected static final String CONF_WORKFLOW = "workflow";
     /** The workflow interval leaf-element.*/
     protected static final String CONF_WORKFLOW_INTERVAL = "interval";
-    /** The workflow update retention in days leaf-element.*/
+    /** [OPTIONAL] The workflow update retention in days leaf-element.*/
     protected static final String CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS = "update_retention_in_days";
+    /** The workflow retain directory path leaf-element.*/
+    protected static final String CONF_WORKFLOW_RETAIN_DIR = "retain_dir";
     /** The workflow names of workflows array leaf-element.*/
     protected static final String CONF_WORKFLOW_WORKFLOWS = "workflows";
     
@@ -242,25 +228,26 @@ public class Configuration {
      */
     protected WorkflowConfiguration loadWorkflowConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_INTERVAL), 
-                "Missing Cumulus element '" + CONF_WORKFLOW_INTERVAL + "'");
+                "Missing workflow element '" + CONF_WORKFLOW_INTERVAL + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_WORKFLOWS), 
-                "Missing Cumulus element '" + CONF_WORKFLOW_WORKFLOWS + "'");
+                "Missing workflow element '" + CONF_WORKFLOW_WORKFLOWS + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_RETAIN_DIR), 
+                "Missing workflow element '" + CONF_WORKFLOW_RETAIN_DIR + "'");
         
         int interval = (int) map.get(CONF_WORKFLOW_INTERVAL);
+        File retainDir = new File((String) map.get(CONF_WORKFLOW_RETAIN_DIR));
         Integer updateRetentionInDays = (Integer) map.get(CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS);
         List<String> workflows = (List<String>) map.get(CONF_WORKFLOW_WORKFLOWS);
         
-        return new WorkflowConfiguration(interval, updateRetentionInDays, workflows);
+        return new WorkflowConfiguration(interval, updateRetentionInDays, retainDir, workflows);
     }
     
     /**
      * Loads the Transformation configuration from the 'transformation' element in the configuration.
      * @param map The map with the transformation configuration.
      * @return The configuration for performing the transformation.
-     * @throws YggdrasilException If loading the required fields file fails.
      */
-    protected TransformationConfiguration loadTransformationConfiguration(Map<String, Object> map) 
-            throws YggdrasilException {
+    protected TransformationConfiguration loadTransformationConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSD_DIR), 
                 "Missing Transformation element '" + CONF_TRANSFORMATION_XSD_DIR + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_TRANSFORMATION_XSLT_DIR), 

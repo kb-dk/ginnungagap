@@ -11,6 +11,7 @@ import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.workflow.CatalogStructMapWorkflow;
@@ -95,7 +96,7 @@ public class CatalogStructmap extends AbstractMain {
                 Cumulus.CumulusStop();
                 archive.shutdown();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (ArgumentCheck | IllegalArgumentException e) {
             log.warn("Argument failure.", e);
             failPrintErrorAndExit();
         }

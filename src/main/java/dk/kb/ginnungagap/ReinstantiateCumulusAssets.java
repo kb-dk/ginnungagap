@@ -17,6 +17,7 @@ import dk.kb.ginnungagap.cumulus.CumulusQuery;
 import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
 import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.metadata.utils.GuidExtractionUtils;
 
 /**
@@ -86,7 +87,7 @@ public class ReinstantiateCumulusAssets extends AbstractMain {
                 System.out.println("Finished!");
                 Cumulus.CumulusStop();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (ArgumentCheck e) {
             log.warn("Argument failure.", e);
             failPrintErrorAndExit();
         }

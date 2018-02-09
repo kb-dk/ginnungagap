@@ -234,8 +234,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER))).thenReturn(warcRecordChecksum);        
         when(record.getFieldLongValue(eq(Constants.FieldNames.FILE_DATA_SIZE))).thenReturn(warcRecordSize);
         when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(warcFileChecksum);
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
@@ -249,8 +249,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
         verify(record).getFieldLongValue(eq(Constants.FieldNames.FILE_DATA_SIZE));
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record, times(2)).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_OK));
@@ -274,8 +274,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
 
         when(record.getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5))).thenReturn(badChecksum);
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
@@ -287,8 +287,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
@@ -309,8 +309,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
 
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID))).thenReturn(warcId);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTIONID))).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getUUID()).thenReturn(warcRecordId);
         
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
@@ -321,8 +321,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(archive).getFile(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
         
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCEPACKAGEID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTIONID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));

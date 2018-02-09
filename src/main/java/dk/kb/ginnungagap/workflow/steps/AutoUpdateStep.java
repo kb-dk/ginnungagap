@@ -1,7 +1,5 @@
 package dk.kb.ginnungagap.workflow.steps;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,10 +63,9 @@ public class AutoUpdateStep extends PreservationStep {
     /**
      * The content-file of the given record will not be preserved during a preservation update.
      * @param record The given Cumulus record with the file to preserve.
-     * @throws IOException If it fails to package the file.
      */
     @Override
-    protected void preserveFile(CumulusRecord record) throws IOException {
+    protected void preserveFile(CumulusRecord record) {
         log.debug("Do not preserve the file again, when performing the preservation update.");
     }
 }

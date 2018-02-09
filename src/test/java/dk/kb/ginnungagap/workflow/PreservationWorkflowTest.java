@@ -155,7 +155,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(record).resetMetadataGuid();
         verify(record).validateRequiredFields(any(RequiredFields.class));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARINGS_METADATA), anyString());
-        verify(record).getUUID();
+        verify(record, times(2)).getUUID();
         verify(record).getPreservationCollectionID();
         verify(record).isMasterAsset();
         verify(record, times(2)).getMetadataGUID();

@@ -27,6 +27,7 @@ import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils.ExitTrappedException;
 import dk.kb.ginnungagap.utils.FileUtils;
+import dk.kb.yggdrasil.exceptions.ArgumentCheck;
 import junit.framework.Assert;
 
 public class CumulusFileValidationTest extends ExtendedTestCase {

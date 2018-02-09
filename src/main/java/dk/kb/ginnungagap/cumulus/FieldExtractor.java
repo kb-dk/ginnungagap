@@ -167,22 +167,16 @@ public class FieldExtractor {
             return new StringField(fd, getFieldTypeName(fd.getFieldType()), 
                     item.getStringValue(fd.getFieldUID()));
         case FieldTypes.FieldTypeBinary:
-            log.debug("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
+            log.trace("Issue handling the field '" + fd.getName() + "' of type " + getFieldTypeName(fd.getFieldType()) 
                 + ", tries to extracts it as the path of the Asset Reference");
             return extractBinaryField(fd, item);
-        case FieldTypes.FieldTypeAudio:
-            log.debug("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
-                + ", an empty string returned for field " + fd.getName());
-            return new StringField(fd, getFieldTypeName(fd.getFieldType()), "");
-        case FieldTypes.FieldTypePicture:
-            log.debug("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
-                    + ", an empty string returned for field " + fd.getName());
-            return new StringField(fd, getFieldTypeName(fd.getFieldType()),  "");
         case FieldTypes.FieldTypeTable:
             return new TableField(fd, getFieldTypeName(fd.getFieldType()), item.getTableValue(fd.getFieldUID()), this);
+        default:
+            log.trace("Currently does not handle field value for type " + getFieldTypeName(fd.getFieldType())
+                    + ", returning an empty field for " + fd.getName());
+            return new EmptyField(fd, getFieldTypeName(fd.getFieldType()));
         }
-
-        throw new IllegalStateException("Unhandled field type: " + getFieldTypeName(fd.getFieldType()));
     }
 
     /**

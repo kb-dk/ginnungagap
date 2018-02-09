@@ -54,7 +54,7 @@ public class ImportWorkflow extends AbstractWorkflow {
     protected void initialiseSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
-            steps.add(new ImportationStep(server, archive, catalogName));
+            steps.add(new ImportationStep(server, archive, catalogName, conf.getWorkflowConf().getRetainDir()));
         }
         
         setWorkflowSteps(steps);

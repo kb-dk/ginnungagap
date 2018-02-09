@@ -180,8 +180,8 @@ public class WarcPacker {
     public void reportSucces(WarcDigest checksumDigest) {
         Date now = new Date();
         for(CumulusRecord r : packagedRecords) {
-            r.setStringValueInField(Constants.FieldNames.METADATAPACKAGEID, warcWrapper.getWarcFileId());
-            r.setStringValueInField(Constants.FieldNames.RESOURCEPACKAGEID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.FieldNames.METADATA_PACKAGE_ID, warcWrapper.getWarcFileId());
+            r.setStringValueInField(Constants.FieldNames.RESOURCE_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
             r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
             r.setPreservationFinished();

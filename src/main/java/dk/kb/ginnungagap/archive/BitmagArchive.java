@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.bitmag.Bitrepository;
@@ -29,9 +30,14 @@ public class BitmagArchive implements Archive {
      * @param conf The configuration for the bitrepository.
      */
     public BitmagArchive(BitmagConfiguration conf) {
-        BitrepositoryConfig bitmagConf = new BitrepositoryConfig(conf.getSettingsDir(), conf.getPrivateKeyFile(),
-                conf.getMaxNumberOfFailingPillars(), conf.getComponentId());
-        bitrepository = new Bitrepository(bitmagConf);
+        try {
+            BitrepositoryConfig bitmagConf = new BitrepositoryConfig(conf.getSettingsDir(), conf.getPrivateKeyFile(),
+                    conf.getMaxNumberOfFailingPillars(), conf.getComponentId());
+            bitrepository = new Bitrepository(bitmagConf);
+        } catch(RuntimeException e) {
+            throw new ArgumentCheck("Could not instantiate Bitrepository connection with configuration: "
+                    + conf, e);
+        }
     }
 
     @Override

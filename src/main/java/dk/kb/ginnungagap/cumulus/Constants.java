@@ -40,18 +40,18 @@ public interface Constants {
         /** Name of the field containing the preservation status of the record. */
         String PRESERVATION_STATUS = "Preservation_status";
         
-        /** The name of the field containing the checksum of the file
+        /** The name of the field containing the MD5 checksum of the file
          * which has been stored in long term preservation.
          */
         String ARCHIVE_MD5 = "ARCHIVE_MD5";
  
         /** The package id for the resource. To be used instead of ARCHIVE_FILENAME*/
-        String RESOURCEPACKAGEID = "RESOURCE PACKAGE ID"; 
+        String RESOURCE_PACKAGE_ID = "RESOURCE PACKAGE ID"; 
         /** The package id for the metadata (METS) */
-        String METADATAPACKAGEID = "METADATA PACKAGE ID"; 
+        String METADATA_PACKAGE_ID = "METADATA PACKAGE ID"; 
         
         /** the ID of the collection which the object should belong to. */
-        String COLLECTIONID = "KB Samling";
+        String COLLECTION_ID = "KB Samling";
         
         /** The GUID for the metadata stored as part of the record data in LTP. */
         String METADATA_GUID = "METADATA GUID";
