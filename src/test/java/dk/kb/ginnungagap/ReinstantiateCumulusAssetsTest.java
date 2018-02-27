@@ -16,10 +16,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils.ExitTrappedException;
@@ -75,7 +75,7 @@ public class ReinstantiateCumulusAssetsTest extends ExtendedTestCase {
         }
     }
 
-    @Test(expectedExceptions = ExitTrappedException.class)
+    @Test(expectedExceptions = IllegalStateException.class)
     public void testUnableToConnect() throws Exception {
         // Use bad path, but a 'yes' for all records in catalog
         String badInputFilePath = UUID.randomUUID().toString();

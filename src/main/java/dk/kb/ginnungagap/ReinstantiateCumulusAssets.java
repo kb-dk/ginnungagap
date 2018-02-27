@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import com.canto.cumulus.Cumulus;
 
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.metadata.utils.GuidExtractionUtils;
 
@@ -42,7 +42,8 @@ public class ReinstantiateCumulusAssets extends AbstractMain {
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
-     * One argument is required; the configuration file, and any other arguments will be ignored.
+     * At least three arguments is required; the configuration file, the catalog name, and a file with the GUIDs. 
+     * A fourth argument for whether or not to run on all cumulus records in the catalog.
      */
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
@@ -60,7 +61,7 @@ public class ReinstantiateCumulusAssets extends AbstractMain {
 
         try {
             if(args.length > 3) {
-                isYes(args[3]);
+                runOnAll = isYes(args[3]);
             }
 
             Configuration conf = instantiateConfiguration(confPath);

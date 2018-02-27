@@ -3,9 +3,9 @@ package dk.kb.ginnungagap.workflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;

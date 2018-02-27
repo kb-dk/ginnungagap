@@ -21,13 +21,15 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.utils.StringUtils;
@@ -78,7 +80,7 @@ public class PreservationStep implements WorkflowStep {
 
     @Override
     public void performStep() throws Exception {
-        CumulusQuery query = CumulusQuery.getPreservationAllQuery(catalogName);
+        CumulusQuery query = CumulusQueryUtils.getPreservationAllQuery(catalogName);
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records to be preserved.");
         preserveRecordItems(items, catalogName);
@@ -112,17 +114,17 @@ public class PreservationStep implements WorkflowStep {
      */
     protected void sendRecordToPreservation(CumulusRecord record) {
         try {
-            record.initFieldsForPreservation();
-            record.resetMetadataGuid();
+            CumulusPreservationUtils.initialiseRecordForPreservation(record);
 
-            record.validateRequiredFields(conf.getRequiredFields());
+            record.validateFieldsExists(conf.getRequiredFields().getWritableFields());
+            record.validateFieldsHasValue(conf.getRequiredFields().getBaseFields());
+            
             preserveFile(record);
             preserveMetadata(record);
             preserveIntellectuelEntity(record);
 
             if(record.isMasterAsset()) {
-                record.initRepresentationFields();
-                record.resetRepresentationMetadataGuid();
+                CumulusPreservationUtils.initializeRecordRepresentaitonForPreservation(record);
 
                 transformAndPreserveRepresentation(record);
                 preserveRepresentationIntellectuelEntity(record);
@@ -130,9 +132,11 @@ public class PreservationStep implements WorkflowStep {
             preserver.checkConditions();
         } catch (Exception e) {
             log.warn("Preserving the record '" + record + "' failed.", e);
-            record.setPreservationFailed("Failed to preserve record '" + record.getUUID() + ": \n" + e.getMessage());
+            CumulusPreservationUtils.setPreservationFailed(record, "Failed to preserve record '" 
+                    + record.getUUID() + ": \n" + e.getMessage());
         }
     }
+    
 
     /**
      * Preserves the content-file of a given record.
@@ -149,7 +153,7 @@ public class PreservationStep implements WorkflowStep {
      * @param record The Cumulus record.
      * @throws IOException If it fails to read or write metadata.
      */
-    protected void preserveMetadata(CumulusRecord record) throws IOException {
+    protected void preserveMetadata(CumulusRecord record) throws Exception {
         File metadataFile = transformAndValidateMetadata(record);
 
         setMetadataStandardsForRecord(record, metadataFile);
@@ -162,7 +166,7 @@ public class PreservationStep implements WorkflowStep {
      */
     protected void preserveIntellectuelEntity(CumulusRecord record) throws IOException {
         String ieUUID = record.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-        String metadataUUID = record.getMetadataGUID();
+        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
         String fileUUID = record.getUUID();
         transformAndPreserveIntellectualEntity(ieUUID, metadataUUID, fileUUID, record);
     }
@@ -170,9 +174,10 @@ public class PreservationStep implements WorkflowStep {
     /**
      * Preserve the representation part of a master asset as its own METS.
      * @param record The Cumulus record.
-     * @throws IOException If an issue occurs when writing or preserving the Master asset metadata.
+     * @throws Exception If an issue occurs when writing or preserving the Master asset metadata,
+     * 
      */
-    protected void transformAndPreserveRepresentation(CumulusRecord record) throws IOException {
+    protected void transformAndPreserveRepresentation(CumulusRecord record) throws Exception {
         String representationMetadataGuid = record.getFieldValue(
                 Constants.FieldNames.REPRESENTATION_METADATA_GUID);
         File metadataFile = new File(conf.getMetadataTempDir(), representationMetadataGuid);
@@ -181,14 +186,19 @@ public class PreservationStep implements WorkflowStep {
                     + RAW_FILE_SUFFIX);
             MetadataTransformer transformer = transformationHandler.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
-            transformer.transformXmlMetadata(record.getMetadata(cumulusMetadataFile), os);
+            try (OutputStream metadataOutputStream = new FileOutputStream(cumulusMetadataFile)) {
+                record.writeFieldMetadata(metadataOutputStream);
+            }
+            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+                transformer.transformXmlMetadata(cumulusIn, os);
+            }
             os.flush();
         }
 
         try (InputStream is = new FileInputStream(metadataFile)) {
             transformationHandler.validate(is);
         }
-        preserver.packRepresentationMetadata(metadataFile, record.getPreservationCollectionID());
+        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
     }
 
     /**
@@ -224,7 +234,7 @@ public class PreservationStep implements WorkflowStep {
         try (InputStream is = new FileInputStream(metadataFile)) {
             transformationHandler.validate(is);
         }
-        preserver.packRepresentationMetadata(metadataFile, record.getPreservationCollectionID());
+        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
     }
     
     /**
@@ -288,14 +298,19 @@ public class PreservationStep implements WorkflowStep {
      * @return The file containing the transformed metadata.
      * @throws IOException If an error occurs when reading or writing the metadata.
      */
-    protected File transformAndValidateMetadata(CumulusRecord record) throws IOException {
-        String metadataUUID = record.getMetadataGUID();
+    protected File transformAndValidateMetadata(CumulusRecord record) throws Exception {
+        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
         File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             File cumulusMetadataFile = new File(conf.getMetadataTempDir(), metadataUUID + RAW_FILE_SUFFIX);
             MetadataTransformer transformer = transformationHandler.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-            transformer.transformXmlMetadata(record.getMetadata(cumulusMetadataFile), os);
+            try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
+                record.writeFieldMetadata(cumulusOut);
+            }
+            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+                transformer.transformXmlMetadata(cumulusIn, os);
+            }
             os.flush();
         }
 

@@ -3,14 +3,14 @@ package dk.kb.ginnungagap.workflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
-import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
 import dk.kb.ginnungagap.workflow.steps.AutoUpdateStep;
+import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
 
 /**
  * Simple workflow for preserving Cumulus items.

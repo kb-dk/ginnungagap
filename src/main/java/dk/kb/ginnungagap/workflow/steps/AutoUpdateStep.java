@@ -3,12 +3,13 @@ package dk.kb.ginnungagap.workflow.steps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 
 /**
@@ -54,7 +55,7 @@ public class AutoUpdateStep extends PreservationStep {
 
     @Override
     public void performStep() throws Exception {
-        CumulusQuery query = CumulusQuery.getPreservationUpdateQuery(catalogName, numberOfDaysForUpdate);
+        CumulusQuery query = CumulusQueryUtils.getPreservationUpdateQuery(catalogName, numberOfDaysForUpdate);
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records for preservation update.");
         preserveRecordItems(items, catalogName);

@@ -3,6 +3,8 @@ package dk.kb.ginnungagap.config;
 import java.io.File;
 import java.util.ArrayList;
 
+import dk.kb.cumulus.config.CumulusConfiguration;
+
 public class TestConfiguration extends Configuration {
 
     TransformationConfiguration transConf;

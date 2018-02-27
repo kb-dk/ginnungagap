@@ -3,10 +3,10 @@ package dk.kb.ginnungagap.workflow.steps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.metadata.utils.CalendarUtils;
 
 /**

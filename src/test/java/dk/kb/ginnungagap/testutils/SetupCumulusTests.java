@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.testng.SkipException;
 
-import dk.kb.ginnungagap.config.CumulusConfiguration;
+import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.yggdrasil.utils.YamlTools;
 

@@ -1,13 +1,13 @@
 package dk.kb.ginnungagap.archive;
 
-import static org.testng.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.eq;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +24,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.yggdrasil.warc.Digest;
 
@@ -131,7 +131,9 @@ public class WarcPackerTest extends ExtendedTestCase {
         verify(record).setStringValueInField(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID), anyString());
         verify(record).setStringValueInField(eq(Constants.FieldNames.ARCHIVE_MD5), anyString());
         verify(record).setDateValueInField(eq(Constants.FieldNames.BEVARINGS_DATO), any(Date.class));
-        verify(record).setPreservationFinished();
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), 
+                eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_COMPLETED));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), eq(""));
         verifyNoMoreInteractions(record);
     }
     
@@ -145,7 +147,9 @@ public class WarcPackerTest extends ExtendedTestCase {
         wp.packagedRecords.add(record);
         wp.reportFailure(failureMessage);
         
-        verify(record).setPreservationFailed(eq(failureMessage));
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), 
+                eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), eq(failureMessage));
         verifyNoMoreInteractions(record);
     }
     

@@ -34,7 +34,7 @@ public class LocalArchive implements Archive {
     }
 
     @Override
-    public void shutdown() {
+    public void close() {
         // Do nothing!!!
     }
 

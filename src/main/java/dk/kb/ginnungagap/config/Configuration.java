@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.utils.YamlTools;

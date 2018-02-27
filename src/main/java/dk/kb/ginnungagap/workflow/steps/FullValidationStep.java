@@ -13,11 +13,11 @@ import org.jwat.warc.WarcRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;

@@ -1,10 +1,11 @@
 package dk.kb.ginnungagap.workflow.steps;
 
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.metadata.utils.CalendarUtils;
 
@@ -33,7 +34,7 @@ public abstract class ValidationStep implements WorkflowStep {
     
     @Override
     public void performStep() throws Exception {
-        CumulusQuery query = CumulusQuery.getQueryForPreservationValidation(catalogName, validationFieldValue);
+        CumulusQuery query = CumulusQueryUtils.getQueryForPreservationValidation(catalogName, validationFieldValue);
         
         CumulusRecordCollection items = server.getItems(catalogName, query);
         for(CumulusRecord record : items) {

@@ -30,15 +30,15 @@ import org.testng.annotations.Test;
 import com.canto.cumulus.CumulusException;
 import com.canto.cumulus.exceptions.UnresolvableAssetReferenceException;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.config.WorkflowConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils.ExitTrappedException;
@@ -198,7 +198,7 @@ public class GinnungapTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testExtractFilesOnly() throws CumulusException, UnresolvableAssetReferenceException {
+    public void testExtractFilesOnly() throws Exception {
         TestConfiguration conf = TestFileUtils.createTempConf();
         MetadataTransformer transformer = mock(MetadataTransformer.class);
         CumulusServer server = mock(CumulusServer.class);
@@ -211,21 +211,19 @@ public class GinnungapTest extends ExtendedTestCase {
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
         when(items.getCount()).thenReturn(1);
         when(record.getFieldValue(eq(Constants.FieldNames.RECORD_NAME))).thenReturn(UUID.randomUUID().toString());
-        when(record.getMetadataGUID()).thenReturn(UUID.randomUUID().toString());
+        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
         when(record.getFile()).thenReturn(resourceFile);
         
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                File f = (File) args[0];
-                try (OutputStream os = new FileOutputStream(f)) {
-                    os.write(UUID.randomUUID().toString().getBytes());
-                    os.flush();
-                }
+                OutputStream out = (OutputStream) args[0];
+                out.write(UUID.randomUUID().toString().getBytes());
+                out.flush();
                 return null;
             }
-        }).when(record).getMetadata(any(File.class));
+        }).when(record).writeFieldMetadata(any(OutputStream.class));
         
         Ginnungagap.extractFilesOnly(server, conf, transformer);
         
@@ -239,15 +237,15 @@ public class GinnungapTest extends ExtendedTestCase {
         verify(items).getCount();
         verifyNoMoreInteractions(items);
         
-        verify(record).getMetadata(any(File.class));
+        verify(record).writeFieldMetadata(any(OutputStream.class));
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
-        verify(record).getMetadataGUID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
         verify(record).getFile();
         verifyNoMoreInteractions(record);
     }
     
     @Test
-    public void testExtractFilesOnlyFailure() throws CumulusException, UnresolvableAssetReferenceException {
+    public void testExtractFilesOnlyFailure() throws Exception {
         TestConfiguration conf = TestFileUtils.createTempConf();
         MetadataTransformer transformer = mock(MetadataTransformer.class);
         CumulusServer server = mock(CumulusServer.class);
@@ -258,19 +256,17 @@ public class GinnungapTest extends ExtendedTestCase {
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
         when(items.getCount()).thenReturn(1);
         when(record.getFieldValue(eq(Constants.FieldNames.RECORD_NAME))).thenThrow(new RuntimeException("FAIL!!!"));
-        
+
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                File f = (File) args[0];
-                try (OutputStream os = new FileOutputStream(f)) {
-                    os.write(UUID.randomUUID().toString().getBytes());
-                    os.flush();
-                }
+                OutputStream out = (OutputStream) args[0];
+                out.write(UUID.randomUUID().toString().getBytes());
+                out.flush();
                 return null;
             }
-        }).when(record).getMetadata(any(File.class));
+        }).when(record).writeFieldMetadata(any(OutputStream.class));
         
         Ginnungagap.extractFilesOnly(server, conf, transformer);
         

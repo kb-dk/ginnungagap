@@ -12,9 +12,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class ValidationWorkflowTest extends ExtendedTestCase {

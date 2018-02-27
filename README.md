@@ -13,7 +13,7 @@ This requires [Yggdrasil](https://github.com/Det-Kongelige-Bibliotek/Yggdrasil).
 
 Testing against Cumulus
 --------------------------
-The current tests against Cumulus required a password-file in the home folder of your linux-user: ${HOME}/cumulus-password.yml
+The current tests against Cumulus required a password-file in the project folder named cumulus-password.yml
 
 It must be a YAML file in the format: 
 login: $username

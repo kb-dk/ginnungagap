@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.workflow;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,30 +11,31 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
@@ -113,10 +115,20 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
         when(items.getCount()).thenReturn(1);
         
-        when(record.getMetadataGUID()).thenReturn(UUID.randomUUID().toString());
-        when(record.getMetadata(any(File.class))).thenReturn(new ByteArrayInputStream(UUID.randomUUID().toString().getBytes()));
+        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
+        when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
         when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
         when(record.isMasterAsset()).thenReturn(false);
+        when(record.getFile()).thenReturn(contentFile);
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                OutputStream out = (OutputStream) invocation.getArguments()[0];
+                out.write(UUID.randomUUID().toString().getBytes());
+                // TODO Auto-generated method stub
+                return null;
+            }
+        }).when(record).writeFieldMetadata(any(OutputStream.class));
 
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS))).thenReturn(metsTransformer);
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY))).thenReturn(ieTransformer);
@@ -151,16 +163,22 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(items).iterator();
         verifyNoMoreInteractions(items);
         
-        verify(record).initFieldsForPreservation();
-        verify(record).resetMetadataGuid();
-        verify(record).validateRequiredFields(any(RequiredFields.class));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_GUID), anyString());
+        verify(record).validateFieldsExists(any(Collection.class));
+        verify(record).validateFieldsHasValue(any(Collection.class));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARINGS_METADATA), anyString());
         verify(record, times(2)).getUUID();
-        verify(record).getPreservationCollectionID();
         verify(record).isMasterAsset();
-        verify(record, times(2)).getMetadataGUID();
-        verify(record).getMetadata(any(File.class));
+        verify(record).writeFieldMetadata(any(OutputStream.class));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
+        verify(record).setStringValueInField(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER), anyString());
+        verify(record).setStringValueInField(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID), anyString());
+        verify(record).getFile();
         verifyNoMoreInteractions(record);
     }
     

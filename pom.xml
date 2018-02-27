@@ -4,7 +4,7 @@
 
   <groupId>dk.kb</groupId>
   <artifactId>ginnungagap</artifactId>
-  <version>1.3.2-SNAPSHOT</version>
+  <version>1.4.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>ginnungagap</name>
@@ -47,6 +47,11 @@
   </developers>
 
   <dependencies>
+    <dependency>
+      <groupId>dk.kb</groupId>
+      <artifactId>kb-cumulus-api</artifactId>
+      <version>0.1.0</version>
+    </dependency>
     <dependency>
       <groupId>dk.kb.yggdrasil</groupId>
       <artifactId>Yggdrasil</artifactId>
@@ -109,7 +114,7 @@
       <version>10</version>
       <scope>system</scope>
       <systemPath>/usr/local/Cumulus_Java_SDK/CumulusJC.jar</systemPath>
-    </dependency>    
+    </dependency>
     <!-- FOR TESTING -->
     <dependency>
       <groupId>org.testng</groupId>
@@ -332,7 +337,7 @@
 
   <reporting>
     <excludeDefaults>true</excludeDefaults>
-   <plugins>
+     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>

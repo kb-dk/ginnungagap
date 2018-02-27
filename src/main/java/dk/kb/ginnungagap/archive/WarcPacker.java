@@ -15,9 +15,10 @@ import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
@@ -184,7 +185,7 @@ public class WarcPacker {
             r.setStringValueInField(Constants.FieldNames.RESOURCE_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
             r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
-            r.setPreservationFinished();
+            CumulusPreservationUtils.setPreservationFinished(r);
         }
     }
 
@@ -194,7 +195,7 @@ public class WarcPacker {
      */
     public void reportFailure(String reason) {
         for(CumulusRecord r : packagedRecords) {
-            r.setPreservationFailed(reason);
+            CumulusPreservationUtils.setPreservationFailed(r, reason);
         }
     }
     

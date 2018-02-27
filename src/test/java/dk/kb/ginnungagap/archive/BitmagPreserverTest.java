@@ -24,9 +24,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.TestBitmagConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class BitmagPreserverTest extends ExtendedTestCase {
@@ -96,7 +96,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.warcPackerForCollection.put(collectionId, wp);
         
         CumulusRecord record = mock(CumulusRecord.class);
-        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getFile()).thenReturn(resourceFile);
         
         preserver.packRecordResource(record);
@@ -107,7 +107,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(wp).addRecordToPackagedList(eq(record));
         verifyNoMoreInteractions(wp);
         
-        verify(record).getPreservationCollectionID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFile();
         verifyNoMoreInteractions(record);
     }
@@ -122,7 +122,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.warcPackerForCollection.put(collectionId, wp);
         
         CumulusRecord record = mock(CumulusRecord.class);
-        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getFieldValue(eq(Constants.FieldNames.GUID))).thenReturn(UUID.randomUUID().toString());
         
         preserver.packRecordMetadata(record, metadataFile);
@@ -133,7 +133,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(wp).addRecordToPackagedList(eq(record));
         verifyNoMoreInteractions(wp);
         
-        verify(record).getPreservationCollectionID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.GUID));
         verifyNoMoreInteractions(record);
     }
@@ -148,7 +148,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.warcPackerForCollection.put(collectionId, wp);
         
         CumulusRecord record = mock(CumulusRecord.class);
-        when(record.getPreservationCollectionID()).thenReturn(collectionId);
+        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
         when(record.getFieldValue(eq(Constants.FieldNames.GUID))).thenReturn("THIS IS NOT POSSIBLE TO PUT INTO A URI #\\/");
         
         preserver.packRecordMetadata(record, metadataFile);

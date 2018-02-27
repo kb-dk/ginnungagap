@@ -10,9 +10,9 @@ import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.metadata.utils.GuidExtractionUtils;
@@ -63,7 +63,7 @@ public class BitmagPreserver {
      * @param record The record to package.
      */
     public void packRecordResource(CumulusRecord record) {
-        WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
+        WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
         File resourceFile = record.getFile();
         wp.packRecordAssetFile(record, resourceFile);
         wp.addRecordToPackagedList(record);
@@ -76,7 +76,7 @@ public class BitmagPreserver {
      */
     public void packRecordMetadata(CumulusRecord record, File metadataFile) {
         try {
-            WarcPacker wp = getWarcPacker(record.getPreservationCollectionID());
+            WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
             String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);

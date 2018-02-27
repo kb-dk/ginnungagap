@@ -53,7 +53,7 @@ public class BitmagArchive implements Archive {
     }
 
     @Override
-    public void shutdown() {
+    public void close() {
         log.debug("Shutting down the bitrepository client and access to the messagebus.");
         bitrepository.shutdown();
     }

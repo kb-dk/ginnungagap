@@ -32,7 +32,7 @@ public class LocalArchiveTest extends ExtendedTestCase {
     public void testShutdown() {
         File archiveBaseDir = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         Archive archive = new LocalArchive(archiveBaseDir.getAbsolutePath());
-        archive.shutdown();
+        archive.close();
     }
 
     @Test

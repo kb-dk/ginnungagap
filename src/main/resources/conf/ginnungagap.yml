@@ -18,7 +18,7 @@ ginnungagap:
     retain_dir: tempDir/retain
     workflows:
       - "PreservationWorkflow"
-      - "ValidationWorkflow"
+      - "ValidationWorkflow"	
       - "ImportationWorkflow"
   transformation:
     xsd_dir: conf/xsd

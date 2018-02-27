@@ -1,16 +1,15 @@
 package dk.kb.ginnungagap;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.Cumulus;
-
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
@@ -81,11 +80,8 @@ public class CatalogStructmap extends AbstractMain {
             MetadataTransformer transformer = instantiateTransformer(conf, 
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_CATALOG_STRUCTMAP);
 
-            Archive archive = instantiateArchive(archiveType, conf);
-
-            Cumulus.CumulusStart();
-            try {
-                CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
+            try (Archive archive = instantiateArchive(archiveType, conf);
+                    CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf())) {
                 BitmagPreserver preserver = new BitmagPreserver(archive, conf.getBitmagConf());
 
                 System.out.println("Starting workflow");
@@ -93,10 +89,8 @@ public class CatalogStructmap extends AbstractMain {
                         preservationCollectionID, intellectualEntityID);
             } finally {
                 System.out.println("Finished!");
-                Cumulus.CumulusStop();
-                archive.shutdown();
             }
-        } catch (ArgumentCheck | IllegalArgumentException e) {
+        } catch (ArgumentCheck | IllegalArgumentException | IOException e) {
             log.warn("Argument failure.", e);
             failPrintErrorAndExit();
         }

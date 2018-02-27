@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.archive;
 
+import java.io.Closeable;
 import java.io.File;
 
 /**
@@ -7,7 +8,7 @@ import java.io.File;
  * Currently either a local archive (which is thus not properly preserved), 
  * or a bitrepository-based archive for proper preservation.
  */
-public interface Archive {
+public interface Archive extends Closeable {
     /**
      * Uploads the file to the archive.
      * It is expected, that the file is removed by this process (if it is successful).
@@ -37,5 +38,5 @@ public interface Archive {
     /**
      * Shutdown the archive, or any connections required for accessing the archive.
      */
-    void shutdown();
+    void close();
 }

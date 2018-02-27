@@ -12,12 +12,13 @@ import org.jwat.warc.WarcRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
@@ -55,7 +56,7 @@ public class ImportationStep implements WorkflowStep {
     
     @Override
     public void performStep() throws Exception {
-        CumulusQuery query = CumulusQuery.getQueryForPreservationImportation(catalogName);
+        CumulusQuery query = CumulusQueryUtils.getQueryForPreservationImportation(catalogName);
         
         CumulusRecordCollection items = server.getItems(catalogName, query);
         for(CumulusRecord record : items) {

@@ -11,11 +11,12 @@ import org.testng.annotations.BeforeMethod;
 
 import com.canto.cumulus.Cumulus;
 import com.canto.cumulus.Item;
+import com.canto.cumulus.RecordItem;
 
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusServer;
+import dk.kb.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
-import dk.kb.ginnungagap.cumulus.FieldExtractor;
 import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TravisUtils;
@@ -89,7 +90,7 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
     
     class TestCumulusRecord extends CumulusRecord {
 
-        public TestCumulusRecord(FieldExtractor fe, Item item) {
+        public TestCumulusRecord(FieldExtractor fe, RecordItem item) {
             super(fe, item);
         }
         

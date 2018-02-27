@@ -3,6 +3,7 @@ package dk.kb.ginnungagap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,16 +12,15 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.canto.cumulus.Cumulus;
-
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusQuery;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.cumulus.CumulusRecordCollection;
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.Constants;
-import dk.kb.ginnungagap.cumulus.CumulusQuery;
-import dk.kb.ginnungagap.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.cumulus.CumulusRecordCollection;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
+import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
@@ -90,13 +90,9 @@ public class Ginnungagap extends AbstractMain {
             MetadataTransformationHandler transformationHandler = instantiateTransformationHandler(conf, 
                     TRANSFORMATION_SCRIPT_FOR_METS, TRANSFORMATION_SCRIPT_FOR_REPRESENTATION, 
                     TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
-            
-            Archive archive = instantiateArchive(archiveType, conf);
 
-            try {
-                Cumulus.CumulusStart();
-                CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
-
+            try (Archive archive = instantiateArchive(archiveType, conf);
+                    CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf())) {
                 if(fileOnly) {
                     extractFilesOnly(cumulusServer, conf, 
                             transformationHandler.getTransformer(TRANSFORMATION_SCRIPT_FOR_METS));
@@ -108,16 +104,13 @@ public class Ginnungagap extends AbstractMain {
                     runWorkflows(workflows, conf.getWorkflowConf().getInterval());
                 }
                 System.out.println("Finished!");
-            } catch (Exception e) {
-                System.out.println("Failed!");
-                throw new RuntimeException("Unexpected failure.", e);
-            } finally {
-                Cumulus.CumulusStop();
-                archive.shutdown();
             }
         } catch (ArgumentCheck e) {
             log.warn("Argument failure.", e);
             printParametersAndExit();
+        } catch (Exception e) {
+            System.out.println("Failed!");
+            throw new RuntimeException("Unexpected failure.", e);
         }
     }
 
@@ -174,7 +167,7 @@ public class Ginnungagap extends AbstractMain {
     protected static void extractFilesOnly(CumulusServer server, Configuration conf, MetadataTransformer transformer) {
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             log.info("Extracting files for catalog '" + catalogName + "'.");
-            CumulusQuery query = CumulusQuery.getPreservationAllQuery(catalogName);
+            CumulusQuery query = CumulusQueryUtils.getPreservationAllQuery(catalogName);
             CumulusRecordCollection items = server.getItems(catalogName, query);
 
             log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records to be preserved.");
@@ -183,9 +176,11 @@ public class Ginnungagap extends AbstractMain {
                     String filename = record.getFieldValue(Constants.FieldNames.RECORD_NAME);
                     File metadataOutputFile = new File(conf.getTransformationConf().getMetadataTempDir(), 
                             filename + ".xml");
-                    record.getMetadata(metadataOutputFile);
+                    try (OutputStream metadataOut = new FileOutputStream(metadataOutputFile)) {
+                        record.writeFieldMetadata(metadataOut);
+                    }
                     File transformedMetadataOutputFile = new File(conf.getTransformationConf().getMetadataTempDir(),
-                            record.getMetadataGUID());
+                            record.getFieldValue(Constants.FieldNames.METADATA_GUID));
                     transformer.transformXmlMetadata(new FileInputStream(metadataOutputFile), 
                             new FileOutputStream(transformedMetadataOutputFile));
 

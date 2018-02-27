@@ -3,9 +3,9 @@ package dk.kb.ginnungagap.workflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusServer;
 import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
