@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+    <mods:name type="personal" displayLabel="crowd">
+        <mods:namePart>CUMULUS_Crowd_Person</mods:namePart>
+        <mods:role>
+            <mods:roleTerm type="text">crowd</mods:roleTerm>
+        </mods:role>
+    </mods:name>
+    <mods:note type="crowd note">CUMULUS_Crowd_Note</mods:note>
+    <mods:note type="crowd commentary">CUMULUS_Crowd_Kommentar</mods:note>
+    <mods:originInfo displayLabel="crowd">
+      <mods:place>
+        <mods:placeTerm>CUMULUS_Crowd_Bygningsnavn</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Sted</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Lokalitet</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Vejnavn</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Husnummer</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Postnummer</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_By</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Sogn</mods:placeTerm>
+        <mods:placeTerm>CUMULUS_Crowd_Matrikelnummer</mods:placeTerm>
+      </mods:place>
+    </mods:originInfo>
+    <mods:subject displayLabel="crowd">
+        <mods:topic>CUMULUS_Crowd_Emneord</mods:topic>
+        <mods:genre>Crowd_Emneord</mods:genre>
+    </mods:subject>
+    <mods:subject displayLabel="crowd">
+        <mods:geographic>CUMULUS_Crowd_Georeference</mods:geographic>
+        <mods:genre>Crowd_Georeference</mods:genre>
+    </mods:subject>
+    <mods:titleInfo displayLabel="crowd">
+        <mods:title>CUMULUS_Crowd_Titel</mods:title>
+    </mods:titleInfo>
+</mods:mods>

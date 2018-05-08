@@ -234,4 +234,12 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
             assertTrue(found, namespace);
         }
     }
+    
+    @Test
+    public void testValidation() throws Exception {
+        File modsFile = new File("src/test/resources/metadata/dsfl-mods.xml");
+        try (InputStream in = new FileInputStream(modsFile)) {
+            transformationHandler.validate(in);
+        }
+    }
 }
