@@ -76,7 +76,7 @@ public class CumulusPreservationUtils {
         String uuid = record.getFieldValueOrNull(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         if(uuid == null || uuid.isEmpty()) {
-            record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID, 
+            record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY, 
                     UUID.randomUUID().toString());
         } else {
             log.trace("Already has a value for the related intellectual object of the representation");

@@ -19,6 +19,12 @@ public class StringUtilsTest extends ExtendedTestCase {
     }
     
     @Test
+    public void testSplit() {
+        String res = StringUtils.split("0,1,2,3", ",", 2);
+        Assert.assertEquals(res, "2");
+    }
+    
+    @Test
     public void testSplitableOnCommaTrue() {
         Assert.assertTrue(StringUtils.splitableOnComma("asfd, fdsa"));
     }

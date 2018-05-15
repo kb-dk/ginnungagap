@@ -35,13 +35,12 @@ import dk.kb.cumulus.CumulusRecordCollection;
 import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.utils.StreamUtils;
 
-public class PreservationStepTest extends ExtendedTestCase {
+public class UpdatePreservationStepTest extends ExtendedTestCase {
 
     String recordGuid = "random-file-uuid";
     String warcFileChecksum = "5cbce357d343f30f2c215dcf1ee94c66";
@@ -74,13 +73,13 @@ public class PreservationStepTest extends ExtendedTestCase {
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         Assert.assertNotNull(step.getName());
         Assert.assertFalse(step.getName().isEmpty());
     }
     
     @Test
-    public void testPerformStep() throws Exception {
+    public void testPerformStepNoRecords() throws Exception {
         addDescription("Test the performStep method, when no records are found");
         CumulusServer server = mock(CumulusServer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
@@ -90,7 +89,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(records);
         when(records.getCount()).thenReturn(0);
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         step.performStep();
         
         verify(server).getItems(anyString(), any(CumulusQuery.class));
@@ -105,15 +104,15 @@ public class PreservationStepTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testPreserveRecordItems() {
-        addDescription("Test the preserve record items method, with one record which fails when trying to be preserved.");
+    public void testPreserveRecordItemsFailure() {
+        addDescription("Test the preserve record items method, with one record which fails trying to retrieve the old preservation update history.");
         CumulusServer server = mock(CumulusServer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
 
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
         when(items.getCount()).thenReturn(1);
@@ -124,7 +123,7 @@ public class PreservationStepTest extends ExtendedTestCase {
                 throw new RuntimeException("THIS MUST FAIL");
             }
         }).when(record).getFieldValueOrNull(
-                eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+                eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));
         
         step.preserveRecordItems(items, catalogName);
         
@@ -136,9 +135,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(items).getCount();
         verifyNoMoreInteractions(items);
         
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
+        verify(record).getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));
         verify(record, times(2)).getUUID();
         verifyNoMoreInteractions(record);
     }
@@ -154,7 +151,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         MetadataTransformer representationTransformer = mock(MetadataTransformer.class);
         CumulusRecord record = mock(CumulusRecord.class);
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         
         when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(recordGuid);
         when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
@@ -182,7 +179,6 @@ public class PreservationStepTest extends ExtendedTestCase {
 
         verifyZeroInteractions(server);
 
-        verify(preserver).packRecordResource(eq(record));
         verify(preserver).packRecordMetadata(eq(record), any(File.class));
         verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString());
         verify(preserver).checkConditions();
@@ -229,76 +225,6 @@ public class PreservationStepTest extends ExtendedTestCase {
     }
 
     @Test
-    public void testSendRecordToPreservationSuccessNonMaster() throws Exception {
-        addDescription("Test the sendRecordToPreservation method for the success scenario for a non-master record.");
-        CumulusServer server = mock(CumulusServer.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        MetadataTransformer metsTransformer = mock(MetadataTransformer.class);
-        MetadataTransformer ieTransformer = mock(MetadataTransformer.class);
-        CumulusRecord record = mock(CumulusRecord.class);
-        
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(recordGuid);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.isMasterAsset()).thenReturn(false);
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER))).thenReturn(warcRecordChecksum);
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                OutputStream out = (OutputStream) invocation.getArguments()[0];
-                StreamUtils.copyInputStreamToOutputStream(new FileInputStream(new File(testRecordMetadataPath)), out);
-                // TODO Auto-generated method stub
-                return null;
-            }
-        }).when(record).writeFieldMetadata(any(OutputStream.class));
-        
-        when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS))).thenReturn(metsTransformer);
-        when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY))).thenReturn(ieTransformer);
-
-        step.sendRecordToPreservation(record);
-
-        verifyZeroInteractions(server);
-
-        verify(preserver).packRecordResource(eq(record));
-        verify(preserver).packRecordMetadata(eq(record), any(File.class));
-        verify(preserver).packRepresentationMetadata(any(File.class), anyString());
-        verify(preserver).checkConditions();
-        verifyNoMoreInteractions(preserver);
-
-        verify(metsTransformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
-        verifyNoMoreInteractions(metsTransformer);
-        
-        verify(ieTransformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
-        verifyNoMoreInteractions(ieTransformer);
-        
-        verify(transformationHandler).getMetadataStandards(any(InputStream.class));
-        verify(transformationHandler).getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS));
-        verify(transformationHandler).getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY));
-        verify(transformationHandler, times(2)).validate(any(InputStream.class));
-        verifyNoMoreInteractions(transformationHandler);
-        
-        verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
-        verify(record).writeFieldMetadata(any(OutputStream.class));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).getUUID();
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_GUID), anyString());
-        verify(record).isMasterAsset();
-        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_GUID), anyString());
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARINGS_METADATA), anyString());
-        verify(record).validateFieldsExists(any(Collection.class));
-        verify(record).validateFieldsHasValue(any(Collection.class));
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
-        verifyNoMoreInteractions(record);
-    }
-    
-    @Test
     public void testSetMetadataStandardsForRecord() throws IOException {
         addDescription("Test the setMetadataStandardsForRecord method");
         CumulusServer server = mock(CumulusServer.class);
@@ -311,7 +237,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         
         when(transformationHandler.getMetadataStandards(any(InputStream.class))).thenReturn(Arrays.asList(metadataStandards));
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         
         step.setMetadataStandardsForRecord(record, testMetadataFile);
         
@@ -325,96 +251,54 @@ public class PreservationStepTest extends ExtendedTestCase {
         verifyNoMoreInteractions(record);
     }
     
-    @Test(expectedExceptions = IOException.class)
-    public void testTransformAndPreserveIntellectualEntityFailureIERawFile() throws IOException {
-        addDescription("Test the transformAndPreserveIntellectualEntity method when the IE raw file cannot be read");
+    @Test
+    public void testGetOldMetadataReferenceWhenEmpty() throws IOException {
+        addDescription("Test the getOldMetadataReference method when the old preservation update history field is empty");
+        CumulusServer server = mock(CumulusServer.class);
+        BitmagPreserver preserver = mock(BitmagPreserver.class);
+        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        
+        when(record.getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME))).thenReturn("");
+        
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        
+        String s = step.getOldMetadataReference(record);
+        Assert.assertEquals(s, UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_HEADER);
+    }
+    
+    @Test
+    public void testGetOldMetadataReferenceWhenNull() throws IOException {
+        addDescription("Test the getOldMetadataReference method when the old preservation update history field is null");
+        CumulusServer server = mock(CumulusServer.class);
+        BitmagPreserver preserver = mock(BitmagPreserver.class);
+        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
+        CumulusRecord record = mock(CumulusRecord.class);
+        
+        when(record.getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME))).thenReturn(null);
+        
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+        
+        String s = step.getOldMetadataReference(record);
+        Assert.assertEquals(s, UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_HEADER);
+    }
+    
+    @Test
+    public void testGetOldMetadataReferenceWhenItHasAValue() throws IOException {
+        addDescription("Test the getOldMetadataReference method when the old preservation update history field has a value");
         CumulusServer server = mock(CumulusServer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         CumulusRecord record = mock(CumulusRecord.class);
 
-        String ieUUID = UUID.randomUUID().toString();
+        String oldHistory = "History: " + UUID.randomUUID().toString();
+        when(record.getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME))).thenReturn(oldHistory);
         
-        File ieRawFile = new File(conf.getTransformationConf().getMetadataTempDir(), ieUUID + PreservationStep.RAW_FILE_SUFFIX);
-        Assert.assertTrue(ieRawFile.createNewFile());
+        UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        try {
-            ieRawFile.setReadable(false);
-            step.transformAndPreserveIntellectualEntity(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString(), record);
-        } finally {
-            ieRawFile.setReadable(true);            
-        }
+        String s = step.getOldMetadataReference(record);
+        Assert.assertEquals(s, oldHistory);
     }
-    
-    @Test(expectedExceptions = IOException.class)
-    public void testTransformAndPreserveIntellectualEntityFailureWriteIEMetadataFile() throws IOException {
-        addDescription("Test the TransformAndPreserveIntellectualEntity method when the IE metadata file cannot be written");
-        CumulusServer server = mock(CumulusServer.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        CumulusRecord record = mock(CumulusRecord.class);
 
-        String ieUUID = UUID.randomUUID().toString();
-        
-        File ieMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), ieUUID);
-        Assert.assertTrue(ieMetadataFile.createNewFile());
-        
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        try {
-            ieMetadataFile.setWritable(false);
-            step.transformAndPreserveIntellectualEntity(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString(), record);
-        } finally {
-            ieMetadataFile.setWritable(true);            
-        }
-    }
-    
-    @Test(expectedExceptions = IOException.class)
-    public void testTransformAndPreserveIntellectualEntityFailureReadIEMetadataFile() throws IOException {
-        addDescription("Test the TransformAndPreserveIntellectualEntity method when the IE metadata file cannot be written");
-        CumulusServer server = mock(CumulusServer.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        MetadataTransformer transformer = mock(MetadataTransformer.class);
-        CumulusRecord record = mock(CumulusRecord.class);
-
-        String ieUUID = UUID.randomUUID().toString();
-        
-        File ieMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), ieUUID);
-        Assert.assertTrue(ieMetadataFile.createNewFile());
-        
-        when(transformationHandler.getTransformer(anyString())).thenReturn(transformer);
-        
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        try {
-            ieMetadataFile.setReadable(false);
-            step.transformAndPreserveIntellectualEntity(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString(), record);
-        } finally {
-            ieMetadataFile.setReadable(true);            
-        }
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testCreateIErawFileFailure() throws IOException {
-        CumulusServer server = mock(CumulusServer.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-
-        String ieUUID = UUID.randomUUID().toString();
-        
-        File ieMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), ieUUID + PreservationStep.RAW_FILE_SUFFIX);
-        Assert.assertTrue(ieMetadataFile.createNewFile());
-        
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        try {
-            ieMetadataFile.setWritable(false);
-            step.createIErawFile(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        } finally {
-            ieMetadataFile.setWritable(true);
-        }
-    }
 }
+

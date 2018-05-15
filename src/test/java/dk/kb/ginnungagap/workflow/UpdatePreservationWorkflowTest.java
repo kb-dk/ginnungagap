@@ -8,14 +8,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -26,7 +24,6 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.cumulus.Constants;
@@ -39,11 +36,11 @@ import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
+import dk.kb.ginnungagap.workflow.steps.UpdatePreservationStep;
 
-public class PreservationWorkflowTest extends ExtendedTestCase {
+public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
 
     TestConfiguration conf;
-    File contentFile;
     
     @BeforeClass
     public void setup() throws IOException {
@@ -51,52 +48,15 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         conf = TestFileUtils.createTempConf();
     }
     
-    @BeforeMethod
-    public void setupMethod() throws IOException {
-        contentFile = TestFileUtils.createFileWithContent("This is the content");        
-    }
-    
     @AfterClass
     public void tearDown() {
         TestFileUtils.tearDown();
     }
     
-    @Test
-    public void testNoItems() {
-        addDescription("Test the workflow, when no items are retrieved from Cumulus");
-        
-        CumulusServer server = mock(CumulusServer.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        
-        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
-        
-        addStep("Mock the methods", "");
-        when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(items);
-        when(server.getCatalogNames()).thenReturn(Arrays.asList("TEST"));
-        when(items.iterator()).thenReturn(new ArrayList<CumulusRecord>().iterator());
-        when(items.getCount()).thenReturn(0);
-        
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);        
-        pw.start();
-        
-        verifyZeroInteractions(transformationHandler);
-        
-        verify(preserver).uploadAll();
-        verifyNoMoreInteractions(preserver);
-        
-        verify(server).getCatalogNames();
-        verify(server).getItems(anyString(), any(CumulusQuery.class));
-        verifyNoMoreInteractions(server);
-        
-        verify(items, times(2)).getCount();
-        verifyNoMoreInteractions(items);
-    }
-    
     @SuppressWarnings("unchecked")
     @Test
-    public void testOneItemInCatalog() throws Exception {
-        addDescription("Test running on a catalog, which delivers a single item.");
+    public void testSingleItemSuccess() throws Exception {
+        addDescription("Test preservation update of a single record");
         CumulusServer server = mock(CumulusServer.class);
         MetadataTransformer metsTransformer = mock(MetadataTransformer.class);
         MetadataTransformer ieTransformer = mock(MetadataTransformer.class);
@@ -119,8 +79,8 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
         when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
         when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
+        when(record.getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER))).thenReturn(UUID.randomUUID().toString());
         when(record.isMasterAsset()).thenReturn(false);
-        when(record.getFile()).thenReturn(contentFile);
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -134,7 +94,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS))).thenReturn(metsTransformer);
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY))).thenReturn(ieTransformer);
         
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
+        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
         pw.start();
         
         verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
@@ -153,7 +113,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(transformationHandler, times(2)).validate(any(InputStream.class));
         verifyNoMoreInteractions(transformationHandler);
 
-        verify(preserver).packRecordResource(any(CumulusRecord.class));
+        verify(preserver, times(0)).packRecordResource(any(CumulusRecord.class));
         verify(preserver).packRecordMetadata(any(CumulusRecord.class), any(File.class));
         verify(preserver).packRepresentationMetadata(any(File.class), anyString());
         verify(preserver).checkConditions();
@@ -164,22 +124,22 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(items).iterator();
         verifyNoMoreInteractions(items);
         
-        verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_GUID), anyString());
-        verify(record).validateFieldsExists(any(Collection.class));
-        verify(record).validateFieldsHasValue(any(Collection.class));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARINGS_METADATA), anyString());
-        verify(record, times(2)).getUUID();
-        verify(record).isMasterAsset();
-        verify(record).writeFieldMetadata(any(OutputStream.class));
+        verify(record, times(3)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record).getFieldValue(eq(Constants.FieldNames.METADATA_PACKAGE_ID));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER), anyString());
+        verify(record).getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));
+        verify(record).isMasterAsset();
+        verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_GUID), anyString());
+        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARINGS_METADATA), anyString());
         verify(record).setStringValueInField(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY), anyString());
-        verify(record).getFile();
+        verify(record).setStringValueInField(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME), anyString());
+        verify(record, times(2)).getUUID();
+        verify(record).validateFieldsExists(any(Collection.class));
+        verify(record).validateFieldsHasValue(any(Collection.class));
+        verify(record).writeFieldMetadata(any(OutputStream.class));
         verifyNoMoreInteractions(record);
     }
     
@@ -189,11 +149,12 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
+        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
         
         String description = pw.getDescription();
         Assert.assertNotNull(description);
         Assert.assertFalse(description.isEmpty());
+        Assert.assertEquals(description, UpdatePreservationWorkflow.WORKFLOW_DESCRIPTION);
     }
     
     @Test
@@ -202,7 +163,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         
-        PreservationWorkflow pw = new PreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
+        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, preserver);
         
         String jobId = pw.getJobID();
         Assert.assertNotNull(jobId);

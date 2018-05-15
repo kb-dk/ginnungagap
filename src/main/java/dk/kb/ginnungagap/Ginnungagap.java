@@ -54,9 +54,6 @@ public class Ginnungagap extends AbstractMain {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(Ginnungagap.class);
 
-    /** The number of days between updates.*/
-    protected static final Integer NUMBER_OF_DAYS_FOR_UPDATE = 90;
-    
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
@@ -137,7 +134,7 @@ public class Ginnungagap extends AbstractMain {
                 res.add(new ValidationWorkflow(conf, server, archive));
             } else if(workflowName.equalsIgnoreCase(UpdatePreservationWorkflow.class.getSimpleName())) {
                 res.add(new UpdatePreservationWorkflow(conf.getTransformationConf(), server, transformationHandler, 
-                        preserver, conf.getWorkflowConf().getUpdateRetentionInDays()));
+                        preserver));
             } else {
                 throw new IllegalStateException("Cannot instantiate a workflow with name: "
                         + workflowName);

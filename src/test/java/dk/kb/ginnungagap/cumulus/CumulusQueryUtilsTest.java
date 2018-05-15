@@ -11,6 +11,12 @@ import dk.kb.cumulus.CumulusQuery;
 public class CumulusQueryUtilsTest extends ExtendedTestCase {
 
     @Test
+    public void testInstantiation() {
+        CumulusQueryUtils cqu = new CumulusQueryUtils();
+        Assert.assertNotNull(cqu);
+    }
+    
+    @Test
     public void testGetPreservationAllQuery() {
         String catalogName = UUID.randomUUID().toString();
         CumulusQuery cq = CumulusQueryUtils.getPreservationAllQuery(catalogName);
@@ -32,6 +38,26 @@ public class CumulusQueryUtilsTest extends ExtendedTestCase {
         CumulusQuery cq = CumulusQueryUtils.getPreservationMasterAssetQuery(catalogName);
         
         Assert.assertTrue(cq.getQuery().contains(catalogName));        
+    }
+    
+    @Test
+    public void testGetQueryForSpecificUUID() {
+        String catalogName = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        CumulusQuery cq = CumulusQueryUtils.getQueryForSpecificUUID(catalogName, uuid);
+        
+        Assert.assertTrue(cq.getQuery().contains(catalogName));        
+        Assert.assertTrue(cq.getQuery().contains(uuid));        
+    }
+    
+    @Test
+    public void testGetQueryForSpecificRecordName() {
+        String catalogName = UUID.randomUUID().toString();
+        String name = UUID.randomUUID().toString();
+        CumulusQuery cq = CumulusQueryUtils.getQueryForSpecificRecordName(catalogName, name);
+        
+        Assert.assertTrue(cq.getQuery().contains(catalogName));        
+        Assert.assertTrue(cq.getQuery().contains(name));        
     }
     
     @Test

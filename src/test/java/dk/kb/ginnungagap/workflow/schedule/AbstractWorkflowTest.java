@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
@@ -160,6 +161,20 @@ public class AbstractWorkflowTest extends ExtendedTestCase {
             }
         };
         Assert.assertTrue(workflow.equals(workflow));
+    }
+
+    @Test
+    public void testEqualsWhenIdentical() {
+        AbstractWorkflow workflow = new AbstractWorkflow("TEST") {
+            @Override
+            public String getDescription() {
+                return "TEST";
+            }
+        };
+        AbstractWorkflow other = Mockito.mock(AbstractWorkflow.class);
+        when(other.getJobID()).thenReturn(workflow.getJobID());
+        
+        Assert.assertTrue(workflow.equals(other));
     }
     
     @Test

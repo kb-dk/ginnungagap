@@ -9,16 +9,18 @@ import dk.kb.ginnungagap.config.TransformationConfiguration;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
-import dk.kb.ginnungagap.workflow.steps.AutoUpdateStep;
+import dk.kb.ginnungagap.workflow.steps.UpdatePreservationStep;
 import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
 
 /**
- * Simple workflow for preserving Cumulus items.
+ * The workflow for performing the preservation update of Cumulus items.
  * 
- * It extracts the record from Cumulus, which match the preservation query.
- * Each Cumulus record will first be validated against its required fields, 
+ * It extracts the record from Cumulus, which match the update preservation query.
+ * Like the preservation workflow, each Cumulus record will first be validated against its required fields, 
  * then all the metadata fields are extracted and transformed.
- * And finally the asset (content file) and transformed metadata will be packaged and sent to the bitrepository.
+ * And finally transformed metadata will be packaged and sent to the bitrepository.
+ * 
+ * This workflow will not preserve the Asset Reference (the content file) of the Cumulus items.
  */
 public class UpdatePreservationWorkflow extends AbstractWorkflow {
     /** Transformation configuration for the metadata.*/
@@ -29,12 +31,10 @@ public class UpdatePreservationWorkflow extends AbstractWorkflow {
     private final MetadataTransformationHandler transformationHandler;
     /** The bitrepository preserver.*/
     private final BitmagPreserver preserver;
-    /** The retention period for updating the preservation of a record.*/
-    private final Integer updateInterval;
 
     /** The description of this workflow.*/
-    protected static final String WORKFLOW_DESCRIPTION = "Preserves all the Cumulus records, which have been set "
-            + "to 'ready for long-term preservation'.";
+    protected static final String WORKFLOW_DESCRIPTION = "Sends new versions of packaged metadata to preservation, "
+            + "for any ";
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Update Preservation Workflow";
     
@@ -45,16 +45,14 @@ public class UpdatePreservationWorkflow extends AbstractWorkflow {
      * @param transformationHandler The metadata transformation handler for transforming the 
      * different kinds of metadata.
      * @param preserver the bitrepository preserver, for packaging and preserving the records.
-     * @param updateInterval The number of days between the updates.
      */
     public UpdatePreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
-            MetadataTransformationHandler transformationHandler, BitmagPreserver preserver, Integer updateInterval) {
+            MetadataTransformationHandler transformationHandler, BitmagPreserver preserver) {
         super(WORKFLOW_NAME);
         this.conf = transConf;
         this.server = server;
         this.transformationHandler = transformationHandler;
         this.preserver = preserver;
-        this.updateInterval = updateInterval;
         
         initialiseSteps();
     }
@@ -65,7 +63,7 @@ public class UpdatePreservationWorkflow extends AbstractWorkflow {
     protected void initialiseSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
         for(String catalogName : server.getCatalogNames()) {
-            steps.add(new AutoUpdateStep(conf, server, transformationHandler, preserver, catalogName, updateInterval));
+            steps.add(new UpdatePreservationStep(conf, server, transformationHandler, preserver, catalogName));
         }
         steps.add(new PreservationFinalizationStep(preserver));
         setWorkflowSteps(steps);
