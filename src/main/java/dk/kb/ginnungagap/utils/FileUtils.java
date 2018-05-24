@@ -76,6 +76,17 @@ public class FileUtils {
     }
     
     /**
+     * Deprecates a file, if it exists.
+     * It will move the file to a copy of the path suffixed by '.old'.
+     * @param f The file to deprecate.
+     */
+    public static void deprecateFileIfExists(File f) {
+        if(f.exists()) {
+            deprecateFile(f);
+        }
+    }
+    
+    /**
      * Deprecate a file. This is done by adding the suffix '.old' to the filename.
      * Also, if another file exists on the deprecation position, then that file is also deprecated. 
      * @param f The file to deprecate.

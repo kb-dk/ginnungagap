@@ -75,7 +75,6 @@ public class CumulusFileValidation extends AbstractMain {
         try {
             Configuration conf = instantiateConfiguration(confPath);
 
-
             Cumulus.CumulusStart();
             try {
                 CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());

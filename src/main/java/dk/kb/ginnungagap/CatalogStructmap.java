@@ -75,7 +75,7 @@ public class CatalogStructmap extends AbstractMain {
 
         try {
             Configuration conf = instantiateConfiguration(confPath);
-            checkConfiguration(conf, catalogName);
+            checkCatalogInConfiguration(conf, catalogName);
 
             MetadataTransformer transformer = instantiateTransformer(conf, 
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_CATALOG_STRUCTMAP);
@@ -93,17 +93,6 @@ public class CatalogStructmap extends AbstractMain {
         } catch (ArgumentCheck | IllegalArgumentException | IOException e) {
             log.warn("Argument failure.", e);
             failPrintErrorAndExit();
-        }
-    }
-    
-    /**
-     * Check that the configuration has the given catalog.
-     * @param conf The configuration.
-     * @param catalogName The name of the catalog, which must exist in the configuration.
-     */
-    protected static void checkConfiguration(Configuration conf, String catalogName) {
-        if(!conf.getCumulusConf().getCatalogs().contains(catalogName)) {
-            throw new IllegalArgumentException("The catalog name '" + catalogName + "' must be the configuration.");
         }
     }
 

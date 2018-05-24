@@ -84,13 +84,13 @@ public class CatalogStructMapTest extends ExtendedTestCase {
     @Test
     public void testCheckConfigurationSuccess() {
         Configuration conf = AbstractMain.instantiateConfiguration(testConf.getAbsolutePath());
-        CatalogStructmap.checkConfiguration(conf, "Audio OM");
+        CatalogStructmap.checkCatalogInConfiguration(conf, "Audio OM");
     }
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testCheckConfigurationFailure() {
         Configuration conf = AbstractMain.instantiateConfiguration(testConf.getAbsolutePath());
-        CatalogStructmap.checkConfiguration(conf, "THIS IS NOT A CUMULUS CATALOG");
+        CatalogStructmap.checkCatalogInConfiguration(conf, "THIS IS NOT A CUMULUS CATALOG");
     }
     
     @Test(expectedExceptions = IllegalStateException.class)

@@ -126,4 +126,15 @@ public abstract class AbstractMain {
         }
         throw new ArgumentCheck("Could not determine whether yes or no for argument: " + arg);
     }
+    
+    /**
+     * Check that the configuration has the given catalog.
+     * @param conf The configuration.
+     * @param catalogName The name of the catalog, which must exist in the configuration.
+     */
+    protected static void checkCatalogInConfiguration(Configuration conf, String catalogName) {
+        if(!conf.getCumulusConf().getCatalogs().contains(catalogName)) {
+            throw new IllegalArgumentException("The catalog name '" + catalogName + "' must be the configuration.");
+        }
+    }
 }
