@@ -116,6 +116,28 @@ public class MetadataExtractionTest extends ExtendedTestCase {
         }
     }
     
+    @Test(expectedExceptions = ExitTrappedException.class)
+    public void testAllArgumentsWithIncorrectCatalogName() throws Exception {
+        try {
+            TestSystemUtils.forbidSystemExitCall();
+            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "GUID", 
+                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
+        } finally {
+            TestSystemUtils.enableSystemExitCall();
+        }
+    }
+    
+    @Test(expectedExceptions = ExitTrappedException.class)
+    public void testRecordNameIdentifierArgumentWithIncorrectCatalogName() throws Exception {
+        try {
+            TestSystemUtils.forbidSystemExitCall();
+            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "Record Name", 
+                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
+        } finally {
+            TestSystemUtils.enableSystemExitCall();
+        }
+    }
+    
     @Test
     public void testGetRecordSuccessWithUUID() {
         addDescription("Test the getRecord method, when it successfully retrieves the record of an UUID.");

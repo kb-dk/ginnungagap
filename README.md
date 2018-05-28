@@ -1,6 +1,10 @@
 # ginnungagap
+Cumulus Bevarings Service, aka. Ginnungagap!
+
 Ginnungagap appears as the primordial void in the Norse creation... 
-TODO: Figure out whether this really is a suitable name for the longterm preservation component for Cumulus
+
+
+Installation and user guide at the IT-wiki of kb.dk.
 
 
 Prerequisite

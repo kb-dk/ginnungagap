@@ -63,6 +63,7 @@ public class MetadataExtraction extends AbstractMain {
             } else if(args[3].toLowerCase().startsWith("record name")) {
                 isGUID = false;
             } else {
+                System.err.println("Bad ID type. Requires: 'GUID' or 'Record Name'");
                 printParametersAndExit();
             }
         }
@@ -101,6 +102,7 @@ public class MetadataExtraction extends AbstractMain {
             }
         } catch (ArgumentCheck e) {
             log.warn("Argument failure.", e);
+            System.err.println("Failed: " + e.getMessage());
             printParametersAndExit();
         } catch (Exception e) {
             System.out.println("Failed!");

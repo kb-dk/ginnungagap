@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils;
 import dk.kb.ginnungagap.testutils.TestSystemUtils.ExitTrappedException;
@@ -87,7 +88,7 @@ public class CatalogStructMapTest extends ExtendedTestCase {
         CatalogStructmap.checkCatalogInConfiguration(conf, "Audio OM");
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ArgumentCheck.class)
     public void testCheckConfigurationFailure() {
         Configuration conf = AbstractMain.instantiateConfiguration(testConf.getAbsolutePath());
         CatalogStructmap.checkCatalogInConfiguration(conf, "THIS IS NOT A CUMULUS CATALOG");

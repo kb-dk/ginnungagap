@@ -134,7 +134,7 @@ public abstract class AbstractMain {
      */
     protected static void checkCatalogInConfiguration(Configuration conf, String catalogName) {
         if(!conf.getCumulusConf().getCatalogs().contains(catalogName)) {
-            throw new IllegalArgumentException("The catalog name '" + catalogName + "' must be the configuration.");
+            throw new ArgumentCheck("The catalog name '" + catalogName + "' must be the configuration.");
         }
     }
 }
