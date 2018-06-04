@@ -14,8 +14,13 @@ import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 
 /**
- * The step for the automatically update of preservation of records.
- * This means it finds the records, which have been changed since their latest preservation.
+ * The step for performing the update preservation action on the records, which are ready for update.
+ * This will extract the metadata, transform it, package it, and send it to preservation.
+ * It will not preserve the content file, since the update preservation action, only involves preserving the
+ * update metadata.
+ * 
+ * It will give the records new Metadata GUIDs, though it will use the existing GUID (for the file) and the 
+ * Intellectuel Entity guid. 
  */
 public class UpdatePreservationStep extends PreservationStep {
     /** The logger.*/
@@ -62,6 +67,7 @@ public class UpdatePreservationStep extends PreservationStep {
     /**
      * Preserves all the record items of the given collection. 
      * @param items The collection of record items to preserve.
+     * @param catalogName The name of the Cumulus catalog with the reccord to have their preservation updated.
      */
     @Override
     protected void preserveRecordItems(CumulusRecordCollection items, String catalogName) {

@@ -44,7 +44,8 @@ public class MetadataExtraction extends AbstractMain {
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
-     * One argument is required; the configuration file, and any other arguments will be ignored.
+     * three argument is required; the configuration file, the ID of the cumulus record, and the name of the catalog.
+     * Also takes 4 optional arguments; type of ID, output path, whether to extract the content file, type of archive.
      */
     public static void main(String ... args) {
         if(args.length < 3) {
@@ -96,6 +97,7 @@ public class MetadataExtraction extends AbstractMain {
                 getCurrentMetadata(warcFile, record, outputDir);
                 
                 if(alsoFile) {
+                    log.info("Retrieving the record file.");
                     retrieveFileRecord(record, archive, outputDir);
                 }
                 System.out.println("Finished!");
@@ -154,17 +156,18 @@ public class MetadataExtraction extends AbstractMain {
      * representation - the record is a representation.
      * @param warcFile The WARC file with the metadata records.
      * @param record The Cumulus record.
-     * @param destination The directory where the metadata records must be placed.
+     * @param destinationDir The directory where the metadata records must be placed.
      * @throws IOException If it fails to extract the metadata and create the output files.
      */
-    protected static void getCurrentMetadata(File warcFile, CumulusRecord record, File destination) throws IOException {
+    protected static void getCurrentMetadata(File warcFile, CumulusRecord record, File destinationDir) 
+            throws IOException {
         String metadataGuid = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
         String ieMetadataGuid = record.getFieldValue(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         
-        File metadataFile = new File(destination, metadataGuid);
+        File metadataFile = new File(destinationDir, metadataGuid);
         FileUtils.deprecateFileIfExists(metadataFile);
-        File ieFile = new File(destination, ieMetadataGuid);
+        File ieFile = new File(destinationDir, ieMetadataGuid);
         FileUtils.deprecateFileIfExists(ieFile);
         
         String repMetadataGuid = record.getFieldValueOrNull(Constants.FieldNames.REPRESENTATION_METADATA_GUID);
@@ -173,12 +176,12 @@ public class MetadataExtraction extends AbstractMain {
         
         File repFile = null;
         if(repMetadataGuid != null) {
-            repFile = new File(destination, repMetadataGuid);
+            repFile = new File(destinationDir, repMetadataGuid);
             FileUtils.deprecateFileIfExists(repFile);
         }
         File repIeFile = null;
         if(repIeMetadataGuid != null) {
-            repIeFile = new File(destination, repIeMetadataGuid);
+            repIeFile = new File(destinationDir, repIeMetadataGuid);
             FileUtils.deprecateFileIfExists(repIeFile);
         }
         
@@ -187,18 +190,18 @@ public class MetadataExtraction extends AbstractMain {
             for(WarcRecord warcRecord : warcReader) {
                 if(warcRecord.header.warcRecordIdStr.contains(metadataGuid)) {
                     copyWarcRecordToFile(warcRecord, metadataFile);
-                    System.out.println("Retrieved metadata '" + metadataFile.getAbsolutePath() + "'");
+                    log.info("Retrieved metadata '" + metadataFile.getAbsolutePath() + "'");
                 } else if(warcRecord.header.warcRecordIdStr.contains(ieMetadataGuid)) {
                     copyWarcRecordToFile(warcRecord, ieFile);                    
-                    System.out.println("Retrieved IE metadata '" + ieFile.getAbsolutePath() + "'");
+                    log.info("Retrieved IE metadata '" + ieFile.getAbsolutePath() + "'");
                 } else if(repMetadataGuid != null && 
                         warcRecord.header.warcRecordIdStr.contains(repMetadataGuid)) {
                     copyWarcRecordToFile(warcRecord, repFile);
-                    System.out.println("Retrieved representation metadata '" + repFile.getAbsolutePath() + "'");
+                    log.info("Retrieved representation metadata '" + repFile.getAbsolutePath() + "'");
                 } else if(repIeMetadataGuid != null && 
                         warcRecord.header.warcRecordIdStr.contains(repIeMetadataGuid)) {
                     copyWarcRecordToFile(warcRecord, repIeFile);
-                    System.out.println("Retrieved representation ie metadata '" + repIeFile.getAbsolutePath() + "'");
+                    log.info("Retrieved representation ie metadata '" + repIeFile.getAbsolutePath() + "'");
                 }
             }
         }

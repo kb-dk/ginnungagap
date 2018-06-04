@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -240,6 +241,15 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         File modsFile = new File("src/test/resources/metadata/dsfl-mods.xml");
         try (InputStream in = new FileInputStream(modsFile)) {
             transformationHandler.validate(in);
+        }
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testValidationFailure() throws Exception {
+        addDescription("Test validating an XML file, which does not have a schema.");
+        File metadataFile = new File("src/test/resources/test_representation.raw.xml");
+        try (InputStream metadata = new FileInputStream(metadataFile)) {
+            transformationHandler.validate(metadata);
         }
     }
 }

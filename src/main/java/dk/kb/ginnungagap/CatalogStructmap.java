@@ -31,9 +31,10 @@ import dk.kb.ginnungagap.workflow.CatalogStructMapWorkflow;
  * 2. Catalog name
  * 3. Preservation Collection ID
  * 4. [OPTIONAL] Archive type
- *   * Bitmag - for The BitRepository
- *   * Local - for placing the  
+ *   * Bitmag - for the BitRepository
+ *   * Local - for placing the file in a local folder
  * 5. [OPTIONAL] Intellecual entity id for the catalog
+ *   * default: a new IE guid is created for it.
  * 
  * e.g.
  * dk.kb.ginningagap.CatalogStructmap conf/ginnungagap.yml CatalogName
@@ -45,7 +46,9 @@ public class CatalogStructmap extends AbstractMain {
     /**
      * Main method. 
      * @param args List of arguments delivered from the commandline.
-     * One argument is required; the configuration file, and any other arguments will be ignored.
+     * It requires three argument is required; the configuration file, the catalog name,
+     *  and the preservation collection id.
+     * And it has two optional arguments: archive type, and intellectual entity ID.
      */
     public static void main(String ... args) {
         // How do you instantiate the primordial void ??
@@ -100,7 +103,7 @@ public class CatalogStructmap extends AbstractMain {
      * Failure. Print argument requirements and exit.
      */
     protected static void failPrintErrorAndExit() {
-        System.err.println("Missing arguments. At least two arguments:");
+        System.err.println("Missing arguments. At least three arguments:");
         System.err.println(" 1. Config file");
         System.err.println(" 2. Catalog name");
         System.err.println(" 3. Bitrepository Collection ID");

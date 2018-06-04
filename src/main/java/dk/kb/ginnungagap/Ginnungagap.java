@@ -204,7 +204,7 @@ public class Ginnungagap extends AbstractMain {
             WorkflowScheduler scheduler = new WorkflowScheduler();
             for(Workflow workflow : workflows) {
                 log.info("Scheduling workflow: " + workflow.getJobID() + " : " + workflow.getDescription() 
-                        + ", at the interval " + interval + " milliseconds");
+                        + " to run every " + interval + " milliseconds");
                 scheduler.schedule(workflow, interval);
             }
             synchronized(scheduler) {
