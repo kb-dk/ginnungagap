@@ -21,8 +21,8 @@ public class LocalArchive implements Archive {
      * Constructor.
      * @param path The path to the directory.
      */
-    public LocalArchive(String path) {
-        this.archiveBaseDir = FileUtils.getDirectory(path);
+    public LocalArchive(File directory) {
+        this.archiveBaseDir = directory;
     }
     
     @Override

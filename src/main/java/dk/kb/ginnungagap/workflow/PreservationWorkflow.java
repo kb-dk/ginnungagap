@@ -1,14 +1,12 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.config.TransformationConfiguration;
+import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
-import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
-import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
 import dk.kb.ginnungagap.workflow.steps.PreservationStep;
 
@@ -20,51 +18,37 @@ import dk.kb.ginnungagap.workflow.steps.PreservationStep;
  * then all the metadata fields are extracted and transformed.
  * And finally the asset (content file) and transformed metadata will be packaged and sent to the bitrepository.
  */
-public class PreservationWorkflow extends AbstractWorkflow {
-    /** Transformation configuration for the metadata.*/
-    private final TransformationConfiguration conf;
-    /** The Cumulus server.*/
-    private final CumulusServer server;
-    /** The metadata transformer handler.*/
-    private final MetadataTransformationHandler transformationHandler;
-    /** The bitrepository preserver.*/
-    private final BitmagPreserver preserver;
-
+@Component
+public class PreservationWorkflow extends Workflow {
     /** The description of this workflow.*/
-    protected static final String WORKFLOW_DESCRIPTION = "Preserves all the Cumulus records, which have been set "
-            + "to 'ready for long-term preservation'.";
+    protected static final String WORKFLOW_DESCRIPTION = 
+            "Preserves all the Cumulus records, which have been set to 'ready for long-term preservation'.";
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Preservation Workflow";
     
-    /**
-     * Constructor.
-     * @param transConf The configuration for the transformation
-     * @param server The Cumulus server where the Cumulus records are extracted.
-     * @param transformationHandler The metadata transformation handler for transforming the 
-     * different kinds of metadata.
-     * @param preserver the bitrepository preserver, for packaging and preserving the records.
-     */
-    public PreservationWorkflow(TransformationConfiguration transConf, CumulusServer server,
-            MetadataTransformationHandler transformationHandler, BitmagPreserver preserver) {
-        super(WORKFLOW_NAME);
-        this.conf = transConf;
-        this.server = server;
-        this.transformationHandler = transformationHandler;
-        this.preserver = preserver;
-        
-        initialiseSteps();
-    }
-    
+    /** Transformation configuration for the metadata.*/
+    @Autowired
+    protected Configuration conf;
+    /** The Cumulus server.*/
+    @Autowired
+    protected CumulusWrapper cumulusWrapper;
+    /** The metadata transformer handler.*/
+    @Autowired
+    protected MetadataTransformationHandler transformationHandler;
+    /** The bitrepository preserver.*/
+    @Autowired
+    protected BitmagPreserver preserver;
+
     /**
      * Initializes all the steps for this workflow.
      */
-    protected void initialiseSteps() {
-        List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
-        for(String catalogName : server.getCatalogNames()) {
-            steps.add(new PreservationStep(conf, server, transformationHandler, preserver, catalogName));
+    @Override
+    protected void initSteps() {
+        for(String catalogName : cumulusWrapper.getServer().getCatalogNames()) {
+            steps.add(new PreservationStep(conf.getTransformationConf(), cumulusWrapper.getServer(), transformationHandler, 
+                    preserver, catalogName));
         }
         steps.add(new PreservationFinalizationStep(preserver));
-        setWorkflowSteps(steps);
     }
     
     @Override
@@ -73,7 +57,12 @@ public class PreservationWorkflow extends AbstractWorkflow {
     }
 
     @Override
-    public String getJobID() {
+    public String getName() {
         return WORKFLOW_NAME;
+    }
+
+    @Override
+    public Long getInterval() {
+        return conf.getWorkflowConf().getInterval();
     }
 }

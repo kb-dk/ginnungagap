@@ -12,9 +12,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.kb.cumulus.CumulusServer;
-import dk.kb.ginnungagap.archive.Archive;
+import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class ImportWorkflowTest extends ExtendedTestCase {
@@ -42,11 +42,14 @@ public class ImportWorkflowTest extends ExtendedTestCase {
 
     @Test
     public void testWorkflowInstantiation() {
-        CumulusServer server = Mockito.mock(CumulusServer.class);
-        Archive archive = Mockito.mock(Archive.class);
-        ImportWorkflow workflow = new ImportWorkflow(conf, server, archive);
+        CumulusWrapper cumulusWrapper = Mockito.mock(CumulusWrapper.class);
+        ArchiveWrapper archive = Mockito.mock(ArchiveWrapper.class);
+        ImportWorkflow workflow = new ImportWorkflow();
+        workflow.conf = conf;
+        workflow.cumulusWrapper = cumulusWrapper;
+        workflow.archive = archive;
         
-        Assert.assertEquals(workflow.getJobID(), ImportWorkflow.WORKFLOW_NAME);
+        Assert.assertEquals(workflow.getName(), ImportWorkflow.WORKFLOW_NAME);
         Assert.assertEquals(workflow.getDescription(), ImportWorkflow.WORKFLOW_DESCRIPTION);
     }
 }

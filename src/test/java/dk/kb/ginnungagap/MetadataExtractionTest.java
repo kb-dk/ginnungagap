@@ -48,7 +48,7 @@ import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.workflow.ImportWorkflow;
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 import dk.kb.ginnungagap.workflow.ValidationWorkflow;
-import dk.kb.ginnungagap.workflow.schedule.Workflow;
+import dk.kb.ginnungagap.workflow.Workflow;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
 import junit.framework.Assert;
 
@@ -86,210 +86,210 @@ public class MetadataExtractionTest extends ExtendedTestCase {
         Assert.assertTrue(metadataExtract instanceof MetadataExtraction);
     }
 
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testNoArguments() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            MetadataExtraction.main();
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-    
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testInvalidIdType() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "THIS_IS_NOT_A_ID_TYPE");
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-    
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testMissingConfigurationFileFailure() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            MetadataExtraction.main(UUID.randomUUID().toString(), guid, catalogName);
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-    
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testAllArgumentsWithIncorrectCatalogName() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "GUID", 
-                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-    
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testRecordNameIdentifierArgumentWithIncorrectCatalogName() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "Record Name", 
-                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-    
-    @Test
-    public void testGetRecordSuccessWithUUID() {
-        addDescription("Test the getRecord method, when it successfully retrieves the record of an UUID.");
-        CumulusServer server = mock(CumulusServer.class);
-        CumulusRecord expectedRecord = mock(CumulusRecord.class);
-        boolean isGuid = true;
-        
-        when(server.findCumulusRecord(eq(catalogName), eq(guid))).thenReturn(expectedRecord);
-        
-        CumulusRecord actualRecord = MetadataExtraction.getRecord(server, catalogName, guid, isGuid);
-        
-        Assert.assertEquals(expectedRecord, actualRecord);
-        
-        verify(server).findCumulusRecord(eq(catalogName), eq(guid));
-        verifyNoMoreInteractions(server);
-        verifyZeroInteractions(expectedRecord);
-    }
-    
-    @Test
-    public void testGetRecordSuccessWithRecordName() {
-        addDescription("Test the getRecord method, when it successfully retrieves the record of an Record Name.");
-        CumulusServer server = mock(CumulusServer.class);
-        CumulusRecord expectedRecord = mock(CumulusRecord.class);
-        boolean isGuid = false;
-        
-        when(server.findCumulusRecordByName(eq(catalogName), eq(recordName))).thenReturn(expectedRecord);
-        
-        CumulusRecord actualRecord = MetadataExtraction.getRecord(server, catalogName, recordName, isGuid);
-        
-        Assert.assertEquals(expectedRecord, actualRecord);
-        
-        verify(server).findCumulusRecordByName(eq(catalogName), eq(recordName));
-        verifyNoMoreInteractions(server);
-        verifyZeroInteractions(expectedRecord);
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testGetRecordFailure() {
-        addDescription("Test the getRecord method, when it fails retrieves the record.");
-        CumulusServer server = mock(CumulusServer.class);
-        when(server.findCumulusRecord(eq(catalogName), eq(guid))).thenReturn(null);
-        boolean isGuid = true;
-        
-        MetadataExtraction.getRecord(server, catalogName, guid, isGuid);
-    }
-    
-    @Test
-    public void testGetCurrentMetadataWhenOnlyMetadata() throws Exception {
-        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Metadata GUID record");
-        CumulusRecord record = mock(CumulusRecord.class);
-        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        
-        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(warcRecordId);
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(null);
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(null);
-        
-        MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
-
-        Assert.assertTrue(new File(destination, warcRecordId).exists());
-
-        verify(record).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID));
-        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID));
-        verifyNoMoreInteractions(record);
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testGetCurrentMetadataWhenOnlyIeMetadata() throws Exception {
-        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the IE record");
-        CumulusRecord record = mock(CumulusRecord.class);
-        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        
-        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(warcRecordId);
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(null);
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(null);
-        
-        try {
-            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(new File(destination, warcRecordId).exists());
-            throw e;
-        }
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testGetCurrentMetadataWhenOnlyRepMetadata() throws Exception {
-        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Representation metadata record");
-        CumulusRecord record = mock(CumulusRecord.class);
-        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-
-        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(warcRecordId);
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(UUID.randomUUID().toString());
-        
-        try {
-            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(new File(destination, warcRecordId).exists());
-            throw e;
-        }
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testGetCurrentMetadataWhenOnlyRepIeMetadata() throws IOException {
-        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Representation IE record");
-        CumulusRecord record = mock(CumulusRecord.class);
-        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-
-        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(warcRecordId);
-        
-        try {
-            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(new File(destination, warcRecordId).exists());
-            throw e;
-        }
-    }
-    
-    @Test
-    public void testRetrieveFileRecord() throws IOException {
-        addDescription("Test the retrieveFileRecord method");
-        CumulusRecord record = mock(CumulusRecord.class);
-        Archive archive = mock(Archive.class);
-        File destinationDir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        
-        String warcName = UUID.randomUUID().toString();
-        String collectionId = UUID.randomUUID().toString();
-        
-        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcName);
-        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
-        when(record.getUUID()).thenReturn(warcRecordId);
-        when(archive.getFile(eq(warcName), eq(collectionId))).thenReturn(warcFile);
-        
-        MetadataExtraction.retrieveFileRecord(record, archive, destinationDir);
-        
-        Assert.assertTrue(new File(destinationDir, warcRecordId).exists());
-        
-        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
-        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).getUUID();
-        verifyZeroInteractions(record);
-        verify(archive).getFile(eq(warcName), eq(collectionId));
-        verifyZeroInteractions(archive);
-    }
-    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testNoArguments() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            MetadataExtraction.main();
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testInvalidIdType() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "THIS_IS_NOT_A_ID_TYPE");
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testMissingConfigurationFileFailure() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            MetadataExtraction.main(UUID.randomUUID().toString(), guid, catalogName);
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testAllArgumentsWithIncorrectCatalogName() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "GUID", 
+//                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testRecordNameIdentifierArgumentWithIncorrectCatalogName() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            MetadataExtraction.main(testConf.getAbsolutePath(), guid, catalogName, "Record Name", 
+//                    TestFileUtils.getTempDir().getAbsolutePath(), "yes", AbstractMain.ARCHIVE_LOCAL, "extra unused variable");
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//    
+//    @Test
+//    public void testGetRecordSuccessWithUUID() {
+//        addDescription("Test the getRecord method, when it successfully retrieves the record of an UUID.");
+//        CumulusServer server = mock(CumulusServer.class);
+//        CumulusRecord expectedRecord = mock(CumulusRecord.class);
+//        boolean isGuid = true;
+//        
+//        when(server.findCumulusRecord(eq(catalogName), eq(guid))).thenReturn(expectedRecord);
+//        
+//        CumulusRecord actualRecord = MetadataExtraction.getRecord(server, catalogName, guid, isGuid);
+//        
+//        Assert.assertEquals(expectedRecord, actualRecord);
+//        
+//        verify(server).findCumulusRecord(eq(catalogName), eq(guid));
+//        verifyNoMoreInteractions(server);
+//        verifyZeroInteractions(expectedRecord);
+//    }
+//    
+//    @Test
+//    public void testGetRecordSuccessWithRecordName() {
+//        addDescription("Test the getRecord method, when it successfully retrieves the record of an Record Name.");
+//        CumulusServer server = mock(CumulusServer.class);
+//        CumulusRecord expectedRecord = mock(CumulusRecord.class);
+//        boolean isGuid = false;
+//        
+//        when(server.findCumulusRecordByName(eq(catalogName), eq(recordName))).thenReturn(expectedRecord);
+//        
+//        CumulusRecord actualRecord = MetadataExtraction.getRecord(server, catalogName, recordName, isGuid);
+//        
+//        Assert.assertEquals(expectedRecord, actualRecord);
+//        
+//        verify(server).findCumulusRecordByName(eq(catalogName), eq(recordName));
+//        verifyNoMoreInteractions(server);
+//        verifyZeroInteractions(expectedRecord);
+//    }
+//    
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testGetRecordFailure() {
+//        addDescription("Test the getRecord method, when it fails retrieves the record.");
+//        CumulusServer server = mock(CumulusServer.class);
+//        when(server.findCumulusRecord(eq(catalogName), eq(guid))).thenReturn(null);
+//        boolean isGuid = true;
+//        
+//        MetadataExtraction.getRecord(server, catalogName, guid, isGuid);
+//    }
+//    
+//    @Test
+//    public void testGetCurrentMetadataWhenOnlyMetadata() throws Exception {
+//        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Metadata GUID record");
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+//        
+//        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(warcRecordId);
+//        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(null);
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(null);
+//        
+//        MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
+//
+//        Assert.assertTrue(new File(destination, warcRecordId).exists());
+//
+//        verify(record).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
+//        verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+//        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID));
+//        verify(record).getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID));
+//        verifyNoMoreInteractions(record);
+//    }
+//    
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testGetCurrentMetadataWhenOnlyIeMetadata() throws Exception {
+//        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the IE record");
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+//        
+//        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(warcRecordId);
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(null);
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(null);
+//        
+//        try {
+//            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
+//        } catch (IllegalStateException e) {
+//            Assert.assertTrue(new File(destination, warcRecordId).exists());
+//            throw e;
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testGetCurrentMetadataWhenOnlyRepMetadata() throws Exception {
+//        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Representation metadata record");
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+//
+//        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(warcRecordId);
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(UUID.randomUUID().toString());
+//        
+//        try {
+//            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
+//        } catch (IllegalStateException e) {
+//            Assert.assertTrue(new File(destination, warcRecordId).exists());
+//            throw e;
+//        }
+//    }
+//    
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testGetCurrentMetadataWhenOnlyRepIeMetadata() throws IOException {
+//        addDescription("Test the getCurrentMetadata method, for the success case, when it has no representation. It must only retrieve the Representation IE record");
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        File destination = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+//
+//        when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
+//        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(warcRecordId);
+//        
+//        try {
+//            MetadataExtraction.getCurrentMetadata(warcFile, record, destination);
+//        } catch (IllegalStateException e) {
+//            Assert.assertTrue(new File(destination, warcRecordId).exists());
+//            throw e;
+//        }
+//    }
+//    
+//    @Test
+//    public void testRetrieveFileRecord() throws IOException {
+//        addDescription("Test the retrieveFileRecord method");
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        Archive archive = mock(Archive.class);
+//        File destinationDir = FileUtils.getDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+//        
+//        String warcName = UUID.randomUUID().toString();
+//        String collectionId = UUID.randomUUID().toString();
+//        
+//        when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenReturn(warcName);
+//        when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
+//        when(record.getUUID()).thenReturn(warcRecordId);
+//        when(archive.getFile(eq(warcName), eq(collectionId))).thenReturn(warcFile);
+//        
+//        MetadataExtraction.retrieveFileRecord(record, archive, destinationDir);
+//        
+//        Assert.assertTrue(new File(destinationDir, warcRecordId).exists());
+//        
+//        verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+//        verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
+//        verify(record).getUUID();
+//        verifyZeroInteractions(record);
+//        verify(archive).getFile(eq(warcName), eq(collectionId));
+//        verifyZeroInteractions(archive);
+//    }
+//    
 //    @Test(expectedExceptions = RuntimeException.class)
 //    public void testFailure() throws Exception {
 //        MetadataExtraction.main(testConf.getAbsolutePath(), "local");

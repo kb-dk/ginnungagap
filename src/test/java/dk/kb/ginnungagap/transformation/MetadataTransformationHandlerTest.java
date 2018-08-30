@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.transformer;
+package dk.kb.ginnungagap.transformation;
 
 import static org.testng.Assert.assertTrue;
 
@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -19,9 +18,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
-import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.utils.StreamUtils;
 
 public class MetadataTransformationHandlerTest extends ExtendedTestCase {
@@ -31,13 +29,18 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
     protected boolean writeOutput = false;
     
     MetadataTransformationHandler transformationHandler;
+    
+    Configuration conf;
 
     @BeforeClass
     public void setup() {
         TestFileUtils.setup();
+        conf = TestFileUtils.createTempConf();
         xsltFile = new File("src/main/resources/scripts/xslt/transformToMets.xsl");
         assertTrue(xsltFile.isFile());
-        transformationHandler = new MetadataTransformationHandler(xsltFile.getParentFile());
+        transformationHandler = new MetadataTransformationHandler();
+        transformationHandler.conf = conf;
+        transformationHandler.initialize();
     }
 
     @AfterClass

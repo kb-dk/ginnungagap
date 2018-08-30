@@ -1,4 +1,8 @@
 ginnungagap:
+  local:
+    output_path: local/output
+    archive_path: local/archive
+    test: true
   bitrepository:
     settings_dir: conf/bitrepository
     keyfile: conf/client.pem

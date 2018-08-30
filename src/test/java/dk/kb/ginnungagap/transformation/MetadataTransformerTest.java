@@ -1,4 +1,4 @@
-package dk.kb.ginnungagap.transformer;
+package dk.kb.ginnungagap.transformation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

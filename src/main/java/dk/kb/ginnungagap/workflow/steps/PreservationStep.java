@@ -38,7 +38,7 @@ import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 /**
  * The preservation step.
  */
-public class PreservationStep implements WorkflowStep {
+public class PreservationStep extends WorkflowStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(PreservationStep.class);
 
@@ -75,11 +75,11 @@ public class PreservationStep implements WorkflowStep {
 
     @Override
     public String getName() {
-        return "Preservation Step";
+        return "Preservation Step for catalog '" + catalogName + "'";
     }
 
     @Override
-    public void performStep() throws Exception {
+    protected void performStep() throws Exception {
         CumulusQuery query = CumulusQueryUtils.getPreservationAllQuery(catalogName);
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records to be preserved.");
@@ -91,21 +91,26 @@ public class PreservationStep implements WorkflowStep {
      * @param items The collection of record items to preserve.
      */
     protected void preserveRecordItems(CumulusRecordCollection items, String catalogName) {
-        int n = items.getCount();
-        if(n == 0) {
+        if(items.getCount() == 0) {
             log.debug("No items to preserve from catalog: " + catalogName);
             return;
         }
+        int i = 0;
+        int failures = 0;
         for(CumulusRecord record : items) {
             try {
+                setResultOfRun("Running! Preservation of #" + i + ", " + record.getUUID());
                 log.debug("Initiating preservation on record '" + record.getUUID() + "'");
                 sendRecordToPreservation(record);
             } catch (RuntimeException e) {
                 log.error("Runtime exception caught while trying to handle Cumulus record '" 
                         + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);
+                failures++;
             }
+            i++;
         }
+        setResultOfRun("Preservation of " + i + " records, with " + failures + " failures.");
     }
 
     /**

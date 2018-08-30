@@ -5,8 +5,16 @@
 	<id>dist</id>
 	<formats>
 		<format>tar.gz</format>
-		<format>zip</format>
 	</formats>
+
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>*:war</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+
 	<fileSets>
 		<!-- Move scripts and transforms dir into assembly -->
 		<fileSet>
@@ -62,9 +70,9 @@
 		</fileSet>
 	</fileSets>
 	<!-- Copy all project dependencies to lib/ -->
-	<dependencySets>
+	<!--dependencySets>
 		<dependencySet>
 			<outputDirectory>${file.separator}lib${file.separator}</outputDirectory>
 		</dependencySet>
-	</dependencySets>
+	</dependencySets-->
 </assembly>

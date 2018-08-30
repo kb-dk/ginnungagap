@@ -10,7 +10,7 @@ import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
  * The step for finalizing the preservation workflow.
  * Uploads all the WARC files, which has been created during the other steps of the preservation workflow. 
  */
-public class PreservationFinalizationStep implements WorkflowStep {
+public class PreservationFinalizationStep extends WorkflowStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(PreservationFinalizationStep.class);
     /** The Bitmag preservation component.*/

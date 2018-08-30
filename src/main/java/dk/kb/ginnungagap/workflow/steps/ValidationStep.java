@@ -12,7 +12,7 @@ import dk.kb.metadata.utils.CalendarUtils;
 /**
  * Abstract class for the Cumulus Record Validation steps.
  */
-public abstract class ValidationStep implements WorkflowStep {
+public abstract class ValidationStep extends WorkflowStep {
     /** Cumulus server.*/
     protected final CumulusServer server;
     /** The name of the catalog to check for records to validate.*/

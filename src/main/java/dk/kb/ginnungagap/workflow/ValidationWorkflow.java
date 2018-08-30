@@ -1,13 +1,10 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import dk.kb.cumulus.CumulusServer;
-import dk.kb.ginnungagap.archive.Archive;
+import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.workflow.schedule.AbstractWorkflow;
-import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
+import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
 import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
 
@@ -20,14 +17,7 @@ import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
  * 
  * The full validation retrieves the file and validates the specific WARC-record.
  */
-public class ValidationWorkflow extends AbstractWorkflow {
-    /** The configuration.*/
-    protected final Configuration conf;
-    /** The Cumulus Server.*/
-    protected final CumulusServer server;
-    /** The Bitrepository archive.*/
-    protected final Archive archive;
-    
+public class ValidationWorkflow extends Workflow {
     /** The description of this workflow.*/
     protected static final String WORKFLOW_DESCRIPTION = "Performs the validation of Cumulus records, "
             + "regarding the state of their archived file:\n"
@@ -37,32 +27,22 @@ public class ValidationWorkflow extends AbstractWorkflow {
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Validation Workflow";
     
-    /**
-     * Constructor.
-     * @param conf The configuration.
-     * @param server The Cumulus server.
-     * @param archive The Bitrepository archive.
-     */
-    public ValidationWorkflow(Configuration conf, CumulusServer server, Archive archive) {
-        super(WORKFLOW_NAME);
-        this.conf = conf;
-        this.server = server;
-        this.archive = archive;
-        
-        initialiseSteps();
-    }
+    /** The configuration.*/
+    @Autowired
+    protected Configuration conf;
+    /** The Cumulus Server.*/
+    @Autowired
+    protected CumulusWrapper server;
+    /** The Bitrepository archive.*/
+    @Autowired
+    protected ArchiveWrapper archive;
     
-    /**
-     * Initialize the steps of this workflow.
-     */
-    protected void initialiseSteps() {
-        List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
+    @Override
+    protected void initSteps() {
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
-            steps.add(new SimpleValidationStep(server, catalogName, archive));
-            steps.add(new FullValidationStep(server, catalogName, archive, conf));
+            steps.add(new SimpleValidationStep(server.getServer(), catalogName, archive));
+            steps.add(new FullValidationStep(server.getServer(), catalogName, archive, conf));
         }
-        
-        setWorkflowSteps(steps);
     }
 
     @Override
@@ -71,7 +51,12 @@ public class ValidationWorkflow extends AbstractWorkflow {
     }
 
     @Override
-    public String getJobID() {
+    public Long getInterval() {
+        return -1L;
+    }
+
+    @Override
+    public String getName() {
         return WORKFLOW_NAME;
     }
 }

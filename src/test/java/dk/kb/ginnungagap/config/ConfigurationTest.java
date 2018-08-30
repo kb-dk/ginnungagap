@@ -86,7 +86,7 @@ public class ConfigurationTest extends ExtendedTestCase {
     @Test
     public void testConfigurationWithoutImport() throws Exception {
         addDescription("Load the configuration");
-        Configuration conf = new Configuration(confFileWithoutImport);
+        Configuration conf = new Configuration(confFileWithoutImport.getAbsolutePath());
         assertNotNull(conf.getBitmagConf());
         assertNotNull(conf.getBitmagConf().getComponentId());
         assertNotNull(conf.getBitmagConf().getMaxNumberOfFailingPillars());
@@ -116,12 +116,17 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
         assertNotNull(conf.getTransformationConf().getMetadataTempDir());
         assertTrue(conf.getTransformationConf().getMetadataTempDir().isDirectory());
+        
+        assertNotNull(conf.getLocalConfiguration());
+        assertNotNull(conf.getLocalConfiguration().getLocalOutputDir());
+        assertNotNull(conf.getLocalConfiguration().getLocalArchiveDir());
+        assertTrue(conf.getLocalConfiguration().getIsTest());
     }
     
     @Test
     public void testConfigurationWithImport() throws Exception {
         addDescription("Load the configuration");
-        Configuration conf = new Configuration(confFileWithImport);
+        Configuration conf = new Configuration(confFileWithImport.getAbsolutePath());
         assertNotNull(conf.getBitmagConf());
         assertNotNull(conf.getBitmagConf().getComponentId());
         assertNotNull(conf.getBitmagConf().getMaxNumberOfFailingPillars());
@@ -150,18 +155,23 @@ public class ConfigurationTest extends ExtendedTestCase {
         assertNotNull(conf.getTransformationConf().getRequiredFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getBaseFields());
         assertNotNull(conf.getTransformationConf().getRequiredFields().getWritableFields());
+
+        assertNotNull(conf.getLocalConfiguration());
+        assertNotNull(conf.getLocalConfiguration().getLocalOutputDir());
+        assertNotNull(conf.getLocalConfiguration().getLocalArchiveDir());
+        assertTrue(conf.getLocalConfiguration().getIsTest());
     }
     
     @Test(expectedExceptions = ArgumentCheck.class)
     public void testConfigurationFailure() throws Exception {
         addDescription("Load a missing file as configuration.");
-        new Configuration(new File("src/test/resources/test-resource.txt"));
+        new Configuration("src/test/resources/test-resource.txt");
     }
     
     @Test
     public void testLoadingBitmagConfigurationWithKeyFile() throws Exception {
         addDescription("Test loading the bitmag configuration with the key file.");
-        Configuration conf = new Configuration(confFileWithoutImport);
+        Configuration conf = new Configuration(confFileWithoutImport.getAbsolutePath());
         
         Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFileWithoutImport).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
         map.put(Configuration.CONF_BITREPOSITORY_KEYFILE, requiredFieldsFile.getPath());
@@ -172,7 +182,7 @@ public class ConfigurationTest extends ExtendedTestCase {
     @Test(expectedExceptions = ArgumentCheck.class)
     public void testImproperBitrepositoryAlgorithm() throws Exception {
         addDescription("Test loading the bitmag configuration with the key file.");
-        Configuration conf = new Configuration(confFileWithoutImport);
+        Configuration conf = new Configuration(confFileWithoutImport.getAbsolutePath());
         
         Map<String, Object> map = (Map<String, Object>) ((Map<String, Map>) YamlTools.loadYamlSettings(confFileWithoutImport).get(Configuration.CONF_GINNUNGAGAP)).get(Configuration.CONF_BITREPOSITORY);
         map.put(Configuration.CONF_BITREPOSITORY_ALGORITHM, "THIS IS NOT A VALID ALGORITHM");

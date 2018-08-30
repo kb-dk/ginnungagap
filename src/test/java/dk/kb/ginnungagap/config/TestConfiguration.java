@@ -12,8 +12,8 @@ public class TestConfiguration extends Configuration {
     CumulusConfiguration cConf;
     WorkflowConfiguration wConf;
     
-    public TestConfiguration(File confFile) {
-        super(confFile);
+    public TestConfiguration(String confPath) {
+        super(confPath);
     }
     
     public void setTransformationConfiguration(TransformationConfiguration transConf) {

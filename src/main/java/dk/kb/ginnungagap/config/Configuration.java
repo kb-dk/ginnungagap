@@ -7,6 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.FileUtils;
@@ -18,6 +22,12 @@ import dk.kb.yggdrasil.utils.YamlTools;
  * <ul>
  *   <li>ginnungagap:</li>
  *   <ul>
+ *     <li>local:</li>
+ *     <ul>
+ *       <li>output_path: $output_path</li>
+ *       <li>archive_path: $archive_path</li>
+ *       <li>test: $TEST (optional - default no)</li>
+ *     </ul>
  *     <li>bitrepository:</li>
  *     <ul>
  *       <li>settings_dir: $settings dir path</li>
@@ -58,6 +68,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  * The configuration file must be in the YAML format.
  */
 @SuppressWarnings("unchecked")
+@Component
 public class Configuration {
 
     /** Ginnungagap root element.*/
@@ -111,6 +122,15 @@ public class Configuration {
     /** Transformation metadata temp file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
     
+    /** Local node-element.*/
+    protected static final String CONF_LOCAL = "local";
+    /** Local output dir path leaf-element.*/
+    protected static final String CONF_LOCAL_OUTPUT_PATH = "output_path";
+    /** Local archive dir path leaf-element.*/
+    protected static final String CONF_LOCAL_ARCHIVE_PATH = "archive_path";
+    /** [OPTIONAL] Local test boolean leaf-element. Default not test.*/
+    protected static final String CONF_LOCAL_TEST = "test";
+    
     /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
     
@@ -122,14 +142,20 @@ public class Configuration {
     protected final TransformationConfiguration transformationConf;
     /** The configuration for the workflows*/
     protected final WorkflowConfiguration workflowConfiguration;
+    /** The configuration for the local output folders and tests.*/
+    protected final LocalConfiguration localConfiguration;
     
     /**
      * Constructor.
      * @param confFile The file with the Ginnungagap configuration, in the described format.
      */
     @SuppressWarnings("rawtypes")
-    public Configuration(File confFile) {
+    @Autowired
+    public Configuration(@Value("#{ @environment['GINNUNGAGAP_CONF'] ?: 'ginnungagap.yml'}") String confPath) {
+        ArgumentCheck.checkNotNullOrEmpty(confPath, "String confPath");
+        File confFile = new File(confPath);
         ArgumentCheck.checkExistsNormalFile(confFile, "File confFile");
+        
         try {
             LinkedHashMap<String, LinkedHashMap> map = YamlTools.loadYamlSettings(confFile);
             
@@ -145,12 +171,15 @@ public class Configuration {
                     "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_WORKFLOW), 
                     "Configuration must contain the '" + CONF_WORKFLOW + "' element.");
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_LOCAL), 
+                    "Configuration must contain the '" + CONF_LOCAL + "' element.");
             
             this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
             this.workflowConfiguration = loadWorkflowConfiguration((Map<String, Object>) confMap.get(CONF_WORKFLOW));
+            this.localConfiguration = loadLocalConfiguration((Map<String, Object>) confMap.get(CONF_LOCAL));
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
@@ -271,6 +300,34 @@ public class Configuration {
         RequiredFields requiredFields = RequiredFields.loadRequiredFieldsFile(requiredFieldsFile);
         
         return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, requiredFields);
+    }
+    
+    /**
+     * Retrieves the local configuration from the map.
+     * @param map The local map.
+     * @return The local configuration.
+     */
+    protected LocalConfiguration loadLocalConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_ARCHIVE_PATH), 
+                "Missing Transformation element '" + CONF_LOCAL_ARCHIVE_PATH + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_OUTPUT_PATH), 
+                "Missing Transformation element '" + CONF_LOCAL_OUTPUT_PATH + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_TEST), 
+                "Missing Transformation element '" + CONF_LOCAL_TEST + "'");
+
+        File outputDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
+        File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
+        boolean isTest = false;
+        if(map.containsKey(CONF_LOCAL_TEST)) {
+            isTest = (Boolean) map.get(CONF_LOCAL_TEST);
+        }
+        
+        return new LocalConfiguration(archiveDir, outputDir, isTest);
+    }
+    
+    /** @return The local configuration. */
+    public LocalConfiguration getLocalConfiguration() {
+        return localConfiguration;
     }
     
     /** @return The configuration for the bitrepository.*/

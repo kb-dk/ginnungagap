@@ -43,13 +43,13 @@ public class CatalogStructMapIntegrationTest extends ExtendedTestCase {
         Cumulus.CumulusStop();
     }
     
-    @Test(enabled = false)
-    public void testPerformingWorkflow() {
-        CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
-        MetadataTransformer transformer = new MetadataTransformer(xsltFile); 
-        BitmagPreserver preserver = Mockito.mock(BitmagPreserver.class);
-
-        CatalogStructmap.createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, collectionID, intellectualEntityID);
-    }
+//    @Test(enabled = false)
+//    public void testPerformingWorkflow() {
+//        CumulusServer cumulusServer = new CumulusServer(conf.getCumulusConf());
+//        MetadataTransformer transformer = new MetadataTransformer(xsltFile); 
+//        BitmagPreserver preserver = Mockito.mock(BitmagPreserver.class);
+//
+//        CatalogStructmap.createCatalogStructmap(cumulusServer, transformer, preserver, conf, catalogName, collectionID, intellectualEntityID);
+//    }
     
 }

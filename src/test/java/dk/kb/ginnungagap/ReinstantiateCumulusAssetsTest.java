@@ -52,95 +52,95 @@ public class ReinstantiateCumulusAssetsTest extends ExtendedTestCase {
         Assert.assertTrue(reinstantiateCumulusAssets instanceof ReinstantiateCumulusAssets);
     }
 
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testMissingArguments() throws Exception {
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            ReinstantiateCumulusAssets.main();
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-
-    @Test(expectedExceptions = ExitTrappedException.class)
-    public void testMissingFileArgument() throws Exception {
-        String catalogName = UUID.randomUUID().toString();
-        String badInputFilePath = UUID.randomUUID().toString();
-        Assert.assertFalse(new File(badInputFilePath).exists());
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            ReinstantiateCumulusAssets.main(testConf.getAbsolutePath(), catalogName, badInputFilePath);
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testUnableToConnect() throws Exception {
-        // Use bad path, but a 'yes' for all records in catalog
-        String badInputFilePath = UUID.randomUUID().toString();
-        try {
-            TestSystemUtils.forbidSystemExitCall();
-            ReinstantiateCumulusAssets.main(testConf.getAbsolutePath(), UUID.randomUUID().toString(), badInputFilePath, "yes");
-        } finally {
-            TestSystemUtils.enableSystemExitCall();
-        }
-    }
-
-    @Test
-    public void testReinstantiateListOfCumulusAssets() {
-        CumulusServer server = mock(CumulusServer.class);
-        String catalogName = UUID.randomUUID().toString();
-        CumulusRecord record = mock(CumulusRecord.class);
-        
-        when(server.findCumulusRecord(eq(catalogName), eq(recordId))).thenReturn(record);
-        when(record.getFile()).thenReturn(testInputFile);
-        
-        ReinstantiateCumulusAssets.reinstantiateListOfCumulusAssets(server, catalogName, testInputFile);
-        
-        verify(server).findCumulusRecord(eq(catalogName), eq(recordId));
-        verifyNoMoreInteractions(server);
-        
-        verify(record).getFile();
-        verify(record).setNewAssetReference(eq(testInputFile));
-        verifyNoMoreInteractions(record);
-    }
-    
-    @Test
-    public void testReinstantiateAllCumulusAssets() {
-        CumulusServer server = mock(CumulusServer.class);
-        String catalogName = UUID.randomUUID().toString();
-        CumulusRecord record = mock(CumulusRecord.class);
-        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
-        
-        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
-        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
-        when(record.getFile()).thenReturn(testInputFile);
-        
-        ReinstantiateCumulusAssets.reinstantiateAllCumulusAssets(server, catalogName);
-        
-        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
-        verifyNoMoreInteractions(server);
-        
-        verify(items).iterator();
-        verifyNoMoreInteractions(items);
-        
-        verify(record).getFile();
-        verify(record).setNewAssetReference(eq(testInputFile));
-        verifyNoMoreInteractions(record);
-    }
-
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testReinstantiateListOfCumulusAssetsBadFile() {
-        CumulusServer server = mock(CumulusServer.class);
-        String catalogName = UUID.randomUUID().toString();
-
-        File badFile = new File(UUID.randomUUID().toString());
-        Assert.assertFalse(badFile.exists());
-        
-        ReinstantiateCumulusAssets.reinstantiateListOfCumulusAssets(server, catalogName, badFile);
-    }
-    
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testMissingArguments() throws Exception {
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            ReinstantiateCumulusAssets.main();
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//
+//    @Test(expectedExceptions = ExitTrappedException.class)
+//    public void testMissingFileArgument() throws Exception {
+//        String catalogName = UUID.randomUUID().toString();
+//        String badInputFilePath = UUID.randomUUID().toString();
+//        Assert.assertFalse(new File(badInputFilePath).exists());
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            ReinstantiateCumulusAssets.main(testConf.getAbsolutePath(), catalogName, badInputFilePath);
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testUnableToConnect() throws Exception {
+//        // Use bad path, but a 'yes' for all records in catalog
+//        String badInputFilePath = UUID.randomUUID().toString();
+//        try {
+//            TestSystemUtils.forbidSystemExitCall();
+//            ReinstantiateCumulusAssets.main(testConf.getAbsolutePath(), UUID.randomUUID().toString(), badInputFilePath, "yes");
+//        } finally {
+//            TestSystemUtils.enableSystemExitCall();
+//        }
+//    }
+//
+//    @Test
+//    public void testReinstantiateListOfCumulusAssets() {
+//        CumulusServer server = mock(CumulusServer.class);
+//        String catalogName = UUID.randomUUID().toString();
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        
+//        when(server.findCumulusRecord(eq(catalogName), eq(recordId))).thenReturn(record);
+//        when(record.getFile()).thenReturn(testInputFile);
+//        
+//        ReinstantiateCumulusAssets.reinstantiateListOfCumulusAssets(server, catalogName, testInputFile);
+//        
+//        verify(server).findCumulusRecord(eq(catalogName), eq(recordId));
+//        verifyNoMoreInteractions(server);
+//        
+//        verify(record).getFile();
+//        verify(record).setNewAssetReference(eq(testInputFile));
+//        verifyNoMoreInteractions(record);
+//    }
+//    
+//    @Test
+//    public void testReinstantiateAllCumulusAssets() {
+//        CumulusServer server = mock(CumulusServer.class);
+//        String catalogName = UUID.randomUUID().toString();
+//        CumulusRecord record = mock(CumulusRecord.class);
+//        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+//        
+//        when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
+//        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+//        when(record.getFile()).thenReturn(testInputFile);
+//        
+//        ReinstantiateCumulusAssets.reinstantiateAllCumulusAssets(server, catalogName);
+//        
+//        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+//        verifyNoMoreInteractions(server);
+//        
+//        verify(items).iterator();
+//        verifyNoMoreInteractions(items);
+//        
+//        verify(record).getFile();
+//        verify(record).setNewAssetReference(eq(testInputFile));
+//        verifyNoMoreInteractions(record);
+//    }
+//
+//    @Test(expectedExceptions = IllegalStateException.class)
+//    public void testReinstantiateListOfCumulusAssetsBadFile() {
+//        CumulusServer server = mock(CumulusServer.class);
+//        String catalogName = UUID.randomUUID().toString();
+//
+//        File badFile = new File(UUID.randomUUID().toString());
+//        Assert.assertFalse(badFile.exists());
+//        
+//        ReinstantiateCumulusAssets.reinstantiateListOfCumulusAssets(server, catalogName, badFile);
+//    }
+//    
 //    @Test(expectedExceptions = IllegalStateException.class)
 //    public void testReinstantiateAllCumulusAssets() throws Exception {
 //        CumulusServer server = mock(CumulusServer.class);

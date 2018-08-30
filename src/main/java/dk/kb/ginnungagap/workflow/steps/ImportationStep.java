@@ -27,7 +27,7 @@ import dk.kb.metadata.utils.CalendarUtils;
 /**
  * The workflow step for importing Cumulus record asset files from the archive.
  */
-public class ImportationStep implements WorkflowStep {
+public class ImportationStep extends WorkflowStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(ImportationStep.class);
 

@@ -9,10 +9,12 @@ import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.metadata.utils.GuidExtractionUtils;
@@ -21,30 +23,22 @@ import dk.kb.metadata.utils.GuidExtractionUtils;
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
  * 
  */
+@Component
 public class BitmagPreserver {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(BitmagPreserver.class);
-
+    
     /** The archive, interface for the Bitrepository.
      * No other archive should be implemented.*/
-    protected final Archive archive;
-    /** The configuration for the bitrepository.*/
-    protected final BitmagConfiguration bitmagConf;
-
+    @Autowired
+    protected ArchiveWrapper archive;
+    /** The configuration.*/
+    @Autowired
+    protected Configuration conf;
+    
     /** Mapping between active warc packers and their collection.*/
-    protected final Map<String, WarcPacker> warcPackerForCollection;
-
-    /**
-     * Constructor.
-     * @param archive The archive where the data should be sent.
-     * @param bitmagConf Configuration for the bitrepository.
-     */
-    public BitmagPreserver(Archive archive, BitmagConfiguration bitmagConf) {
-        this.archive = archive;
-        this.warcPackerForCollection = new HashMap<String, WarcPacker>();
-        this.bitmagConf = bitmagConf;
-    }
-
+    protected Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
+    
     /**
      * Retrieves the Warc packer for a given Bitrepository collection.
      * If no Warc packer exists for the given Bitrepository collection, then a new one is created.
@@ -53,11 +47,11 @@ public class BitmagPreserver {
      */
     protected WarcPacker getWarcPacker(String collectionId) {
         if(!warcPackerForCollection.containsKey(collectionId)) {
-            warcPackerForCollection.put(collectionId, new WarcPacker(bitmagConf));
+            warcPackerForCollection.put(collectionId, new WarcPacker(conf.getBitmagConf()));
         }
         return warcPackerForCollection.get(collectionId);
     }
-
+    
     /**
      * Packages the Asset File of a Cumulus record.
      * @param record The record to package.
@@ -103,13 +97,13 @@ public class BitmagPreserver {
      */
     public void checkConditions() {
         for(Map.Entry<String, WarcPacker> warc : warcPackerForCollection.entrySet()) {
-            if(warc.getValue().getSize() > bitmagConf.getWarcFileSizeLimit()) {
+            if(warc.getValue().getSize() > conf.getBitmagConf().getWarcFileSizeLimit()) {
                 String collectionId = warc.getKey();
                 uploadWarcFile(collectionId);
             }
         }
     }
-
+    
     /**
      * Uploads all warc files to their given collection.
      */
@@ -118,7 +112,7 @@ public class BitmagPreserver {
             uploadWarcFile(collectionId);
         }
     }
-
+    
     /**
      * Performs the upload of the warc file for the given collection.
      * @param collectionId The id of the collection to upload to.
@@ -131,17 +125,17 @@ public class BitmagPreserver {
             FileUtils.deleteFile(wp.getWarcFile());
             return;
         }
-
+        
         log.info("Uploading warc file for collection '" + collectionId + "'");
         WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
-
+        
         boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
         if(uploadSucces) {
             log.info("Successfully uploaded the WARC file '" + wp.getWarcFile().getName() + "'"); 
             wp.reportSucces(checksumDigest);
         } else {
             log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "
-                    + "Keeping it in temp dir: '" + bitmagConf.getTempDir().getAbsolutePath() + "'");
+                    + "Keeping it in temp dir: '" + conf.getBitmagConf().getTempDir().getAbsolutePath() + "'");
             wp.reportFailure("Could not upload the file to the archive.");
         }
         warcPackerForCollection.remove(collectionId);

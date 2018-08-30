@@ -1,55 +1,51 @@
 package dk.kb.ginnungagap.workflow.schedule;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.bitrepository.common.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import dk.kb.ginnungagap.workflow.PreservationWorkflow;
 
 /**
- * Scheduler that uses Timer to run workflows.
+ * The workflow scheduler for scheduling the workflows.
+ * 
+ * Wraps a ScheduledExecutorService, which checks whether to run any of workflows once every second.
+ * It is the workflows themselves, who checks their conditions and performs their tasks if the conditions are met.
  */
+@Service
 public class WorkflowScheduler {
-    /** The logger.*/
-    private static final Logger log = LoggerFactory.getLogger(WorkflowScheduler.class);
+    /** The interval for the timer, so it .*/
+    protected static final long TIMER_INTERVAL = 1000L;
+    
+    /** The preservation workflow.*/
+    @Autowired
+    PreservationWorkflow preservationWorkflow;
 
-    /** The timer that schedules events. */
-    protected final Timer timer;
-    /** The map between the running timertasks and their names. */
-    protected Map<String, SchedulableWorkflowTimerTask> intervalTasks = new HashMap<String, 
-            SchedulableWorkflowTimerTask>();
-    /** The default value for the schuler.*/
-    public static final long SCHEDULE_INTERVAL = 60000;
-
-    /** The name of the timer.*/
-    protected static final String TIMER_NAME = "Cumulus Bevaring Service Scheduler";
-    /** Whether the timer is a daemon.*/
-    protected static final boolean TIMER_IS_DAEMON = true;
-    /** A timer delay of 0 seconds.*/
-    protected static final Long NO_DELAY = 0L;
-
-    /** Setup a timer task for running the workflows at requested interval.
-     */
-    public WorkflowScheduler() {
-        timer = new Timer(TIMER_NAME, TIMER_IS_DAEMON);
-    }
-
+    /** The timer for running the TimerTasks.*/
+    ScheduledExecutorService executorService;
+    
     /**
-     * Adds a workflow for the scheduler to schedule.
-     * @param workflow The job to schedule.
-     * @param interval The interval for how often the job should be triggered.
+     * Method for shutting down this service.
      */
-    public void schedule(Workflow workflow, Long interval) {
-        log.debug("Scheduling job : " + workflow.getJobID() + " to run every " 
-                + TimeUtils.millisecondsToHuman(interval));
+    @PreDestroy
+    public void shutDown() {
+        preservationWorkflow.cancel();
+        executorService.shutdownNow();
+    }
+    
+    /**
+     * Scedules the workflows.
+     */
+    @PostConstruct
+    public void scheduleWorkflows() {
+        executorService = Executors.newSingleThreadScheduledExecutor();
         
-        SchedulableWorkflowTimerTask task = new SchedulableWorkflowTimerTask(interval, workflow);
-        if(interval > 0) {
-            timer.scheduleAtFixedRate(task, NO_DELAY, SCHEDULE_INTERVAL);
-        }
-
-        intervalTasks.put(workflow.getJobID(), task);
+        executorService.scheduleAtFixedRate(preservationWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 }
