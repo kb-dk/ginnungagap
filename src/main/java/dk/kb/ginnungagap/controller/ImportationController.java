@@ -8,28 +8,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
+import dk.kb.ginnungagap.workflow.ImportWorkflow;
 
 /**
  * Controller for the preservation workflow view.
  */
 @Controller
-public class PreservationController {
+public class ImportationController {
     /** The log.*/
-    protected final Logger log = LoggerFactory.getLogger(PreservationController.class);
+    protected final Logger log = LoggerFactory.getLogger(ImportationController.class);
 
     /** The CCS workflow.*/
     @Autowired
-    protected PreservationWorkflow preservationWorkflow;
+    protected ImportWorkflow importWorkflow;
 
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/preservation")
+    @RequestMapping("/import")
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", preservationWorkflow);
+        model.addAttribute("workflow", importWorkflow);
         
         return "preservation";
     }
@@ -38,10 +38,10 @@ public class PreservationController {
      * The run method for the workflows.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/preservation/run")
+    @RequestMapping("/import/run")
     public RedirectView runWorkflow() {
-        log.info("Running the preservation workflow.");
-        preservationWorkflow.startManually();
+        log.info("Running the update importation workflow.");
+        importWorkflow.startManually();
         
         try {
             synchronized(this) {
@@ -50,6 +50,6 @@ public class PreservationController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../preservation",true);
+        return new RedirectView("../import",true);
     }
 }

@@ -9,24 +9,23 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/../../aim">AIM</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/../../ccs">CCS</a>
-                </li>
-            </ul>
-        </div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item <c:if test="${page=='workflow'}">active</c:if>">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/workflow">Workflow</a>
+                <li class="nav-item <c:if test="${page=='ginnungagap'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/ginnungagap">Ginnungagap</a>
                 </li>
-                <li class="nav-item <c:if test="${page=='report'}">active</c:if>">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/report">Reporting</a>
+                <li class="nav-item <c:if test="${page=='preservation'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/preservation">Preservation</a>
+                </li>
+                <li class="nav-item <c:if test="${page=='update'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/update">Update</a>
+                </li>
+                <li class="nav-item <c:if test="${page=='validation'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/validation">Validation</a>
+                </li>
+                <li class="nav-item <c:if test="${page=='import'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/import">Import</a>
                 </li>
             </ul>
         </div>

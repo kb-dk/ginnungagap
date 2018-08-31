@@ -8,28 +8,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
+import dk.kb.ginnungagap.workflow.ValidationWorkflow;
 
 /**
  * Controller for the preservation workflow view.
  */
 @Controller
-public class PreservationController {
+public class ValidationController {
     /** The log.*/
-    protected final Logger log = LoggerFactory.getLogger(PreservationController.class);
+    protected final Logger log = LoggerFactory.getLogger(ValidationController.class);
 
-    /** The CCS workflow.*/
+    /** The validation workflow.*/
     @Autowired
-    protected PreservationWorkflow preservationWorkflow;
-
+    protected ValidationWorkflow workflow;
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/preservation")
+    @RequestMapping("/validation")
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", preservationWorkflow);
+        log.info("Requested the preservation path");
+        model.addAttribute("workflow", workflow);
         
         return "preservation";
     }
@@ -38,10 +38,9 @@ public class PreservationController {
      * The run method for the workflows.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/preservation/run")
+    @RequestMapping("/validation/run")
     public RedirectView runWorkflow() {
-        log.info("Running the preservation workflow.");
-        preservationWorkflow.startManually();
+        workflow.startManually();
         
         try {
             synchronized(this) {
@@ -50,6 +49,6 @@ public class PreservationController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../preservation",true);
+        return new RedirectView("../validation",true);
     }
 }

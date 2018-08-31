@@ -49,7 +49,7 @@ public class FullValidationStep extends ValidationStep {
 
     @Override
     public String getName() {
-        return "Simple Validation Step for '" + catalogName + "'";
+        return "Full Validation Step for '" + catalogName + "'";
     }
 
     @Override

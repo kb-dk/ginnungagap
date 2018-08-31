@@ -2,10 +2,13 @@ package dk.kb.ginnungagap.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
+
+import dk.kb.ginnungagap.config.Configuration;
 
 /**
  * Setting the default start path for the view.
@@ -15,6 +18,9 @@ public class IndexController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(IndexController.class);
 
+    @Autowired
+    protected Configuration conf;
+    
     /**
      * Index controller, for redirecting towards the workflow site.
      * @return The redirect toward the workflow site.
@@ -30,8 +36,8 @@ public class IndexController {
      */
     @RequestMapping("/ginnungagap")
     public String getGinnungagap(Model model) {
-        log.warn("Ginnungagap model: " + model.asMap().toString());
-
+        model.addAttribute("conf", conf);
+        
         return "ginnungagap";
     }
 }

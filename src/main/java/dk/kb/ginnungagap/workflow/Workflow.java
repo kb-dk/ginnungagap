@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.utils.CalendarUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 
@@ -137,8 +138,12 @@ public abstract class Workflow extends TimerTask {
     /**
      * @return The date for the next time this workflow should be run.
      */
-    public Date getNextRunDate() {
-        return new Date(nextRun.getTime());
+    public String getNextRunDate() {
+        if(nextRun != null) {
+            return CalendarUtils.dateToText(nextRun);
+        } else {
+            return "Must be run manual";
+        }
     }
     
     /**

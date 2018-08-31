@@ -53,7 +53,7 @@ public class UpdatePreservationStep extends PreservationStep {
 
     @Override
     public String getName() {
-        return "Preservation Update Step";
+        return "Preservation Update Step for catalog '" + catalogName + "'";
     }
 
     @Override

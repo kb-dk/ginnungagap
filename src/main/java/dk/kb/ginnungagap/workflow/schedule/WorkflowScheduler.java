@@ -10,7 +10,10 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dk.kb.ginnungagap.workflow.ImportWorkflow;
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
+import dk.kb.ginnungagap.workflow.UpdatePreservationWorkflow;
+import dk.kb.ginnungagap.workflow.ValidationWorkflow;
 
 /**
  * The workflow scheduler for scheduling the workflows.
@@ -26,7 +29,16 @@ public class WorkflowScheduler {
     /** The preservation workflow.*/
     @Autowired
     PreservationWorkflow preservationWorkflow;
-
+    /** The update preservation workflow.*/
+    @Autowired
+    UpdatePreservationWorkflow updateWorkflow;
+    /** The validation workflow.*/
+    @Autowired
+    ValidationWorkflow validationWorkflow;
+    /** The import workflow.*/
+    @Autowired
+    ImportWorkflow importWorkflow;
+    
     /** The timer for running the TimerTasks.*/
     ScheduledExecutorService executorService;
     
@@ -36,6 +48,10 @@ public class WorkflowScheduler {
     @PreDestroy
     public void shutDown() {
         preservationWorkflow.cancel();
+        updateWorkflow.cancel();
+        validationWorkflow.cancel();
+        importWorkflow.cancel();
+        
         executorService.shutdownNow();
     }
     
@@ -47,5 +63,8 @@ public class WorkflowScheduler {
         executorService = Executors.newSingleThreadScheduledExecutor();
         
         executorService.scheduleAtFixedRate(preservationWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(updateWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(validationWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(importWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 }

@@ -10,7 +10,7 @@
 
 <c:set var = "disable_workflow" value = "false" />
 <head>
-    <title>Preservation Workflow</title>
+    <title>Validation Workflow</title>
     <jsp:include page="includes/head.jsp" />
     <meta http-equiv="Refresh" content="30">
 </head>
@@ -19,7 +19,7 @@
     <jsp:param name="page" value="workflow"/>
 </jsp:include>
 <div class="jumbotron text-center">
-    <h1>Cumulus Preservation Service: Preservation Workflow</h1>
+    <h1>Cumulus Preservation Service: Validation Workflow</h1>
     <h2>Ginnungagap</h2>
 </div>
 <div id="main" class="container">
@@ -53,7 +53,7 @@
         </tbody>
     </table>
 
-    <form action="${pageContext.request.contextPath}/preservation/run" method="post">
+    <form action="${pageContext.request.contextPath}/validation/run" method="post">
         <button type="submit" class="btn btn-success" <c:if test="${disable_workflow eq true}">disabled</c:if> >Run Workflow</button>
     </form>
   </div>

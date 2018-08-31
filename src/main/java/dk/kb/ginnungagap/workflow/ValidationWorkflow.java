@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.workflow;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.config.Configuration;
@@ -17,6 +18,7 @@ import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
  * 
  * The full validation retrieves the file and validates the specific WARC-record.
  */
+@Component
 public class ValidationWorkflow extends Workflow {
     /** The description of this workflow.*/
     protected static final String WORKFLOW_DESCRIPTION = "Performs the validation of Cumulus records, "

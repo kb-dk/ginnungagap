@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.workflow;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
@@ -19,6 +20,7 @@ import dk.kb.ginnungagap.workflow.steps.UpdatePreservationStep;
  * 
  * This workflow will not preserve the Asset Reference (the content file) of the Cumulus items.
  */
+@Component
 public class UpdatePreservationWorkflow extends Workflow {
     /** The description of this workflow.*/
     protected static final String WORKFLOW_DESCRIPTION = "Sends new versions of packaged metadata to preservation, "

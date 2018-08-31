@@ -8,28 +8,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
+import dk.kb.ginnungagap.workflow.UpdatePreservationWorkflow;
 
 /**
  * Controller for the preservation workflow view.
  */
 @Controller
-public class PreservationController {
+public class UpdateController {
     /** The log.*/
-    protected final Logger log = LoggerFactory.getLogger(PreservationController.class);
+    protected final Logger log = LoggerFactory.getLogger(UpdateController.class);
 
     /** The CCS workflow.*/
     @Autowired
-    protected PreservationWorkflow preservationWorkflow;
+    protected UpdatePreservationWorkflow updateWorkflow;
 
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/preservation")
+    @RequestMapping("/update")
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", preservationWorkflow);
+        model.addAttribute("workflow", updateWorkflow);
         
         return "preservation";
     }
@@ -38,10 +38,10 @@ public class PreservationController {
      * The run method for the workflows.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/preservation/run")
+    @RequestMapping("/update/run")
     public RedirectView runWorkflow() {
-        log.info("Running the preservation workflow.");
-        preservationWorkflow.startManually();
+        log.info("Running the update preservation workflow.");
+        updateWorkflow.startManually();
         
         try {
             synchronized(this) {
@@ -50,6 +50,6 @@ public class PreservationController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../preservation",true);
+        return new RedirectView("../update",true);
     }
 }

@@ -178,6 +178,6 @@ public class ImportationStep extends WorkflowStep {
 
     @Override
     public String getName() {
-        return "Importation Workflow";
+        return "Importation Workflow for catalog '" + catalogName + "'";
     }
 }
