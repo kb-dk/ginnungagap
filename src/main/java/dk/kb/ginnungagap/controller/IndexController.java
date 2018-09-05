@@ -36,7 +36,10 @@ public class IndexController {
      */
     @RequestMapping("/ginnungagap")
     public String getGinnungagap(Model model) {
-        model.addAttribute("conf", conf);
+        model.addAttribute("cumulusConf", conf.getViewableCumulusConfiguration());
+        model.addAttribute("localConf", conf.getLocalConfiguration());
+        model.addAttribute("bitmagConf", conf.getBitmagConf());
+        model.addAttribute("transformationConf", conf.getTransformationConf());
         
         return "ginnungagap";
     }

@@ -316,7 +316,7 @@ public class Configuration {
                 "Missing Transformation element '" + CONF_LOCAL_TEST + "'");
 
         File outputDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
-        File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
+        File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_ARCHIVE_PATH));
         boolean isTest = false;
         if(map.containsKey(CONF_LOCAL_TEST)) {
             isTest = (Boolean) map.get(CONF_LOCAL_TEST);
@@ -348,5 +348,13 @@ public class Configuration {
     /** @return The configuration for the transformation.*/
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
+    }
+    
+    /**
+     * A version of Cumulus configuration without the password.
+     * @return The viewable configuration for accessing Cumulus.
+     */
+    public ViewableCumulusConfiguration getViewableCumulusConfiguration() {
+        return new ViewableCumulusConfiguration(cumulusConf);
     }
 }

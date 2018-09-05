@@ -19,7 +19,7 @@
     <jsp:param name="page" value="workflow"/>
 </jsp:include>
 <div class="jumbotron text-center">
-    <h1>Cumulus Preservation Service: Importation Workflow</h1>
+    <h1>Importation Workflow</h1>
     <h2>Ginnungagap</h2>
 </div>
 <div id="main" class="container">

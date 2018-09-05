@@ -8,18 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusQuery;
@@ -32,7 +22,6 @@ import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
 import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
-import dk.kb.ginnungagap.utils.StringUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 
 /**
@@ -93,31 +82,41 @@ public class PreservationStep extends WorkflowStep {
     protected void preserveRecordItems(CumulusRecordCollection items, String catalogName) {
         if(items.getCount() == 0) {
             log.debug("No items to preserve from catalog: " + catalogName);
+            setResultOfRun("No preservable records found for catalog '" + catalogName + "'.");
             return;
         }
         int i = 0;
         int failures = 0;
+        String failure = "";
         for(CumulusRecord record : items) {
             try {
                 setResultOfRun("Running! Preservation of #" + i + ", " + record.getUUID());
                 log.debug("Initiating preservation on record '" + record.getUUID() + "'");
                 sendRecordToPreservation(record);
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                 log.error("Runtime exception caught while trying to handle Cumulus record '" 
                         + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);
                 failures++;
+                if(failure.isEmpty()) {
+                    failure = e.getMessage();
+                }
             }
             i++;
         }
-        setResultOfRun("Preservation of " + i + " records, with " + failures + " failures.");
+        String results = "Preservation of " + i + " records";
+        if(failures > 0) {
+            results += ", with " + failures + " failures.";
+            results += " First error message: " + failure;
+        }
+        setResultOfRun(results);
     }
 
     /**
      * Preserves the record, and if it is a master-asset, then the representation is also preserved.
      * @param record The given Cumulus record to preserve.
      */
-    protected void sendRecordToPreservation(CumulusRecord record) {
+    protected void sendRecordToPreservation(CumulusRecord record) throws Exception {
         try {
             CumulusPreservationUtils.initialiseRecordForPreservation(record);
 
@@ -139,6 +138,7 @@ public class PreservationStep extends WorkflowStep {
             log.warn("Preserving the record '" + record + "' failed.", e);
             CumulusPreservationUtils.setPreservationFailed(record, "Failed to preserve record '" 
                     + record.getUUID() + ": \n" + e.getMessage());
+            throw e;
         }
     }
     
@@ -226,7 +226,8 @@ public class PreservationStep extends WorkflowStep {
      */
     protected void transformAndPreserveIntellectualEntity(String ieUUID, String metadataUUID, String fileUUID, 
             CumulusRecord record) throws IOException {
-        File ieRawFile = createIErawFile(ieUUID, metadataUUID, fileUUID);
+        File ieRawFile = new File(conf.getMetadataTempDir(), ieUUID + RAW_FILE_SUFFIX);
+        CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, ieRawFile);
         File metadataFile = new File(conf.getMetadataTempDir(), ieUUID);
         try (OutputStream os = new FileOutputStream(metadataFile);
                 InputStream in = new FileInputStream(ieRawFile)) {
@@ -242,60 +243,6 @@ public class PreservationStep extends WorkflowStep {
         preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
     }
     
-    /**
-     * Creates the raw XML file for the intellectual entity, for the transformation.
-     * It should have the following format:
-     * <record>
-     *   <ie_uuid>IE_UUID</ie_uuid>
-     *   <object_uuid>OBJECT_UUID</object_uuid>
-     *   <file_uuid>FILE_UUID</file_uuid>
-     * </record>
-     * (where the file uuid field is optional).
-     * @param ieUUID The UUID for the intellectual entity.
-     * @param metadataUUID The UUID for the metadata object.
-     * @param fileUUID The UUID for the file. This may be null.
-     * @return The raw XML file.
-     */
-    protected File createIErawFile(String ieUUID, String metadataUUID, String fileUUID) {
-        try {
-            File ieRawFile = new File(conf.getMetadataTempDir(), ieUUID + RAW_FILE_SUFFIX); 
-
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("record");
-            doc.appendChild(rootElement);
-
-            Element ieField = doc.createElement("ie_uuid");
-            rootElement.appendChild(ieField);
-            ieField.appendChild(doc.createTextNode(ieUUID));
-
-            Element metadataField = doc.createElement("object_uuid");
-            rootElement.appendChild(metadataField);
-            metadataField.appendChild(doc.createTextNode(metadataUUID));
-            
-            if(!StringUtils.isNullOrEmpty(fileUUID)) {
-                Element fileField = doc.createElement("file_uuid");
-                rootElement.appendChild(fileField);
-                fileField.appendChild(doc.createTextNode(fileUUID));
-            }
-
-            // write the content into xml file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(ieRawFile);
-
-            transformer.transform(source, result);
-            return ieRawFile;
-        } catch(Exception e) {
-            throw new IllegalStateException("Cannot create the raw IntellectualEntity metadata file.", e);
-        }
-    }
-
     /**
      * Transforms and validates the metadata from the Cumulus record.
      * 

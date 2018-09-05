@@ -31,7 +31,7 @@ public class ImportationController {
     public String getWorkflow(Model model) {
         model.addAttribute("workflow", importWorkflow);
         
-        return "preservation";
+        return "import";
     }
     
     /**

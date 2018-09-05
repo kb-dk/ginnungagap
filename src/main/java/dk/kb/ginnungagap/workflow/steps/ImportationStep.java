@@ -1,14 +1,7 @@
 package dk.kb.ginnungagap.workflow.steps;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
-import org.jwat.warc.WarcReader;
-import org.jwat.warc.WarcReaderFactory;
-import org.jwat.warc.WarcRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +13,7 @@ import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.ginnungagap.utils.StreamUtils;
+import dk.kb.ginnungagap.utils.WarcUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.metadata.utils.CalendarUtils;
 
@@ -59,9 +52,13 @@ public class ImportationStep extends WorkflowStep {
         CumulusQuery query = CumulusQueryUtils.getQueryForPreservationImportation(catalogName);
         
         CumulusRecordCollection items = server.getItems(catalogName, query);
+        int i = 0;
         for(CumulusRecord record : items) {
+            setResultOfRun("Running... Importing " + record.getUUID());
             importRecord(record);
+            i++;
         }
+        setResultOfRun("Imported " + i + " records");
     }
 
     /**
@@ -76,12 +73,10 @@ public class ImportationStep extends WorkflowStep {
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             
-            try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(f))) {
-                WarcRecord warcRecord = getWarcRecord(reader, uuid);
-
-                File file = extractRecord(warcRecord, record);
-                importFile(record, file);
-            }
+            File file = new File(record.getUUID());
+            WarcUtils.extractRecord(f, uuid, file);
+            importFile(record, file);
+            
             setValid(record);
         } catch (IllegalStateException e) {
             String errMsg = "The record '" + record + "' is invalid: " + e.getMessage();
@@ -119,41 +114,6 @@ public class ImportationStep extends WorkflowStep {
         FileUtils.deprecateMove(f, newFile);
     }
     
-    /**
-     * Extracts the content of a record into a file. 
-     * @param warcRecord The WARC record to be extracted.
-     * @param cumulusRecord The Cumulus record for the warc record to be extracted.
-     * @return The file with the extracted WARC record.
-     * @throws IOException If an error occurs while extracting the WARC record.
-     */
-    protected File extractRecord(WarcRecord warcRecord, CumulusRecord cumulusRecord) throws IOException {
-        File outputFile = new File(cumulusRecord.getUUID());
-        
-        try (OutputStream os = new FileOutputStream(outputFile)) {
-            StreamUtils.copyInputStreamToOutputStream(warcRecord.getPayloadContent(), os);
-            os.flush();
-            os.close();
-        }
-        return outputFile;
-    }
-    
-    /**
-     * Retrieves the WARC record from the WARC file.
-     * Will throw an exception, if the record is not found.
-     * @param file The WARC file to extract the WARC record from.
-     * @param recordId The id of the WARC record.
-     * @return The WARC record.
-     * @throws IOException If an error occurs when reading the WARC file.
-     */
-    protected WarcRecord getWarcRecord(WarcReader reader, String recordId) throws IOException {
-        for(WarcRecord record : reader) {
-            if(record.header.warcRecordIdStr.contains(recordId)) {
-                return record;
-            }
-        }
-        throw new IllegalStateException("Could not find the record '" + recordId + "' in the WARC file.");
-    }
-
     /**
      * Report back that the validation of the record failed.
      * @param record The record which is invalid.

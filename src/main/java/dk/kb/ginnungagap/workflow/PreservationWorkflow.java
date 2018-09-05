@@ -22,7 +22,7 @@ import dk.kb.ginnungagap.workflow.steps.PreservationStep;
 public class PreservationWorkflow extends Workflow {
     /** The description of this workflow.*/
     protected static final String WORKFLOW_DESCRIPTION = 
-            "Preserves all the Cumulus records, which have been set to 'ready for long-term preservation'.";
+            "Preserves all the Cumulus records, which have been set to 'Send til Langtidsbevaring'.";
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Preservation Workflow";
     

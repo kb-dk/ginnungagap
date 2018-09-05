@@ -16,10 +16,10 @@
 </head>
 <body>
 <jsp:include page="includes/topBar.jsp">
-    <jsp:param name="page" value="workflow"/>
+    <jsp:param name="page" value="validation"/>
 </jsp:include>
 <div class="jumbotron text-center">
-    <h1>Cumulus Preservation Service: Validation Workflow</h1>
+    <h1>Validation Workflow</h1>
     <h2>Ginnungagap</h2>
 </div>
 <div id="main" class="container">

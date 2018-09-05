@@ -31,7 +31,7 @@ public class UpdateController {
     public String getWorkflow(Model model) {
         model.addAttribute("workflow", updateWorkflow);
         
-        return "preservation";
+        return "update";
     }
     
     /**

@@ -62,6 +62,7 @@ public class UpdatePreservationStep extends PreservationStep {
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records for preservation update.");
         preserveRecordItems(items, catalogName);
+        setResultOfRun("Updated preservation for " + items.getCount() + " records.");
     }
     
     /**
@@ -82,7 +83,7 @@ public class UpdatePreservationStep extends PreservationStep {
                 String oldMetadataReference = getOldMetadataReference(record);
                 sendRecordToPreservation(record);
                 saveUpdateMetadataHistoryReference(record, oldMetadataReference);
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                 log.error("Runtime exception caught while trying to handle Cumulus record '" 
                         + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);

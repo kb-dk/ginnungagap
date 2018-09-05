@@ -33,6 +33,7 @@ public class PreservationFinalizationStep extends WorkflowStep {
     public void performStep() throws Exception {
         try {
             preserver.uploadAll();
+            setResultOfRun("Uploaded all WARC files");
         } catch (Throwable e) {
             log.error("Failed to update the packaged files.", e);
             throw new IllegalStateException("Failed to finalize the preservation.", e);

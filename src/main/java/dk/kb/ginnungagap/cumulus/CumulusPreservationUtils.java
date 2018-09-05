@@ -1,14 +1,26 @@
 package dk.kb.ginnungagap.cumulus;
 
+import java.io.File;
 import java.util.UUID;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.StringUtils;
 
 /**
  * Class containing all the preservation methods regarding Cumulus records.
@@ -116,5 +128,56 @@ public class CumulusPreservationUtils {
         record.setStringEnumValueForField(Constants.FieldNames.PRESERVATION_STATUS, 
                 Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED);
         record.setStringValueInField(Constants.FieldNames.QA_ERROR, status);
+    }
+    
+    /**
+     * Creates the raw XML file for the intellectual entity, for the transformation.
+     * It should have the following format:
+     * <record>
+     *   <ie_uuid>IE_UUID</ie_uuid>
+     *   <object_uuid>OBJECT_UUID</object_uuid>
+     *   <file_uuid>FILE_UUID</file_uuid>
+     * </record>
+     * (where the file uuid field is optional).
+     * @param ieUUID The UUID for the intellectual entity.
+     * @param metadataUUID The UUID for the metadata object.
+     * @param fileUUID The UUID for the file. This may be null.
+     * @param ieRawFile The file for the raw IE metadata output.
+     */
+    public static void createIErawFile(String ieUUID, String metadataUUID, String fileUUID, File ieRawFile) {
+        try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+            Element rootElement = doc.createElement("record");
+            doc.appendChild(rootElement);
+
+            Element ieField = doc.createElement("ie_uuid");
+            rootElement.appendChild(ieField);
+            ieField.appendChild(doc.createTextNode(ieUUID));
+
+            Element metadataField = doc.createElement("object_uuid");
+            rootElement.appendChild(metadataField);
+            metadataField.appendChild(doc.createTextNode(metadataUUID));
+            
+            if(!StringUtils.isNullOrEmpty(fileUUID)) {
+                Element fileField = doc.createElement("file_uuid");
+                rootElement.appendChild(fileField);
+                fileField.appendChild(doc.createTextNode(fileUUID));
+            }
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(ieRawFile);
+
+            transformer.transform(source, result);
+        } catch(Exception e) {
+            throw new IllegalStateException("Cannot create the raw IntellectualEntity metadata file.", e);
+        }
     }
 }

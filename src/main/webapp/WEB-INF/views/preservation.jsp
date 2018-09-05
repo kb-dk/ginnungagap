@@ -16,7 +16,7 @@
 </head>
 <body>
 <jsp:include page="includes/topBar.jsp">
-    <jsp:param name="page" value="workflow"/>
+    <jsp:param name="page" value="preservation"/>
 </jsp:include>
 <div class="jumbotron text-center">
     <h1>Cumulus Preservation Service: Preservation Workflow</h1>

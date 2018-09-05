@@ -35,7 +35,6 @@ import dk.kb.cumulus.CumulusRecordCollection;
 import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.config.RequiredFields;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.transformation.MetadataTransformer;
@@ -394,27 +393,6 @@ public class PreservationStepTest extends ExtendedTestCase {
             step.transformAndPreserveIntellectualEntity(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString(), record);
         } finally {
             ieMetadataFile.setReadable(true);            
-        }
-    }
-    
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testCreateIErawFileFailure() throws IOException {
-        CumulusServer server = mock(CumulusServer.class);
-        BitmagPreserver preserver = mock(BitmagPreserver.class);
-        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-
-        String ieUUID = UUID.randomUUID().toString();
-        
-        File ieMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), ieUUID + PreservationStep.RAW_FILE_SUFFIX);
-        Assert.assertTrue(ieMetadataFile.createNewFile());
-        
-        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        
-        try {
-            ieMetadataFile.setWritable(false);
-            step.createIErawFile(ieUUID, UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        } finally {
-            ieMetadataFile.setWritable(true);
         }
     }
 }

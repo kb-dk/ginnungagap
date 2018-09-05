@@ -31,7 +31,7 @@ public class ValidationController {
         log.info("Requested the preservation path");
         model.addAttribute("workflow", workflow);
         
-        return "preservation";
+        return "validation";
     }
     
     /**

@@ -40,6 +40,7 @@ public abstract class ValidationStep extends WorkflowStep {
         for(CumulusRecord record : items) {
             validateRecord(record);
         }
+        setResultOfRun("Validated " + items.getCount() + " records.");
     }
 
     /**

@@ -14,10 +14,10 @@
 </head>
 <body>
 <jsp:include page="includes/topBar.jsp">
-    <jsp:param name="page" value="workflow"/>
+    <jsp:param name="page" value="error"/>
 </jsp:include>
 <div class="jumbotron text-center">
-    <h1>Cumulus Preservation Service Workflow</h1>
+    <h1>Cumulus Preservation Service</h1>
     <h2>Ginnungagap error</h2>
 </div>
 </body>
