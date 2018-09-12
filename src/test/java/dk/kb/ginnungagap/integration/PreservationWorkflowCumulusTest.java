@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItem;
 
 import dk.kb.cumulus.CumulusRecord;

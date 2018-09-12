@@ -4,20 +4,14 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
-import org.mockito.Mockito;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
 
-import dk.kb.cumulus.CumulusServer;
-import dk.kb.ginnungagap.CatalogStructmap;
-import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.testutils.SetupCumulusTests;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.ginnungagap.transformation.MetadataTransformer;
 
 public class CatalogStructMapIntegrationTest extends ExtendedTestCase {
 

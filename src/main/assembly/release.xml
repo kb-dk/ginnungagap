@@ -17,6 +17,7 @@
 
 	<fileSets>
 		<!-- Move scripts and transforms dir into assembly -->
+		<!--
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/bin</directory>
 			<lineEnding>lf</lineEnding>
@@ -24,15 +25,16 @@
 			<fileMode>0755</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
+		-->
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/conf</directory>
 			<includes>
 				<include>*.yml</include>
 				<include>*.xml</include>
-				<include>*.cfg</include>
+				<!--include>*.cfg</include-->
 			</includes>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>${file.separator}conf${file.separator}</outputDirectory>
+			<outputDirectory>${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
@@ -42,21 +44,21 @@
 				<include>*.xml</include>
 			</includes>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>${file.separator}conf${file.separator}bitrepository</outputDirectory>
+			<outputDirectory>${file.separator}bitrepository</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/scripts/xsd</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>${file.separator}conf${file.separator}xsd${file.separator}</outputDirectory>
+			<outputDirectory>${file.separator}script${file.separator}xsd${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/scripts/xslt</directory>
 			<lineEnding>lf</lineEnding>
-			<outputDirectory>${file.separator}conf${file.separator}xslt${file.separator}</outputDirectory>
+			<outputDirectory>${file.separator}script${file.separator}xslt${file.separator}</outputDirectory>
 			<fileMode>0744</fileMode>
 			<filtered>true</filtered>
 		</fileSet>

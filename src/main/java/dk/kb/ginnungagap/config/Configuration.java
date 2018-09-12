@@ -47,9 +47,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *     <li>workflow:</li>
  *     <ul>
  *       <li>interval: $interval</li>
- *       <li>update_retention_in_days: $update_retention_in_days (optional)</li>
  *       <li>retain_dir: $retain_dir</li>
- *       <li>workflows: <br/>- $workflow_1<br/>- $workflow_2<br/>- ...</li>
  *     </ul>
  *     <li>transformation:</li>
  *     <ul>
@@ -104,12 +102,8 @@ public class Configuration {
     protected static final String CONF_WORKFLOW = "workflow";
     /** The workflow interval leaf-element.*/
     protected static final String CONF_WORKFLOW_INTERVAL = "interval";
-    /** [OPTIONAL] The workflow update retention in days leaf-element.*/
-    protected static final String CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS = "update_retention_in_days";
     /** The workflow retain directory path leaf-element.*/
     protected static final String CONF_WORKFLOW_RETAIN_DIR = "retain_dir";
-    /** The workflow names of workflows array leaf-element.*/
-    protected static final String CONF_WORKFLOW_WORKFLOWS = "workflows";
     
     /** Transformation node-element.*/
     protected static final String CONF_TRANSFORMATION = "transformation";
@@ -259,17 +253,13 @@ public class Configuration {
     protected WorkflowConfiguration loadWorkflowConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_INTERVAL), 
                 "Missing workflow element '" + CONF_WORKFLOW_INTERVAL + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_WORKFLOWS), 
-                "Missing workflow element '" + CONF_WORKFLOW_WORKFLOWS + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_RETAIN_DIR), 
                 "Missing workflow element '" + CONF_WORKFLOW_RETAIN_DIR + "'");
         
         int interval = (int) map.get(CONF_WORKFLOW_INTERVAL);
-        File retainDir = new File((String) map.get(CONF_WORKFLOW_RETAIN_DIR));
-        Integer updateRetentionInDays = (Integer) map.get(CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS);
-        List<String> workflows = (List<String>) map.get(CONF_WORKFLOW_WORKFLOWS);
+        File retainDir = FileUtils.getDirectory((String) map.get(CONF_WORKFLOW_RETAIN_DIR));
         
-        return new WorkflowConfiguration(interval, updateRetentionInDays, retainDir, workflows);
+        return new WorkflowConfiguration(interval, retainDir);
     }
     
     /**

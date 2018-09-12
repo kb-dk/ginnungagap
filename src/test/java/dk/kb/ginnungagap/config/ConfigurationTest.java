@@ -1,13 +1,12 @@
 package dk.kb.ginnungagap.config;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertFalse;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -105,8 +104,6 @@ public class ConfigurationTest extends ExtendedTestCase {
 
         assertNotNull(conf.getWorkflowConf());
         assertNotNull(conf.getWorkflowConf().getInterval());
-        assertNotNull(conf.getWorkflowConf().getWorkflows());
-        assertFalse(conf.getWorkflowConf().getWorkflows().isEmpty());
         
         assertNotNull(conf.getTransformationConf());
         assertNotNull(conf.getTransformationConf().getXsdDir());
@@ -145,9 +142,6 @@ public class ConfigurationTest extends ExtendedTestCase {
 
         assertNotNull(conf.getWorkflowConf());
         assertNotNull(conf.getWorkflowConf().getInterval());
-        assertNotNull(conf.getWorkflowConf().getUpdateRetentionInDays());
-        assertNotNull(conf.getWorkflowConf().getWorkflows());
-        assertFalse(conf.getWorkflowConf().getWorkflows().isEmpty());
         
         assertNotNull(conf.getTransformationConf());
         assertNotNull(conf.getTransformationConf().getXsdDir());
@@ -189,30 +183,4 @@ public class ConfigurationTest extends ExtendedTestCase {
         conf.loadBitmagConf(map);
     }
     
-    @Test
-    public void testWorkflowConfigurationWithValidUpdateRetention() {
-        addDescription("The creating the WorkflowConfiguration with a valid update retention");
-        int updateRetention = 1234;
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
-        
-        assertEquals(workflow.getUpdateRetentionInDays(), updateRetention);
-    }
-    
-    @Test
-    public void testWorkflowConfigurationWithoutUpdateRetention() {
-        addDescription("The creating the WorkflowConfiguration where the update retention is null");
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, null, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
-        
-        assertEquals(workflow.getUpdateRetentionInDays(), WorkflowConfiguration.DEFAULT_UPDATE_RETENTION);
-    }
-    
-    @Test
-    public void testWorkflowConfigurationWithInvalidUpdateRetention() {
-        addDescription("The creating the WorkflowConfiguration with an invalid update retention");
-        int updateRetention = -1234;
-        WorkflowConfiguration workflow = new WorkflowConfiguration(-1, updateRetention, TestFileUtils.getTempDir(), Arrays.asList("TEST WORKFLOW"));
-        
-        assertFalse(workflow.getUpdateRetentionInDays() == updateRetention);
-        assertEquals(workflow.getUpdateRetentionInDays(), WorkflowConfiguration.DEFAULT_UPDATE_RETENTION);
-    }
 }

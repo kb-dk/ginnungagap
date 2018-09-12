@@ -30,7 +30,7 @@ import dk.kb.ginnungagap.transformation.MetadataTransformer;
 import dk.kb.ginnungagap.utils.WarcUtils;
 
 /**
- * Setting the default start path for the view.
+ * Controller for dealing with the metadata creation/extraction.
  */
 @Controller
 public class MetadataController {
@@ -52,11 +52,11 @@ public class MetadataController {
     
     
     /**
-     * Index controller, for redirecting towards the workflow site.
-     * @return The redirect toward the workflow site.
+     * The metadata controller view.
+     * @return The metadata view.
      */
     @RequestMapping("/metadata")
-    public String getGinnungagap(Model model) {
+    public String getMetadata(Model model) {
         model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
         return "metadata";
     }
@@ -77,6 +77,7 @@ public class MetadataController {
             @RequestParam(value="metadataType", required=false, defaultValue="METS") String metadataType,
             @RequestParam(value="source", required=false, defaultValue="cumulus") String source) {        
         try {
+            log.info("Extracting '" + metadataType + "' metadata for '" + id + "' from catalog '" + catalog + "'.");
             String filename = id + ".xml";
             File metadataFile;
 
@@ -86,6 +87,13 @@ public class MetadataController {
             } else {
                 record = cumulusWrapper.getServer().findCumulusRecordByName(catalog, id);            
             }
+            if(record == null) {
+                throw new IllegalStateException("No Cumulus record for '" + id + "' at catalog '" + catalog 
+                        + "' can be found!");
+            }
+            
+            record.validateFieldsExists(conf.getTransformationConf().getRequiredFields().getWritableFields());
+            record.validateFieldsHasValue(conf.getTransformationConf().getRequiredFields().getBaseFields());
             
             if(source.equalsIgnoreCase("archive")) {
                 metadataFile = getArchivedMetadata(filename, metadataType, record);

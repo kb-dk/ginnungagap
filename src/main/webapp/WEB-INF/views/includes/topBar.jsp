@@ -15,8 +15,11 @@
                 <li class="nav-item <c:if test="${page=='ginnungagap'}">active</c:if>">
                     <a class="nav-link" href="${pageContext.request.contextPath}/ginnungagap">Ginnungagap</a>
                 </li>
-                <li class="nav-item <c:if test="${page=='ginnungagap'}">active</c:if>">
+                <li class="nav-item <c:if test="${page=='metadata'}">active</c:if>">
                     <a class="nav-link" href="${pageContext.request.contextPath}/metadata">Metadata</a>
+                </li>
+                <li class="nav-item <c:if test="${page=='catalog'}">active</c:if>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/catalog">Catalog</a>
                 </li>
             </ul>
         </div>
