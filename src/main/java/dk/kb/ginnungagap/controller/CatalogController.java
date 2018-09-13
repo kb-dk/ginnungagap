@@ -78,25 +78,15 @@ public class CatalogController {
     public ResponseEntity<Resource> extractMetadata(@RequestParam(value="catalog", required=true) String catalog,
             @RequestParam(value="ieID", required=true, defaultValue="") String ieID,
             @RequestParam(value="allowSubSet", required=true) String allowSubSet) {        
-        String intellectuelEntityID;
-        if(ieID == null || ieID.isEmpty()) {
-            intellectuelEntityID = UUID.randomUUID().toString();
-        } else {
-            intellectuelEntityID = ieID;
-        }
-        File structmapFile = new File(conf.getTransformationConf().getMetadataTempDir(), intellectuelEntityID);
+        String intellectualEntityID = getIntellectualID(ieID);
         
-        boolean allowMissingRecords = Boolean.parseBoolean(allowSubSet);
-        boolean success = extractStructmap(catalog, intellectuelEntityID, structmapFile);
-        if(!(success || allowMissingRecords)) {
-            throw new IllegalStateException("Could not extract all the records. "
-                    + "Some where missing their intellectual entity ID.");
-        }
+        File structmapFile = extractStructmap(intellectualEntityID, catalog, allowSubSet);
+        
         try {
             log.info("Sending extracted catalog structmap metadata for catalog '" + catalog + "'.");
             Resource resource = new UrlResource(structmapFile.toURI());
             
-            String filename = intellectuelEntityID + ".xml";
+            String filename = intellectualEntityID + ".xml";
             
             return ResponseEntity.ok()
                     .contentType(MediaType.TEXT_XML)
@@ -122,20 +112,10 @@ public class CatalogController {
             @RequestParam(value="ieID", required=true, defaultValue="") String ieID,
             @RequestParam(value="collectionID", required=true) String collectionID,
             @RequestParam(value="allowSubSet", required=true) String allowSubSet) {        
-        String intellectuelEntityID;
-        if(ieID == null || ieID.isEmpty()) {
-            intellectuelEntityID = UUID.randomUUID().toString();
-        } else {
-            intellectuelEntityID = ieID;
-        }
-        File structmapFile = new File(conf.getTransformationConf().getMetadataTempDir(), intellectuelEntityID);
+        String intellectualEntityID = getIntellectualID(ieID);
         
-        boolean allowMissingRecords = Boolean.parseBoolean(allowSubSet);
-        boolean success = extractStructmap(catalog, intellectuelEntityID, structmapFile);
-        if(!(success || allowMissingRecords)) {
-            throw new IllegalStateException("Could not extract all the records. "
-                    + "Some where missing their intellectual entity ID.");
-        }
+        File structmapFile = extractStructmap(intellectualEntityID, catalog, allowSubSet);
+        
         log.info("Packing and preserving the catalog structmap metadata for catalog '" + catalog + "'.");
         
         preserver.packRepresentationMetadata(structmapFile, collectionID);
@@ -145,17 +125,34 @@ public class CatalogController {
     }
     
     /**
-     * Extracts a METS with the structmap for all the files in the catalog.
-     * @param catalogName The name of the catalog.
-     * @param intellectualEntityID The intellectual entity ID of the structmap.
-     * @param structmapFile The METS with the structmap for the catalog. 
+     * Extract the IntellectualEntityID from the argument, or create a new UUID if it is null or empty.
+     * @param ieID The given intellectual entity id from user argument.
+     * @return The intellectual entity id.
      */
-    protected boolean extractStructmap(String catalogName, String intellectualEntityID, File structmapFile) {
+    protected String getIntellectualID(String ieID) {
+        if(ieID == null || ieID.isEmpty()) {
+            return UUID.randomUUID().toString();
+        } else {
+            return ieID;
+        }
+    }
+    
+    /**
+     * Extracts a METS with the structmap for all the files in the catalog.
+     * @param intellectualEntityID The intellectual entity id for the catalog.
+     * @param catalog The name of the catalog.
+     * @param allowSubSet The String argument for whether or not a subset of the records are allowed.
+     * @return The file with the structmap.
+     */
+    protected File extractStructmap(String intellectualEntityID, String catalog, String allowSubSet) {
+        File structmapFile = new File(conf.getTransformationConf().getMetadataTempDir(), intellectualEntityID);
+        
+        boolean allowMissingRecords = Boolean.parseBoolean(allowSubSet);
         boolean allRecords = false;
         try {
             String uuid = UUID.randomUUID().toString();
             File extractFile = new File(conf.getTransformationConf().getMetadataTempDir(), uuid + ".xml");
-            allRecords = extractGuidsAndFileIDsForCatalog(catalogName, intellectualEntityID, uuid, extractFile );
+            allRecords = extractGuidsAndFileIDsForCatalog(catalog, intellectualEntityID, uuid, extractFile );
             MetadataTransformer transformer =  metadataTransformer.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_CATALOG_STRUCTMAP);
             try (InputStream in = new FileInputStream(extractFile);
@@ -166,7 +163,11 @@ public class CatalogController {
             throw new IllegalStateException("Could not extract Cumulus", e);
         }
         
-        return allRecords;
+        if(!(allRecords || allowMissingRecords)) {
+            throw new IllegalStateException("Could not extract all the records. "
+                    + "Some where missing their intellectual entity ID.");
+        }
+        return structmapFile;
     }
     
     /**

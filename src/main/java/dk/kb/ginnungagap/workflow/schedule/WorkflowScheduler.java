@@ -62,9 +62,13 @@ public class WorkflowScheduler {
     public void scheduleWorkflows() {
         executorService = Executors.newSingleThreadScheduledExecutor();
         
-        executorService.scheduleAtFixedRate(preservationWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
-        executorService.scheduleAtFixedRate(updateWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
-        executorService.scheduleAtFixedRate(validationWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
-        executorService.scheduleAtFixedRate(importWorkflow, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(preservationWorkflow, TIMER_INTERVAL, 
+                TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(updateWorkflow, TIMER_INTERVAL, 
+                TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(validationWorkflow, TIMER_INTERVAL, 
+                TIMER_INTERVAL, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(importWorkflow, TIMER_INTERVAL, 
+                TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 }

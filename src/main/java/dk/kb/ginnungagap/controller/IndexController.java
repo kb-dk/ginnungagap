@@ -17,7 +17,7 @@ import dk.kb.ginnungagap.config.Configuration;
 public class IndexController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(IndexController.class);
-
+    /** The configuration.*/
     @Autowired
     protected Configuration conf;
     
@@ -32,6 +32,7 @@ public class IndexController {
 
     /**
      * Index controller, for redirecting towards the workflow site.
+     * @param model The model for the view.
      * @return The redirect toward the workflow site.
      */
     @RequestMapping("/ginnungagap")

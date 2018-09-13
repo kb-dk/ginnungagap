@@ -141,7 +141,7 @@ public class Configuration {
     
     /**
      * Constructor.
-     * @param confFile The file with the Ginnungagap configuration, in the described format.
+     * @param confPath The file with the Ginnungagap configuration, in the described format.
      */
     @SuppressWarnings("rawtypes")
     @Autowired

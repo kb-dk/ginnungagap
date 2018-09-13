@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.BitmagPreserver;
-import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
@@ -26,9 +25,6 @@ public class PreservationWorkflow extends Workflow {
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Preservation Workflow";
     
-    /** Transformation configuration for the metadata.*/
-    @Autowired
-    protected Configuration conf;
     /** The Cumulus server.*/
     @Autowired
     protected CumulusWrapper cumulusWrapper;
@@ -45,8 +41,8 @@ public class PreservationWorkflow extends Workflow {
     @Override
     protected void initSteps() {
         for(String catalogName : cumulusWrapper.getServer().getCatalogNames()) {
-            steps.add(new PreservationStep(conf.getTransformationConf(), cumulusWrapper.getServer(), transformationHandler, 
-                    preserver, catalogName));
+            steps.add(new PreservationStep(conf.getTransformationConf(), cumulusWrapper.getServer(), 
+                    transformationHandler, preserver, catalogName));
         }
         steps.add(new PreservationFinalizationStep(preserver));
     }

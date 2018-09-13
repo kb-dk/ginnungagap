@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
-import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
 import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
@@ -29,9 +28,6 @@ public class ValidationWorkflow extends Workflow {
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Validation Workflow";
     
-    /** The configuration.*/
-    @Autowired
-    protected Configuration conf;
     /** The Cumulus Server.*/
     @Autowired
     protected CumulusWrapper server;

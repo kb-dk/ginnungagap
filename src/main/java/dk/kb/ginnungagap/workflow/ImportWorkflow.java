@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
-import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.workflow.steps.ImportationStep;
 
@@ -25,9 +24,6 @@ public class ImportWorkflow extends Workflow {
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Importation Workflow";
     
-    /** The configuration.*/
-    @Autowired
-    protected Configuration conf;
     /** The Cumulus Server.*/
     @Autowired
     protected CumulusWrapper cumulusWrapper;
@@ -38,7 +34,8 @@ public class ImportWorkflow extends Workflow {
     @Override
     protected void initSteps() {
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
-            steps.add(new ImportationStep(cumulusWrapper.getServer(), archive, catalogName, conf.getWorkflowConf().getRetainDir()));
+            steps.add(new ImportationStep(cumulusWrapper.getServer(), archive, catalogName, 
+                    conf.getWorkflowConf().getRetainDir()));
         }
     }
 

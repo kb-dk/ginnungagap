@@ -53,6 +53,7 @@ public class MetadataController {
     
     /**
      * The metadata controller view.
+     * @param model The model for the view.
      * @return The metadata view.
      */
     @RequestMapping("/metadata")
@@ -179,7 +180,8 @@ public class MetadataController {
         String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
         String fileUUID = record.getUUID();
         try (OutputStream os = new FileOutputStream(metadataFile)) {
-            File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID + ".raw.xml");
+            File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
+                    + ".raw.xml");
             CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, rawMetadataFile);
             try (InputStream cumulusIn = new FileInputStream(rawMetadataFile)) {
                 transformer.transformXmlMetadata(cumulusIn, os);
@@ -201,7 +203,8 @@ public class MetadataController {
 
         String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
-            File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID + ".raw.xml");
+            File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
+                    + ".raw.xml");
             try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
                 record.writeFieldMetadata(cumulusOut);
             }

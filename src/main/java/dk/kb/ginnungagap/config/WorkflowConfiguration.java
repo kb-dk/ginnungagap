@@ -19,10 +19,7 @@ public class WorkflowConfiguration {
     /**
      * Constructor.
      * @param interval The interval for running the workflows.
-     * @param updateRetentionInDays The update preservation retention period in days.
-     * This may be null, but it will then have the default value.
      * @param retainDir The retain directory.
-     * @param workflows The names of the workflows.
      */
     public WorkflowConfiguration(int interval, File retainDir) {
         ArgumentCheck.checkExistsDirectory(retainDir, "File retainDir");
