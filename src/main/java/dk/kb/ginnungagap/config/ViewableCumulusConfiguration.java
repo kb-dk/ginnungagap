@@ -11,6 +11,9 @@ public class ViewableCumulusConfiguration {
     /** The configuration for Cumulus.*/
     protected final CumulusConfiguration cumulusConf;
     
+    /** The password for this viewable password.*/
+    protected static final String VIEWABLE_PASSWORD = "***********";
+    
     /**
      * Constructor.
      * @param conf The configuration for Cumulus.
@@ -45,6 +48,6 @@ public class ViewableCumulusConfiguration {
      * @return The obscured password for login to Cumulus.
      */
     public String getUserPassword() {
-        return "***********";
+        return VIEWABLE_PASSWORD;
     }
 }

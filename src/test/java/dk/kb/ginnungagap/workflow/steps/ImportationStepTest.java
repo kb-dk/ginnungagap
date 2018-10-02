@@ -4,7 +4,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -19,6 +18,7 @@ import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.cumulus.Constants;
@@ -59,6 +59,15 @@ public class ImportationStepTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
 
+    @BeforeMethod
+    public void setupMethod() {
+        if(retainDir != null && retainDir.list().length > 0) {
+            for(File f : retainDir.listFiles()) {
+                FileUtils.deleteFile(f);
+            }
+        }
+    }
+    
     @Test
     public void testGetName() {
         addDescription("Test the GetName method.");
@@ -93,7 +102,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         step.importRecord(record);
 
-        verify(record, times(2)).getUUID();
+        verify(record).getUUID();
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
@@ -230,6 +239,47 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
+        verify(record).getUUID();
         verifyNoMoreInteractions(record);
+    }
+    
+    @Test
+    public void testDeprecateFileWhenFileExists() throws Exception {
+        addDescription("Test the deprecateFile method, when the file exists. It should be moved to the retain folder.");
+        CumulusServer server = mock(CumulusServer.class);
+        Archive archive = mock(Archive.class);
+        
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
+        Assert.assertEquals(retainDir.list().length, 0);
+        
+        File testFile = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        Assert.assertTrue(testFile.exists());
+        
+        step.deprecateFile(testFile);
+        
+        Assert.assertEquals(retainDir.list().length, 1);
+        
+        verifyZeroInteractions(server);
+        verifyZeroInteractions(archive);
+    }
+    
+    @Test
+    public void testDeprecateFileWhenFileDoesNotExists() throws Exception {
+        addDescription("Test the deprecateFile method, when the file does not exist. It should not be moved to the retain folder.");
+        CumulusServer server = mock(CumulusServer.class);
+        Archive archive = mock(Archive.class);
+        
+        ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
+        Assert.assertEquals(retainDir.list().length, 0);
+        
+        File testFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        Assert.assertFalse(testFile.exists());
+        
+        step.deprecateFile(testFile);
+        
+        Assert.assertEquals(retainDir.list().length, 0);
+        
+        verifyZeroInteractions(server);
+        verifyZeroInteractions(archive);
     }
 }

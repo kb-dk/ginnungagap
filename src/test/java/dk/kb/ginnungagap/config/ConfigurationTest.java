@@ -7,11 +7,13 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -183,4 +185,46 @@ public class ConfigurationTest extends ExtendedTestCase {
         conf.loadBitmagConf(map);
     }
     
+    @Test
+    public void testLoadLocalConfiguration() throws Exception {
+        addDescription("Test the loadLocalConfiguration method");
+        Configuration conf = new Configuration(confFileWithoutImport.getAbsolutePath());
+        
+        addStep("Have the test field and set to true", "isTest is true");
+        Map<String, Object> localMap = new HashMap<String, Object>();
+        localMap.put(Configuration.CONF_LOCAL_ARCHIVE_PATH, conf.getLocalConfiguration().getLocalArchiveDir().getAbsolutePath());
+        localMap.put(Configuration.CONF_LOCAL_OUTPUT_PATH, conf.getLocalConfiguration().getLocalOutputDir().getAbsolutePath());
+        localMap.put(Configuration.CONF_LOCAL_TEST, "true");
+        
+        LocalConfiguration localConf = conf.loadLocalConfiguration(localMap);
+        Assert.assertTrue(localConf.getIsTest());
+
+        
+        addStep("Have the test field and set to false", "isTest is false");
+        localMap.put(Configuration.CONF_LOCAL_TEST, "false");
+        
+        localConf = conf.loadLocalConfiguration(localMap);
+        Assert.assertFalse(localConf.getIsTest());
+        
+        
+        addStep("Test without the test field", "isTest should default to false");
+        localMap.remove(Configuration.CONF_LOCAL_TEST);
+        
+        localConf = conf.loadLocalConfiguration(localMap);
+        Assert.assertFalse(localConf.getIsTest());
+    }
+    
+    @Test
+    public void testViewableCumulusConfiguration() {
+        addDescription("Test the ViewableCumulusConfiguration. Should not be able to retrieve the password");
+        Configuration conf = new Configuration(confFileWithoutImport.getAbsolutePath());
+        
+        ViewableCumulusConfiguration cumulusConf = conf.getViewableCumulusConfiguration();
+        Assert.assertEquals(cumulusConf.getServerUrl(), conf.getCumulusConf().getServerUrl());
+        Assert.assertEquals(cumulusConf.getUserName(), conf.getCumulusConf().getUserName());
+        Assert.assertEquals(cumulusConf.getCatalogs(), conf.getCumulusConf().getCatalogs());
+        
+        Assert.assertFalse(cumulusConf.getUserPassword().equalsIgnoreCase(conf.getCumulusConf().getUserPassword()));
+        Assert.assertEquals(cumulusConf.getUserPassword(), ViewableCumulusConfiguration.VIEWABLE_PASSWORD);
+    }
 }

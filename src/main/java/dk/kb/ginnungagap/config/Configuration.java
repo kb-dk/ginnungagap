@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.utils.BooleanUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.utils.YamlTools;
 
@@ -302,14 +303,12 @@ public class Configuration {
                 "Missing Transformation element '" + CONF_LOCAL_ARCHIVE_PATH + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_OUTPUT_PATH), 
                 "Missing Transformation element '" + CONF_LOCAL_OUTPUT_PATH + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_TEST), 
-                "Missing Transformation element '" + CONF_LOCAL_TEST + "'");
 
         File outputDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
         File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_ARCHIVE_PATH));
         boolean isTest = false;
         if(map.containsKey(CONF_LOCAL_TEST)) {
-            isTest = (Boolean) map.get(CONF_LOCAL_TEST);
+            isTest = BooleanUtils.extractBoolean(map.get(CONF_LOCAL_TEST));
         }
         
         return new LocalConfiguration(archiveDir, outputDir, isTest);

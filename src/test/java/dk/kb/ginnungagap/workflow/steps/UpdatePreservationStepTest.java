@@ -99,7 +99,7 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         
         verifyZeroInteractions(transformationHandler);
         
-        verify(records, times(2)).getCount();
+        verify(records, times(3)).getCount();
         verifyNoMoreInteractions(records);
     }
     

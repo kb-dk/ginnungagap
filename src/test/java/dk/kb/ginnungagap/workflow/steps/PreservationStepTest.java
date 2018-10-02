@@ -126,7 +126,9 @@ public class PreservationStepTest extends ExtendedTestCase {
                 eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         
         step.preserveRecordItems(items, catalogName);
-        
+
+        Assert.assertTrue(step.getResultOfLastRun().contains("1 failures"));
+
         verifyZeroInteractions(server);
         verifyZeroInteractions(preserver);
         verifyZeroInteractions(transformationHandler);
@@ -138,8 +140,63 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
-        verify(record, times(2)).getUUID();
+        verify(record, times(4)).getUUID();
         verifyNoMoreInteractions(record);
+    }
+    
+    @Test
+    public void testPreserveRecordItemsMultipleFailures() {
+        addDescription("Test the preserve record items method, with two record which fails when trying to be preserved.");
+        CumulusServer server = mock(CumulusServer.class);
+        BitmagPreserver preserver = mock(BitmagPreserver.class);
+        MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
+        CumulusRecordCollection items = mock(CumulusRecordCollection.class);
+        CumulusRecord record1 = mock(CumulusRecord.class);
+        CumulusRecord record2 = mock(CumulusRecord.class);
+        
+        PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
+
+        when(items.iterator()).thenReturn(Arrays.asList(record1, record2).iterator());
+        when(items.getCount()).thenReturn(2);
+        
+        doAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                throw new RuntimeException("THIS MUST FAIL");
+            }
+        }).when(record1).getFieldValueOrNull(
+                eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        doAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                throw new RuntimeException("THIS MUST FAIL");
+            }
+        }).when(record2).getFieldValueOrNull(
+                eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        
+        step.preserveRecordItems(items, catalogName);
+        
+        Assert.assertTrue(step.getResultOfLastRun().contains("2 failures"));
+        
+        verifyZeroInteractions(server);
+        verifyZeroInteractions(preserver);
+        verifyZeroInteractions(transformationHandler);
+        
+        verify(items).iterator();
+        verify(items).getCount();
+        verifyNoMoreInteractions(items);
+        
+        verify(record1).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record1).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
+        verify(record1).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
+        verify(record1, times(4)).getUUID();
+        verifyNoMoreInteractions(record1);
+        
+        verify(record2).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record2).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
+        verify(record2).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
+        verify(record2, times(4)).getUUID();
+        verifyNoMoreInteractions(record2);
     }
 
     @Test

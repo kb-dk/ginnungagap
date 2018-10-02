@@ -1217,7 +1217,7 @@
     <xsl:if test="field[@name='Crowd_Person']">
       <xsl:element name="mods:name">
         <xsl:attribute name="type">
-          <xsl:value-of select="'personal" />
+          <xsl:value-of select="'personal'" />
         </xsl:attribute>
         <xsl:attribute name="displayLabel">
           <xsl:value-of select="'crowd'" />
@@ -1686,7 +1686,7 @@
                   field[@name='Crowd_Matrikelnummer']">
       <xsl:element name="mods:originInfo">
         <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'crowd" />
+          <xsl:value-of select="'crowd'" />
         </xsl:attribute>
         <xsl:element name="mods:place">
           <!-- Crowd_Bygningsnavn -->

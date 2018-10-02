@@ -133,7 +133,7 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         verify(preserver).uploadAll();
         verifyNoMoreInteractions(preserver);
         
-        verify(items, times(2)).getCount();
+        verify(items, times(3)).getCount();
         verify(items).iterator();
         verifyNoMoreInteractions(items);
         

@@ -73,7 +73,7 @@ public class ImportationStep extends WorkflowStep {
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             
-            File file = new File(record.getUUID());
+            File file = new File(retainDir, uuid);
             WarcUtils.extractRecord(f, uuid, file);
             importFile(record, file);
             
@@ -110,7 +110,7 @@ public class ImportationStep extends WorkflowStep {
         if(!f.exists()) {
             return;
         }
-        File newFile = new File(retainDir, f.getAbsolutePath());
+        File newFile = new File(retainDir, f.getName());
         FileUtils.deprecateMove(f, newFile);
     }
     
