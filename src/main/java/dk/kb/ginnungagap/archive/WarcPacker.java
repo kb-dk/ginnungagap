@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.archive;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
@@ -27,7 +29,7 @@ import dk.kb.yggdrasil.warc.WarcWriterWrapper;
 /**
  * Packages the warc files.
  */
-public class WarcPacker {
+public class WarcPacker implements Closeable {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(WarcPacker.class);
 
@@ -43,6 +45,8 @@ public class WarcPacker {
     
     /** Whether or not the current WARC file has any content besides the warc-info.*/
     protected boolean hasContent;
+    /** Whether or not this WARC packer is closed.*/
+    protected boolean isClosed;
 
     /**
      * Constructor.
@@ -56,6 +60,7 @@ public class WarcPacker {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             writeWarcinfo();
             this.hasContent = false;
+            this.isClosed = false;
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
         }
@@ -67,28 +72,31 @@ public class WarcPacker {
      * @throws YggdrasilException If it fails to write the warc info.
      */
     protected void writeWarcinfo() throws YggdrasilException {
-        Digest digestor = new Digest(bitmagConf.getAlgorithm());
-        StringBuffer payload = new StringBuffer();
-        payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        synchronized(warcWrapper) {
+            Digest digestor = new Digest(bitmagConf.getAlgorithm());
+            StringBuffer payload = new StringBuffer();
+            payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
 
-        payload.append("\n");
-        for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
-            String value = System.getProperty((String) key);
-            if(value != null && !value.isEmpty()) {
-                payload.append(key + ": " + value + "\n");
+            payload.append("\n");
+            for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
+                String value = System.getProperty((String) key);
+                if(value != null && !value.isEmpty()) {
+                    payload.append(key + ": " + value + "\n");
+                }
             }
-        }
-        payload.append("\n");
-        for(String key : WarcInfoConstants.ENV_VARIABLES) {
-            String value = System.getenv().get(key);
-            if(value != null && !value.isEmpty()) {
-                payload.append(key + ": " + value + "\n");
+            payload.append("\n");
+            for(String key : WarcInfoConstants.ENV_VARIABLES) {
+                String value = System.getenv().get(key);
+                if(value != null && !value.isEmpty()) {
+                    payload.append(key + ": " + value + "\n");
+                }
             }
+
+            byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
+            warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                    digestor.getDigestOfBytes(warcInfoPayloadBytes));
         }
-        
-        byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
-        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
-                digestor.getDigestOfBytes(warcInfoPayloadBytes));
     }
 
     /**
@@ -109,14 +117,18 @@ public class WarcPacker {
      * as the UUID of the metadata record.
      * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
      */
-    protected void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, String uuid) {
-        try (InputStream in = new FileInputStream(resourceFile)) {
-            Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
-            log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the record received "
-                    + "the URI:" + uri + "'");
-            hasContent = true;
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+    protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
+            String uuid) {
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        synchronized(warcWrapper) {
+            try (InputStream in = new FileInputStream(resourceFile)) {
+                Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
+                log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the "
+                        + "record received the URI:" + uri + "'");
+                hasContent = true;
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+            }
         }
     }
     
@@ -127,15 +139,18 @@ public class WarcPacker {
      * @param refersTo Value for the refers-to elements in the warc record header. This may be null.
      */
     protected void packMetadata(File metadataFile, Uri refersTo) {
-        try (InputStream in = new FileInputStream(metadataFile)) {
-            Digest digestor = new Digest(bitmagConf.getAlgorithm());
-            WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
-            warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
-                    ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
-                    metadataFile.getName());
-            hasContent = true;
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        synchronized(warcWrapper) {
+            try (InputStream in = new FileInputStream(metadataFile)) {
+                Digest digestor = new Digest(bitmagConf.getAlgorithm());
+                WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
+                warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
+                        ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
+                        metadataFile.getName());
+                hasContent = true;
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+            }
         }
     }
 
@@ -165,11 +180,15 @@ public class WarcPacker {
      * Close this warc packer, thus closing any streams and files.
      * This should be called before accessing the file and sending it to the archive.
      */
+    @Override
     public void close() {
-        try {
-            warcWrapper.close();
-        } catch (YggdrasilException e) {
-            throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
+        synchronized(warcWrapper) {
+            this.isClosed = true;
+            try {
+                this.warcWrapper.close();
+            } catch (YggdrasilException e) {
+                throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
+            }
         }
     }
 

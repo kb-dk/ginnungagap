@@ -46,10 +46,12 @@ public class BitmagPreserver {
      * @return The Warc packer for a given Bitrepository collection.
      */
     protected WarcPacker getWarcPacker(String collectionId) {
-        if(!warcPackerForCollection.containsKey(collectionId)) {
-            warcPackerForCollection.put(collectionId, new WarcPacker(conf.getBitmagConf()));
+        synchronized(warcPackerForCollection) {
+            if(!warcPackerForCollection.containsKey(collectionId)) {
+                warcPackerForCollection.put(collectionId, new WarcPacker(conf.getBitmagConf()));
+            }
+            return warcPackerForCollection.get(collectionId);
         }
-        return warcPackerForCollection.get(collectionId);
     }
     
     /**
@@ -117,27 +119,29 @@ public class BitmagPreserver {
      * Performs the upload of the warc file for the given collection.
      * @param collectionId The id of the collection to upload to.
      */
-    protected void uploadWarcFile(String collectionId) {
-        WarcPacker wp = warcPackerForCollection.get(collectionId);
-        wp.close();
-        if(!wp.hasContent()) {
-            log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
-            FileUtils.deleteFile(wp.getWarcFile());
-            return;
+    protected synchronized void uploadWarcFile(String collectionId) {
+        synchronized(warcPackerForCollection) {
+            WarcPacker wp = warcPackerForCollection.get(collectionId);
+            wp.close();
+            if(!wp.hasContent()) {
+                log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
+                FileUtils.deleteFile(wp.getWarcFile());
+                return;
+            }
+
+            log.info("Uploading warc file for collection '" + collectionId + "'");
+            WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
+
+            boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
+            if(uploadSucces) {
+                log.info("Successfully uploaded the WARC file '" + wp.getWarcFile().getName() + "'"); 
+                wp.reportSucces(checksumDigest);
+            } else {
+                log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "
+                        + "Keeping it in temp dir: '" + conf.getBitmagConf().getTempDir().getAbsolutePath() + "'");
+                wp.reportFailure("Could not upload the file to the archive.");
+            }
+            warcPackerForCollection.remove(collectionId);
         }
-        
-        log.info("Uploading warc file for collection '" + collectionId + "'");
-        WarcDigest checksumDigest = ChecksumUtils.calculateChecksum(wp.getWarcFile(), ChecksumUtils.MD5_ALGORITHM);
-        
-        boolean uploadSucces = archive.uploadFile(wp.getWarcFile(), collectionId);
-        if(uploadSucces) {
-            log.info("Successfully uploaded the WARC file '" + wp.getWarcFile().getName() + "'"); 
-            wp.reportSucces(checksumDigest);
-        } else {
-            log.warn("Failed to upload the file '" + wp.getWarcFile().getName() + "'. "
-                    + "Keeping it in temp dir: '" + conf.getBitmagConf().getTempDir().getAbsolutePath() + "'");
-            wp.reportFailure("Could not upload the file to the archive.");
-        }
-        warcPackerForCollection.remove(collectionId);
     }
 }

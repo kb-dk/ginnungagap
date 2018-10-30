@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,6 @@ public class MetadataController {
     @Autowired
     protected ArchiveWrapper archiveWrapper;
     
-    
     /**
      * The metadata controller view.
      * @param model The model for the view.
@@ -93,8 +93,7 @@ public class MetadataController {
                         + "' can be found!");
             }
             
-            record.validateFieldsExists(conf.getTransformationConf().getRequiredFields().getWritableFields());
-            record.validateFieldsHasValue(conf.getTransformationConf().getRequiredFields().getBaseFields());
+            validateRecord(record);
             
             if(source.equalsIgnoreCase("archive")) {
                 metadataFile = getArchivedMetadata(filename, metadataType, record);
@@ -111,6 +110,23 @@ public class MetadataController {
             log.warn("Failed to retrieve metadata", e);
             throw new IllegalStateException("Failed to extract metadata", e);
         }
+    }
+    
+    /**
+     * Validates that the record is at least ready for preservation.
+     * @param record The record.
+     */
+    protected void validateRecord(CumulusRecord record) {
+        CumulusPreservationUtils.initIntellectualEntityUUID(record);
+        
+        String uuid = record.getFieldValueOrNull(Constants.FieldNames.METADATA_GUID);
+        if(uuid == null || uuid.isEmpty()) {
+            record.setStringValueInField(Constants.FieldNames.METADATA_GUID, 
+                    UUID.randomUUID().toString());
+        }
+        
+        record.validateFieldsExists(conf.getTransformationConf().getRequiredFields().getWritableFields());
+        record.validateFieldsHasValue(conf.getTransformationConf().getRequiredFields().getBaseFields());
     }
     
     /**

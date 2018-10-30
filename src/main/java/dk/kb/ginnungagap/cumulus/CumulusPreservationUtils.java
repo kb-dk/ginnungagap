@@ -83,8 +83,9 @@ public class CumulusPreservationUtils {
     
     /**
      * Initializes the value in the related object identifier value for the intellectual entity.
+     * @param record The Cumulus record.
      */
-    protected static void initIntellectualEntityUUID(CumulusRecord record) {
+    public static void initIntellectualEntityUUID(CumulusRecord record) {
         String uuid = record.getFieldValueOrNull(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         if(uuid == null || uuid.isEmpty()) {
@@ -99,7 +100,7 @@ public class CumulusPreservationUtils {
      * Initializes the file-checksum for the cumulus record.
      * @param record The Cumulus record to have its checksum initialized.
      */
-    protected static void initRecordChecksum(CumulusRecord record) {
+    public static void initRecordChecksum(CumulusRecord record) {
         if(record.getFieldValueOrNull(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER) != null) {
             return;
         }

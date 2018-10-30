@@ -1,10 +1,15 @@
 package dk.kb.ginnungagap.workflow;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
 import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
 
@@ -36,11 +41,13 @@ public class ValidationWorkflow extends Workflow {
     protected ArchiveWrapper archive;
     
     @Override
-    protected void initSteps() {
+    protected Collection<WorkflowStep> createSteps() {
+        List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
         for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             steps.add(new SimpleValidationStep(server.getServer(), catalogName, archive));
             steps.add(new FullValidationStep(server.getServer(), catalogName, archive, conf));
         }
+        return steps;
     }
 
     @Override

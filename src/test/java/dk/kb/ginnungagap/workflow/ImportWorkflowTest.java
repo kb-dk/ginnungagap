@@ -2,6 +2,7 @@ package dk.kb.ginnungagap.workflow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -16,6 +17,8 @@ import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
+import dk.kb.ginnungagap.workflow.steps.ImportationStep;
 
 public class ImportWorkflowTest extends ExtendedTestCase {
 
@@ -51,5 +54,29 @@ public class ImportWorkflowTest extends ExtendedTestCase {
         
         Assert.assertEquals(workflow.getName(), ImportWorkflow.WORKFLOW_NAME);
         Assert.assertEquals(workflow.getDescription(), ImportWorkflow.WORKFLOW_DESCRIPTION);
+        Assert.assertEquals(workflow.getInterval().longValue(), -1L);
+        
+        Mockito.verifyZeroInteractions(cumulusWrapper);
+        Mockito.verifyZeroInteractions(archive);
+    }
+    
+    @Test
+    public void testCreateSteps() {
+        CumulusWrapper cumulusWrapper = Mockito.mock(CumulusWrapper.class);
+        ArchiveWrapper archive = Mockito.mock(ArchiveWrapper.class);
+        ImportWorkflow workflow = new ImportWorkflow();
+        workflow.conf = conf;
+        workflow.cumulusWrapper = cumulusWrapper;
+        workflow.archive = archive;
+
+        List<WorkflowStep> steps = (List<WorkflowStep>) workflow.createSteps();
+        
+        Assert.assertEquals(steps.size(), conf.getCumulusConf().getCatalogs().size());
+        Assert.assertTrue(steps.get(0) instanceof ImportationStep);
+        
+        Mockito.verifyZeroInteractions(archive);
+        
+        Mockito.verify(cumulusWrapper).getServer();
+        Mockito.verifyNoMoreInteractions(cumulusWrapper);
     }
 }

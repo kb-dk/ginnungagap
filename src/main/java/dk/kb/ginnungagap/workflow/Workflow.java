@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.workflow;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
@@ -25,6 +26,9 @@ public abstract class Workflow extends TimerTask {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(Workflow.class);
     
+    /** The text for running the workflow manually.*/
+    protected static final String WORKFLOW_MUST_BE_RUN_MANUALLY = "Must be run manual";
+    
     /** The date for the next run of the workflow.*/
     protected Date nextRun;
     /** The current state of the workflow.*/
@@ -45,14 +49,15 @@ public abstract class Workflow extends TimerTask {
      */
     @PostConstruct
     protected void init() {
-        initSteps();
+        this.steps = new ArrayList<WorkflowStep>(createSteps());
         readyForNextRun();
     }
     
     /**
      * Initializes the steps for the workflow.
+     * @return The steps of the workflow.
      */
-    abstract void initSteps();
+    abstract Collection<WorkflowStep> createSteps();
     
     /**
      * @return The interval for the workflow.
@@ -90,13 +95,8 @@ public abstract class Workflow extends TimerTask {
      * Goes through all steps and runs them one after the other.
      */
     protected void runWorkflowSteps() {
-        try {
-            for(WorkflowStep step : steps) {
-                step.run();
-            }
-        } catch (Exception e) {
-            log.error("Faild to run all the workflow steps.", e);
-            status = "Failure during last run: " + e.getMessage();
+        for(WorkflowStep step : steps) {
+            performStep(step);
         }
     }
     
@@ -142,7 +142,7 @@ public abstract class Workflow extends TimerTask {
         if(nextRun != null) {
             return CalendarUtils.dateToText(nextRun);
         } else {
-            return "Must be run manual";
+            return WORKFLOW_MUST_BE_RUN_MANUALLY;
         }
     }
     
