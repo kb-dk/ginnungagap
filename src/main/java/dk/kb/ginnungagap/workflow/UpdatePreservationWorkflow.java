@@ -28,7 +28,7 @@ import dk.kb.ginnungagap.workflow.steps.UpdatePreservationStep;
 public class UpdatePreservationWorkflow extends Workflow {
     /** The description of this workflow.*/
     protected static final String WORKFLOW_DESCRIPTION = "Sends new versions of packaged metadata to preservation, "
-            + "for any ";
+            + "for records with new/changed metadata, which is ready for preservation update.";
     /** The name of this workflow.*/
     protected static final String WORKFLOW_NAME = "Update Preservation Workflow";
     

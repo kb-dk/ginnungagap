@@ -10,6 +10,21 @@ public abstract class WorkflowStep {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(WorkflowStep.class);
     
+    /** The initial status, before this step has run.*/
+    protected static final String INIT_STATUS = "Not yet run.";
+    /** The initial results, before this step has finished any run.*/
+    protected static final String INIT_RESULTS = "Not yet run.";
+    /** The initial value for the last run time, before it has run.*/
+    protected static final Long INIT_LAST_RUN_TIME = -1L;
+    /** The suffix for the last run time, when it is running. */
+    protected static final String RUNNING_TIME_SUFFIX = "...";
+    /** The status when the step is running.*/
+    protected static final String STATUS_RUNNING = "Running";
+    /** The status when the step is successfully finished.*/
+    protected static final String STATUS_FINISHED = "Finished";
+    /** The status when the step is failed.*/
+    protected static final String STATUS_FAILED = "Failed";
+    
     /** The status of the workflow.*/
     protected String status;
     /** The results of the last run.*/
@@ -23,9 +38,9 @@ public abstract class WorkflowStep {
      * Constructor.
      */
     protected WorkflowStep() {
-        this.status = "Not yet run.";
-        this.resultsOfLastRun = "Not yet run.";
-        this.timeForLastRun = -1L;
+        this.status = INIT_STATUS;
+        this.resultsOfLastRun = INIT_RESULTS;
+        this.timeForLastRun = INIT_LAST_RUN_TIME;
     }
     
     /** 
@@ -61,7 +76,7 @@ public abstract class WorkflowStep {
      */
     public String getExecutionTime() {
         if(currentRunStart > 0) {
-            return "" + getCurrentRunTime() + "...";
+            return "" + getCurrentRunTime() + RUNNING_TIME_SUFFIX;
         }
         return "" + timeForLastRun;
     }
@@ -83,13 +98,13 @@ public abstract class WorkflowStep {
         currentRunStart = System.currentTimeMillis();
         timeForLastRun = -1;
         try {
-            setStatus("Running");
+            setStatus(STATUS_RUNNING);
             setResultOfRun("Running...");
             performStep();
-            setStatus("Finished");
+            setStatus(STATUS_FINISHED);
         } catch (Throwable e) {
             log.error("Failure when running step: " + getName(), e);
-            setStatus("Failed");
+            setStatus(STATUS_FAILED);
             setResultOfRun("Failure: " + e.getMessage());
         }
         timeForLastRun = System.currentTimeMillis() - currentRunStart;
