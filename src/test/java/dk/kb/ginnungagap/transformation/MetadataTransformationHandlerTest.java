@@ -45,7 +45,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
     @AfterClass
     public void tearDown() {
-        TestFileUtils.tearDown();
+//        TestFileUtils.tearDown();
     }
 
     @Test
@@ -247,6 +247,14 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
     
+    @Test
+    public void testValidation2() throws Exception {
+        File modsFile = new File("src/test/resources/metadata/crowd_mods.xml");
+        try (InputStream in = new FileInputStream(modsFile)) {
+            transformationHandler.validate(in);
+        }
+    }
+    
     @Test(expectedExceptions = IllegalStateException.class)
     public void testValidationFailure() throws Exception {
         addDescription("Test validating an XML file, which does not have a schema.");
@@ -254,5 +262,31 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         try (InputStream metadata = new FileInputStream(metadataFile)) {
             transformationHandler.validate(metadata);
         }
+    }
+    
+
+    @Test
+    public void testTransformationWithCompleteAudioMetadata() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with all metadata fields for audio files.");
+        File xmlFile = new File("src/test/resources/cumulus_extract_with_all_fields.xml");
+        assertTrue(xmlFile.isFile());
+        
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+        
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+
+        addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                System.out.println(text);
+            }
+        }
+
+        addStep("Validate the METS", "");
+        transformationHandler.validate(new FileInputStream(metadataFile));
+
     }
 }

@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<record>
+  <field name="Accessionsnr">
+    <value>Accessionsnr</value>
+  </field>
+  <field name="Additional recipient (personal)">
+    <value>Additional recipient (personal)</value>
+  </field>
+  <field name="Additional resources">
+    <value>Additional resources</value>
+  </field>
+  <field name="Additional sender (personal)">
+    <value>Additional sender (personal)</value>
+  </field>
+  <field name="agentIdentifierType">
+    <value>program</value>
+  </field>
+  <field name="agentIdentifierValue">
+    <value>gatekeeper</value>
+  </field>
+  <field name="Aleph_ID">
+    <value>Aleph_ID</value>
+  </field>
+  <field name="AlephID">
+    <value>AlephID</value>
+  </field>
+  <field name="Alternative title">
+    <value>Alternative title</value>
+  </field>
+  <field name="ARCHIVE_FILENAME">
+    <value>KBDOMS-20120302175748-00086-dia-prod-dom-01.kb.dk.arc</value>
+  </field>
+  <field name="ARCHIVE_MD5">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="Asset Access Date">
+    <value>Wed Oct 02 17:15:23 CEST 2013</value>
+  </field>
+  <field name="Asset Creation Date">
+    <value>Fri Mar 02 18:44:32 CET 2012</value>
+  </field>
+  <field name="Asset Data Size (Long)">
+    <value>11748576</value>
+  </field>
+  <field name="Asset Identifier">
+    <value>1330649072</value>
+  </field>
+  <field name="Asset Modification Date">
+    <value>Fri Mar 02 18:44:32 CET 2012</value>
+  </field>
+  <field name="Asset Modification State Identifier">
+    <value>2012-02-29 01:11:53</value>
+  </field>
+  <field name="Asset Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="Asset Reference">
+    <value>Asset Reference</value>
+  </field>
+  <field name="Audio Codec Information">
+    <value>PCM</value>
+  </field>
+  <field name="Audio Sample Size [bits]">
+    <value>16</value>
+  </field>
+  <field name="Author">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="BEXT CodingHistory">
+    <value>Zoom H4->PCM, 44100, 16, Stereo->iZotope RX 2</value>
+  </field>
+  <field name="BEXT Description">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="BEXT OriginationDate">
+    <value>2012-02-08</value>
+  </field>
+  <field name="BEXT Originator">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="BEXT OriginatorReference">
+    <value>See Description for identifiers</value>
+  </field>
+  <field name="BEXT Version">
+    <value>0</value>
+  </field>
+  <field name="Bit Rate Audio [kbit/s]">
+    <value>1411.0</value>
+  </field>
+  <field name="Block Align">
+    <value>4</value>
+  </field>
+  <field name="Bygningsnavn">
+    <value>Bygningsnavn</value>
+  </field>
+  <field name="Catalog Name">
+    <value>Audio OM</value>
+  </field>
+  <field name="Cataloging language">
+    <value>da</value>
+  </field>
+  <field name="Cataloging User">
+    <value>pewa</value>
+  </field>
+  <field name="Categories">
+    <value>Categories</value>
+  </field>
+  <field name="Channel Mode">
+    <value>Stereo</value>
+  </field>
+  <field name="CHECKSUM_DISPLAY_COPY">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="CHECKSUM_ORIGINAL_MASTER">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="Collection">
+    <value>Collection</value>
+  </field>
+  <field name="compositionLevel">
+    <value>0</value>
+  </field>
+  <field name="Contributor">
+    <value>Contributor</value>
+  </field>
+  <field name="Copyright">
+    <value>Dansk Folkemindesamling, Det Kongelige Bibliotek</value>
+  </field>
+  <field name="Copyright Notice">
+    <value>Copyright Notice</value>
+  </field>
+  <field name="Country">
+    <value>Country</value>
+  </field>
+  <field name="Country (location) of recipient">
+    <value>Country (location) of recipient</value>
+  </field>
+  <field name="Country (location) of sender">
+    <value>Country (location) of sender</value>
+  </field>
+  <field name="creatingApplication">
+    <value>creatingApplication</value>
+  </field>
+  <field name="Creator">
+    <value>Creator</value>
+  </field>
+  <field name="Crowd_By">
+    <value>Crowd_By</value>
+  </field>
+  <field name="Crowd_Bygningsnavn">
+    <value>Crowd_Bygningsnavn</value>
+  </field>
+  <field name="Crowd_Emneord">
+    <value>Crowd_Emneord</value>
+  </field>
+  <field name="Crowd_Georeference">
+    <value>Crowd_Georeference</value>
+  </field>
+  <field name="Crowd_Husnummer">
+    <value>Crowd_Husnummer</value>
+  </field>
+  <field name="Crowd_Kommentar">
+    <value>Crowd_Kommentar</value>
+  </field>
+  <field name="Crowd_Lokalitet">
+    <value>Crowd_Lokalitet</value>
+  </field>
+  <field name="Crowd_Matrikelnummer">
+    <value>Crowd_Matrikelnummer</value>
+  </field>
+  <field name="Crowd_Note">
+    <value>Crowd_Note</value>
+  </field>
+  <field name="Crowd_Person">
+    <value>Crowd_Person</value>
+  </field>
+  <field name="Crowd_Postnummer">
+    <value>Crowd_Postnummer</value>
+  </field>
+  <field name="Crowd_Sogn">
+    <value>Crowd_Sogn</value>
+  </field>
+  <field name="Crowd_Sted">
+    <value>Crowd_Sted</value>
+  </field>
+  <field name="Crowd_Titel">
+    <value>Crowd_Titel</value>
+  </field>
+  <field name="Crowd_Vejnavn">
+    <value>Crowd_Vejnavn</value>
+  </field>
+  <field name="Date not after">
+    <value>Date not after</value>
+  </field>
+  <field name="Date not before">
+    <value>Date not before</value>
+  </field>
+  <field name="Date of Origin">
+    <value>Date of Origin</value>
+  </field>
+  <field name="Dato ikke efter">
+    <value>Dato ikke efter</value>
+  </field>
+  <field name="Dato ikke før">
+    <value>Dato ikke før</value>
+  </field>
+  <field name="Department">
+    <value>Department</value>
+  </field>
+  <field name="Description">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="Dialog">
+    <value>Dialog</value>
+  </field>
+  <field name="Dimensions">
+    <value>Dimensions</value>
+  </field>
+  <field name="DK5">
+    <value>DK5</value>
+  </field>
+  <field name="Document Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="Duration">
+    <value>66.5</value>
+  </field>
+  <field name="essenceTrackBitDepth">
+    <value>16</value>
+  </field>
+  <field name="essenceTrackDataRate">
+    <value>1411.0</value>
+  </field>
+  <field name="essenceTrackDuration">
+    <value>66.5</value>
+  </field>
+  <field name="essenceTrackSamplingRate">
+    <value>44100</value>
+  </field>
+  <field name="essenceTrackStandard">
+    <value>PCM</value>
+  </field>
+  <field name="eventType">
+    <value>1</value>
+  </field>
+  <field name="eventIdentifierType">
+    <value>Det Kongelige Biblioteks eventype</value>
+  </field>
+  <field name="eventIdentifierValue">
+    <value>1</value>
+  </field>
+  <field name="Event Date">
+    <value>Event Date</value>
+  </field>
+  <field name="Event Description">
+    <value>Event Description</value>
+  </field>
+  <field name="Event Lable">
+    <value>Event Lable</value>
+  </field>
+  <field name="Event Participants">
+    <value>Event Participants</value>
+  </field>
+  <field name="Event Place">
+    <value>Event Place</value>
+  </field>
+  <field name="Event Type">
+    <value>Event Type</value>
+  </field>
+  <field name="Extent">
+    <value>Extent</value>
+  </field>
+  <field name="File Data Size">
+    <value>11748576</value>
+  </field>
+  <field name="File Format">
+    <value>Wave Sound</value>
+  </field>
+  <field name="File Format Identifier">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="File Format Type">
+    <value>Audio</value>
+  </field>
+  <field name="File Resource Size">
+    <value>0</value>
+  </field>
+  <field name="Folder Name">
+    <value>DFSDIG\2012-02-08</value>
+  </field>
+  <field name="formatName">
+    <value>Wave Sound</value>
+  </field>
+  <field name="formatVersion">
+    <value>0</value>
+  </field>
+  <field name="Generel materialebetegnelse">
+    <value>Lyd</value>
+  </field>
+  <field name="Genre">
+    <value>Genre</value>
+  </field>
+  <field name="Georeference">
+    <value>Georeference</value>
+  </field>
+  <field name="GUID">
+    <value>Uid:dk:kb:doms:2007-01/5d2c97d0-648f-11e1-b7b0-0017a4f603c1</value>
+  </field>
+  <field name="Henvisninger">
+    <value>Henvisninger</value>
+  </field>
+  <field name="IARL Archival Location">
+    <value>DK, KB: DFS</value>
+  </field>
+  <field name="IART Artist">
+    <value>Nanna Bøge Bomholt</value>
+  </field>
+  <field name="ICMT Comments">
+    <value>Optaget udenfor i blæst. Optaget i Sverige, Skåne</value>
+  </field>
+  <field name="ICMS Commissioned">
+    <value>Dansk Folkemindesamling</value>
+  </field>
+  <field name="ICOP Copyright">
+    <value>Klausuleret indtil 2061-09-10</value>
+  </field>
+  <field name="ICRD Creation date">
+    <value>2011-09-10</value>
+  </field>
+  <field name="ID">
+    <value>639</value>
+  </field>
+  <field name="IENG Engineer">
+    <value>Anne Mia Steno, Emmerik Warburg</value>
+  </field>
+  <field name="IMED Medium">
+    <value>PCM: 44100 Hz, 16 bit, Stereo</value>
+  </field>
+  <field name="INAM Name (Title)">
+    <value>Besegling af cirklen -Nanna StoneChild</value>
+  </field>
+  <field name="instantiationChannelConfiguration">
+    <value>Stereo</value>
+  </field>
+  <field name="instantiationDate">
+    <value>2012-02-08</value>
+  </field>
+  <field name="instantiationDigital">
+    <value>audio/x-wav</value>
+  </field>
+  <field name="instantiationFileSize">
+    <value>11748576</value>
+  </field>
+  <field name="instantiationPhysical">
+    <value>PCM: 44100 Hz, 16 bit, Stereo</value>
+  </field>
+  <field name="Intern note">
+    <value>Intern note</value>
+  </field>
+  <field name="IPRD Product (Album)">
+    <value>Dansk Folkemindesamling/Moderne hekse i Danmark</value>
+  </field>
+  <field name="ISRC Source ">
+    <value>Anne Mia Steno</value>
+  </field>
+  <field name="Item Creation Date">
+    <value>Fri Mar 02 14:35:46 CET 2012</value>
+  </field>
+  <field name="Item Modification Date">
+    <value>Wed Oct 02 17:15:23 CEST 2013</value>
+  </field>
+  <field name="Keywords">
+    <value>Keywords</value>
+  </field>
+  <field name="Kommentar til indhold">
+    <value>Kommentar til indhold</value>
+  </field>
+  <field name="Language">
+    <value>Language</value>
+  </field>
+  <field name="LCSH">
+    <value>LCSH</value>
+  </field>
+  <field name="Local Date">
+    <value>Local Date</value>
+  </field>
+  <field name="Location">
+    <value>Location</value>
+  </field>
+  <field name="Location of Origin">
+    <value>Location of Origin</value>
+  </field>
+  <field name="Location of recipient">
+    <value>Location of recipient</value>
+  </field>
+  <field name="Location of sender">
+    <value>Location of sender</value>
+  </field>
+  <field name="Manuel Date not after">
+    <value>Manuel Date not after</value>
+  </field>
+  <field name="Manuel Date not before">
+    <value>Manuel Date not before</value>
+  </field>
+  <field name="Mastertransferstatus">
+    <value>OK</value>
+  </field>
+  <field name="Materialebetegnelse">
+    <value>Materialebetegnelse</value>
+  </field>
+  <field name="Medvirkende rolle">
+    <value>Meddeler</value>
+  </field>
+  <field name="messageDigest">
+    <value>f1e019cc295c73885ffdad8b7063be21</value>
+  </field>
+  <field name="messageDigestAlgorithm">
+    <value>MD5</value>
+  </field>
+  <field name="METADATA GUID">
+    <value>METADATA GUID</value>
+  </field>
+  <field name="Motiv">
+    <value>Motiv</value>
+  </field>
+  <field name="Målestok">
+    <value>Målestok</value>
+  </field>
+  <field name="Note">
+    <value>Note</value>
+  </field>
+  <field name="objectCategory">
+    <value>File</value>
+  </field>
+  <field name="objectIdentifierValue">
+    <value>Uid:dk:kb:doms:2007-01/5d2c97d0-648f-11e1-b7b0-0017a4f603c1</value>
+  </field>
+  <field name="objectIdentifierType">
+    <value>UUID</value>
+  </field>
+  <field name="Omfang">
+    <value>Omfang</value>
+  </field>
+  <field name="Ophav">
+    <value>Ophav</value>
+  </field>
+  <field name="Opstilling">
+    <value>DFS GD 2012-001</value>
+  </field>
+  <field name="Organisation">
+    <value>Organisation</value>
+  </field>
+  <field name="Organisational affiliation of ">
+    <value>Organisational affiliation of </value>
+  </field>
+  <field name="Organisational affiliation of ">
+    <value>Organisational affiliation of </value>
+  </field>
+  <field name="Origin not after">
+    <value>Origin not after</value>
+  </field>
+  <field name="Origin not before">
+    <value>Origin not before</value>
+  </field>
+  <field name="Pageorientation">
+    <value>Pageorientation</value>
+  </field>
+  <field name="Patron">
+    <value>Patron</value>
+  </field>
+  <field name="pbcoreAnnotation">
+    <value>pbcoreAnnotation</value>
+  </field>
+  <field name="pbcoreAssetDate">
+    <value>2011-09-10</value>
+  </field>
+  <field name="pbcoreAssetType">
+    <value>Lyd</value>
+  </field>
+  <field name="pbcoreAudienceLevel">
+    <value>pbcoreAudienceLevel</value>
+  </field>
+  <field name="pbcoreAudienceRating">
+    <value>pbcoreAudienceRating</value>
+  </field>
+  <field name="pbcoreContributor">
+    <value>pbcoreContributor</value>
+  </field>
+  <field name="pbcorecontributorRole">
+    <value>pbcorecontributorRole</value>
+  </field>
+  <field name="pbcoreCreator">
+    <value>pbcoreCreator</value>
+  </field>
+  <field name="pbcorecreatorRole">
+    <value>Meddeler</value>
+  </field>
+  <field name="pbcoreDescription">
+    <value>Dansk Folkemindesamling/Moderne hekse i Danmark</value>
+  </field>
+  <field name="pbcoreGenre">
+    <value>pbcoreGenre</value>
+  </field>
+  <field name="pbcoreIdentifier">
+    <value>Besegling af cirklen -Nanna StoneChild</value>
+  </field>
+  <field name="pbcorePublisher">
+    <value>pbcorePublisher</value>
+  </field>
+  <field name="pbcorepublisherRole">
+    <value>Indsamler</value>
+  </field>
+  <field name="pbcorerightsEmbedded">
+    <value>pbcorerightsEmbedded</value>
+  </field>
+  <field name="pbcorerightsSummary">
+    <value>Klausuleret indtil 2061-09-10</value>
+  </field>
+  <field name="pbcoreSubject">
+    <value>pbcoreSubject</value>
+  </field>
+  <field name="pbcoreTitle">
+    <value>pbcoreTitle</value>
+  </field>
+  <field name="Person">
+    <value>Person</value>
+  </field>
+  <field name="Presentation date">
+    <value>Presentation date</value>
+  </field>
+  <field name="Preservation_status">
+    <value>Langtidsbevaret</value>
+  </field>
+  <field name="preservationLevelDateAssigned">
+    <value>20111119</value>
+  </field>
+  <field name="preservationLevelRationale_BitSafety">
+    <value>preservationLevelRationale_BitSafety</value>
+  </field>
+  <field name="preservationLevelRationale_Confidentiality">
+    <value>preservationLevelRationale_Confidentiality</value>
+  </field>
+  <field name="preservationLevelRationale_Logical">
+    <value>preservationLevelRationale_Logical</value>
+  </field>
+  <field name="preservationLevelRationale">
+    <value>Pt. kun mulighed for bitbevaring af dette format</value>
+  </field>
+  <field name="preservationLevelRole">
+    <value>Krav</value>
+  </field>
+  <field name="preservationLevelValue_BitSafety">
+    <value>bitSafetyMax</value>
+  </field>
+  <field name="preservationLevelValue_Confidentiality">
+    <value>confidentialityVeryLow</value>
+  </field>
+  <field name="preservationLevelValue_Logical">
+    <value>logicalStrategyEmulation</value>
+  </field>
+  <field name="preservationLevelValue">
+    <value>Aktiv bit bevaring</value>
+  </field>
+  <field name="Printer">
+    <value>Printer</value>
+  </field>
+  <field name="Production_Catalog">
+    <value>Multimedia DP</value>
+  </field>
+  <field name="Publication_catalog">
+    <value>Audio DP</value>
+  </field>
+  <field name="PublicationDate">
+    <value>02-03-2012</value>
+  </field>
+  <field name="Publikation">
+    <value>Publikation</value>
+  </field>
+  <field name="Published">
+    <value>false</value>
+  </field>
+  <field name="PublishedByVersion">
+    <value>Publication workflow of iteration 13. Class = dk.kb.doms.components.workflow.iteration13.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.6 $;Publish without QA version = $Revision: 1.8 $;productionRoot = /Multimedia;undoRoot = /archive_pool/undo/Sounds;publishNonArchivalRoot = /online_master_arkiv_m_2/non-archival/Sounds;productionRoot = /Multimedia;</value>
+  </field>
+  <field name="Publisher">
+    <value>Publisher</value>
+  </field>
+  <field name="Recipient (organization)">
+    <value>Recipient (organization)</value>
+  </field>
+  <field name="Record Name">
+    <value>DFS_GD_2012-001.wav</value>
+  </field>
+  <field name="Related Sub Assets">
+    <value>Related Sub Assets</value>
+  </field>
+  <field name="relatedObjectIdentifierValue_intellectualEntity">
+    <value>relatedObjectIdentifierValue_intellectualEntity</value>
+  </field>
+  <field name="Registrationstate">
+    <value>Færdigregistreret</value>
+  </field>
+  <field name="Samling">
+    <value>Samling</value>
+  </field>
+  <field name="Sampling Rate [Hz]">
+    <value>44100</value>
+  </field>
+  <field name="Scale">
+    <value>Scale</value>
+  </field>
+  <field name="Scan Number">
+    <value>Scan Number</value>
+  </field>
+  <field name="Scribe">
+    <value>Scribe</value>
+  </field>
+  <field name="Script">
+    <value>Script</value>
+  </field>
+  <field name="Script: detail">
+    <value>Script: detail</value>
+  </field>
+  <field name="Selected references">
+    <value>Selected references</value>
+  </field>
+  <field name="Sender (organization)">
+    <value>Sender (organization)</value>
+  </field>
+  <field name="Sender (person)">
+    <value>Sender (person)</value>
+  </field>
+  <field name="Serie">
+    <value>Serie</value>
+  </field>
+  <field name="Server Name">
+    <value>dia-prod-dom-02.kb.dk</value>
+  </field>
+  <field name="Shelfmark">
+    <value>Shelfmark</value>
+  </field>
+  <field name="Situation">
+    <value>Situation</value>
+  </field>
+  <field name="size">
+    <value>11748576</value>
+  </field>
+  <field name="Software">
+    <value>Software</value>
+  </field>
+  <field name="Sprog">
+    <value>Sprog</value>
+  </field>
+  <field name="State">
+    <value>State</value>
+  </field>
+  <field name="storageMedium">
+    <value>e-magasin</value>
+  </field>
+  <field name="Størrelse">
+    <value>Størrelse</value>
+  </field>
+  <field name="Subtitle">
+    <value>Subtitle</value>
+  </field>
+  <field name="Textarea">
+    <value>Textarea</value>
+  </field>
+  <field name="Thumbnail Mean Value">
+    <value>234</value>
+  </field>
+  <field name="Thumbnail Rotation">
+    <value>0</value>
+  </field>
+  <field name="Thumbnail Standard Deviation">
+    <value>24</value>
+  </field>
+  <field name="Titel">
+    <value>Titel</value>
+  </field>
+  <field name="Title">
+    <value>Title</value>
+  </field>
+  <field name="Topografinr">
+    <value>Topografinr</value>
+  </field>
+  <field name="Transcribed title">
+    <value>Transcribed title</value>
+  </field>
+  <field name="Translator">
+    <value>Translator</value>
+  </field>
+  <field name="Udgivelsesland">
+    <value>Udgivelsesland</value>
+  </field>
+  <field name="Udgiver">
+    <value>Udgiver</value>
+  </field>
+  <field name="Udgiver rolle">
+    <value>Indsamler</value>
+  </field>
+  <field name="Undertekst">
+    <value>Undertekst</value>
+  </field>
+  <field name="Undertitel">
+    <value>Undertitel</value>
+  </field>
+  <field name="Undo">
+    <value>false</value>
+  </field>
+  <field name="Unix File Identifier">
+    <value>2041272261</value>
+  </field>
+  <field name="URL">
+    <value>URL</value>
+  </field>
+  <field name="URL-tekst">
+    <value>URL-tekst</value>
+  </field>
+  <field name="Volume Name">
+    <value>Sounds</value>
+  </field>
+  <field name="År">
+    <value>2011-09-10</value>
+  </field>
+</record>
