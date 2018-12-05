@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 
 public class MetadataTransformationHandlerTest extends ExtendedTestCase {
@@ -45,7 +46,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
     @AfterClass
     public void tearDown() {
-//        TestFileUtils.tearDown();
+        TestFileUtils.tearDown();
     }
 
     @Test
@@ -264,7 +265,6 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
     
-
     @Test
     public void testTransformationWithCompleteAudioMetadata() throws Exception {
         addDescription("Test the transformation of a Cumulus XML file with all metadata fields for audio files.");
@@ -287,6 +287,31 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         addStep("Validate the METS", "");
         transformationHandler.validate(new FileInputStream(metadataFile));
+    }
+    
+    @Test
+    public void testTransformationOfUpdateMetadata() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file when has been updated.");
+        File xmlFile = new File("src/test/resources/metadata/update_raw.xml");
+        assertTrue(xmlFile.isFile());
+        
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+        
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
 
+        addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                System.out.println(text);
+            }
+        }
+
+        addStep("Validate the METS", "");
+        transformationHandler.validate(new FileInputStream(metadataFile));
+        
+//        System.out.println(StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile)));
     }
 }

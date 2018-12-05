@@ -265,8 +265,8 @@
       <!-- eventType -->
       <xsl:element name="premis:eventType">
         <xsl:choose>
-          <xsl:when test="field[@name='eventType']">
-            <xsl:value-of select="field[@name='eventType']/value" />
+          <xsl:when test="field[@name='Bevarings metadata historik']">
+            <xsl:value-of select="'metadata modification'" />
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="'ingestion'" />
@@ -314,6 +314,21 @@
           <xsl:call-template name="premis_identifier_value" />
         </xsl:element>
       </xsl:element>
+      <!-- When this is an update, then add the linking identifier to the previous metadata  -->
+      <xsl:if test="field[@name='Bevarings metadata historik']">
+        <xsl:element name="premis:linkingObjectIdentifier">
+          <xsl:element name="premis:linkingObjectIdentifierType">
+            <xsl:call-template name="premis_identifier_type" />
+          </xsl:element>
+          <xsl:element name="premis:linkingObjectIdentifierValue">
+            <xsl:value-of select="java:dk.kb.metadata.selector.PremisUtils.getLatestHistoricGuid(
+                    field[@name='Bevarings metadata historik']/value)" />
+          </xsl:element>
+          <xsl:element name="premis:linkingObjectRole">
+            <xsl:value-of select="'source'" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:if>
     </premis:event>
   </xsl:template>
   
@@ -332,8 +347,8 @@
       <!-- eventType -->
       <xsl:element name="premis:eventType">
         <xsl:choose>
-          <xsl:when test="field[@name='eventType']">
-            <xsl:value-of select="field[@name='eventType']/value" />
+          <xsl:when test="field[@name='Bevarings metadata historik']">
+            <xsl:value-of select="'metadata modification'" />
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="'ingestion'" />
@@ -373,6 +388,21 @@
           <xsl:call-template name="premis_representation_identifier_value" />
         </xsl:element>
       </xsl:element>
+      <!-- When this is an update, then add the linking identifier to the previous metadata  -->
+      <xsl:if test="field[@name='Bevarings metadata historik']">
+        <xsl:element name="premis:linkingObjectIdentifier">
+          <xsl:element name="premis:linkingObjectIdentifierType">
+            <xsl:call-template name="premis_identifier_type" />
+          </xsl:element>
+          <xsl:element name="premis:linkingObjectIdentifierValue">
+            <xsl:value-of select="java:dk.kb.metadata.selector.PremisUtils.getLatestHistoricGuid(
+                    field[@name='Bevarings metadata historik']/value)" />
+          </xsl:element>
+          <xsl:element name="premis:linkingObjectRole">
+            <xsl:value-of select="'source'" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:if>
     </premis:event>
   </xsl:template>
   

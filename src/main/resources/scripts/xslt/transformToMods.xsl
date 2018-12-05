@@ -1403,7 +1403,7 @@
           <xsl:value-of select="'crowd'" />
         </xsl:attribute>
         <xsl:attribute name="type">
-          <xsl:value-of select="note" />
+          <xsl:value-of select="'note'" />
         </xsl:attribute>
         <xsl:value-of select="field[@name='Crowd_Note']/value" />
       </xsl:element>
@@ -1416,7 +1416,7 @@
           <xsl:value-of select="'crowd'" />
         </xsl:attribute>
         <xsl:attribute name="type">
-          <xsl:value-of select="kommentar" />
+          <xsl:value-of select="'kommentar'" />
         </xsl:attribute>
         <xsl:value-of select="field[@name='Crowd_Kommentar']/value" />
       </xsl:element>

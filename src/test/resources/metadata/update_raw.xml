@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?><record>
+    <field data-type="string" name="Flash Mode">
+        <value>Flash not used, No strobe return detection function, No flash function, No red-eye reduction mode</value>
+    </field>
+    <field data-type="string" name="objectIdentifierValue">
+        <value>Uid:dk:kb:doms:2007-01/d24565e0-9ffa-11e2-8a63-0016357f605f</value>
+    </field>
+    <field data-type="string" name="Georeference">
+        <value>55.295380, 10.524870</value>
+    </field>
+    <field data-type="enumerator" name="Bevaring_check_type">
+        <value>Simpelt check</value>
+    </field>
+    <field data-type="string" name="Bevarings metadata historik">
+        <value>MetadataGUID ## PackageID</value>
+        <value>83824f4e-1f0e-43ca-8778-40a889c2dea5 ## 71dec00f-8860-440a-8f81-74cf12677004</value>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Image</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>0f5a230cbbb78f4f886300b1a177715d</value>
+    </field>
+    <field data-type="enumerator" name="objectIdentifierType">
+        <value>UUID</value>
+    </field>
+    <field data-type="string" name="Crowd_Emneord">
+        <value>udstillingsvinduer,butik</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>237391</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:bevaring</value>
+    </field>
+    <field data-type="enumerator" name="eventIdentifierType">
+        <value>Det Kongelige Biblioteks eventype</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Langtidsbevaret</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Odense Luftfoto, Fyn</value>
+    </field>
+    <field data-type="string" name="Image Orientation">
+        <value>Top left</value>
+    </field>
+    <field data-type="string" name="Crowd_Georeference">
+        <value>55.507926716362974,10.037888291427635</value>
+    </field>
+    <field data-type="enumerator" name="Color Model">
+        <value>RGB Color</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="Contrast">
+        <value>Normal</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Wed Nov 14 11:15:54 CET 2018</value>
+    </field>
+    <field data-type="string" name="Crowd_Sted">
+        <value>Toftekærsvej 5, Ore, 5400 Bogense</value>
+    </field>
+    <field data-type="integer" name="size">
+        <value>125836252</value>
+    </field>
+    <field data-type="string" name="Gain Control">
+        <value>None</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Lokalitet">
+        <value>Danmark, Fyn, Harndrup</value>
+    </field>
+    <field data-type="string" name="LastCmdInitiated">
+        <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@b65f39</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Luftfoto DP</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1365380249</value>
+    </field>
+    <field data-type="string" name="Mastertransferstatus">
+        <value>OK</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2012-10-29 02:24:22</value>
+    </field>
+    <field data-type="string" name="År">
+        <value>1964</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>27</value>
+    </field>
+    <field data-type="string" name="messageDigest">
+        <value>0f5a230cbbb78f4f886300b1a177715d</value>
+    </field>
+    <field data-type="string" name="ARCHIVE_MD5">
+        <value>21b0e21e8691c218e8f6d6748059f95c</value>
+    </field>
+    <field data-type="integer" name="Color Channels">
+        <value>3</value>
+    </field>
+    <field data-type="string" name="Opstilling">
+        <value>N112</value>
+    </field>
+    <field data-type="enumerator" name="Luftfoto - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_DISPLAY_COPY">
+        <value>3b2e0fac6b289af9db92b5ebd4b81d2b</value>
+    </field>
+    <field data-type="date" name="Captured Date">
+        <value>Mon Oct 29 10:24:21 CET 2012</value>
+    </field>
+    <field data-type="double" name="Image Height">
+        <value>2.2425</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>online_master_arkiv_6</value>
+    </field>
+    <field data-type="string" name="Ophav">
+        <value>Odense Luftfoto</value>
+    </field>
+    <field data-type="integer" name="Registrationdate">
+        <value>2049030787</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>66050083-b38f-4694-982f-fc17404441f0</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>false</value>
+    </field>
+    <field data-type="double" name="Vertical Resolution">
+        <value>2400.0</value>
+    </field>
+    <field data-type="enumerator" name="Generel Material Description">
+        <value>Kort, Todimensionalt billedmateriale </value>
+    </field>
+    <field data-type="enumerator" name="Genre">
+        <value>Skråfoto</value>
+    </field>
+    <field data-type="string" name="White Balance Mode">
+        <value>Auto white balance</value>
+    </field>
+    <field data-type="date" name="Bevarings dato">
+        <value>Wed Nov 14 11:14:06 CET 2018</value>
+    </field>
+    <field data-type="string" name="Compression">
+        <value>Uncompressed</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>/online_master_arkiv_6/non-archival/Maps/FYNLUFTFOTO/Odense/OD06131</value>
+    </field>
+    <field data-type="string" name="creatingApplication">
+        <value>Adobe Photoshop CS5</value>
+    </field>
+    <field data-type="string" name="compositionLevel">
+        <value>0</value>
+    </field>
+    <field data-type="enumerator" name="Copyright">
+        <value>Billedet er muligvis beskyttet af loven om ophavsret</value>
+    </field>
+    <field data-type="string" name="PublishedByVersion">
+        <value>Publication workflow of iteration 13. Class = dk.kb.doms.components.workflow.iteration13.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.6 $;Publish without QA version = $Revision: 1.8 $;productionRoot = /Maps;undoRoot = /online_master_arkiv_6/undo/Maps;publishNonArchivalRoot = /online_master_arkiv_6/non-archival/Maps;productionRoot = /Maps;</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>ihrs</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>OD06131_002.tif</value>
+    </field>
+    <field data-type="string" name="ICC Profile Name">
+        <value>Adobe RGB (1998)</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Wed Apr 03 14:00:43 CEST 2013</value>
+    </field>
+    <field data-type="enumerator" name="messageDigestAlgorithm">
+        <value>MD5</value>
+    </field>
+    <field data-type="string" name="eventIdentifierValue">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>Uid:dk:kb:doms:2007-01/d24565e0-9ffa-11e2-8a63-0016357f605f</value>
+    </field>
+    <field data-type="double" name="Horizontal Resolution">
+        <value>2400.0</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Luftfoto OM</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Mon Apr 08 05:17:29 CEST 2013</value>
+    </field>
+    <field data-type="string" name="Bevarings metadata">
+        <value>http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd</value>
+        <value>http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd</value>
+        <value>http://www.loc.gov/mix/v20 http://www.loc.gov/standards/mix/mix20/mix20.xsd</value>
+        <value>http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd</value>
+    </field>
+    <field data-type="string" name="METADATA PACKAGE ID">
+        <value>839ea00e-b4b4-4171-a66d-f3effd3e4599</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>108</value>
+    </field>
+    <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
+        <value>4dde2b45-0bbb-418c-9512-5dff94e3b17f</value>
+    </field>
+    <field data-type="string" name="Titel">
+        <value>Tues Test</value>
+    </field>
+    <field data-type="string" name="XMP Metadata">
+        <value>&amp;lt;?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?&amp;gt;</value>
+        <value>&amp;lt;x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "&amp;gt;</value>
+        <value>   &amp;lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"</value>
+        <value>            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:DocumentID&amp;gt;9411EA589BC6DB515270467A012CA331&amp;lt;/xmpMM:DocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:OriginalDocumentID&amp;gt;9411EA589BC6DB515270467A012CA331&amp;lt;/xmpMM:OriginalDocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:InstanceID&amp;gt;xmp.iid:979D7CCAB221E2119FCEBA3FBCB6127D&amp;lt;/xmpMM:InstanceID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:History&amp;gt;</value>
+        <value>            &amp;lt;rdf:Seq&amp;gt;</value>
+        <value>               &amp;lt;rdf:li rdf:parseType="Resource"&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:action&amp;gt;saved&amp;lt;/stEvt:action&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:instanceID&amp;gt;xmp.iid:5B0C9304AD21E211816CF775BC37AF9A&amp;lt;/stEvt:instanceID&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:when&amp;gt;2012-10-29T10:42:57+01:00&amp;lt;/stEvt:when&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:softwareAgent&amp;gt;Adobe Photoshop Camera Raw 6.6 (Windows)&amp;lt;/stEvt:softwareAgent&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:changed&amp;gt;/metadata&amp;lt;/stEvt:changed&amp;gt;</value>
+        <value>               &amp;lt;/rdf:li&amp;gt;</value>
+        <value>               &amp;lt;rdf:li rdf:parseType="Resource"&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:action&amp;gt;saved&amp;lt;/stEvt:action&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:instanceID&amp;gt;xmp.iid:979D7CCAB221E2119FCEBA3FBCB6127D&amp;lt;/stEvt:instanceID&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:when&amp;gt;2012-10-29T11:24:21+01:00&amp;lt;/stEvt:when&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:softwareAgent&amp;gt;Adobe Photoshop CS5 Windows&amp;lt;/stEvt:softwareAgent&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:changed&amp;gt;/&amp;lt;/stEvt:changed&amp;gt;</value>
+        <value>               &amp;lt;/rdf:li&amp;gt;</value>
+        <value>            &amp;lt;/rdf:Seq&amp;gt;</value>
+        <value>         &amp;lt;/xmpMM:History&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:dc="http://purl.org/dc/elements/1.1/"&amp;gt;</value>
+        <value>         &amp;lt;dc:format&amp;gt;image/tiff&amp;lt;/dc:format&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmp="http://ns.adobe.com/xap/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;xmp:MetadataDate&amp;gt;2012-10-29T11:24:21+01:00&amp;lt;/xmp:MetadataDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:CreateDate&amp;gt;2012-10-25T17:27:51+02:00&amp;lt;/xmp:CreateDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:ModifyDate&amp;gt;2012-10-29T11:24:21+01:00&amp;lt;/xmp:ModifyDate&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ColorMode&amp;gt;3&amp;lt;/photoshop:ColorMode&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ICCProfile&amp;gt;Adobe RGB (1998)&amp;lt;/photoshop:ICCProfile&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>   &amp;lt;/rdf:RDF&amp;gt;</value>
+        <value>&amp;lt;/x:xmpmeta&amp;gt;</value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                                                                                                    </value>
+        <value>                            </value>
+        <value>&amp;lt;?xpacket end="w"?&amp;gt;</value>
+    </field>
+    <field data-type="integer" name="Bits Per Channel">
+        <value>8</value>
+    </field>
+    <field data-type="string" name="Software">
+        <value>Adobe Photoshop CS5</value>
+    </field>
+    <field data-type="string" name="preservationLevelDateAssigned">
+        <value>20171123</value>
+    </field>
+    <field data-type="date" name="IPTC Date Created">
+        <value>Mon Oct 29 10:24:21 CET 2012</value>
+    </field>
+    <field data-type="integer" name="Unix File Identifier">
+        <value>-1945367137</value>
+    </field>
+    <field data-type="binary" name="Asset Reference">
+        <value>dia-prod-cdb-01:/online_master_arkiv_6/non-archival/Maps/FYNLUFTFOTO/Odense/OD06131/OD06131_002.tif</value>
+    </field>
+    <field data-type="string" name="KB Samling">
+        <value>F</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>OD06131_002.tif</value>
+    </field>
+    <field data-type="integer" name="Horizontal Pixels">
+        <value>7792</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Confidentiality">
+        <value>confidentialityLow</value>
+    </field>
+    <field data-type="string" name="LastCmdSucceeded">
+        <value>dk.kb.doms.api.oais.sipdipcommands.FinishTransactionCmd@b65f39</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>125836252</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Logical">
+        <value>logicalStrategyMigration</value>
+    </field>
+    <field data-type="string" name="EXIF Version">
+        <value>2.2.1</value>
+    </field>
+    <field data-type="string" name="Color Space">
+        <value>Uncalibrated</value>
+    </field>
+    <field data-type="enumerator" name="Cataloging language">
+        <value>da</value>
+    </field>
+    <field data-type="string" name="Crowd_Note">
+        <value>-</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>dia-prod-cdb-01.kb.dk</value>
+    </field>
+    <field data-type="string" name="PublicationDate">
+        <value>08-04-2013</value>
+    </field>
+    <field data-type="string" name="Saturation">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="RESOURCE PACKAGE ID">
+        <value>839ea00e-b4b4-4171-a66d-f3effd3e4599</value>
+    </field>
+    <field data-type="string" name="Sharpness">
+        <value>Normal</value>
+    </field>
+    <field data-type="integer" name="Vertical Pixels">
+        <value>5382</value>
+    </field>
+    <field data-type="double" name="Image Width">
+        <value>3.2466666666666666</value>
+    </field>
+    <field data-type="enumerator" name="Material Description">
+        <value>Negativ</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Mon Apr 08 05:17:29 CEST 2013</value>
+    </field>
+    <field data-type="string" name="Subject Distance Range">
+        <value>Unknown</value>
+    </field>
+    <field data-type="string" name="Exposure Mode">
+        <value>Auto exposure</value>
+    </field>
+    <field data-type="string" name="Crowd_Titel">
+        <value>- 1964 - Ore</value>
+    </field>
+    <field data-type="string" name="Scene Capture Type">
+        <value>Standard</value>
+    </field>
+    <field data-type="string" name="Custom Rendered">
+        <value>Normal process</value>
+    </field>
+    <field data-type="enumerator" name="Publication_catalog">
+        <value>Luftfoto OM</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_BitSafety">
+        <value>bitSafetyVeryHigh</value>
+    </field>
+    <field data-type="string" name="Location">
+        <value>Danmark</value>
+    </field>
+</record>

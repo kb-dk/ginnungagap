@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import com.canto.cumulus.Cumulus;
 
+import dk.kb.ginnungagap.GinnungagapConstants;
 import dk.kb.metadata.utils.ExceptionUtils;
 
 /**
@@ -93,7 +94,7 @@ public final class AgentSelector {
     /**
      * The version for the ingest agent.
      */
-    protected static final String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
+    protected static final String KB_API_VERSION = GinnungagapConstants.getBuildVersion();
 
     /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {
