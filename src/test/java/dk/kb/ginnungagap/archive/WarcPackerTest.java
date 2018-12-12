@@ -124,7 +124,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         
         CumulusRecord record = mock(CumulusRecord.class);
         WarcDigest digest = new Digest("MD5").getDigestOfBytes("TEST".getBytes());
-        wp.packagedRecords.add(record);
+        wp.packagedCompleteRecords.add(record);
         wp.reportSucces(digest);
         
         verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_PACKAGE_ID), anyString());
@@ -144,7 +144,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         
         String failureMessage = "THIS MUST FAIL!!!";
         CumulusRecord record = mock(CumulusRecord.class);
-        wp.packagedRecords.add(record);
+        wp.packagedCompleteRecords.add(record);
         wp.reportFailure(failureMessage);
         
         verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), 
@@ -159,14 +159,14 @@ public class WarcPackerTest extends ExtendedTestCase {
         WarcPacker wp = new WarcPacker(conf);
         CumulusRecord record = mock(CumulusRecord.class);
         
-        Assert.assertTrue(wp.packagedRecords.isEmpty());
+        Assert.assertTrue(wp.packagedCompleteRecords.isEmpty());
         wp.addRecordToPackagedList(record);
-        Assert.assertFalse(wp.packagedRecords.isEmpty());
-        Assert.assertEquals(wp.packagedRecords.size(), 1);
-        Assert.assertTrue(wp.packagedRecords.contains(record));
+        Assert.assertFalse(wp.packagedCompleteRecords.isEmpty());
+        Assert.assertEquals(wp.packagedCompleteRecords.size(), 1);
+        Assert.assertTrue(wp.packagedCompleteRecords.contains(record));
 
         wp.addRecordToPackagedList(record);
-        Assert.assertEquals(wp.packagedRecords.size(), 1);
+        Assert.assertEquals(wp.packagedCompleteRecords.size(), 1);
     }
     
     @Test

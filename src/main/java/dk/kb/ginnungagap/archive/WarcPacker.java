@@ -38,8 +38,10 @@ public class WarcPacker implements Closeable {
     
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
-    /** The records which has been packaged in the warc file.*/
-    protected final List<CumulusRecord> packagedRecords;
+    /** The records which has been packaged in the warc file, but content file and metadata.*/
+    protected final List<CumulusRecord> packagedCompleteRecords;
+    /** The records whose metadata has been packaged in the warc file.*/
+    protected final List<CumulusRecord> packagedMetadataRecords;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
     
@@ -54,8 +56,9 @@ public class WarcPacker implements Closeable {
      */
     public WarcPacker(BitmagConfiguration conf) {
         this.bitmagConf = conf;
-        this.packagedRecords = new ArrayList<CumulusRecord>();
-
+        this.packagedCompleteRecords = new ArrayList<CumulusRecord>();
+        this.packagedMetadataRecords = new ArrayList<CumulusRecord>();
+        
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             writeWarcinfo();
@@ -199,13 +202,19 @@ public class WarcPacker implements Closeable {
      */
     public void reportSucces(WarcDigest checksumDigest) {
         Date now = new Date();
-        for(CumulusRecord r : packagedRecords) {
+        for(CumulusRecord r : packagedCompleteRecords) {
             r.setStringValueInField(Constants.FieldNames.METADATA_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.RESOURCE_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
             r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
             CumulusPreservationUtils.setPreservationFinished(r);
         }
+        for(CumulusRecord r : packagedMetadataRecords) {
+            r.setStringValueInField(Constants.FieldNames.METADATA_PACKAGE_ID, warcWrapper.getWarcFileId());
+            r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
+            CumulusPreservationUtils.setPreservationFinished(r);
+        }
+
     }
 
     /**
@@ -213,18 +222,28 @@ public class WarcPacker implements Closeable {
      * @param reason The message regarding the reason for the failure.
      */
     public void reportFailure(String reason) {
-        for(CumulusRecord r : packagedRecords) {
+        for(CumulusRecord r : packagedCompleteRecords) {
             CumulusPreservationUtils.setPreservationFailed(r, reason);
         }
     }
     
     /**
-     * Adds the record to the list of packaged records, unless it already is part of the list.
+     * Adds the record to the list of packaged complete records, unless it already is part of the list.
      * @param record The record 
      */
     public void addRecordToPackagedList(CumulusRecord record) {
-        if(!packagedRecords.contains(record)) {
-            packagedRecords.add(record);
+        if(!packagedCompleteRecords.contains(record)) {
+            packagedCompleteRecords.add(record);
+        }
+    }
+    
+    /**
+     * Adds the record to the list of packaged metadata records, unless it already is part of the list.
+     * @param record The record 
+     */
+    public void addRecordToMetadataPackagedList(CumulusRecord record) {
+        if(!packagedMetadataRecords.contains(record) && !packagedCompleteRecords.contains(record)) {
+            packagedMetadataRecords.add(record);
         }
     }
 

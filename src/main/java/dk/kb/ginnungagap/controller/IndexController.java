@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import dk.kb.ginnungagap.GinnungagapConstants;
 import dk.kb.ginnungagap.config.Configuration;
 
 /**
@@ -20,6 +21,9 @@ public class IndexController {
     /** The configuration.*/
     @Autowired
     protected Configuration conf;
+    /** The constants.*/
+    @Autowired
+    protected GinnungagapConstants constants;
     
     /**
      * Index controller, for redirecting towards the workflow site.
@@ -41,6 +45,7 @@ public class IndexController {
         model.addAttribute("localConf", conf.getLocalConfiguration());
         model.addAttribute("bitmagConf", conf.getBitmagConf());
         model.addAttribute("transformationConf", conf.getTransformationConf());
+        model.addAttribute("version", constants.getBuildVersion());
         
         return "ginnungagap";
     }

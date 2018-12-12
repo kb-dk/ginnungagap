@@ -143,7 +143,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verifyZeroInteractions(archive);
         
         verify(wp).packMetadata(eq(metadataFile), any(Uri.class));
-        verify(wp).addRecordToPackagedList(eq(record));
+        verify(wp).addRecordToMetadataPackagedList(eq(record));
         verifyNoMoreInteractions(wp);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));

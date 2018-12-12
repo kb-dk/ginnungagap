@@ -77,7 +77,7 @@ public class BitmagPreserver {
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
             wp.packMetadata(metadataFile, refersToUri);
-            wp.addRecordToPackagedList(record);
+            wp.addRecordToMetadataPackagedList(record);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Could not package metadata.", e);
         }

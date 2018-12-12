@@ -19,6 +19,7 @@
 <div class="jumbotron text-center">
     <h1>Cumulus Preservation Service</h1>
     <h2>Ginnungagap</h2>
+    <h3>Version: ${version}</h3>
 </div>
 <div id="conf" class="container">
   <h3>Configuration</h3>
