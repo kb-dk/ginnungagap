@@ -20,14 +20,13 @@ import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.ginnungagap.utils.StreamUtils;
 
 public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
     protected File xsltFile;
     
-    protected boolean writeOutput = false;
+    protected boolean writeOutput = true;
     
     MetadataTransformationHandler transformationHandler;
     
@@ -70,7 +69,9 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
             addStep("Validate the METS", "");
             transformationHandler.validate(new FileInputStream(metadataFile));
         } finally {
-            System.out.println(out.toString());
+            if(writeOutput) {
+                System.out.println(out.toString());
+            }
         }
     }
 
@@ -246,6 +247,13 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         try (InputStream in = new FileInputStream(modsFile)) {
             transformationHandler.validate(in);
         }
+        
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(modsFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
+                System.out.println(text);
+            }
+        }
     }
     
     @Test
@@ -253,6 +261,13 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         File modsFile = new File("src/test/resources/metadata/crowd_mods.xml");
         try (InputStream in = new FileInputStream(modsFile)) {
             transformationHandler.validate(in);
+        }
+        
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(modsFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
+                System.out.println(text);
+            }
         }
     }
     
@@ -262,6 +277,13 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         File metadataFile = new File("src/test/resources/test_representation.raw.xml");
         try (InputStream metadata = new FileInputStream(metadataFile)) {
             transformationHandler.validate(metadata);
+        }
+        
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                System.out.println(text);
+            }
         }
     }
     
@@ -287,6 +309,13 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         addStep("Validate the METS", "");
         transformationHandler.validate(new FileInputStream(metadataFile));
+        
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                System.out.println(text);
+            }
+        }
     }
     
     @Test
@@ -312,6 +341,11 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         addStep("Validate the METS", "");
         transformationHandler.validate(new FileInputStream(metadataFile));
         
-//        System.out.println(StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile)));
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile);) {
+                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                System.out.println(text);
+            }
+        }
     }
 }

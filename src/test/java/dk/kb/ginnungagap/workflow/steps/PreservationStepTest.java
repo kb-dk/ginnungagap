@@ -212,12 +212,16 @@ public class PreservationStepTest extends ExtendedTestCase {
         
         PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
         
+        String ieUUID = UUID.randomUUID().toString();
+        String metadataUUID = UUID.randomUUID().toString();
+        String repIeUUID = UUID.randomUUID().toString();
+        
         when(record.getFieldValue(eq(Constants.FieldNames.METADATA_GUID))).thenReturn(recordGuid);
         when(record.getFieldValue(eq(Constants.FieldNames.COLLECTION_ID))).thenReturn(collectionId);
-        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(UUID.randomUUID().toString());
-        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(UUID.randomUUID().toString());
+        when(record.getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY))).thenReturn(repIeUUID);
+        when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID))).thenReturn(metadataUUID);
+        when(record.getFieldValue(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(ieUUID);
+        when(record.getFieldValueOrNull(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID))).thenReturn(ieUUID);
         when(record.isMasterAsset()).thenReturn(true);
         when(record.getFile()).thenReturn(contentFile);
         doAnswer(new Answer<Void>() {
@@ -240,7 +244,7 @@ public class PreservationStepTest extends ExtendedTestCase {
 
         verify(preserver).packRecordResource(eq(record));
         verify(preserver).packRecordMetadata(eq(record), any(File.class));
-        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString());
+        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString(), anyString());
         verify(preserver).checkConditions();
         verifyNoMoreInteractions(preserver);
 
@@ -321,7 +325,7 @@ public class PreservationStepTest extends ExtendedTestCase {
 
         verify(preserver).packRecordResource(eq(record));
         verify(preserver).packRecordMetadata(eq(record), any(File.class));
-        verify(preserver).packRepresentationMetadata(any(File.class), anyString());
+        verify(preserver).packRepresentationMetadata(any(File.class), anyString(), anyString());
         verify(preserver).checkConditions();
         verifyNoMoreInteractions(preserver);
 

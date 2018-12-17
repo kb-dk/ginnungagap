@@ -180,7 +180,7 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         verifyZeroInteractions(server);
 
         verify(preserver).packRecordMetadata(eq(record), any(File.class));
-        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString());
+        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString(), anyString());
         verify(preserver).checkConditions();
         verifyNoMoreInteractions(preserver);
 

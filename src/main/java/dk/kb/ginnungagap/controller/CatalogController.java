@@ -118,7 +118,7 @@ public class CatalogController {
         
         log.info("Packing and preserving the catalog structmap metadata for catalog '" + catalog + "'.");
         
-        preserver.packRepresentationMetadata(structmapFile, collectionID);
+        preserver.packRepresentationMetadata(structmapFile, collectionID, null);
         preserver.uploadAll();
         
         return new RedirectView("../catalog",true);

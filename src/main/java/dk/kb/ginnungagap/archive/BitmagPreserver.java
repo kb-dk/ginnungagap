@@ -76,7 +76,7 @@ public class BitmagPreserver {
             String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
-            wp.packMetadata(metadataFile, refersToUri);
+            wp.packMetadata(metadataFile, refersToUri, null);
             wp.addRecordToMetadataPackagedList(record);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Could not package metadata.", e);
@@ -87,10 +87,14 @@ public class BitmagPreserver {
      * Packages the metadata of a representation. 
      * @param metadataFile The file with the metadata.
      * @param collectionID The ID of the preservation collection, where the metadata must be preserved.
+     * @param warcRecordId The ID of the warc record.
      */
-    public void packRepresentationMetadata(File metadataFile, String collectionID) {
+    public void packRepresentationMetadata(File metadataFile, String collectionID, String warcRecordId) {
+        if(warcRecordId == null) {
+            warcRecordId = metadataFile.getName();
+        }
         WarcPacker wp = getWarcPacker(collectionID);
-        wp.packMetadata(metadataFile, null);        
+        wp.packMetadata(metadataFile, null, warcRecordId);        
     }
     
     /**

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +204,8 @@ public class PreservationStep extends WorkflowStep {
         try (InputStream is = new FileInputStream(metadataFile)) {
             transformationHandler.validate(is);
         }
-        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID),
+                UUID.randomUUID().toString());
     }
 
     /**
@@ -240,7 +242,8 @@ public class PreservationStep extends WorkflowStep {
         try (InputStream is = new FileInputStream(metadataFile)) {
             transformationHandler.validate(is);
         }
-        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+        preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID), 
+                UUID.randomUUID().toString());
     }
     
     /**

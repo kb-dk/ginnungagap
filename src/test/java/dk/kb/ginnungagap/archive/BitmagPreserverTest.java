@@ -142,7 +142,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         
         verifyZeroInteractions(archive);
         
-        verify(wp).packMetadata(eq(metadataFile), any(Uri.class));
+        verify(wp).packMetadata(eq(metadataFile), any(Uri.class), anyString());
         verify(wp).addRecordToMetadataPackagedList(eq(record));
         verifyNoMoreInteractions(wp);
         
@@ -177,14 +177,16 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         preserver.archive = archive;
         preserver.conf = conf;
         
+        String recordId = UUID.randomUUID().toString();
+        
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         
-        preserver.packRepresentationMetadata(metadataFile, collectionId);
+        preserver.packRepresentationMetadata(metadataFile, collectionId, recordId);
         
         verifyZeroInteractions(archive);
         
-        verify(wp).packMetadata(eq(metadataFile), eq(null));
+        verify(wp).packMetadata(eq(metadataFile), eq(null), eq(recordId));
         verifyNoMoreInteractions(wp);
     }
     

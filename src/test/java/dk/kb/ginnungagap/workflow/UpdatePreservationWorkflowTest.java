@@ -128,7 +128,7 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
 
         verify(preserver, times(0)).packRecordResource(any(CumulusRecord.class));
         verify(preserver).packRecordMetadata(any(CumulusRecord.class), any(File.class));
-        verify(preserver).packRepresentationMetadata(any(File.class), anyString());
+        verify(preserver).packRepresentationMetadata(any(File.class), anyString(), anyString());
         verify(preserver).checkConditions();
         verify(preserver).uploadAll();
         verifyNoMoreInteractions(preserver);

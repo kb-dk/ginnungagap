@@ -3,6 +3,7 @@ package dk.kb.metadata.selector;
 import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
 
+import dk.kb.ginnungagap.archive.WarcInfoConstants;
 import dk.kb.metadata.utils.StringUtils;
 
 /**
@@ -26,5 +27,28 @@ public class PremisUtils {
         String line = lastNode.getFirstChild().getNodeValue();
         
         return StringUtils.split(line, " ", 0);
+    }
+    
+    /**
+     * Retrieves the system environment and properties.
+     * @return the system environment and properties.
+     */
+    public static String getEnvironmentAndProperties() {
+        StringBuffer res = new StringBuffer();
+        for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
+            String value = System.getProperty((String) key);
+            if(value != null && !value.isEmpty()) {
+                res.append(key + ": " + value + "\n");
+            }
+        }
+        res.append("\n");
+        for(String key : WarcInfoConstants.ENV_VARIABLES) {
+            String value = System.getenv().get(key);
+            if(value != null && !value.isEmpty()) {
+                res.append(key + ": " + value + "\n");
+            }
+        }
+
+        return res.toString();
     }
 }

@@ -59,7 +59,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         Digest digestor = new Digest(conf.getAlgorithm());
         WarcDigest wd = digestor.getDigestOfFile(testFile);
         wp.packResource(testFile, wd, ContentType.parseContentType("application/octetstream"), UUID.randomUUID().toString());
-        wp.packMetadata(testFile, new Uri("urn:uuid:" + UUID.randomUUID().toString()));
+        wp.packMetadata(testFile, new Uri("urn:uuid:" + UUID.randomUUID().toString()), UUID.randomUUID().toString());
         
         assertTrue(wp.getSize() > 0);
         assertTrue(wp.getSize() > 2 * testFile.length()); 
@@ -82,7 +82,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         addDescription("Test failure to write a missing file as metadata");
         
         WarcPacker wp = new WarcPacker(conf);
-        wp.packMetadata(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), new Uri("urn:uuid:" + UUID.randomUUID().toString()));
+        wp.packMetadata(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), new Uri("urn:uuid:" + UUID.randomUUID().toString()), UUID.randomUUID().toString());
     }
     
     @Test(expectedExceptions = IllegalStateException.class)

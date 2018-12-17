@@ -141,15 +141,16 @@ public class WarcPacker implements Closeable {
      * as the UUID of the metadata record.
      * @param refersTo Value for the refers-to elements in the warc record header. This may be null.
      */
-    protected void packMetadata(File metadataFile, Uri refersTo) {
+    protected void packMetadata(File metadataFile, Uri refersTo, String recordId) {
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             try (InputStream in = new FileInputStream(metadataFile)) {
+                String uuid = metadataFile.getName();
                 Digest digestor = new Digest(bitmagConf.getAlgorithm());
                 WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
                 warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
                         ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
-                        metadataFile.getName());
+                        recordId, uuid);
                 hasContent = true;
             } catch (Exception e) {
                 throw new IllegalStateException("Could not package the metadata into the WARC file.", e);

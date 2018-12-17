@@ -287,6 +287,13 @@
         </xsl:choose>
       </xsl:element>
       
+      <!-- event detail information -->
+      <xsl:element name="premis:eventDetailInformation">
+        <xsl:element name="premis:eventDetail">
+          <xsl:value-of select="java:dk.kb.metadata.selector.PremisUtils.getEnvironmentAndProperties()" />
+        </xsl:element>
+      </xsl:element>
+      
       <!-- linkingAgentIdentifier -->
       <xsl:element name="premis:linkingAgentIdentifier">
         <xsl:element name="premis:linkingAgentIdentifierType">
