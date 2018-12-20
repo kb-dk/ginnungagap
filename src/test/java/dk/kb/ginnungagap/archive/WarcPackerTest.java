@@ -46,7 +46,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         conf = new BitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 10000000, TestFileUtils.getTempDir(), "SHA-1");
     }
     
-    @AfterClass
+//    @AfterClass
     public void tearDown() {
         TestFileUtils.tearDown();
     }

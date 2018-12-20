@@ -140,9 +140,11 @@ public class WarcPacker implements Closeable {
      * @param metadataFile The file with the metadata. The name of the file must be the same 
      * as the UUID of the metadata record.
      * @param refersTo Value for the refers-to elements in the warc record header. This may be null.
+     * @param warcRecordId The id of the WARC record.
      */
-    protected void packMetadata(File metadataFile, Uri refersTo, String recordId) {
+    protected void packMetadata(File metadataFile, Uri refersTo, String warcRecordId) {
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
         synchronized(warcWrapper) {
             try (InputStream in = new FileInputStream(metadataFile)) {
                 String uuid = metadataFile.getName();
@@ -150,7 +152,7 @@ public class WarcPacker implements Closeable {
                 WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
                 warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
                         ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
-                        recordId, uuid);
+                        warcRecordId, uuid);
                 hasContent = true;
             } catch (Exception e) {
                 throw new IllegalStateException("Could not package the metadata into the WARC file.", e);

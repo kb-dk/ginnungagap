@@ -76,7 +76,7 @@ public class BitmagPreserver {
             String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
-            wp.packMetadata(metadataFile, refersToUri, null);
+            wp.packMetadata(metadataFile, refersToUri, metadataFile.getName());
             wp.addRecordToMetadataPackagedList(record);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Could not package metadata.", e);
@@ -94,7 +94,7 @@ public class BitmagPreserver {
             warcRecordId = metadataFile.getName();
         }
         WarcPacker wp = getWarcPacker(collectionID);
-        wp.packMetadata(metadataFile, null, warcRecordId);        
+        wp.packMetadata(metadataFile, null, warcRecordId);
     }
     
     /**
