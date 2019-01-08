@@ -27,7 +27,7 @@ public class CumulusQueryUtils {
         String query = String.format(
                 StringUtils.replaceSpacesToTabs("%s is %s\nand %s is %s\nand %s is %s"),
                 Constants.FieldNames.PRESERVATION_STATUS,
-                Constants.FieldValues.PRESERVATIONSTATE_READY_FOR_ARCHIVAL,
+                Constants.FieldValues.PRESERVATIONSTATE_SEND_TO_ARCHIVE,
                 Constants.FieldNames.REGISTRATIONSTATE,
                 Constants.FieldValues.REGISTRATIONSTATE_FINISHED,
                 Constants.FieldNames.CATALOG_NAME,
