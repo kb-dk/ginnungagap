@@ -57,6 +57,11 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
  *     </ul>
+ *     <li>mail:</li>
+ *     <ul>
+ *       <li>sender: $sender</li>
+ *       <li>receiver: <br/>- $receiver1<br/>- $receiver2<br/>- ...</li>
+ *     </ul>
  *   </ul>
  * </ul>
  * 
@@ -125,6 +130,13 @@ public class Configuration {
     protected static final String CONF_LOCAL_ARCHIVE_PATH = "archive_path";
     /** [OPTIONAL] Local test boolean leaf-element. Default not test.*/
     protected static final String CONF_LOCAL_TEST = "test";
+
+    /** Mail node-element.*/
+    protected static final String CONF_MAIL = "mail";
+    /** The mail sender leaf-element.*/
+    protected static final String CONF_MAIL_SENDER = "sender";
+    /** The mail receivers array leaf-element.*/
+    protected static final String CONF_MAIL_RECEIVERS = "receivers";
     
     /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
@@ -139,6 +151,8 @@ public class Configuration {
     protected final WorkflowConfiguration workflowConfiguration;
     /** The configuration for the local output folders and tests.*/
     protected final LocalConfiguration localConfiguration;
+    /** The configuration for the mail.*/
+    protected final MailConfiguration mailConfiguration;
     
     /**
      * Constructor.
@@ -168,13 +182,16 @@ public class Configuration {
                     "Configuration must contain the '" + CONF_WORKFLOW + "' element.");
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_LOCAL), 
                     "Configuration must contain the '" + CONF_LOCAL + "' element.");
-            
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_MAIL),
+                    "Configuration must contain the '" + CONF_MAIL + "' element.");
+
             this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
             this.workflowConfiguration = loadWorkflowConfiguration((Map<String, Object>) confMap.get(CONF_WORKFLOW));
             this.localConfiguration = loadLocalConfiguration((Map<String, Object>) confMap.get(CONF_LOCAL));
+            this.mailConfiguration = loadMailConfiguration((Map<String, Object>) confMap.get(CONF_MAIL));
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
@@ -300,9 +317,9 @@ public class Configuration {
      */
     protected LocalConfiguration loadLocalConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_ARCHIVE_PATH), 
-                "Missing Transformation element '" + CONF_LOCAL_ARCHIVE_PATH + "'");
+                "Missing Local element '" + CONF_LOCAL_ARCHIVE_PATH + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_OUTPUT_PATH), 
-                "Missing Transformation element '" + CONF_LOCAL_OUTPUT_PATH + "'");
+                "Missing Local element '" + CONF_LOCAL_OUTPUT_PATH + "'");
 
         File outputDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
         File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_ARCHIVE_PATH));
@@ -312,6 +329,22 @@ public class Configuration {
         }
         
         return new LocalConfiguration(archiveDir, outputDir, isTest);
+    }
+
+    /**
+     * Retrieves the mail configuration from the map.
+     * @param map The mail map.
+     * @return The map configuration.
+     */
+    protected MailConfiguration loadMailConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_MAIL_SENDER),
+                "Missing Mail element '" + CONF_MAIL_SENDER + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_MAIL_RECEIVERS),
+                "Missing Mail element '" + CONF_MAIL_RECEIVERS + "'");
+
+        List<String> receivers = (List<String>) map.get(CONF_MAIL_RECEIVERS);
+
+        return new MailConfiguration((String) map.get(CONF_MAIL_SENDER), receivers);
     }
     
     /** @return The local configuration. */
@@ -338,6 +371,9 @@ public class Configuration {
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
     }
+
+    /** @return The configuration for the mail.*/
+    public MailConfiguration getMailConfiguration() { return mailConfiguration; }
     
     /**
      * A version of Cumulus configuration without the password.

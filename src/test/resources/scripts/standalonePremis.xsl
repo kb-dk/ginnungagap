@@ -11,9 +11,9 @@
 	<xsl:include href="transformToPremis.xsl" />
 
 	<xsl:template match="record">
-<!-- 		<xsl:call-template name="premis_preservation" /> -->
+		<xsl:call-template name="premis_preservation" />
 <!-- 		<xsl:call-template name="premis_event" /> -->
-		<xsl:call-template name="premis_rights" />
+<!-- 		<xsl:call-template name="premis_rights" /> -->
 <!-- 		<xsl:call-template name="premis_object" /> -->
 	</xsl:template>
 
