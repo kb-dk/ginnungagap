@@ -36,7 +36,7 @@ public class PremisUtils {
     public static String getEnvironmentAndProperties() {
         StringBuffer res = new StringBuffer();
         for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
-            String value = System.getProperty((String) key);
+            String value = System.getProperty(key);
             if(value != null && !value.isEmpty()) {
                 res.append(key + ": " + value + "\n");
             }

@@ -1,5 +1,7 @@
 package dk.kb.ginnungagap.controller;
 
+import dk.kb.ginnungagap.GinnungagapConstants;
+import dk.kb.ginnungagap.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import dk.kb.ginnungagap.GinnungagapConstants;
-import dk.kb.ginnungagap.config.Configuration;
-
 /**
  * Setting the default start path for the view.
  */
@@ -18,6 +17,10 @@ import dk.kb.ginnungagap.config.Configuration;
 public class IndexController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(IndexController.class);
+
+    /** The ginnugagap index path.*/
+    protected static final String PATH = "ginnungagap";
+
     /** The configuration.*/
     @Autowired
     protected Configuration conf;
@@ -31,7 +34,7 @@ public class IndexController {
      */
     @RequestMapping("/")
     public RedirectView getIndex() {
-        return new RedirectView("ginnungagap",true);
+        return new RedirectView(PATH,true);
     }
 
     /**
@@ -39,7 +42,7 @@ public class IndexController {
      * @param model The model for the view.
      * @return The redirect toward the workflow site.
      */
-    @RequestMapping("/ginnungagap")
+    @RequestMapping("/" + PATH)
     public String getGinnungagap(Model model) {
         model.addAttribute("cumulusConf", conf.getViewableCumulusConfiguration());
         model.addAttribute("localConf", conf.getLocalConfiguration());
@@ -47,6 +50,6 @@ public class IndexController {
         model.addAttribute("transformationConf", conf.getTransformationConf());
         model.addAttribute("version", constants.getBuildVersion());
         
-        return "ginnungagap";
+        return PATH;
     }
 }

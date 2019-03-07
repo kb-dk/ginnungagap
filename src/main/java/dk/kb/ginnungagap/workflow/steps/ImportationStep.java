@@ -41,6 +41,7 @@ public class ImportationStep extends WorkflowStep {
      * @param retainDir The directory to place existing files, so they will not be overridden.
      */
     public ImportationStep(CumulusServer server, Archive archive, String catalogName, File retainDir) {
+        super(catalogName);
         this.server = server;
         this.archive = archive;
         this.catalogName = catalogName;

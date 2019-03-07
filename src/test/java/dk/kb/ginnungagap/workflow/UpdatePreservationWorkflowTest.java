@@ -98,20 +98,19 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS))).thenReturn(metsTransformer);
         when(transformationHandler.getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY))).thenReturn(ieTransformer);
         
-        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow();
-        pw.conf = conf;
-        pw.cumulusWrapper = cumulusWrapper; 
-        pw.transformationHandler = transformationHandler;
-        pw.preserver = preserver;
-        pw.init();
+        UpdatePreservationWorkflow workflow = new UpdatePreservationWorkflow();
+        workflow.conf = conf;
+        workflow.cumulusWrapper = cumulusWrapper;
+        workflow.transformationHandler = transformationHandler;
+        workflow.preserver = preserver;
+        workflow.init();
+
+        workflow.runWorkflowSteps();
         
-        pw.runWorkflowSteps();
-        
-        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
-        verify(server).getCatalogNames();
+        verify(server).getItems(eq(conf.getCumulusConf().getCatalogs().get(0)), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
-        verify(cumulusWrapper, times(2)).getServer();
+        verify(cumulusWrapper).getServer();
         verifyNoMoreInteractions(cumulusWrapper);
         
         verify(metsTransformer).transformXmlMetadata(any(InputStream.class), any(OutputStream.class));
@@ -161,14 +160,16 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         CumulusWrapper server = mock(CumulusWrapper.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
-        
-        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow();
-        pw.conf = conf;
-        pw.cumulusWrapper = server; 
-        pw.transformationHandler = transformationHandler;
-        pw.preserver = preserver;
-        
-        String description = pw.getDescription();
+        CumulusWrapper cumulusWrapper = mock(CumulusWrapper.class);
+
+        UpdatePreservationWorkflow workflow = new UpdatePreservationWorkflow();
+        workflow.conf = conf;
+        workflow.cumulusWrapper = cumulusWrapper;
+        workflow.transformationHandler = transformationHandler;
+        workflow.preserver = preserver;
+        workflow.init();
+
+        String description = workflow.getDescription();
         Assert.assertNotNull(description);
         Assert.assertFalse(description.isEmpty());
         Assert.assertEquals(description, UpdatePreservationWorkflow.WORKFLOW_DESCRIPTION);
@@ -179,14 +180,16 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         CumulusWrapper server = mock(CumulusWrapper.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
-        
-        UpdatePreservationWorkflow pw = new UpdatePreservationWorkflow();
-        pw.conf = conf;
-        pw.cumulusWrapper = server; 
-        pw.transformationHandler = transformationHandler;
-        pw.preserver = preserver;
-        
-        String name = pw.getName();
+        CumulusWrapper cumulusWrapper = mock(CumulusWrapper.class);
+
+        UpdatePreservationWorkflow workflow = new UpdatePreservationWorkflow();
+        workflow.conf = conf;
+        workflow.cumulusWrapper = cumulusWrapper;
+        workflow.transformationHandler = transformationHandler;
+        workflow.preserver = preserver;
+        workflow.init();
+
+        String name = workflow.getName();
         Assert.assertNotNull(name);
         Assert.assertFalse(name.isEmpty());
         Assert.assertEquals(name, UpdatePreservationWorkflow.WORKFLOW_NAME);

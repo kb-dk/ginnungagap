@@ -1,11 +1,7 @@
 package dk.kb.ginnungagap.config;
 
-import dk.kb.yggdrasil.utils.HostName;
-
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Configuration for sending mails.

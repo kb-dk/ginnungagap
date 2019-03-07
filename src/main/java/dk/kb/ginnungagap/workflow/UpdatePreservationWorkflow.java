@@ -1,18 +1,17 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import dk.kb.ginnungagap.archive.BitmagPreserver;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.PreservationFinalizationStep;
 import dk.kb.ginnungagap.workflow.steps.UpdatePreservationStep;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The workflow for performing the preservation update of Cumulus items.
@@ -41,11 +40,11 @@ public class UpdatePreservationWorkflow extends Workflow {
     /** The bitrepository preserver.*/
     @Autowired
     protected BitmagPreserver preserver;
-    
+
     @Override
     protected Collection<WorkflowStep> createSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
-        for(String catalogName : cumulusWrapper.getServer().getCatalogNames()) {
+        for(String catalogName : conf.getCumulusConf().getCatalogs()) {
             steps.add(new UpdatePreservationStep(conf.getTransformationConf(), cumulusWrapper.getServer(), 
                     transformationHandler, preserver, catalogName));
         }

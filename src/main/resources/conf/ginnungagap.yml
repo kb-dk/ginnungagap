@@ -26,4 +26,7 @@ ginnungagap:
     xslt_dir: /usr/local/ginnungagap/current/scripts/xslt
     required_fields_file: /usr/local/ginnungagap/current/required_fields.yml
     metadata_temp_dir: /usr/local/ginnungagap/tempDir/metadata
-
+  mail:
+    sender: ginnungagap@kb.dk
+    receivers:
+      - ginnungagap@kb.dk

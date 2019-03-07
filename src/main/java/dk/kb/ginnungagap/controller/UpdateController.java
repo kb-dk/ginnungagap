@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import dk.kb.ginnungagap.workflow.UpdatePreservationWorkflow;
@@ -18,30 +19,35 @@ public class UpdateController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(UpdateController.class);
 
-    /** The CCS workflow.*/
+    /** The path.*/
+    protected static final String PATH = "update";
+
+    /** The update workflow.*/
     @Autowired
-    protected UpdatePreservationWorkflow updateWorkflow;
+    protected UpdatePreservationWorkflow workflow;
 
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/update")
+    @RequestMapping("/" + PATH)
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", updateWorkflow);
-        
-        return "update";
+        model.addAttribute("workflow", workflow);
+
+        return PATH;
     }
     
     /**
      * The run method for the workflows.
+     * @param catalog The catalog to run upon.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/update/run")
-    public RedirectView runWorkflow() {
+    @RequestMapping("/" + PATH + "/run")
+    public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="null")
+                                                String catalog) {
         log.info("Running the update preservation workflow.");
-        updateWorkflow.startManually();
+        workflow.startManually(catalog);
         
         try {
             synchronized(this) {
@@ -50,6 +56,6 @@ public class UpdateController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../update",true);
+        return new RedirectView("../" + PATH,true);
     }
 }

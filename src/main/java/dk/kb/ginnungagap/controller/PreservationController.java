@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import dk.kb.ginnungagap.workflow.PreservationWorkflow;
@@ -18,30 +19,35 @@ public class PreservationController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(PreservationController.class);
 
-    /** The CCS workflow.*/
+    /** The ginnugagap index path.*/
+    protected static final String PATH = "preservation";
+
+    /** The preservation workflow.*/
     @Autowired
-    protected PreservationWorkflow preservationWorkflow;
+    protected PreservationWorkflow workflow;
 
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/preservation")
+    @RequestMapping("/" + PATH)
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", preservationWorkflow);
-        
-        return "preservation";
+        model.addAttribute("workflow", workflow);
+
+        return PATH;
     }
     
     /**
      * The run method for the workflows.
+     * @param catalog The catalog to run upon.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/preservation/run")
-    public RedirectView runWorkflow() {
+    @RequestMapping("/" + PATH + "/run")
+    public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="null")
+                                                String catalog) {
         log.info("Running the preservation workflow.");
-        preservationWorkflow.startManually();
+        workflow.startManually(catalog);
         
         try {
             synchronized(this) {
@@ -50,6 +56,6 @@ public class PreservationController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../preservation",true);
+        return new RedirectView("../" + PATH,true);
     }
 }

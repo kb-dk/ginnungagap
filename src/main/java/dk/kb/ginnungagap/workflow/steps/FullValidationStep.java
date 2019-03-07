@@ -82,7 +82,6 @@ public class FullValidationStep extends ValidationStep {
     /**
      * Retrieves the WARC record from the WARC file.
      * Will throw an exception, if the record is not found.
-     * @param file The WARC file to extract the WARC record from.
      * @param recordId The id of the WARC record.
      * @return The WARC record.
      * @throws IOException If an error occurs when reading the WARC file.

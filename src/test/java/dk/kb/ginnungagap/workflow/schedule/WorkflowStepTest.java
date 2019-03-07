@@ -11,7 +11,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testStatus() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
@@ -31,7 +31,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testResults() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
@@ -51,7 +51,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testLastRunWhenNotRunning() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
@@ -74,7 +74,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testLastRunWhenRunning() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
@@ -93,7 +93,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testRunSuccess() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 // SHOULD ENTER HERE
@@ -111,7 +111,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testRunFailed() {
-        WorkflowStep step = new WorkflowStep() {
+        WorkflowStep step = new WorkflowStep(null) {
             @Override
             protected void performStep() throws Exception {
                 throw new IllegalStateException("SHOULD THROW AN EXCEPTION");

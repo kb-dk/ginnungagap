@@ -51,12 +51,15 @@ public class ImportWorkflowTest extends ExtendedTestCase {
         workflow.conf = conf;
         workflow.cumulusWrapper = cumulusWrapper;
         workflow.archive = archive;
-        
+        workflow.init();
+
         Assert.assertEquals(workflow.getName(), ImportWorkflow.WORKFLOW_NAME);
         Assert.assertEquals(workflow.getDescription(), ImportWorkflow.WORKFLOW_DESCRIPTION);
         Assert.assertEquals(workflow.getInterval().longValue(), -1L);
-        
+
+        Mockito.verify(cumulusWrapper).getServer();
         Mockito.verifyZeroInteractions(cumulusWrapper);
+
         Mockito.verifyZeroInteractions(archive);
     }
     
@@ -68,6 +71,7 @@ public class ImportWorkflowTest extends ExtendedTestCase {
         workflow.conf = conf;
         workflow.cumulusWrapper = cumulusWrapper;
         workflow.archive = archive;
+        workflow.init();
 
         List<WorkflowStep> steps = (List<WorkflowStep>) workflow.createSteps();
         
@@ -76,7 +80,7 @@ public class ImportWorkflowTest extends ExtendedTestCase {
         
         Mockito.verifyZeroInteractions(archive);
         
-        Mockito.verify(cumulusWrapper).getServer();
+        Mockito.verify(cumulusWrapper, Mockito.times(2)).getServer();
         Mockito.verifyNoMoreInteractions(cumulusWrapper);
     }
 }

@@ -56,6 +56,7 @@ public class PreservationStep extends WorkflowStep {
      */
     public PreservationStep(TransformationConfiguration transConf, CumulusServer server,
             MetadataTransformationHandler transformationHandler, BitmagPreserver preserver, String catalogName) {
+        super(catalogName);
         this.conf = transConf;
         this.server = server;
         this.transformationHandler = transformationHandler;

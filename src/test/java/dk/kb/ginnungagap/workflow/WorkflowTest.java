@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.testutils.TestFileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,13 +24,26 @@ public class WorkflowTest extends ExtendedTestCase {
     boolean calledName;
     boolean calledInterval;
     boolean calledDescription;
-    
+
+    TestConfiguration conf;
+
+    @BeforeClass
+    public void setupClass() {
+        TestFileUtils.setup();
+        conf = TestFileUtils.createTempConf();
+    }
+
     @BeforeMethod
     public void setupMethod() {
         calledInitStep = false;
         calledName = false;
         calledInterval = false;
         calledDescription = false;
+    }
+
+    @AfterClass
+    public void tearDownClass() {
+        TestFileUtils.tearDown();
     }
 
     @Test
@@ -113,9 +130,9 @@ public class WorkflowTest extends ExtendedTestCase {
             @Override
             Collection<WorkflowStep> createSteps() {
                 calledInitStep = true;
-                throw new RuntimeException("FAIL");
+                return new ArrayList<WorkflowStep>();
             }
-            
+
             @Override
             String getName() {
                 calledName = true;
@@ -142,6 +159,7 @@ public class WorkflowTest extends ExtendedTestCase {
                 throw new RuntimeException("TEST");
             }
         }).when(step).run();
+        Mockito.when(step.runForCatalog(Mockito.anyString())).thenReturn(true);
         workflow.steps.add(step);
         
         Long dateTime = System.currentTimeMillis() - 3600000;
@@ -158,6 +176,7 @@ public class WorkflowTest extends ExtendedTestCase {
         
         Mockito.verify(step).run();
         Mockito.verify(step, Mockito.times(3)).getName();
+        Mockito.verify(step).runForCatalog(Mockito.eq(null));
         Mockito.verifyNoMoreInteractions(step);
     }
 

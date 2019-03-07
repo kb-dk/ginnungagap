@@ -48,7 +48,7 @@ public class TestFileUtils {
     
     public static File createFileWithContent(String content) throws IOException {
         File res = new File(getTempDir(), UUID.randomUUID().toString());
-        try (OutputStream os = new FileOutputStream(res);) {
+        try (OutputStream os = new FileOutputStream(res)) {
             os.write(content.getBytes());
             os.flush();
         }

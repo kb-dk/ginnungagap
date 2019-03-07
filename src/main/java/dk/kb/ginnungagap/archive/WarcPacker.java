@@ -83,7 +83,7 @@ public class WarcPacker implements Closeable {
 
             payload.append("\n");
             for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
-                String value = System.getProperty((String) key);
+                String value = System.getProperty(key);
                 if(value != null && !value.isEmpty()) {
                     payload.append(key + ": " + value + "\n");
                 }
@@ -116,9 +116,10 @@ public class WarcPacker implements Closeable {
     
     /**
      * Packages a file in a WARC-resource.
-     * @param metadataFile The file with the metadata. The name of the file must be the same 
-     * as the UUID of the metadata record.
-     * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
+     * @param resourceFile The file with the content for the resource record.
+     * @param blockDigest The digest for the warc record.
+     * @param contentType The content type for the warc record (refers to the content of the file).
+     * @param uuid The UUID of the warc record.
      */
     protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
             String uuid) {
@@ -270,5 +271,19 @@ public class WarcPacker implements Closeable {
         }
 
         return res;
+    }
+
+    /**
+     * @return The list of completely packaged records.
+     */
+    public List<CumulusRecord> getPackagedCompleteRecords() {
+        return packagedCompleteRecords;
+    }
+
+    /**
+     * @return The list of metadata only packaged records.
+     */
+    public List<CumulusRecord> getPackagedMetadataRecords() {
+        return packagedMetadataRecords;
     }
 }

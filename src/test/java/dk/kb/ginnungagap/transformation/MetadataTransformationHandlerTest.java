@@ -61,7 +61,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         try {
             transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
             File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-            try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+            try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
                 fos.write(out.toByteArray());
                 fos.flush();
             }
@@ -88,7 +88,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
 
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-        try (FileOutputStream fos = new FileOutputStream(metadataFile);) {
+        try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
             fos.write(out.toByteArray());
             fos.flush();
         }
@@ -111,7 +111,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
 
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -139,7 +139,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -163,7 +163,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -187,7 +187,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -211,7 +211,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -249,7 +249,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(modsFile);) {
+            try (InputStream is = new FileInputStream(modsFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
                 System.out.println(text);
             }
@@ -264,7 +264,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(modsFile);) {
+            try (InputStream is = new FileInputStream(modsFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
                 System.out.println(text);
             }
@@ -280,7 +280,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -301,7 +301,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
 
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -311,7 +311,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -332,7 +332,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
 
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }
@@ -342,7 +342,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         transformationHandler.validate(new FileInputStream(metadataFile));
         
         if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile);) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
                 System.out.println(text);
             }

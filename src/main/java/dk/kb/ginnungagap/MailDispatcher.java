@@ -1,8 +1,11 @@
 package dk.kb.ginnungagap;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.yggdrasil.utils.HostName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.mail.Message;
@@ -14,40 +17,34 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import dk.kb.ginnungagap.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * The component for sending mails.
  */
 @Component
-public class SendMail {
+public class MailDispatcher {
     /** The log.*/
-    protected final Logger log = LoggerFactory.getLogger(SendMail.class);
+    protected final Logger log = LoggerFactory.getLogger(MailDispatcher.class);
 
-    /** The receivers of the mails.*/
-    private List<String> receivers;
-    /** The sender of the mails.*/
-    private String sender;
     /** The host of the machine, where the mail is being sent.*/
-    private String host;
+    protected String host;
 
     /** The configuration. Auto-wired.*/
     @Autowired
     protected Configuration conf;
-    
+
     /**
      * Initializes this component.
      */
     @PostConstruct
     protected void initialize() {
-        this.receivers = conf.getMailConfiguration().getReceivers();
-        this.sender = conf.getMailConfiguration().getSender();
-        this.host = "localhost";
+        HostName hostname = new HostName();
+        this.host = hostname.getHostName();
+        if(this.host.isEmpty()) {
+            this.host = "localhost";
+        }
     }
 
     /**
@@ -58,13 +55,13 @@ public class SendMail {
      */
     public void sendReport(String subject, String content) {
         Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.host", conf.getMailConfiguration().getSender());
         Session session = Session.getDefaultInstance(properties);
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(sender));
-            for(String receiver : receivers) {
+            message.setFrom(new InternetAddress(host));
+            for(String receiver : conf.getMailConfiguration().getReceivers()) {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
             }
             message.setSubject(subject);

@@ -1,21 +1,19 @@
 package dk.kb.ginnungagap.workflow;
 
+import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.utils.CalendarUtils;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.utils.CalendarUtils;
-import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
-import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 
 /**
  * Abstract class for workflows.
@@ -38,12 +36,16 @@ public abstract class Workflow extends TimerTask {
     /** The current step running.*/
     protected WorkflowStep currentStep = null;
     /** The steps for the workflow.*/
-    protected List<WorkflowStep> steps = new ArrayList<WorkflowStep>();
-    
-    /** The configuration. Auto-wired.*/
+    protected List<WorkflowStep> steps = new ArrayList<>();
+    /** The time it took for the latest run. Set to -1 before any runs.*/
+    protected Long lastRunTime = -1L;
+    /** The name of the catalog for next run.*/
+    protected String catalogForNextRun = null;
+
+    /** The configuration. */
     @Autowired
     protected Configuration conf;
-    
+
     /**
      * Initialization
      */
@@ -78,6 +80,7 @@ public abstract class Workflow extends TimerTask {
     public void run() {
         if(state == WorkflowState.WAITING && nextRun.getTime() <= System.currentTimeMillis()) {
             try {
+                lastRunTime = 0L;
                 state = WorkflowState.RUNNING;
                 runWorkflowSteps();
                 state = WorkflowState.SUCCEEDED;
@@ -86,17 +89,21 @@ public abstract class Workflow extends TimerTask {
                 state = WorkflowState.ABORTED;
             } finally {
                 readyForNextRun();
+                catalogForNextRun = null;
             }
         }
     }
     
     /**
      * The method for actually running the workflow.
-     * Goes through all steps and runs them one after the other.
+     * Goes through all steps, check if they have to be run, and runs them one after the other.
      */
     protected void runWorkflowSteps() {
         for(WorkflowStep step : steps) {
-            performStep(step);
+            if(step.runForCatalog(catalogForNextRun)) {
+                performStep(step);
+            }
+            lastRunTime += step.getTimeForLastRun();
         }
     }
     
@@ -122,10 +129,12 @@ public abstract class Workflow extends TimerTask {
      * Start the workflow by setting the nextRun time to 'now'.
      * It will not actually start the workflow immediately, but it will trigger that the timertask is executed 
      * the next time it is executed by the scheduler.
+     * @param catalogForNextRun The name of the catalog for next run. Null for all catalogs.
      */
-    public void startManually() {
+    public void startManually(String catalogForNextRun) {
         this.nextRun = new Date(System.currentTimeMillis());
         this.state = WorkflowState.WAITING;
+        this.catalogForNextRun = catalogForNextRun;
     }
     
     /**
@@ -189,5 +198,12 @@ public abstract class Workflow extends TimerTask {
         } else {
             return currentStep.getName();
         }
+    }
+
+    /**
+     * @return The time in millis of how long time it took last time.
+     */
+    public Long getLastRunTime() {
+        return lastRunTime;
     }
 }

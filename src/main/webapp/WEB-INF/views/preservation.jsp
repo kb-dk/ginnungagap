@@ -36,6 +36,7 @@
             <th>State</th>
             <th>Time for last run (in millis)</th>
             <th>Results for last run</th>
+            <th>Run step</th>
         </tr>
         </thead>
         <tbody>
@@ -48,13 +49,24 @@
                 <td>${step.getStatus()}</td>
                 <td>${step.getExecutionTime()}</td>
                 <td>${step.getResultOfLastRun()}</td>
+                <td>
+                    <c:if test="${not empty step.getCatalogName()}">
+                        <form action="${pageContext.request.contextPath}/preservation/run" method="post">
+                            <input type="hidden" name="catalog" value="${step.getCatalogName()}"/>
+                            <button type="submit" class="btn btn-success" <c:if test="${disable_workflow eq true}">disabled</c:if> >Run on ${step.getCatalogName()}</button>
+                        </form>
+                    </c:if>
+                    <c:if test="${empty step.getCatalogName()}">
+                         <button type="button" class="btn btn-success" disabled>Run every time</button>
+                    </c:if>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 
     <form action="${pageContext.request.contextPath}/preservation/run" method="post">
-        <button type="submit" class="btn btn-success" <c:if test="${disable_workflow eq true}">disabled</c:if> >Run Workflow</button>
+        <button type="submit" class="btn btn-success" <c:if test="${disable_workflow eq true}">disabled</c:if> >Run whole workflow</button>
     </form>
   </div>
 </div>

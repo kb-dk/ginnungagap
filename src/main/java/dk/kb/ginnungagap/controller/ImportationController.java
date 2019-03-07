@@ -1,14 +1,14 @@
 package dk.kb.ginnungagap.controller;
 
+import dk.kb.ginnungagap.workflow.ImportWorkflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-
-import dk.kb.ginnungagap.workflow.ImportWorkflow;
 
 /**
  * Controller for the preservation workflow view.
@@ -18,30 +18,35 @@ public class ImportationController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(ImportationController.class);
 
-    /** The CCS workflow.*/
+    /** The path.*/
+    protected static final String PATH = "import";
+
+    /** The importation workflow.*/
     @Autowired
-    protected ImportWorkflow importWorkflow;
+    protected ImportWorkflow workflow;
 
     /**
      * View for the workflows.
      * @param model The model.
      * @return The path to the workflow.
      */
-    @RequestMapping("/import")
+    @RequestMapping("/" + PATH)
     public String getWorkflow(Model model) {
-        model.addAttribute("workflow", importWorkflow);
+        model.addAttribute("workflow", workflow);
         
-        return "import";
+        return PATH;
     }
     
     /**
      * The run method for the workflows.
+     * @param catalog The catalog to run upon.
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
-    @RequestMapping("/import/run")
-    public RedirectView runWorkflow() {
+    @RequestMapping("/" + PATH + "/run")
+    public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="null")
+                                                String catalog) {
         log.info("Running the update importation workflow.");
-        importWorkflow.startManually();
+        workflow.startManually(catalog);
         
         try {
             synchronized(this) {
@@ -50,6 +55,6 @@ public class ImportationController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new RedirectView("../import",true);
+        return new RedirectView("../" + PATH,true);
     }
 }

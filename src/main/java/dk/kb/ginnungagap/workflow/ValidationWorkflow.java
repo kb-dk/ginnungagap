@@ -1,17 +1,16 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
 import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Workflow for validating the records.
@@ -36,10 +35,10 @@ public class ValidationWorkflow extends Workflow {
     /** The Cumulus Server.*/
     @Autowired
     protected CumulusWrapper server;
-    /** The Bitrepository archive.*/
+    /** The wrapped Bitrepository archive.*/
     @Autowired
     protected ArchiveWrapper archive;
-    
+
     @Override
     protected Collection<WorkflowStep> createSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();

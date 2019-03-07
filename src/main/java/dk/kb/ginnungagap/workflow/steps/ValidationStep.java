@@ -27,6 +27,7 @@ public abstract class ValidationStep extends WorkflowStep {
      * @param validationFieldValue The validation field value to extract.
      */
     protected ValidationStep(CumulusServer server, String catalogName, String validationFieldValue) {
+        super(catalogName);
         this.server = server;
         this.catalogName = catalogName;
         this.validationFieldValue = validationFieldValue;

@@ -33,14 +33,19 @@ public abstract class WorkflowStep {
     protected long timeForLastRun;
     /** The start time for the current run (0 when not running)*/
     protected long currentRunStart = 0L;
+    /** The name of the catalog, which this steps runs for.*/
+    protected final String catalog;
 
     /**
      * Constructor.
+     * @param catalog The name of the catalog, which this step runs for.
+     *                If set to null, then it runs for any catalog.
      */
-    protected WorkflowStep() {
+    protected WorkflowStep(String catalog) {
         this.status = INIT_STATUS;
         this.resultsOfLastRun = INIT_RESULTS;
         this.timeForLastRun = INIT_LAST_RUN_TIME;
+        this.catalog = catalog;
     }
     
     /** 
@@ -80,6 +85,13 @@ public abstract class WorkflowStep {
         }
         return "" + timeForLastRun;
     }
+
+    /**
+     * @return The time for the last run.
+     */
+    public Long getTimeForLastRun() {
+        return timeForLastRun;
+    }
     
     /**
      * @return The current runtime in millis. 
@@ -87,7 +99,28 @@ public abstract class WorkflowStep {
     public Long getCurrentRunTime() {
         return System.currentTimeMillis() - currentRunStart;
     }
-    
+
+    /**
+     * Checks whether or not this step should be run for give catalog.
+     * (thus if the given catalog name is identical to the catalog for this step, or either catalog
+     * name is null).
+     * @param catalogName The name of the catalog to run upon. Null if all catalogs.
+     * @return Whether or not to run this step.
+     */
+    public boolean runForCatalog(String catalogName) {
+        if(catalogName == null || this.catalog == null) {
+            return true;
+        }
+        return catalogName.equalsIgnoreCase(this.catalog);
+    }
+
+    /**
+     * @return The catalog for this catalog to run upon. Null if all catalogs.
+     */
+    public String getCatalogName() {
+        return this.catalog;
+    }
+
     /**
      * Run step.
      * Will keep track about the different states throughout running the step (running, fininshed and failure),

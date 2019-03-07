@@ -38,7 +38,7 @@ public class StreamUtilsTest extends ExtendedTestCase {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testCopyInputStreamToOutputStreamFailureOutputStreamNull() throws IOException {
-        ByteArrayInputStream in = new ByteArrayInputStream(TEST_MSG.getBytes());;
+        ByteArrayInputStream in = new ByteArrayInputStream(TEST_MSG.getBytes());
         ByteArrayOutputStream out = null;
         StreamUtils.copyInputStreamToOutputStream(in, out);
     }

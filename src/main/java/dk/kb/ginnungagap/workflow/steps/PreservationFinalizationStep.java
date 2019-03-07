@@ -21,6 +21,7 @@ public class PreservationFinalizationStep extends WorkflowStep {
      * @param preserver The Bitmag Preservation component.
      */
     public PreservationFinalizationStep(BitmagPreserver preserver) {
+        super(null);
         this.preserver = preserver;
     }
     

@@ -13,23 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ExceptionController implements ErrorController {
 
+    /** The path.*/
+    protected static final String PATH = "error";
+    /** The attribute for the status code.*/
+    protected static final String ATTRIBUTE_STATUS_CODE = "javax.servlet.error.status_code";
+    /** The attribute for the exception.*/
+    protected static final String ATTRIBUTE_EXCEPTION = "javax.servlet.error.exception";
+
     /**
      * Handling the case when a request receives an exception.
      * @param request The request containing the exception.
      * @param model The model for the view.
      * @return The error page.
      */
-    @RequestMapping("/error")
+    @RequestMapping("/" + PATH)
     public String handleError(HttpServletRequest request, Model model) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
+        Integer statusCode = (Integer) request.getAttribute(ATTRIBUTE_STATUS_CODE);
+        Exception exception = (Exception) request.getAttribute(ATTRIBUTE_EXCEPTION);
         model.addAttribute("statusCode", statusCode);
         model.addAttribute("error", exception);
-        return "error";
+        return PATH;
     }
     
     @Override
     public String getErrorPath() {
-        return "/error";
+        return PATH;
     }
 }

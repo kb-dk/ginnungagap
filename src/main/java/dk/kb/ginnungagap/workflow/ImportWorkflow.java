@@ -1,25 +1,18 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.ginnungagap.workflow.steps.ImportationStep;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * Workflow for validating the records.
- * There are two types of validation:
- * Simple validation, and full validation.
- * 
- * The simple validation just checks the default checksum for the WARC file.
- * 
- * The full validation retrieves the file and validates the specific WARC-record.
+ * Workflow for importing the content file for Cumulus records from the archive.
  */
 @Component
 public class ImportWorkflow extends Workflow {
@@ -35,7 +28,7 @@ public class ImportWorkflow extends Workflow {
     /** The Bitrepository archive.*/
     @Autowired
     protected ArchiveWrapper archive;
-    
+
     @Override
     protected Collection<WorkflowStep> createSteps() {
         List<WorkflowStep> steps = new ArrayList<WorkflowStep>();

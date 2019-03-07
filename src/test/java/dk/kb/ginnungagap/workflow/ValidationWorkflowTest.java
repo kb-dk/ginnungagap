@@ -52,12 +52,15 @@ public class ValidationWorkflowTest extends ExtendedTestCase {
         workflow.conf = conf;
         workflow.server = cumulusWrapper;
         workflow.archive = archive;
-        
+        workflow.init();
+
         Assert.assertEquals(workflow.getName(), ValidationWorkflow.WORKFLOW_NAME);
         Assert.assertEquals(workflow.getDescription(), ValidationWorkflow.WORKFLOW_DESCRIPTION);
         Assert.assertEquals(workflow.getInterval().longValue(), -1L);
-        
-        Mockito.verifyZeroInteractions(cumulusWrapper);
+
+        Mockito.verify(cumulusWrapper, Mockito.times(2)).getServer();
+        Mockito.verifyNoMoreInteractions(cumulusWrapper);
+
         Mockito.verifyZeroInteractions(archive);
     }
     
@@ -69,6 +72,7 @@ public class ValidationWorkflowTest extends ExtendedTestCase {
         workflow.conf = conf;
         workflow.server = cumulusWrapper;
         workflow.archive = archive;
+        workflow.init();
 
         List<WorkflowStep> steps = (List<WorkflowStep>) workflow.createSteps();
         
@@ -78,7 +82,7 @@ public class ValidationWorkflowTest extends ExtendedTestCase {
         
         Mockito.verifyZeroInteractions(archive);
         
-        Mockito.verify(cumulusWrapper, Mockito.times(2)).getServer();
+        Mockito.verify(cumulusWrapper, Mockito.times(4)).getServer();
         Mockito.verifyNoMoreInteractions(cumulusWrapper);
     }
 }

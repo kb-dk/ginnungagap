@@ -1,13 +1,11 @@
 package dk.kb.ginnungagap.workflow.schedule;
 
+import dk.kb.ginnungagap.workflow.*;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.workflow.ImportWorkflow;
-import dk.kb.ginnungagap.workflow.PreservationWorkflow;
-import dk.kb.ginnungagap.workflow.UpdatePreservationWorkflow;
-import dk.kb.ginnungagap.workflow.ValidationWorkflow;
+import java.util.Arrays;
 
 public class WorkflowSchedulerTest extends ExtendedTestCase {
 
@@ -20,11 +18,11 @@ public class WorkflowSchedulerTest extends ExtendedTestCase {
         ValidationWorkflow validationWorkflow = Mockito.mock(ValidationWorkflow.class);
         ImportWorkflow importWorkflow = Mockito.mock(ImportWorkflow.class);
 
+        scheduler.importWorkflow = importWorkflow;
         scheduler.preservationWorkflow = preservationWorkflow;
         scheduler.updateWorkflow = updateWorkflow;
         scheduler.validationWorkflow = validationWorkflow;
-        scheduler.importWorkflow = importWorkflow;
-        
+
         scheduler.scheduleWorkflows();
         
         Mockito.verifyZeroInteractions(preservationWorkflow);
