@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,18 +71,19 @@ public class PreservationStep extends WorkflowStep {
     }
 
     @Override
-    protected void performStep() throws Exception {
+    protected void performStep(WorkflowReport report) throws Exception {
         CumulusQuery query = CumulusQueryUtils.getPreservationAllQuery(catalogName);
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records to be preserved.");
-        preserveRecordItems(items, catalogName);
+        preserveRecordItems(items, catalogName, report);
     }
 
     /**
      * Preserves all the record items of the given collection. 
      * @param items The collection of record items to preserve.
+     * @param report The report for workflow.
      */
-    protected void preserveRecordItems(CumulusRecordCollection items, String catalogName) {
+    protected void preserveRecordItems(CumulusRecordCollection items, String catalogName, WorkflowReport report) {
         if(items.getCount() == 0) {
             log.debug("No items to preserve from catalog: " + catalogName);
             setResultOfRun("No preservable records found for catalog '" + catalogName + "'.");
@@ -95,8 +97,10 @@ public class PreservationStep extends WorkflowStep {
                 setResultOfRun("Running! Preservation of #" + i + ", " + record.getUUID());
                 log.debug("Initiating preservation on record '" + record.getUUID() + "'");
                 sendRecordToPreservation(record);
+                report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
             } catch (Exception e) {
-                log.error("Runtime exception caught while trying to handle Cumulus record '" 
+                report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), e.getMessage(), catalogName);
+                log.error("Runtime exception caught while trying to handle Cumulus record '"
                         + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);
                 failures++;

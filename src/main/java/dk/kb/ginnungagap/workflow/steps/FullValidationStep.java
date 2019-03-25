@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jwat.warc.WarcDigest;
 import org.jwat.warc.WarcReader;
 import org.jwat.warc.WarcReaderFactory;
@@ -53,7 +54,7 @@ public class FullValidationStep extends ValidationStep {
     }
 
     @Override
-    protected void validateRecord(CumulusRecord record) {
+    protected void validateRecord(CumulusRecord record, WorkflowReport report) {
         try {
             String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
             String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
@@ -67,15 +68,15 @@ public class FullValidationStep extends ValidationStep {
                 validateSize(warcRecord, record);
                 validateRecordChecksum(warcRecord, record);
             }
-            setValid(record);
+            setValid(record, report);
         } catch (IllegalStateException e) {
             String errMsg = "The record '" + record + "' is invalid: " + e.getMessage();
             log.info(errMsg, e);
-            setInvalid(record, errMsg);            
+            setInvalid(record, errMsg, report);
         } catch (Exception e) {
             String errMsg = "Error when trying to validate record '" + record + "'";
             log.warn(errMsg, e);
-            setInvalid(record, errMsg + " : " + e.getMessage());
+            setInvalid(record, errMsg + " : " + e.getMessage(), report);
         }
     }
     

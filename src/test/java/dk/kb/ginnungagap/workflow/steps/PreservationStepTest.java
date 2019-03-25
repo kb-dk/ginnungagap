@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -84,14 +85,17 @@ public class PreservationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         CumulusRecordCollection records = mock(CumulusRecordCollection.class);
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(records);
         when(records.getCount()).thenReturn(0);
         
         PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        step.performStep();
-        
+        step.performStep(report);
+
+        verifyZeroInteractions(report);
+
         verify(server).getItems(anyString(), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
@@ -111,7 +115,8 @@ public class PreservationStepTest extends ExtendedTestCase {
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
 
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
@@ -125,9 +130,12 @@ public class PreservationStepTest extends ExtendedTestCase {
         }).when(record).getFieldValueOrNull(
                 eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         
-        step.preserveRecordItems(items, catalogName);
+        step.preserveRecordItems(items, catalogName, report);
 
         Assert.assertTrue(step.getResultOfLastRun().contains("1 failures"));
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verifyZeroInteractions(server);
         verifyZeroInteractions(preserver);
@@ -138,6 +146,7 @@ public class PreservationStepTest extends ExtendedTestCase {
         verifyNoMoreInteractions(items);
         
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
         verify(record, times(4)).getUUID();
@@ -153,12 +162,16 @@ public class PreservationStepTest extends ExtendedTestCase {
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record1 = mock(CumulusRecord.class);
         CumulusRecord record2 = mock(CumulusRecord.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         PreservationStep step = new PreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
 
         when(items.iterator()).thenReturn(Arrays.asList(record1, record2).iterator());
         when(items.getCount()).thenReturn(2);
-        
+
+        String record1Name = UUID.randomUUID().toString();
+        String record2Name = UUID.randomUUID().toString();
+
         doAnswer(new Answer<String>() {
             @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
@@ -166,6 +179,7 @@ public class PreservationStepTest extends ExtendedTestCase {
             }
         }).when(record1).getFieldValueOrNull(
                 eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        when(record1.getFieldValue(eq(Constants.FieldNames.RECORD_NAME))).thenReturn(record1Name);
         doAnswer(new Answer<String>() {
             @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
@@ -173,11 +187,16 @@ public class PreservationStepTest extends ExtendedTestCase {
             }
         }).when(record2).getFieldValueOrNull(
                 eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        
-        step.preserveRecordItems(items, catalogName);
+        when(record2.getFieldValue(eq(Constants.FieldNames.RECORD_NAME))).thenReturn(record2Name);
+
+        step.preserveRecordItems(items, catalogName, report);
         
         Assert.assertTrue(step.getResultOfLastRun().contains("2 failures"));
-        
+
+        verify(report).addFailedRecord(eq(record1Name), anyString(), anyString());
+        verify(report).addFailedRecord(eq(record2Name), anyString(), anyString());
+        verifyNoMoreInteractions(report);
+
         verifyZeroInteractions(server);
         verifyZeroInteractions(preserver);
         verifyZeroInteractions(transformationHandler);
@@ -185,13 +204,15 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(items).iterator();
         verify(items).getCount();
         verifyNoMoreInteractions(items);
-        
+
+        verify(record1).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record1).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record1).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record1).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
         verify(record1, times(4)).getUUID();
         verifyNoMoreInteractions(record1);
-        
+
+        verify(record2).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record2).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record2).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record2).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());

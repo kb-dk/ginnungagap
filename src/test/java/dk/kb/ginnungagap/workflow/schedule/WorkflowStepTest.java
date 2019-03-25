@@ -3,9 +3,14 @@ package dk.kb.ginnungagap.workflow.schedule;
 import java.util.Random;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 
 public class WorkflowStepTest extends ExtendedTestCase {
 
@@ -13,7 +18,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
     public void testStatus() {
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
             }
             @Override
@@ -33,7 +38,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
     public void testResults() {
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
             }
             @Override
@@ -53,7 +58,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
     public void testLastRunWhenNotRunning() {
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
             }
             @Override
@@ -76,7 +81,7 @@ public class WorkflowStepTest extends ExtendedTestCase {
     public void testLastRunWhenRunning() {
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 throw new IllegalStateException("SHOULD NOT TEST THIS!");
             }
             @Override
@@ -93,9 +98,10 @@ public class WorkflowStepTest extends ExtendedTestCase {
 
     @Test
     public void testRunSuccess() {
+        WorkflowReport report = mock(WorkflowReport.class);
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 // SHOULD ENTER HERE
             }
             @Override
@@ -104,16 +110,19 @@ public class WorkflowStepTest extends ExtendedTestCase {
             }
         };
         
-        step.run();
+        step.run(report);
         
         Assert.assertEquals(step.getStatus(), WorkflowStep.STATUS_FINISHED);
+
+        Mockito.verifyZeroInteractions(report);
     }
 
     @Test
     public void testRunFailed() {
+        WorkflowReport report = mock(WorkflowReport.class);
         WorkflowStep step = new WorkflowStep(null) {
             @Override
-            protected void performStep() throws Exception {
+            protected void performStep(WorkflowReport report) throws Exception {
                 throw new IllegalStateException("SHOULD THROW AN EXCEPTION");
             }
             @Override
@@ -122,9 +131,12 @@ public class WorkflowStepTest extends ExtendedTestCase {
             }
         };
         
-        step.run();
+        step.run(report);
         
         Assert.assertEquals(step.getStatus(), WorkflowStep.STATUS_FAILED);
+
+        Mockito.verify(report).addWorkflowFailure(anyString());
+        Mockito.verifyNoMoreInteractions(report);
     }
 
 }

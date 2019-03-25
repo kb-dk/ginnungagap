@@ -1,7 +1,9 @@
 package dk.kb.ginnungagap.workflow;
 
+import dk.kb.ginnungagap.MailDispatcher;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.utils.CalendarUtils;
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import org.slf4j.Logger;
@@ -45,6 +47,9 @@ public abstract class Workflow extends TimerTask {
     /** The configuration. */
     @Autowired
     protected Configuration conf;
+    /** The mail dispatcher.*/
+    @Autowired
+    protected MailDispatcher mailer;
 
     /**
      * Initialization
@@ -69,7 +74,7 @@ public abstract class Workflow extends TimerTask {
     /**
      * @return The name of the workflow
      */
-    abstract String getName();
+    public abstract String getName();
     
     /**
      * @return The description of the workflow.
@@ -79,17 +84,20 @@ public abstract class Workflow extends TimerTask {
     @Override
     public void run() {
         if(state == WorkflowState.WAITING && nextRun.getTime() <= System.currentTimeMillis()) {
+            WorkflowReport report = new WorkflowReport(this);
             try {
                 lastRunTime = 0L;
                 state = WorkflowState.RUNNING;
-                runWorkflowSteps();
+                runWorkflowSteps(report);
                 state = WorkflowState.SUCCEEDED;
             } catch (RuntimeException e) {
+                report.addWorkflowFailure(e.getMessage());
                 log.warn("Failure while running the workflow '" + getName() + "'", e);
                 state = WorkflowState.ABORTED;
             } finally {
-                readyForNextRun();
                 catalogForNextRun = null;
+                mailer.sendReport(report);
+                readyForNextRun();
             }
         }
     }
@@ -97,11 +105,12 @@ public abstract class Workflow extends TimerTask {
     /**
      * The method for actually running the workflow.
      * Goes through all steps, check if they have to be run, and runs them one after the other.
+     * @param report The report.
      */
-    protected void runWorkflowSteps() {
+    protected void runWorkflowSteps(WorkflowReport report) {
         for(WorkflowStep step : steps) {
             if(step.runForCatalog(catalogForNextRun)) {
-                performStep(step);
+                performStep(step, report);
             }
             lastRunTime += step.getTimeForLastRun();
         }
@@ -110,15 +119,17 @@ public abstract class Workflow extends TimerTask {
     /**
      * Initiates the given step and sets it to the current running step.
      * @param step The step to start.
+     * @param report The report for running this workflow.
      */
-    protected void performStep(WorkflowStep step) {
+    protected void performStep(WorkflowStep step, WorkflowReport report) {
         if(state != WorkflowState.ABORTED) {
             this.state = WorkflowState.RUNNING;
             this.currentStep = step;
             log.info("Starting step: '" + step.getName() + "'");
             try {
-                step.run();
+                step.run(report);
             } catch (Exception e) {
+                report.addWorkflowFailure(e.getMessage());
                 log.error("Failure in step: '" + step.getName() + "'.", e);
                 throw new IllegalStateException("Failed to run step " + step.getName(), e);
             }
@@ -134,7 +145,11 @@ public abstract class Workflow extends TimerTask {
     public void startManually(String catalogForNextRun) {
         this.nextRun = new Date(System.currentTimeMillis());
         this.state = WorkflowState.WAITING;
-        this.catalogForNextRun = catalogForNextRun;
+        if(catalogForNextRun == null || catalogForNextRun.isEmpty()) {
+            this.catalogForNextRun = null;
+        } else {
+            this.catalogForNextRun = catalogForNextRun;
+        }
     }
     
     /**

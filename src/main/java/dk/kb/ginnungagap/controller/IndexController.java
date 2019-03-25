@@ -48,8 +48,9 @@ public class IndexController {
         model.addAttribute("localConf", conf.getLocalConfiguration());
         model.addAttribute("bitmagConf", conf.getBitmagConf());
         model.addAttribute("transformationConf", conf.getTransformationConf());
+        model.addAttribute("mailConf", conf.getMailConfiguration());
         model.addAttribute("version", constants.getBuildVersion());
-        
+
         return PATH;
     }
 }

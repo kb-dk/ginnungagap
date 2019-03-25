@@ -1,5 +1,7 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,11 +59,11 @@ public class UpdatePreservationStep extends PreservationStep {
     }
 
     @Override
-    public void performStep() throws Exception {
+    public void performStep(WorkflowReport report) throws Exception {
         CumulusQuery query = CumulusQueryUtils.getPreservationUpdateQuery(catalogName);
         CumulusRecordCollection items = server.getItems(catalogName, query);
         log.info("Catalog '" + catalogName + "' had " + items.getCount() + " records for preservation update.");
-        preserveRecordItems(items, catalogName);
+        preserveRecordItems(items, catalogName, report);
         setResultOfRun("Updated preservation for " + items.getCount() + " records.");
     }
     
@@ -69,9 +71,10 @@ public class UpdatePreservationStep extends PreservationStep {
      * Preserves all the record items of the given collection. 
      * @param items The collection of record items to preserve.
      * @param catalogName The name of the Cumulus catalog with the reccord to have their preservation updated.
+     * @param report The report for workflow.
      */
     @Override
-    protected void preserveRecordItems(CumulusRecordCollection items, String catalogName) {
+    protected void preserveRecordItems(CumulusRecordCollection items, String catalogName, WorkflowReport report) {
         int n = items.getCount();
         if(n == 0) {
             log.debug("No items for preservation update from catalog: " + catalogName);
@@ -83,7 +86,9 @@ public class UpdatePreservationStep extends PreservationStep {
                 String oldMetadataReference = getOldMetadataReference(record);
                 sendRecordToPreservation(record);
                 saveUpdateMetadataHistoryReference(record, oldMetadataReference);
+                report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
             } catch (Exception e) {
+                report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), e.getMessage(), catalogName);
                 log.error("Runtime exception caught while trying to handle Cumulus record '" 
                         + record.getUUID() + "'. Something must be seriously wrong with that item!!!\n"
                         + "Trying to handle next item.", e);

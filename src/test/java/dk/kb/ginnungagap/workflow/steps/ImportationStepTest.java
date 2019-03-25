@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -86,7 +87,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the importation of a record for the succes scenario.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         File outFile = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
@@ -100,9 +102,13 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
         
-        step.importRecord(record);
+        step.importRecord(record, report);
+
+        verify(report).addSuccessRecord(anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(record).getUUID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
@@ -123,7 +129,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the importation of a record, when it cannot find the given warc record.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String sillyId = UUID.randomUUID().toString();
         
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
@@ -136,9 +143,13 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenReturn(new File(warcResourcePath));
         
-        step.importRecord(record);
+        step.importRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(record).getUUID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
@@ -157,7 +168,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the importation of a record, when it cannot retrieve the WARC file from the archive.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String sillyId = UUID.randomUUID().toString();
         
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
@@ -170,9 +182,13 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         when(archive.getFile(eq(warcFileId), eq(collectionId))).thenThrow(new IllegalStateException("This must fail!!"));
         
-        step.importRecord(record);
+        step.importRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(record).getUUID();
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
@@ -191,7 +207,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the importation of a record, when it cannot retrieve the WARC file from the archive.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
@@ -199,8 +216,10 @@ public class ImportationStepTest extends ExtendedTestCase {
         when(server.getItems(eq(catalogName), any(CumulusQuery.class))).thenReturn(items);
         when(items.iterator()).thenReturn(new ArrayList<CumulusRecord>().iterator());
         
-        step.performStep();
-        
+        step.performStep(report);
+
+        verifyZeroInteractions(report);
+
         verifyZeroInteractions(archive);
         
         verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
@@ -215,7 +234,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the importation of a bad record, which fails when trying to import.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
@@ -225,8 +245,11 @@ public class ImportationStepTest extends ExtendedTestCase {
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
         when(record.getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID))).thenThrow(new RuntimeException("MUST FAIL"));
         
-        step.performStep();
-        
+        step.performStep(report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
+
         verifyZeroInteractions(archive);
         
         verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
@@ -234,7 +257,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         
         verify(items).iterator();
         verifyNoMoreInteractions(items);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
@@ -248,7 +272,8 @@ public class ImportationStepTest extends ExtendedTestCase {
         addDescription("Test the deprecateFile method, when the file exists. It should be moved to the retain folder.");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         ImportationStep step = new ImportationStep(server, archive, catalogName, retainDir);
         Assert.assertEquals(retainDir.list().length, 0);
         

@@ -2,6 +2,8 @@ package dk.kb.ginnungagap.workflow.steps;
 
 import java.io.File;
 
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,14 +51,14 @@ public class ImportationStep extends WorkflowStep {
     }
     
     @Override
-    public void performStep() throws Exception {
+    public void performStep(WorkflowReport report) throws Exception {
         CumulusQuery query = CumulusQueryUtils.getQueryForPreservationImportation(catalogName);
         
         CumulusRecordCollection items = server.getItems(catalogName, query);
         int i = 0;
         for(CumulusRecord record : items) {
             setResultOfRun("Running... Importing " + record.getUUID());
-            importRecord(record);
+            importRecord(record, report);
             i++;
         }
         setResultOfRun("Imported " + i + " records");
@@ -66,8 +68,9 @@ public class ImportationStep extends WorkflowStep {
      * The step for performing the specific validation.
      * Must be implemented by the sub-classes.
      * @param record The record to validate.
+     * @param report The report for workflow.
      */
-    protected void importRecord(CumulusRecord record) {
+    protected void importRecord(CumulusRecord record, WorkflowReport report) {
         try {
             String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
             String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
@@ -78,15 +81,15 @@ public class ImportationStep extends WorkflowStep {
             WarcUtils.extractRecord(f, uuid, file);
             importFile(record, file);
             
-            setValid(record);
+            setValid(record, report);
         } catch (IllegalStateException e) {
             String errMsg = "The record '" + record + "' is invalid: " + e.getMessage();
             log.info(errMsg, e);
-            setInvalid(record, errMsg);            
+            setInvalid(record, errMsg, report);
         } catch (Exception e) {
             String errMsg = "Error when trying to validate record '" + record + "'";
             log.warn(errMsg, e);
-            setInvalid(record, errMsg + " : " + e.getMessage());
+            setInvalid(record, errMsg + " : " + e.getMessage(), report);
         }
     }
     
@@ -119,8 +122,10 @@ public class ImportationStep extends WorkflowStep {
      * Report back that the validation of the record failed.
      * @param record The record which is invalid.
      * @param message The message regarding why the WARC file is invalid.
+     * @param report The report for workflow.
      */
-    protected void setInvalid(CumulusRecord record, String message) {
+    protected void setInvalid(CumulusRecord record, String message, WorkflowReport report) {
+        report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), message, catalogName);
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION, 
                 Constants.FieldValues.PRESERVATION_IMPORT_FAILURE);
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);
@@ -129,9 +134,11 @@ public class ImportationStep extends WorkflowStep {
     /**
      * Report back that the validation was succes-full.
      * @param record The record which is valid.
+     * @param report The report for workflow.
      */
-    protected void setValid(CumulusRecord record) {
-        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION, 
+    protected void setValid(CumulusRecord record, WorkflowReport report) {
+        report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
+        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION,
                 Constants.FieldValues.PRESERVATION_IMPORT_NONE);
         String message = "Imported at: " + CalendarUtils.getCurrentDate();
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);

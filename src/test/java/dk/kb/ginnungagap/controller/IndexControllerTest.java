@@ -4,6 +4,7 @@ import dk.kb.ginnungagap.GinnungagapConstants;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.config.LocalConfiguration;
+import dk.kb.ginnungagap.config.MailConfiguration;
 import dk.kb.ginnungagap.config.TransformationConfiguration;
 import dk.kb.ginnungagap.config.ViewableCumulusConfiguration;
 import org.jaccept.structure.ExtendedTestCase;
@@ -32,11 +33,13 @@ public class IndexControllerTest extends ExtendedTestCase {
         LocalConfiguration localConfiguration = Mockito.mock(LocalConfiguration.class);
         BitmagConfiguration bitmagConfiguration = Mockito.mock(BitmagConfiguration.class);
         TransformationConfiguration transformationConfiguration = Mockito.mock(TransformationConfiguration.class);
+        MailConfiguration mailConf = Mockito.mock(MailConfiguration.class);
 
         Mockito.when(conf.getViewableCumulusConfiguration()).thenReturn(viewableCumulusConfiguration);
         Mockito.when(conf.getLocalConfiguration()).thenReturn(localConfiguration);
         Mockito.when(conf.getBitmagConf()).thenReturn(bitmagConfiguration);
         Mockito.when(conf.getTransformationConf()).thenReturn(transformationConfiguration);
+        Mockito.when(conf.getMailConfiguration()).thenReturn(mailConf);
 
         GinnungagapConstants constants = Mockito.mock(GinnungagapConstants.class);
         String version = UUID.randomUUID().toString();
@@ -55,6 +58,7 @@ public class IndexControllerTest extends ExtendedTestCase {
         Mockito.verify(model).addAttribute(Mockito.eq("localConf"), Mockito.eq(localConfiguration));
         Mockito.verify(model).addAttribute(Mockito.eq("bitmagConf"), Mockito.eq(bitmagConfiguration));
         Mockito.verify(model).addAttribute(Mockito.eq("transformationConf"), Mockito.eq(transformationConfiguration));
+        Mockito.verify(model).addAttribute(Mockito.eq("mailConf"), Mockito.eq(mailConf));
         Mockito.verify(model).addAttribute(Mockito.eq("version"), Mockito.eq(version));
         Mockito.verifyNoMoreInteractions(model);
 
@@ -62,6 +66,7 @@ public class IndexControllerTest extends ExtendedTestCase {
         Mockito.verify(conf).getLocalConfiguration();
         Mockito.verify(conf).getBitmagConf();
         Mockito.verify(conf).getTransformationConf();
+        Mockito.verify(conf).getMailConfiguration();
         Mockito.verifyNoMoreInteractions(conf);
 
         Mockito.verify(constants).getBuildVersion();

@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.workflow.schedule;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,16 +127,18 @@ public abstract class WorkflowStep {
      * Will keep track about the different states throughout running the step (running, fininshed and failure),
      * and it will keep track of the time the step has taken. 
      * The actual methods for the step will be implemented in the step themselves.
+     * @param report The report for workflow.
      */
-    public void run() {
+    public void run(WorkflowReport report) {
         currentRunStart = System.currentTimeMillis();
         timeForLastRun = -1;
         try {
             setStatus(STATUS_RUNNING);
             setResultOfRun("Running...");
-            performStep();
+            performStep(report);
             setStatus(STATUS_FINISHED);
         } catch (Throwable e) {
+            report.addWorkflowFailure(e.getMessage());
             log.error("Failure when running step: " + getName(), e);
             setStatus(STATUS_FAILED);
             setResultOfRun("Failure: " + e.getMessage());
@@ -151,7 +154,8 @@ public abstract class WorkflowStep {
     
     /**
      * Perform the task wrapped in this step.
+     * @param report The report where any steps and handled records are reported.
      * @throws Exception if the step failed or the workflow was aborted
      */
-    protected abstract void performStep() throws Exception;
+    protected abstract void performStep(WorkflowReport report) throws Exception;
 }

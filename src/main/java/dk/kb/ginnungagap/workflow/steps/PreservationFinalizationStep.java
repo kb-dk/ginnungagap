@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +32,12 @@ public class PreservationFinalizationStep extends WorkflowStep {
     }
 
     @Override
-    public void performStep() throws Exception {
+    public void performStep(WorkflowReport report) throws Exception {
         try {
             preserver.uploadAll();
             setResultOfRun("Uploaded all WARC files");
         } catch (Throwable e) {
+            report.addWorkflowFailure(e.getMessage());
             log.error("Failed to update the packaged files.", e);
             throw new IllegalStateException("Failed to finalize the preservation.", e);
         }

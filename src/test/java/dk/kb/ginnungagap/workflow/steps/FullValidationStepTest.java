@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.warc.WarcReader;
 import org.jwat.warc.WarcReaderFactory;
@@ -227,7 +228,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
 
@@ -241,7 +243,10 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
         FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addSuccessRecord(anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getFile(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
@@ -250,6 +255,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldLongValue(eq(Constants.FieldNames.FILE_DATA_SIZE));
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record, times(2)).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
@@ -267,7 +273,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(warcPath);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String badChecksum = UUID.randomUUID().toString();
         
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
@@ -281,7 +288,10 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
         FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getFile(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
@@ -289,6 +299,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
@@ -305,7 +316,8 @@ public class FullValidationStepTest extends ExtendedTestCase {
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         File exampleWarc = new File(UUID.randomUUID().toString());
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
 
@@ -316,13 +328,17 @@ public class FullValidationStepTest extends ExtendedTestCase {
         when(archive.getFile(eq(warcId), eq(collectionId))).thenReturn(exampleWarc);
 
         FullValidationStep step = new FullValidationStep(server, catalogName, archive, conf);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getFile(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
         
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getUUID();
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));

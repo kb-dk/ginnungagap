@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -64,6 +65,7 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         MetadataTransformer ieTransformer = mock(MetadataTransformer.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
+        WorkflowReport report = mock(WorkflowReport.class);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
@@ -105,8 +107,11 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         workflow.preserver = preserver;
         workflow.init();
 
-        workflow.runWorkflowSteps();
-        
+        workflow.runWorkflowSteps(report);
+
+        verify(report).addSuccessRecord(anyString(), anyString());
+        verifyNoMoreInteractions(report);
+
         verify(server).getItems(eq(conf.getCumulusConf().getCatalogs().get(0)), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
@@ -140,6 +145,7 @@ public class UpdatePreservationWorkflowTest extends ExtendedTestCase {
         verify(record, times(3)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValue(eq(Constants.FieldNames.METADATA_PACKAGE_ID));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));
         verify(record).getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));

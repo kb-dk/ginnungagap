@@ -1,11 +1,11 @@
 package dk.kb.ginnungagap.workflow;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-
+import dk.kb.ginnungagap.MailDispatcher;
 import dk.kb.ginnungagap.config.TestConfiguration;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -16,8 +16,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.workflow.schedule.WorkflowState;
-import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 
 public class WorkflowTest extends ExtendedTestCase {
     boolean calledInitStep;
@@ -57,7 +62,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 throw new RuntimeException("FAIL");
             }
             
@@ -92,9 +97,9 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
-                throw new RuntimeException("FAIL");
+                return UUID.randomUUID().toString();
             }
             
             @Override
@@ -109,18 +114,23 @@ public class WorkflowTest extends ExtendedTestCase {
                 throw new RuntimeException("FAIL");
             }
         };
-        
+
+        MailDispatcher mailer = mock(MailDispatcher.class);
         Long dateTime = System.currentTimeMillis() - 3600000;
         workflow.state = WorkflowState.WAITING;
         workflow.nextRun = new Date(dateTime);
+        workflow.mailer = mailer;
         Assert.assertEquals(workflow.getState(), WorkflowState.WAITING);
         workflow.run();
         Assert.assertEquals(workflow.getState(), WorkflowState.SUCCEEDED);
         Assert.assertEquals(workflow.nextRun.getTime(), dateTime.longValue(), "No new date when interval is -1");
         Assert.assertFalse(calledInitStep);
-        Assert.assertFalse(calledName);
+        Assert.assertTrue(calledName);
         Assert.assertTrue(calledInterval);
         Assert.assertFalse(calledDescription);
+
+        Mockito.verify(mailer).sendReport(any(WorkflowReport.class));
+        Mockito.verifyNoMoreInteractions(mailer);
     }
     
     @Test
@@ -134,7 +144,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
 
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
                 return "name";
             }
@@ -153,18 +163,21 @@ public class WorkflowTest extends ExtendedTestCase {
         };
         
         WorkflowStep step = Mockito.mock(WorkflowStep.class);
+        MailDispatcher mailer = mock(MailDispatcher.class);
+
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 throw new RuntimeException("TEST");
             }
-        }).when(step).run();
+        }).when(step).run(any(WorkflowReport.class));
         Mockito.when(step.runForCatalog(Mockito.anyString())).thenReturn(true);
         workflow.steps.add(step);
         
         Long dateTime = System.currentTimeMillis() - 3600000;
         workflow.state = WorkflowState.WAITING;
         workflow.nextRun = new Date(dateTime);
+        workflow.mailer = mailer;
         Assert.assertEquals(workflow.getState(), WorkflowState.WAITING);
         workflow.run();
         Assert.assertEquals(workflow.getState(), WorkflowState.ABORTED);
@@ -174,7 +187,7 @@ public class WorkflowTest extends ExtendedTestCase {
         Assert.assertTrue(calledInterval);
         Assert.assertFalse(calledDescription);
         
-        Mockito.verify(step).run();
+        Mockito.verify(step).run(Mockito.any(WorkflowReport.class));
         Mockito.verify(step, Mockito.times(3)).getName();
         Mockito.verify(step).runForCatalog(Mockito.eq(null));
         Mockito.verifyNoMoreInteractions(step);
@@ -190,7 +203,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 throw new RuntimeException("FAIL");
             }
             
@@ -224,7 +237,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 throw new RuntimeException("FAIL");
             }
             
@@ -262,7 +275,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
                 throw new RuntimeException("FAIL");
             }
@@ -279,12 +292,13 @@ public class WorkflowTest extends ExtendedTestCase {
                 throw new RuntimeException("FAIL");
             }
         };
-        
+        WorkflowReport report = mock(WorkflowReport.class);
         WorkflowStep step = Mockito.mock(WorkflowStep.class);
         workflow.state = WorkflowState.ABORTED;
-        workflow.performStep(step);
+        workflow.performStep(step, report);
         
         Mockito.verifyZeroInteractions(step);
+        Mockito.verifyZeroInteractions(report);
     }
     
     @Test
@@ -297,7 +311,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
                 throw new RuntimeException("FAIL");
             }
@@ -332,7 +346,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
                 throw new RuntimeException("FAIL");
             }
@@ -372,7 +386,7 @@ public class WorkflowTest extends ExtendedTestCase {
             }
             
             @Override
-            String getName() {
+            public String getName() {
                 calledName = true;
                 throw new RuntimeException("FAIL");
             }

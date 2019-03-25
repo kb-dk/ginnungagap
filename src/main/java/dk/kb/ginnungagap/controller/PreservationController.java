@@ -44,9 +44,9 @@ public class PreservationController {
      * @return The redirect back to the workflow view, when the given workflow is started.
      */
     @RequestMapping("/" + PATH + "/run")
-    public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="null")
+    public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="")
                                                 String catalog) {
-        log.info("Running the preservation workflow.");
+        log.info("Running the preservation workflow (for catalog: " + catalog + ").");
         workflow.startManually(catalog);
         
         try {

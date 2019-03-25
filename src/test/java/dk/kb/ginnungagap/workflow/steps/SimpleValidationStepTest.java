@@ -9,9 +9,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -49,6 +50,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
+        WorkflowReport report = mock(WorkflowReport.class);
         
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
@@ -60,11 +62,15 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         when(archive.getChecksum(eq(warcId), eq(collectionId))).thenReturn(warcFileChecksum);
 
         SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addSuccessRecord(anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getChecksum(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
@@ -82,7 +88,8 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
         String notTheExpectedChecksum = UUID.randomUUID().toString();
@@ -94,11 +101,15 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         when(archive.getChecksum(eq(warcId), eq(collectionId))).thenReturn(notTheExpectedChecksum);
 
         SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getChecksum(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
@@ -116,7 +127,8 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
         
@@ -126,11 +138,15 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         when(archive.getChecksum(eq(warcId), eq(collectionId))).thenThrow(new IllegalStateException("CHECKSUM FAILURE."));
 
         SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getChecksum(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
@@ -147,6 +163,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
+        WorkflowReport report = mock(WorkflowReport.class);
 
         String warcId = "TEST-WARC-ID-" + UUID.randomUUID().toString();
         String collectionId = "TEST-COLLECTION-ID-" + UUID.randomUUID().toString();
@@ -157,11 +174,15 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         when(archive.getChecksum(eq(warcId), eq(collectionId))).thenThrow(new RuntimeException("YOU MUST FAIL HERE!!!"));
 
         SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
-        step.validateRecord(record);
+        step.validateRecord(record, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
 
         verify(archive).getChecksum(eq(warcId), eq(collectionId));
         verifyNoMoreInteractions(archive);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
@@ -173,18 +194,29 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
     }
     
     @Test
-    public void testPerformStep() throws Exception {
+    public void testPerformStepWithNoItems() throws Exception {
         addDescription("Test the perform step method");
         CumulusServer server = mock(CumulusServer.class);
         Archive archive = mock(Archive.class);
         CumulusRecord record = mock(CumulusRecord.class);
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
-        
-        when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
+        WorkflowReport report = mock(WorkflowReport.class);
+
+        when(items.iterator()).thenReturn(new ArrayList<CumulusRecord>().iterator());
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(items);
         
         SimpleValidationStep step = new SimpleValidationStep(server, catalogName, archive);
 
-        step.performStep();
+        step.performStep(report);
+
+        verifyZeroInteractions(report);
+        verifyZeroInteractions(archive);
+
+        verify(server).getItems(eq(catalogName), any(CumulusQuery.class));
+        verifyNoMoreInteractions(server);
+
+        verify(items).iterator();
+        verify(items).getCount();
+        verifyNoMoreInteractions(items);
     }
 }

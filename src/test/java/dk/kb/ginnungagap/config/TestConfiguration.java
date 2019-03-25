@@ -11,6 +11,7 @@ public class TestConfiguration extends Configuration {
     BitmagConfiguration bmConf;
     CumulusConfiguration cConf;
     WorkflowConfiguration wConf;
+    MailConfiguration mConf;
     
     public TestConfiguration(String confPath) {
         super(confPath);
@@ -67,4 +68,16 @@ public class TestConfiguration extends Configuration {
     public void setWorkflowConf(WorkflowConfiguration wConf) {
         this.wConf = wConf;
     }
+
+    @Override
+    public MailConfiguration getMailConfiguration() {
+        if(this.mConf != null) {
+            return mConf;
+        }
+        return super.getMailConfiguration();
+    }
+    public void setMailConfiguration(MailConfiguration mConf) {
+        this.mConf = mConf;
+    }
+
 }

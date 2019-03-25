@@ -47,6 +47,18 @@
       </ul>
     </div>
   </div>
+  <div id="mail" class="container">
+    <h4>Mail configuration:</h4>
+    <div class="container">
+      <p><b>Sender:</b> ${mailConf.getSender()}</p>
+      <p><b>Receivers:</b></p>
+      <ul>
+        <c:forEach items="${mailConf.getReceivers()}" var="receiver">
+          <li>${receiver}</li>
+        </c:forEach>
+      </ul>
+    </div>
+  </div>
   <div id="bitmag" class="container">
     <h4>Bitrepository and packaging configuration:</h4>
     <div class="container">

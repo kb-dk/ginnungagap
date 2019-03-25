@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -21,8 +22,9 @@ public class PreservationFinalizationStepTest extends ExtendedTestCase {
         addDescription("Test the running the preservation finalization step.");
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         PreservationFinalizationStep step = new PreservationFinalizationStep(preserver);
-        
-        step.performStep();
+        WorkflowReport report = mock(WorkflowReport.class);
+
+        step.performStep(report);
         
         verify(preserver).uploadAll();
         verifyNoMoreInteractions(preserver);
@@ -44,13 +46,14 @@ public class PreservationFinalizationStepTest extends ExtendedTestCase {
         addDescription("Test the performStep method when it fails");
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         PreservationFinalizationStep step = new PreservationFinalizationStep(preserver);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 throw new RuntimeException("This must fail");
             }
         }).when(preserver).uploadAll();
-        step.performStep();
+        step.performStep(report);
     }
 }

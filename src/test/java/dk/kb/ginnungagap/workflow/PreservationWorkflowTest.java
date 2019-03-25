@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.MailDispatcher;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -70,6 +71,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         CumulusWrapper cumulusWrapper = mock(CumulusWrapper.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
+        MailDispatcher mailer = mock(MailDispatcher.class);
         
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         
@@ -85,6 +87,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         workflow.cumulusWrapper = cumulusWrapper;
         workflow.transformationHandler = transformationHandler;
         workflow.preserver = preserver;
+        workflow.mailer = mailer;
         workflow.init();
 
         workflow.startManually(null);
@@ -115,7 +118,8 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         MetadataTransformer ieTransformer = mock(MetadataTransformer.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
-        
+        MailDispatcher mailer = mock(MailDispatcher.class);
+
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
 
@@ -153,6 +157,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         workflow.cumulusWrapper = cumulusWrapper;
         workflow.transformationHandler = transformationHandler;
         workflow.preserver = preserver;
+        workflow.mailer = mailer;
         workflow.init();
 
         workflow.startManually(null);
@@ -197,6 +202,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(record, times(3)).getUUID();
         verify(record).isMasterAsset();
         verify(record).writeFieldMetadata(any(OutputStream.class));
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));

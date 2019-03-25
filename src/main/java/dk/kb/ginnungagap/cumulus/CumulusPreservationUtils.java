@@ -181,4 +181,13 @@ public class CumulusPreservationUtils {
             throw new IllegalStateException("Cannot create the raw IntellectualEntity metadata file.", e);
         }
     }
+
+    /**
+     * Method for extracting the record name of a Cumulus record.
+     * @param record The record.
+     * @return The record name.
+     */
+    public static String getRecordName(CumulusRecord record) {
+        return record.getFieldValue(Constants.FieldNames.RECORD_NAME);
+    }
 }
