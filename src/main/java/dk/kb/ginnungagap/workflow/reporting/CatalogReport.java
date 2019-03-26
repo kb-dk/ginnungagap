@@ -1,7 +1,5 @@
 package dk.kb.ginnungagap.workflow.reporting;
 
-import dk.kb.ginnungagap.workflow.Workflow;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

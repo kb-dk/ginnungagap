@@ -20,8 +20,10 @@ Testing against Cumulus
 The current tests against Cumulus required a password-file in the project folder named cumulus-password.yml
 
 It must be a YAML file in the format: 
+<pre>
 login: $username
 password: $password
+</pre>
 (where you have replace $username and $password with your actual login credentials).
 
 If such a file does not exist, then the cumulus tests are ignored. 
