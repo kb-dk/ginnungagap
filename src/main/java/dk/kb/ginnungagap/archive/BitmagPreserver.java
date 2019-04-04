@@ -1,12 +1,11 @@
 package dk.kb.ginnungagap.archive;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
-import dk.kb.ginnungagap.MailDispatcher;
-import dk.kb.metadata.utils.CalendarUtils;
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
+import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
@@ -14,12 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import dk.kb.cumulus.Constants;
-import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.utils.ChecksumUtils;
-import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.metadata.utils.GuidExtractionUtils;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
