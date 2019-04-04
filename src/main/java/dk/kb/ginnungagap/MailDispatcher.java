@@ -52,25 +52,6 @@ public class MailDispatcher {
     }
 
     /**
-     * Method for sending a mail.
-     * It will be sent to all the receivers in the configuration, and it will be from the sender in the configuration.
-     * @param subject The subject of the mail.
-     * @param content The content of the mail.
-     */
-    public void sendReport(String subject, String content) {
-        try {
-            MimeBodyPart bodyPart = new MimeBodyPart();
-            bodyPart.setText(content);
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(bodyPart);
-
-            sendMail(subject, multipart);
-        } catch (MessagingException e) {
-            log.error("Encountered an error while trying to send a mail with the subject: " + subject, e);
-        }
-    }
-
-    /**
      * Sends a workflow report.
      * @param report The report to send.
      */

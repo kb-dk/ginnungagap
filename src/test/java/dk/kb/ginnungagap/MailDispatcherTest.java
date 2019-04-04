@@ -11,6 +11,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import java.util.Arrays;
 
 public class MailDispatcherTest extends ExtendedTestCase {
@@ -32,11 +35,16 @@ public class MailDispatcherTest extends ExtendedTestCase {
     }
 
     @Test(enabled = false)
-    public void testSendingMail() {
+    public void testSendingMail() throws Exception {
         MailDispatcher mailer = new MailDispatcher();
         mailer.conf = conf;
         mailer.initialize();
 
-        mailer.sendReport("Subject", "content");
+        MimeBodyPart bodyPart = new MimeBodyPart();
+        bodyPart.setText("content");
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(bodyPart);
+
+        mailer.sendMail("Subject", multipart);
     }
 }

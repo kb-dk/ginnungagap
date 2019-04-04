@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
+import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,8 +177,9 @@ public class PreservationStep extends WorkflowStep {
      * @param record The record to have its intellectual entity preserved.
      */
     protected void preserveIntellectuelEntity(CumulusRecord record) throws IOException {
-        String ieUUID = record.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+        String ieUUID = GuidExtractionUtils.extractGuid(record.getFieldValue(
+                Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         String fileUUID = record.getUUID();
         transformAndPreserveIntellectualEntity(ieUUID, metadataUUID, fileUUID, record);
     }
@@ -186,7 +188,6 @@ public class PreservationStep extends WorkflowStep {
      * Preserve the representation part of a master asset as its own METS.
      * @param record The Cumulus record.
      * @throws Exception If an issue occurs when writing or preserving the Master asset metadata,
-     * 
      */
     protected void transformAndPreserveRepresentation(CumulusRecord record) throws Exception {
         String representationMetadataGuid = record.getFieldValue(
@@ -259,7 +260,7 @@ public class PreservationStep extends WorkflowStep {
      * @throws IOException If an error occurs when reading or writing the metadata.
      */
     protected File transformAndValidateMetadata(CumulusRecord record) throws Exception {
-        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+        String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             File cumulusMetadataFile = new File(conf.getMetadataTempDir(), metadataUUID + RAW_FILE_SUFFIX);

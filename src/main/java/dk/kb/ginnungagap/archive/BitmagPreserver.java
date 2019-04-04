@@ -37,9 +37,6 @@ public class BitmagPreserver {
     /** The configuration.*/
     @Autowired
     protected Configuration conf;
-    /** The mail dispatcher.*/
-    @Autowired
-    protected MailDispatcher mailer;
 
     /** Mapping between active warc packers and their collection.*/
     protected Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
@@ -150,50 +147,7 @@ public class BitmagPreserver {
                         + "Keeping it in temp dir: '" + conf.getBitmagConf().getTempDir().getAbsolutePath() + "'");
                 wp.reportFailure("Could not upload the file to the archive.");
             }
-            sendUploadMail(wp, uploadSuccess);
             warcPackerForCollection.remove(collectionId);
         }
-    }
-
-    /**
-     * Send mail about uploading the Cumulus records.
-     * @param wp The Warc packer for the warc file being uploaded, with the Cumulus records packed.
-     * @param success Whether or not it was a successful upload.
-     */
-    protected void sendUploadMail(WarcPacker wp, boolean success) {
-        String subject = "Ginnungagap " + (success ? "successfully" : "failed to") + " upload the file "
-                + wp.getWarcFile().getName();
-        StringBuilder message = new StringBuilder();
-        message.append("Ginnungagap has uploaded the file '");
-        message.append(wp.getWarcFile().getName());
-        message.append("' at ");
-        message.append(CalendarUtils.getCurrentDate());
-        message.append("\n");
-
-        if(wp.getPackagedMetadataRecords().isEmpty()) {
-            message.append("No metadata update records packaged.");
-        } else {
-            message.append("Packaged the metadata update for the records:");
-            message.append("\n");
-            for(CumulusRecord record : wp.getPackagedMetadataRecords()) {
-                message.append(" * ");
-                message.append(record.getUUID());
-                message.append("\n");
-            }
-        }
-
-        if(wp.getPackagedCompleteRecords().isEmpty()) {
-            message.append("No complete records packaged with both content and metadata.");
-        } else {
-            message.append("Packaged both the content and metadata for the records:");
-            message.append("\n");
-            for(CumulusRecord record : wp.getPackagedCompleteRecords()) {
-                message.append(" * ");
-                message.append(record.getUUID());
-                message.append("\n");
-            }
-        }
-
-        mailer.sendReport(subject, message.toString());
     }
 }

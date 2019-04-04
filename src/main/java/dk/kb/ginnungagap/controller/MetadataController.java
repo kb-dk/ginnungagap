@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,12 +148,13 @@ public class MetadataController {
         File outputFile = new File(conf.getBitmagConf().getTempDir(), filename);
         String recordId = null;
         if(metadataType.equalsIgnoreCase("KBIDS")) {
-            recordId = record.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
+            recordId = GuidExtractionUtils.extractGuid(record.getFieldValue(
+                    Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         } else {
             if(!metadataType.equalsIgnoreCase("METS")) {
                 log.warn("Undecypherable metadata type '" + metadataType + "'. Deliver METS.");
             }
-            recordId = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+            recordId = CumulusPreservationUtils.getMetadataUUID(record);
         }
         
         WarcUtils.extractRecord(warcFile, recordId, outputFile);
@@ -192,8 +194,9 @@ public class MetadataController {
         MetadataTransformer transformer = metadataTransformer.getTransformer(
                 MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
 
-        String ieUUID = record.getFieldValue(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
-        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+        String ieUUID = GuidExtractionUtils.extractGuid(record.getFieldValue(
+                Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
+        String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         String fileUUID = record.getUUID();
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
@@ -217,7 +220,7 @@ public class MetadataController {
         MetadataTransformer transformer = metadataTransformer.getTransformer(
                 MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
 
-        String metadataUUID = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+        String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");

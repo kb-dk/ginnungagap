@@ -1,21 +1,11 @@
 package dk.kb.ginnungagap.archive;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
-
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.MailDispatcher;
+import dk.kb.ginnungagap.config.TestBitmagConfiguration;
+import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.testutils.TestFileUtils;
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.common.Uri;
@@ -26,11 +16,20 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.kb.cumulus.Constants;
-import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.config.TestBitmagConfiguration;
-import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.ginnungagap.testutils.TestFileUtils;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertTrue;
 
 public class BitmagPreserverTest extends ExtendedTestCase {
 
@@ -82,12 +81,9 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
 
         assertTrue(preserver.warcPackerForCollection.isEmpty());
         preserver.checkConditions();
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -98,12 +94,9 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker packer = preserver.getWarcPacker(collectionId);
         Assert.assertEquals(packer, preserver.getWarcPacker(collectionId));
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -114,8 +107,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         
@@ -134,8 +126,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFile();
         verifyNoMoreInteractions(record);
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -146,8 +136,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         
@@ -168,8 +157,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.GUID));
         verifyNoMoreInteractions(record);
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test(expectedExceptions = IllegalStateException.class)
@@ -180,8 +167,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         
@@ -190,8 +176,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         when(record.getFieldValue(eq(Constants.FieldNames.GUID))).thenReturn("THIS IS NOT POSSIBLE TO PUT INTO A URI #\\/");
         
         preserver.packRecordMetadata(record, metadataFile);
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -202,8 +186,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         String recordId = UUID.randomUUID().toString();
         
         WarcPacker wp = mock(WarcPacker.class);
@@ -215,8 +198,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         
         verify(wp).packMetadata(eq(metadataFile), eq(null), eq(recordId));
         verifyNoMoreInteractions(wp);
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -227,8 +208,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getSize()).thenReturn(0L);
@@ -241,8 +221,6 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         
         verify(wp).getSize();
         verifyNoMoreInteractions(wp);
-
-        verifyZeroInteractions(mailer);
     }
     
     @Test
@@ -253,8 +231,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getSize()).thenReturn(Long.MAX_VALUE);
@@ -270,16 +247,11 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verifyNoMoreInteractions(archive);
         
         verify(wp).getSize();
-        verify(wp, times(5)).getWarcFile();
+        verify(wp, times(3)).getWarcFile();
         verify(wp).close();
         verify(wp).reportSucces(any(WarcDigest.class));
         verify(wp).hasContent();
-        verify(wp).getPackagedCompleteRecords();
-        verify(wp).getPackagedMetadataRecords();
         verifyNoMoreInteractions(wp);
-
-        verify(mailer).sendReport(anyString(), anyString());
-        verifyNoMoreInteractions(mailer);
     }
     
     @Test
@@ -290,8 +262,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getWarcFile()).thenReturn(warcFile);
@@ -303,17 +274,12 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(archive).uploadFile(any(File.class), anyString());
         verifyNoMoreInteractions(archive);
         
-        verify(wp, times(5)).getWarcFile();
+        verify(wp, times(3)).getWarcFile();
         verify(wp).close();
         verify(wp).reportFailure(anyString());
         verify(wp).hasContent();
-        verify(wp).getPackagedCompleteRecords();
-        verify(wp).getPackagedMetadataRecords();
         verifyNoMoreInteractions(wp);
-
-        verify(mailer).sendReport(anyString(), anyString());
-        verifyNoMoreInteractions(mailer);
-    }   
+    }
     
     @Test
     public void testUploadAllWhenItHasNoContent() {
@@ -323,8 +289,7 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         BitmagPreserver preserver = new BitmagPreserver();
         preserver.archive = archive;
         preserver.conf = conf;
-        preserver.mailer = mailer;
-        
+
         WarcPacker wp = mock(WarcPacker.class);
         preserver.warcPackerForCollection.put(collectionId, wp);
         when(wp.getWarcFile()).thenReturn(warcFile);
@@ -341,7 +306,5 @@ public class BitmagPreserverTest extends ExtendedTestCase {
         verify(wp).close();
         verify(wp).hasContent();
         verifyNoMoreInteractions(wp);
-
-        verifyZeroInteractions(mailer);
     }
 }

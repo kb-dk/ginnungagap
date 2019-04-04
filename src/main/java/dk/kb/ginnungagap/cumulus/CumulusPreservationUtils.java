@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.jwat.warc.WarcDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,5 +190,15 @@ public class CumulusPreservationUtils {
      */
     public static String getRecordName(CumulusRecord record) {
         return record.getFieldValue(Constants.FieldNames.RECORD_NAME);
+    }
+
+    /**
+     * Method for extracting the Metadata UUID of a Cumulus record.
+     * @param record The record.
+     * @return The metadata uuid of the record.
+     */
+    public static String getMetadataUUID(CumulusRecord record) {
+        String res = record.getFieldValue(Constants.FieldNames.METADATA_GUID);
+        return GuidExtractionUtils.extractGuid(res);
     }
 }

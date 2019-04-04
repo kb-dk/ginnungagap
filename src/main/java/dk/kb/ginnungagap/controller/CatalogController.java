@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,7 +218,7 @@ public class CatalogController {
                 }
                 os.write("  <record>\n".getBytes(StandardCharsets.UTF_8));
                 os.write("    <guid>".getBytes(StandardCharsets.UTF_8));
-                os.write(recordIntellectualEntity.getBytes(StandardCharsets.UTF_8));
+                os.write(GuidExtractionUtils.extractGuid(recordIntellectualEntity).getBytes(StandardCharsets.UTF_8));
                 os.write("</guid>\n".getBytes(StandardCharsets.UTF_8));
                 os.write("    <name>".getBytes(StandardCharsets.UTF_8));
                 os.write(recordName.getBytes(StandardCharsets.UTF_8));
