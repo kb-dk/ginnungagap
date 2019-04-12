@@ -2,7 +2,6 @@ package dk.kb.ginnungagap;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
-import dk.kb.yggdrasil.utils.HostName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +43,7 @@ public class MailDispatcher {
      */
     @PostConstruct
     protected void initialize() {
-        HostName hostname = new HostName();
-        this.host = hostname.getHostName();
-        if(this.host.isEmpty()) {
-            this.host = "localhost";
-        }
+        this.host = "localhost";
     }
 
     /**
