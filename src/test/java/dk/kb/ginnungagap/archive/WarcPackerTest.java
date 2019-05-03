@@ -46,7 +46,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         conf = new BitmagConfiguration(TestFileUtils.getTempDir(), null, 1, 10000000, TestFileUtils.getTempDir(), "SHA-1");
     }
     
-    @AfterClass
+//    @AfterClass
     public void tearDown() {
         TestFileUtils.tearDown();
     }
@@ -59,7 +59,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         Digest digestor = new Digest(conf.getAlgorithm());
         WarcDigest wd = digestor.getDigestOfFile(testFile);
         wp.packResource(testFile, wd, ContentType.parseContentType("application/octetstream"), UUID.randomUUID().toString());
-        wp.packMetadata(testFile, new Uri("urn:uuid:" + UUID.randomUUID().toString()));
+        wp.packMetadata(testFile, new Uri("urn:uuid:" + UUID.randomUUID().toString()), UUID.randomUUID().toString());
         
         assertTrue(wp.getSize() > 0);
         assertTrue(wp.getSize() > 2 * testFile.length()); 
@@ -82,7 +82,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         addDescription("Test failure to write a missing file as metadata");
         
         WarcPacker wp = new WarcPacker(conf);
-        wp.packMetadata(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), new Uri("urn:uuid:" + UUID.randomUUID().toString()));
+        wp.packMetadata(new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString()), new Uri("urn:uuid:" + UUID.randomUUID().toString()), UUID.randomUUID().toString());
     }
     
     @Test(expectedExceptions = IllegalStateException.class)
@@ -124,7 +124,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         
         CumulusRecord record = mock(CumulusRecord.class);
         WarcDigest digest = new Digest("MD5").getDigestOfBytes("TEST".getBytes());
-        wp.packagedRecords.add(record);
+        wp.packagedCompleteRecords.add(record);
         wp.reportSucces(digest);
         
         verify(record).setStringValueInField(eq(Constants.FieldNames.METADATA_PACKAGE_ID), anyString());
@@ -144,7 +144,7 @@ public class WarcPackerTest extends ExtendedTestCase {
         
         String failureMessage = "THIS MUST FAIL!!!";
         CumulusRecord record = mock(CumulusRecord.class);
-        wp.packagedRecords.add(record);
+        wp.packagedCompleteRecords.add(record);
         wp.reportFailure(failureMessage);
         
         verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), 
@@ -159,14 +159,14 @@ public class WarcPackerTest extends ExtendedTestCase {
         WarcPacker wp = new WarcPacker(conf);
         CumulusRecord record = mock(CumulusRecord.class);
         
-        Assert.assertTrue(wp.packagedRecords.isEmpty());
+        Assert.assertTrue(wp.packagedCompleteRecords.isEmpty());
         wp.addRecordToPackagedList(record);
-        Assert.assertFalse(wp.packagedRecords.isEmpty());
-        Assert.assertEquals(wp.packagedRecords.size(), 1);
-        Assert.assertTrue(wp.packagedRecords.contains(record));
+        Assert.assertFalse(wp.packagedCompleteRecords.isEmpty());
+        Assert.assertEquals(wp.packagedCompleteRecords.size(), 1);
+        Assert.assertTrue(wp.packagedCompleteRecords.contains(record));
 
         wp.addRecordToPackagedList(record);
-        Assert.assertEquals(wp.packagedRecords.size(), 1);
+        Assert.assertEquals(wp.packagedCompleteRecords.size(), 1);
     }
     
     @Test

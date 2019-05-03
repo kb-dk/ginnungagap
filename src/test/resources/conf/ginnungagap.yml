@@ -1,4 +1,8 @@
 ginnungagap:
+  local:
+    output_path: tempDir/local/output
+    archive_path: tempDir/local/archive
+    test: true
   bitrepository:
     settings_dir: tempDir/conf/bitrepository
     keyfile: ''
@@ -44,6 +48,9 @@ ginnungagap:
         to: 'dia-prod-dom-02.kb.dk/online_master_arkiv_m_10/non-archival/Maps/LUFTFO/2012/jan/BCO54/BC54_relaterede_filer/CD_2/'
       - from: '*:dia-prod-dom-02.kb.dk::Maps:LUFTFO:2012:jan:BCO54:BC54_relaterede_filer:MapinfoOverview_dbs:'
         to: 'dia-prod-dom-02.kb.dk/online_master_arkiv_m_10/non-archival/Maps/LUFTFO/2012/jan/BCO54/BC54_relaterede_filer/MapinfoOverview_dbs/'
-
+  mail:
+    sender: ginnungagap@kb.dk
+    receivers:
+      - ginnungagap@kb.dk
 
 

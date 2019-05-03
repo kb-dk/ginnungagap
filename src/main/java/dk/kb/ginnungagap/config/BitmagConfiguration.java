@@ -72,7 +72,6 @@ public class BitmagConfiguration {
     public String getAlgorithm() {
         return algorithm;
     }
-
     
     /**
      * Generates a component id, which includes the hostname and a random UUID.

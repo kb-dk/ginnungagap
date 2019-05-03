@@ -31,14 +31,14 @@ public class LocalArchiveTest extends ExtendedTestCase {
     @Test
     public void testShutdown() {
         File archiveBaseDir = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        Archive archive = new LocalArchive(archiveBaseDir.getAbsolutePath());
+        Archive archive = new LocalArchive(archiveBaseDir);
         archive.close();
     }
 
     @Test
     public void testUploadFile() throws IOException {
         File archiveBaseDir = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        Archive archive = new LocalArchive(archiveBaseDir.getAbsolutePath());
+        Archive archive = new LocalArchive(archiveBaseDir);
 
         File testFile = TestFileUtils.copyFileToTemp(new File("src/test/resources/warc/warcexample.warc"));
         
@@ -51,7 +51,7 @@ public class LocalArchiveTest extends ExtendedTestCase {
     @Test
     public void testGetFile() {
         File archiveBaseDir = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
-        Archive archive = new LocalArchive(archiveBaseDir.getAbsolutePath());
+        Archive archive = new LocalArchive(archiveBaseDir);
 
         archive.getFile(UUID.randomUUID().toString(), collectionId);
     }
@@ -60,7 +60,7 @@ public class LocalArchiveTest extends ExtendedTestCase {
     public void testGetChecksum() throws Exception {
         File archiveBaseDir = FileUtils.retrieveSubDirectory(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
         File collectionDir = FileUtils.retrieveSubDirectory(archiveBaseDir, collectionId);
-        Archive archive = new LocalArchive(archiveBaseDir.getAbsolutePath());
+        Archive archive = new LocalArchive(archiveBaseDir);
         
         String id = UUID.randomUUID().toString();
         String expectedChecksum = "37e9a7db97d6050911038d72b0f0585c";

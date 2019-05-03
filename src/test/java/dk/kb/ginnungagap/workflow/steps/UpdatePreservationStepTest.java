@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.jaccept.structure.ExtendedTestCase;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -84,14 +85,17 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         CumulusServer server = mock(CumulusServer.class);
         BitmagPreserver preserver = mock(BitmagPreserver.class);
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         CumulusRecordCollection records = mock(CumulusRecordCollection.class);
         when(server.getItems(anyString(), any(CumulusQuery.class))).thenReturn(records);
         when(records.getCount()).thenReturn(0);
         
         UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
-        step.performStep();
-        
+        step.performStep(report);
+
+        verifyZeroInteractions(report);
+
         verify(server).getItems(anyString(), any(CumulusQuery.class));
         verifyNoMoreInteractions(server);
         
@@ -99,7 +103,7 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         
         verifyZeroInteractions(transformationHandler);
         
-        verify(records, times(2)).getCount();
+        verify(records, times(3)).getCount();
         verifyNoMoreInteractions(records);
     }
     
@@ -111,7 +115,8 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         MetadataTransformationHandler transformationHandler = mock(MetadataTransformationHandler.class);
         CumulusRecordCollection items = mock(CumulusRecordCollection.class);
         CumulusRecord record = mock(CumulusRecord.class);
-        
+        WorkflowReport report = mock(WorkflowReport.class);
+
         UpdatePreservationStep step = new UpdatePreservationStep(conf.getTransformationConf(), server, transformationHandler, preserver, catalogName);
 
         when(items.iterator()).thenReturn(Arrays.asList(record).iterator());
@@ -125,8 +130,11 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         }).when(record).getFieldValueOrNull(
                 eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));
         
-        step.preserveRecordItems(items, catalogName);
-        
+        step.preserveRecordItems(items, catalogName, report);
+
+        verify(report).addFailedRecord(anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(report);
+
         verifyZeroInteractions(server);
         verifyZeroInteractions(preserver);
         verifyZeroInteractions(transformationHandler);
@@ -134,7 +142,8 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         verify(items).iterator();
         verify(items).getCount();
         verifyNoMoreInteractions(items);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValueOrNull(eq(UpdatePreservationStep.PRESERVATION_UPDATE_HISTORY_FIELD_NAME));
         verify(record, times(2)).getUUID();
         verifyNoMoreInteractions(record);
@@ -180,7 +189,7 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         verifyZeroInteractions(server);
 
         verify(preserver).packRecordMetadata(eq(record), any(File.class));
-        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString());
+        verify(preserver, times(3)).packRepresentationMetadata(any(File.class), anyString(), anyString());
         verify(preserver).checkConditions();
         verifyNoMoreInteractions(preserver);
 

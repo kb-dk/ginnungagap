@@ -48,7 +48,7 @@ public class TestFileUtils {
     
     public static File createFileWithContent(String content) throws IOException {
         File res = new File(getTempDir(), UUID.randomUUID().toString());
-        try (OutputStream os = new FileOutputStream(res);) {
+        try (OutputStream os = new FileOutputStream(res)) {
             os.write(content.getBytes());
             os.flush();
         }
@@ -79,7 +79,7 @@ public class TestFileUtils {
             FileUtils.copyFile(f, new File(xsltDir, f.getName()));
         }
 
-        return new TestConfiguration(new File(confDir, "ginnungagap.yml"));
+        return new TestConfiguration(new File(confDir, "ginnungagap.yml").getAbsolutePath());
     }
     
     public static int numberOfLinesInFile(File f) throws IOException {

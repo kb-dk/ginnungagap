@@ -89,11 +89,28 @@ public final class AgentSelector {
         ExceptionUtils.insertException(res);
         throw res;
     }
-
+    
     /**
      * The version for the ingest agent.
      */
-    protected static final String KB_API_VERSION = AgentSelector.class.getPackage().getImplementationVersion();
+    protected static String kbApiVersion = null;
+    
+    /**
+     * @param version Sets the version.
+     */
+    public static void setApiVersion(String version) {
+        kbApiVersion = version;
+    }
+    
+    /**
+     * @return The api version. Returns "UNKNOWN" if it has not been set.
+     */
+    public static String getApiVersion() {
+        if(kbApiVersion == null) {
+            return "UNKNOWN";
+        }
+        return kbApiVersion;
+    }
 
     /** @return Agent type for the KB agent.*/
     public static String getKbAgentType() {
@@ -112,11 +129,7 @@ public final class AgentSelector {
 
     /** @return The metadata generator agent.*/
     public static String getApiAgentValue() {
-        if(KB_API_VERSION != null) {
-            return KB_AGENT_CBS + " (v. " + KB_API_VERSION + ") ";
-        } else {
-            return KB_AGENT_CBS + " (v. Undetermined) ";
-        }
+        return KB_AGENT_CBS + " (v. " + getApiVersion() + ") ";
     }
 
     /** @return Agent type for the department agent.*/

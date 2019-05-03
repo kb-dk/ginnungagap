@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.workflow.steps;
 
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class SimpleValidationStep extends ValidationStep {
     }
 
     @Override
-    protected void validateRecord(CumulusRecord record) {
+    protected void validateRecord(CumulusRecord record, WorkflowReport report) {
         try {
             String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
             String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
@@ -43,7 +44,7 @@ public class SimpleValidationStep extends ValidationStep {
             String warcChecksum = record.getFieldValue(Constants.FieldNames.ARCHIVE_MD5);
             
             if(checksumResult.equalsIgnoreCase(warcChecksum)) {
-                setValid(record);
+                setValid(record, report);
             } else {
                 throw new IllegalStateException("Checksums did not match. Expected '" + warcChecksum 
                         + "', but received '" + checksumResult + "' from the archive.");
@@ -52,11 +53,11 @@ public class SimpleValidationStep extends ValidationStep {
             log.info("Failed to validate the WARC file", e);
             String message = "WARC file exists, but it has an integrity issue. Discovered at: " 
                     + CalendarUtils.getCurrentDate();
-            setInvalid(record, message);
+            setInvalid(record, message, report);
         } catch (Exception e) {
             String errMsg = "Error when trying to validate record '" + record + "'";
             log.warn(errMsg, e);
-            setInvalid(record, errMsg + " : " + e.getMessage());
+            setInvalid(record, errMsg + " : " + e.getMessage(), report);
         }
     }
 }

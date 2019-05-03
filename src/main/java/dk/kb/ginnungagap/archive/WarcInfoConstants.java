@@ -18,7 +18,7 @@ public class WarcInfoConstants {
                     + "revision: 1.0.0\n";
     
     /** The list of preservable system properties for the WarcInfo.*/
-    protected static final Collection<String> SYSTEM_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
+    public static final Collection<String> SYSTEM_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
             "awt.toolkit",
             "file.encoding",
             "file.encoding.pkg",
@@ -51,7 +51,7 @@ public class WarcInfoConstants {
             ));
     
     /** The list of preservable environment variables for the WarcInfo.*/
-    protected static final Collection<String> ENV_VARIABLES = Collections.unmodifiableList(Arrays.asList(
+    public static final Collection<String> ENV_VARIABLES = Collections.unmodifiableList(Arrays.asList(
             "HOSTNAME",
             "SSH_CONNECTION"
             ));

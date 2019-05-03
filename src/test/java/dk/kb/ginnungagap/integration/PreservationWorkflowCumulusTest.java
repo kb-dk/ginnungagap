@@ -1,16 +1,19 @@
 package dk.kb.ginnungagap.integration;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import com.canto.cumulus.Cumulus;
-import com.canto.cumulus.Item;
 import com.canto.cumulus.RecordItem;
 
 import dk.kb.cumulus.CumulusRecord;
@@ -28,7 +31,7 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
     CumulusServer server;
     
     String passwordFilePath = System.getenv("HOME") + "/cumulus-password.yml";
-    String catalogName = "Letters OM";
+    String catalogName = "Luftfoto OM";
 
     @BeforeClass
     public void setup() throws Exception {
@@ -61,6 +64,18 @@ public class PreservationWorkflowCumulusTest extends ExtendedTestCase {
     @AfterClass
     public void tearDownClass() {
         Cumulus.CumulusStop();
+    }
+    
+    @Test
+    public void testRecord() throws Exception {
+        addDescription("Extract a record");
+        
+        CumulusRecord record = server.findCumulusRecordByName("Luftfoto OM", "OD06131_002.tif");
+        
+        File outMetadata = new File(TestFileUtils.getTempDir(), record.getUUID());
+        try (OutputStream os = new FileOutputStream(outMetadata)) {
+            record.writeFieldMetadata(os);
+        }
     }
     
 //    @Test

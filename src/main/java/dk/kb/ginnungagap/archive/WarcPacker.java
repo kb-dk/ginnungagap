@@ -1,5 +1,6 @@
 package dk.kb.ginnungagap.archive;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusRecord;
 import dk.kb.ginnungagap.config.BitmagConfiguration;
 import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.ChecksumUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.warc.Digest;
@@ -27,7 +29,7 @@ import dk.kb.yggdrasil.warc.WarcWriterWrapper;
 /**
  * Packages the warc files.
  */
-public class WarcPacker {
+public class WarcPacker implements Closeable {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(WarcPacker.class);
 
@@ -36,13 +38,17 @@ public class WarcPacker {
     
     /** The warc writer wrapper, for writing the warc records.*/
     protected final WarcWriterWrapper warcWrapper;
-    /** The records which has been packaged in the warc file.*/
-    protected final List<CumulusRecord> packagedRecords;
+    /** The records which has been packaged in the warc file, but content file and metadata.*/
+    protected final List<CumulusRecord> packagedCompleteRecords;
+    /** The records whose metadata has been packaged in the warc file.*/
+    protected final List<CumulusRecord> packagedMetadataRecords;
     /** The configuration for the bitrepository.*/
     protected final BitmagConfiguration bitmagConf;
     
     /** Whether or not the current WARC file has any content besides the warc-info.*/
     protected boolean hasContent;
+    /** Whether or not this WARC packer is closed.*/
+    protected boolean isClosed;
 
     /**
      * Constructor.
@@ -50,12 +56,14 @@ public class WarcPacker {
      */
     public WarcPacker(BitmagConfiguration conf) {
         this.bitmagConf = conf;
-        this.packagedRecords = new ArrayList<CumulusRecord>();
-
+        this.packagedCompleteRecords = new ArrayList<CumulusRecord>();
+        this.packagedMetadataRecords = new ArrayList<CumulusRecord>();
+        
         try {
             this.warcWrapper = WarcWriterWrapper.getWriter(conf.getTempDir(), UUID.randomUUID().toString());
             writeWarcinfo();
             this.hasContent = false;
+            this.isClosed = false;
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialise the warc writer wrapper.", e);
         }
@@ -67,28 +75,31 @@ public class WarcPacker {
      * @throws YggdrasilException If it fails to write the warc info.
      */
     protected void writeWarcinfo() throws YggdrasilException {
-        Digest digestor = new Digest(bitmagConf.getAlgorithm());
-        StringBuffer payload = new StringBuffer();
-        payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        synchronized(warcWrapper) {
+            Digest digestor = new Digest(bitmagConf.getAlgorithm());
+            StringBuffer payload = new StringBuffer();
+            payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
 
-        payload.append("\n");
-        for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
-            String value = System.getProperty((String) key);
-            if(value != null && !value.isEmpty()) {
-                payload.append(key + ": " + value + "\n");
+            payload.append("\n");
+            for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
+                String value = System.getProperty(key);
+                if(value != null && !value.isEmpty()) {
+                    payload.append(key + ": " + value + "\n");
+                }
             }
-        }
-        payload.append("\n");
-        for(String key : WarcInfoConstants.ENV_VARIABLES) {
-            String value = System.getenv().get(key);
-            if(value != null && !value.isEmpty()) {
-                payload.append(key + ": " + value + "\n");
+            payload.append("\n");
+            for(String key : WarcInfoConstants.ENV_VARIABLES) {
+                String value = System.getenv().get(key);
+                if(value != null && !value.isEmpty()) {
+                    payload.append(key + ": " + value + "\n");
+                }
             }
+
+            byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
+            warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
+                    digestor.getDigestOfBytes(warcInfoPayloadBytes));
         }
-        
-        byte[] warcInfoPayloadBytes = payload.toString().getBytes(StandardCharsets.UTF_8);
-        warcWrapper.writeWarcinfoRecord(warcInfoPayloadBytes,
-                digestor.getDigestOfBytes(warcInfoPayloadBytes));
     }
 
     /**
@@ -105,18 +116,23 @@ public class WarcPacker {
     
     /**
      * Packages a file in a WARC-resource.
-     * @param metadataFile The file with the metadata. The name of the file must be the same 
-     * as the UUID of the metadata record.
-     * @param resourceUUID The UUID of the resource, so it can be references in the WARC header metadata.
+     * @param resourceFile The file with the content for the resource record.
+     * @param blockDigest The digest for the warc record.
+     * @param contentType The content type for the warc record (refers to the content of the file).
+     * @param uuid The UUID of the warc record.
      */
-    protected void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, String uuid) {
-        try (InputStream in = new FileInputStream(resourceFile)) {
-            Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
-            log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the record received "
-                    + "the URI:" + uri + "'");
-            hasContent = true;
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+    protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
+            String uuid) {
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        synchronized(warcWrapper) {
+            try (InputStream in = new FileInputStream(resourceFile)) {
+                Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
+                log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the "
+                        + "record received the URI:" + uri + "'");
+                hasContent = true;
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+            }
         }
     }
     
@@ -125,17 +141,23 @@ public class WarcPacker {
      * @param metadataFile The file with the metadata. The name of the file must be the same 
      * as the UUID of the metadata record.
      * @param refersTo Value for the refers-to elements in the warc record header. This may be null.
+     * @param warcRecordId The id of the WARC record.
      */
-    protected void packMetadata(File metadataFile, Uri refersTo) {
-        try (InputStream in = new FileInputStream(metadataFile)) {
-            Digest digestor = new Digest(bitmagConf.getAlgorithm());
-            WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
-            warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
-                    ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
-                    metadataFile.getName());
-            hasContent = true;
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+    protected void packMetadata(File metadataFile, Uri refersTo, String warcRecordId) {
+        ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
+        ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
+        synchronized(warcWrapper) {
+            try (InputStream in = new FileInputStream(metadataFile)) {
+                String uuid = metadataFile.getName();
+                Digest digestor = new Digest(bitmagConf.getAlgorithm());
+                WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);
+                warcWrapper.writeMetadataRecord(in, metadataFile.length(), 
+                        ContentType.parseContentType(METADATA_CONTENT_TYPE), refersTo, blockDigest, 
+                        warcRecordId, uuid);
+                hasContent = true;
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not package the metadata into the WARC file.", e);
+            }
         }
     }
 
@@ -165,11 +187,15 @@ public class WarcPacker {
      * Close this warc packer, thus closing any streams and files.
      * This should be called before accessing the file and sending it to the archive.
      */
+    @Override
     public void close() {
-        try {
-            warcWrapper.close();
-        } catch (YggdrasilException e) {
-            throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
+        synchronized(warcWrapper) {
+            this.isClosed = true;
+            try {
+                this.warcWrapper.close();
+            } catch (YggdrasilException e) {
+                throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
+            }
         }
     }
 
@@ -180,13 +206,19 @@ public class WarcPacker {
      */
     public void reportSucces(WarcDigest checksumDigest) {
         Date now = new Date();
-        for(CumulusRecord r : packagedRecords) {
+        for(CumulusRecord r : packagedCompleteRecords) {
             r.setStringValueInField(Constants.FieldNames.METADATA_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.RESOURCE_PACKAGE_ID, warcWrapper.getWarcFileId());
             r.setStringValueInField(Constants.FieldNames.ARCHIVE_MD5, checksumDigest.digestString);
             r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
             CumulusPreservationUtils.setPreservationFinished(r);
         }
+        for(CumulusRecord r : packagedMetadataRecords) {
+            r.setStringValueInField(Constants.FieldNames.METADATA_PACKAGE_ID, warcWrapper.getWarcFileId());
+            r.setDateValueInField(Constants.FieldNames.BEVARINGS_DATO, now);
+            CumulusPreservationUtils.setPreservationFinished(r);
+        }
+
     }
 
     /**
@@ -194,18 +226,28 @@ public class WarcPacker {
      * @param reason The message regarding the reason for the failure.
      */
     public void reportFailure(String reason) {
-        for(CumulusRecord r : packagedRecords) {
+        for(CumulusRecord r : packagedCompleteRecords) {
             CumulusPreservationUtils.setPreservationFailed(r, reason);
         }
     }
     
     /**
-     * Adds the record to the list of packaged records, unless it already is part of the list.
+     * Adds the record to the list of packaged complete records, unless it already is part of the list.
      * @param record The record 
      */
     public void addRecordToPackagedList(CumulusRecord record) {
-        if(!packagedRecords.contains(record)) {
-            packagedRecords.add(record);
+        if(!packagedCompleteRecords.contains(record)) {
+            packagedCompleteRecords.add(record);
+        }
+    }
+    
+    /**
+     * Adds the record to the list of packaged metadata records, unless it already is part of the list.
+     * @param record The record 
+     */
+    public void addRecordToMetadataPackagedList(CumulusRecord record) {
+        if(!packagedMetadataRecords.contains(record) && !packagedCompleteRecords.contains(record)) {
+            packagedMetadataRecords.add(record);
         }
     }
 
@@ -229,5 +271,19 @@ public class WarcPacker {
         }
 
         return res;
+    }
+
+    /**
+     * @return The list of completely packaged records.
+     */
+    public List<CumulusRecord> getPackagedCompleteRecords() {
+        return packagedCompleteRecords;
+    }
+
+    /**
+     * @return The list of metadata only packaged records.
+     */
+    public List<CumulusRecord> getPackagedMetadataRecords() {
+        return packagedMetadataRecords;
     }
 }

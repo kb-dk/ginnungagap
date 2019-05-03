@@ -1,20 +1,19 @@
 package dk.kb.ginnungagap.utils;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotEquals;
-
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
@@ -22,12 +21,12 @@ import dk.kb.ginnungagap.testutils.TestFileUtils;
 
 public class FileUtilsTest extends ExtendedTestCase {
 
-    @BeforeClass
+    @BeforeMethod
     public void setup() {
         TestFileUtils.setup();
     }
     
-    @AfterClass
+    @AfterMethod
     public void tearDown() {
         TestFileUtils.tearDown();
     }
@@ -183,5 +182,88 @@ public class FileUtilsTest extends ExtendedTestCase {
             f.getParentFile().setWritable(true);
             Assert.assertTrue(f.delete());
         }
+    }
+    
+    @Test
+    public void testDeprecateMove() throws Exception {
+        addDescription("Test the deprecateMove method");
+        File from = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String fromPath = from.getAbsolutePath();
+        File to = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String toPath = to.getAbsolutePath();
+        
+        FileUtils.deprecateMove(from, to);
+        Assert.assertFalse(new File(fromPath).exists());
+        Assert.assertTrue(new File(toPath).exists());
+        
+        Assert.assertTrue(new File(toPath + FileUtils.DEPRECATION_SUFFIX).exists());
+    }
+    
+    @Test
+    public void testDeprecateFileIfExists() throws Exception {
+        addDescription("Test the deprecateFileIfExists method");
+        File f1 = new File(TestFileUtils.getTempDir(), UUID.randomUUID().toString());
+        Assert.assertEquals(TestFileUtils.getTempDir().list().length, 0);
+        Assert.assertFalse(f1.exists());
+        FileUtils.deprecateFileIfExists(f1);
+        Assert.assertEquals(TestFileUtils.getTempDir().list().length, 0);
+        Assert.assertFalse(f1.exists());
+        
+        File f2 = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String f2path = f2.getAbsolutePath();
+        Assert.assertEquals(TestFileUtils.getTempDir().list().length, 1);
+        Assert.assertTrue(f2.exists());
+        Assert.assertTrue(new File(f2path).exists());
+        FileUtils.deprecateFileIfExists(f2);
+        Assert.assertEquals(TestFileUtils.getTempDir().list().length, 1);
+        Assert.assertFalse(new File(f2path).exists());
+        Assert.assertFalse(f2.exists());
+        
+        Assert.assertTrue(new File(f2path + FileUtils.DEPRECATION_SUFFIX).exists());
+    }
+    
+    @Test
+    public void testDeprecateFile() throws Exception {
+        addDescription("Test the deprecateFile method");
+        File f = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String path = f.getAbsolutePath();
+        
+        Assert.assertTrue(new File(path).exists());
+        FileUtils.deprecateFile(f);
+        Assert.assertFalse(new File(path).exists());
+    }
+    
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testDeprecateFileFailure() throws Exception {
+        addDescription("Test the deprecateFile method, when it fails, since it cannot move the file");
+        File f = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String path = f.getAbsolutePath();
+        File newFile = new File(f.getAbsolutePath() + FileUtils.DEPRECATION_SUFFIX);
+        Assert.assertTrue(newFile.createNewFile());
+        
+        try {
+            TestFileUtils.getTempDir().setWritable(false);
+            TestFileUtils.getTempDir().setReadable(false);
+            Assert.assertTrue(new File(path).exists());
+            FileUtils.deprecateFile(f);
+        } finally {
+            TestFileUtils.getTempDir().setWritable(true);            
+            TestFileUtils.getTempDir().setReadable(true);
+        }
+    }
+
+    @Test
+    public void testDeprecateFileDeprecatedFile() throws Exception {
+        addDescription("Test the deprecateFile method, when it already have a deprecated file");
+        File f = TestFileUtils.createFileWithContent(UUID.randomUUID().toString());
+        String path = f.getAbsolutePath();
+        File newFile = new File(f.getAbsolutePath() + FileUtils.DEPRECATION_SUFFIX);
+        Assert.assertTrue(newFile.createNewFile());
+        
+        FileUtils.deprecateFile(f);
+        
+        Assert.assertFalse(new File(path).exists());
+        Assert.assertTrue(new File(f.getAbsolutePath() + FileUtils.DEPRECATION_SUFFIX).exists());
+        Assert.assertTrue(new File(f.getAbsolutePath() + FileUtils.DEPRECATION_SUFFIX + FileUtils.DEPRECATION_SUFFIX).exists());
     }
 }

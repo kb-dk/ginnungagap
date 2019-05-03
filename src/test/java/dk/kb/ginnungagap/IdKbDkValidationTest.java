@@ -39,7 +39,7 @@ public class IdKbDkValidationTest extends ExtendedTestCase {
         }
     }
 
-    @Test//(enabled = false)
+    @Test
     public void testProfiles() throws Exception {
         addDescription("Validates the current METS profile");
         XmlValidator validator = new XmlValidator();

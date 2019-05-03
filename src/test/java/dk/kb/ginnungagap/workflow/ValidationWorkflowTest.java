@@ -2,6 +2,7 @@ package dk.kb.ginnungagap.workflow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.jaccept.structure.ExtendedTestCase;
@@ -12,10 +13,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.kb.cumulus.CumulusServer;
-import dk.kb.ginnungagap.archive.Archive;
+import dk.kb.ginnungagap.archive.ArchiveWrapper;
 import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.cumulus.CumulusWrapper;
 import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
+import dk.kb.ginnungagap.workflow.steps.FullValidationStep;
+import dk.kb.ginnungagap.workflow.steps.SimpleValidationStep;
 
 public class ValidationWorkflowTest extends ExtendedTestCase {
 
@@ -42,11 +46,43 @@ public class ValidationWorkflowTest extends ExtendedTestCase {
 
     @Test
     public void testWorkflowInstantiation() {
-        CumulusServer server = Mockito.mock(CumulusServer.class);
-        Archive archive = Mockito.mock(Archive.class);
-        ValidationWorkflow workflow = new ValidationWorkflow(conf, server, archive);
-        
-        Assert.assertEquals(workflow.getJobID(), ValidationWorkflow.WORKFLOW_NAME);
+        CumulusWrapper cumulusWrapper = Mockito.mock(CumulusWrapper.class);
+        ArchiveWrapper archive = Mockito.mock(ArchiveWrapper.class);
+        ValidationWorkflow workflow = new ValidationWorkflow();
+        workflow.conf = conf;
+        workflow.server = cumulusWrapper;
+        workflow.archive = archive;
+        workflow.init();
+
+        Assert.assertEquals(workflow.getName(), ValidationWorkflow.WORKFLOW_NAME);
         Assert.assertEquals(workflow.getDescription(), ValidationWorkflow.WORKFLOW_DESCRIPTION);
+        Assert.assertEquals(workflow.getInterval().longValue(), -1L);
+
+        Mockito.verify(cumulusWrapper, Mockito.times(2)).getServer();
+        Mockito.verifyNoMoreInteractions(cumulusWrapper);
+
+        Mockito.verifyZeroInteractions(archive);
+    }
+    
+    @Test
+    public void testCreateSteps() {
+        CumulusWrapper cumulusWrapper = Mockito.mock(CumulusWrapper.class);
+        ArchiveWrapper archive = Mockito.mock(ArchiveWrapper.class);
+        ValidationWorkflow workflow = new ValidationWorkflow();
+        workflow.conf = conf;
+        workflow.server = cumulusWrapper;
+        workflow.archive = archive;
+        workflow.init();
+
+        List<WorkflowStep> steps = (List<WorkflowStep>) workflow.createSteps();
+        
+        Assert.assertEquals(steps.size(), 2*conf.getCumulusConf().getCatalogs().size());
+        Assert.assertTrue(steps.get(0) instanceof SimpleValidationStep);
+        Assert.assertTrue(steps.get(1) instanceof FullValidationStep);
+        
+        Mockito.verifyZeroInteractions(archive);
+        
+        Mockito.verify(cumulusWrapper, Mockito.times(4)).getServer();
+        Mockito.verifyNoMoreInteractions(cumulusWrapper);
     }
 }

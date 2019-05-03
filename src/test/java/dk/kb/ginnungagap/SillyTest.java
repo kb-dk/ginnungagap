@@ -23,7 +23,7 @@ public class SillyTest extends ExtendedTestCase {
     @Test
     public void testNull() {
         addDescription("Test that casting a null does not give a null-pointer exception");
-        String s = (String) null;
+        String s = null;
         assertNull(s);
     }
     

@@ -1,4 +1,8 @@
 ginnungagap:
+  local:
+    output_path: tempDir/local/output
+    archive_path: tempDir/local/archive
+    test: true
   bitrepository:
     settings_dir: tempDir/conf/bitrepository
     keyfile: ''
@@ -24,4 +28,7 @@ ginnungagap:
     xslt_dir: tempDir/scripts/xslt
     required_fields_file: src/test/resources/conf/required_fields.yml
     metadata_temp_dir: tempDir/metadata
-
+  mail:
+    sender: ginnungagap@kb.dk
+    receivers:
+      - ginnungagap@kb.dk

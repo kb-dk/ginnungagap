@@ -1,14 +1,9 @@
 package dk.kb.ginnungagap.workflow.steps;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
-import org.jwat.warc.WarcReader;
-import org.jwat.warc.WarcReaderFactory;
-import org.jwat.warc.WarcRecord;
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.workflow.reporting.WorkflowReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,14 +15,14 @@ import dk.kb.cumulus.CumulusServer;
 import dk.kb.ginnungagap.archive.Archive;
 import dk.kb.ginnungagap.cumulus.CumulusQueryUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.ginnungagap.utils.StreamUtils;
+import dk.kb.ginnungagap.utils.WarcUtils;
 import dk.kb.ginnungagap.workflow.schedule.WorkflowStep;
 import dk.kb.metadata.utils.CalendarUtils;
 
 /**
  * The workflow step for importing Cumulus record asset files from the archive.
  */
-public class ImportationStep implements WorkflowStep {
+public class ImportationStep extends WorkflowStep {
     /** The logger.*/
     private static final Logger log = LoggerFactory.getLogger(ImportationStep.class);
 
@@ -48,6 +43,7 @@ public class ImportationStep implements WorkflowStep {
      * @param retainDir The directory to place existing files, so they will not be overridden.
      */
     public ImportationStep(CumulusServer server, Archive archive, String catalogName, File retainDir) {
+        super(catalogName);
         this.server = server;
         this.archive = archive;
         this.catalogName = catalogName;
@@ -55,42 +51,45 @@ public class ImportationStep implements WorkflowStep {
     }
     
     @Override
-    public void performStep() throws Exception {
+    public void performStep(WorkflowReport report) throws Exception {
         CumulusQuery query = CumulusQueryUtils.getQueryForPreservationImportation(catalogName);
         
         CumulusRecordCollection items = server.getItems(catalogName, query);
+        int i = 0;
         for(CumulusRecord record : items) {
-            importRecord(record);
+            setResultOfRun("Running... Importing " + record.getUUID());
+            importRecord(record, report);
+            i++;
         }
+        setResultOfRun("Imported " + i + " records");
     }
 
     /**
      * The step for performing the specific validation.
      * Must be implemented by the sub-classes.
      * @param record The record to validate.
+     * @param report The report for workflow.
      */
-    protected void importRecord(CumulusRecord record) {
+    protected void importRecord(CumulusRecord record, WorkflowReport report) {
         try {
             String warcId = record.getFieldValue(Constants.FieldNames.RESOURCE_PACKAGE_ID);
             String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
             String uuid = record.getUUID();
             File f = archive.getFile(warcId, collectionId);
             
-            try (WarcReader reader = WarcReaderFactory.getReader(new FileInputStream(f))) {
-                WarcRecord warcRecord = getWarcRecord(reader, uuid);
-
-                File file = extractRecord(warcRecord, record);
-                importFile(record, file);
-            }
-            setValid(record);
+            File file = new File(retainDir, uuid);
+            WarcUtils.extractRecord(f, uuid, file);
+            importFile(record, file);
+            
+            setValid(record, report);
         } catch (IllegalStateException e) {
             String errMsg = "The record '" + record + "' is invalid: " + e.getMessage();
             log.info(errMsg, e);
-            setInvalid(record, errMsg);            
+            setInvalid(record, errMsg, report);
         } catch (Exception e) {
             String errMsg = "Error when trying to validate record '" + record + "'";
             log.warn(errMsg, e);
-            setInvalid(record, errMsg + " : " + e.getMessage());
+            setInvalid(record, errMsg + " : " + e.getMessage(), report);
         }
     }
     
@@ -115,51 +114,18 @@ public class ImportationStep implements WorkflowStep {
         if(!f.exists()) {
             return;
         }
-        File newFile = new File(retainDir, f.getAbsolutePath());
+        File newFile = new File(retainDir, f.getName());
         FileUtils.deprecateMove(f, newFile);
     }
     
     /**
-     * Extracts the content of a record into a file. 
-     * @param warcRecord The WARC record to be extracted.
-     * @param cumulusRecord The Cumulus record for the warc record to be extracted.
-     * @return The file with the extracted WARC record.
-     * @throws IOException If an error occurs while extracting the WARC record.
-     */
-    protected File extractRecord(WarcRecord warcRecord, CumulusRecord cumulusRecord) throws IOException {
-        File outputFile = new File(cumulusRecord.getUUID());
-        
-        try (OutputStream os = new FileOutputStream(outputFile)) {
-            StreamUtils.copyInputStreamToOutputStream(warcRecord.getPayloadContent(), os);
-            os.flush();
-            os.close();
-        }
-        return outputFile;
-    }
-    
-    /**
-     * Retrieves the WARC record from the WARC file.
-     * Will throw an exception, if the record is not found.
-     * @param file The WARC file to extract the WARC record from.
-     * @param recordId The id of the WARC record.
-     * @return The WARC record.
-     * @throws IOException If an error occurs when reading the WARC file.
-     */
-    protected WarcRecord getWarcRecord(WarcReader reader, String recordId) throws IOException {
-        for(WarcRecord record : reader) {
-            if(record.header.warcRecordIdStr.contains(recordId)) {
-                return record;
-            }
-        }
-        throw new IllegalStateException("Could not find the record '" + recordId + "' in the WARC file.");
-    }
-
-    /**
      * Report back that the validation of the record failed.
      * @param record The record which is invalid.
      * @param message The message regarding why the WARC file is invalid.
+     * @param report The report for workflow.
      */
-    protected void setInvalid(CumulusRecord record, String message) {
+    protected void setInvalid(CumulusRecord record, String message, WorkflowReport report) {
+        report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), message, catalogName);
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION, 
                 Constants.FieldValues.PRESERVATION_IMPORT_FAILURE);
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);
@@ -168,9 +134,11 @@ public class ImportationStep implements WorkflowStep {
     /**
      * Report back that the validation was succes-full.
      * @param record The record which is valid.
+     * @param report The report for workflow.
      */
-    protected void setValid(CumulusRecord record) {
-        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION, 
+    protected void setValid(CumulusRecord record, WorkflowReport report) {
+        report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
+        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION,
                 Constants.FieldValues.PRESERVATION_IMPORT_NONE);
         String message = "Imported at: " + CalendarUtils.getCurrentDate();
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);
@@ -178,6 +146,6 @@ public class ImportationStep implements WorkflowStep {
 
     @Override
     public String getName() {
-        return "Importation Workflow";
+        return "Importation Workflow for catalog '" + catalogName + "'";
     }
 }

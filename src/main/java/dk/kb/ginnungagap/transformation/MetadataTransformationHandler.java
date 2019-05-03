@@ -9,14 +9,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.utils.StringUtils;
 import dk.kb.yggdrasil.exceptions.YggdrasilException;
 import dk.kb.yggdrasil.xslt.XmlEntityResolver;
@@ -27,6 +30,7 @@ import dk.kb.yggdrasil.xslt.XmlValidator;
 /**
  * Handler for the metadata transformers.
  */
+@Component
 public class MetadataTransformationHandler {
     
     /** The name for the transformation script for catalog structmaps.*/
@@ -39,21 +43,23 @@ public class MetadataTransformationHandler {
     public static final String TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY = "transformToKbId.xsl";
     
     /** Mapping between the name of the transformations and their transformers.*/
-    protected final Map<String, MetadataTransformer> transformers;
+    protected Map<String, MetadataTransformer> transformers;
     /** The directory with the XSLT files.*/
-    protected final File xsltDir;
+    protected File xsltDir;
     
     /** The xml validator.*/
-    protected final XmlValidator xmlValidator;
-
+    protected XmlValidator xmlValidator;
+    
+    /** The configuration. */
+    @Autowired
+    protected Configuration conf;
     
     /**
-     * Constructor.
-     * @param xsltDir The directory with the XSLT transformation scripts. 
+     * Initializes the metadata transformation handler.
      */
-    public MetadataTransformationHandler(File xsltDir) {
-        ArgumentCheck.checkExistsDirectory(xsltDir, "File xsltDir");
-        this.xsltDir = xsltDir;
+    @PostConstruct
+    protected void initialize() {
+        this.xsltDir = conf.getTransformationConf().getXsltDir();
         this.transformers = new HashMap<String, MetadataTransformer>();
         this.xmlValidator = new XmlValidator();
     }

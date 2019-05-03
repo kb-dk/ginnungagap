@@ -1,28 +1,32 @@
 ginnungagap:
+  local:
+    output_path: /usr/local/ginnungagap/output
+    archive_path: /usr/local/ginnungagap/archive
   bitrepository:
-    settings_dir: conf/bitrepository
-    keyfile: conf/client.pem
+    settings_dir: /usr/local/ginnungagap/current/bitrepository
+    keyfile: /usr/local/ginnungagap/current/bitrepository/client-01.pem
     max_failing_pillars: 1
     warc_size_limit: 1000000000
-    temp_dir: tempDir/warcs
+    temp_dir: /usr/local/ginnungagap/tempDir/warcs
     algorithm: SHA-1
   cumulus:
-    server_url: cumulus-core-test-01.kb.dk
-    username: audio-adm
-    password: ''
+    server_url: <MILJØ SPECIFIK CUMULUS URL>
+    username: bevaring
+    password: <SE PASSWORD MANAGER>
     catalogs:
+      - "Samlingsbilleder"
       - "Audio"
-      - "Conservation"
+      - "Billedarkivet"
   workflow:
-    interval: 3600000
-    retain_dir: tempDir/retain
-    workflows:
-      - "PreservationWorkflow"
-      - "ValidationWorkflow"	
-      - "ImportationWorkflow"
+    interval: -1
+    update_retention_in_days: 180
+    retain_dir: /usr/local/ginnungagap/retain
   transformation:
-    xsd_dir: conf/xsd
-    xslt_dir: conf/xslt
-    required_fields_file: conf/required_fields.yml
-    metadata_temp_dir: tempDir/metadata
-
+    xsd_dir: /usr/local/ginnungagap/current/scripts/xsd
+    xslt_dir: /usr/local/ginnungagap/current/scripts/xslt
+    required_fields_file: /usr/local/ginnungagap/current/required_fields.yml
+    metadata_temp_dir: /usr/local/ginnungagap/tempDir/metadata
+  mail:
+    sender: ginnungagap@kb.dk
+    receivers:
+      - ginnungagap@kb.dk

@@ -52,7 +52,7 @@ public class TransformUtils {
      */
     public static String getCumulusVal(String val){       
         if(val.indexOf(LANG_SEPARATOR) > -1){
-            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1, val.length()), 
+            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1),
                     IS_NON_TRANSLITERATION).trim();
         } else {
             return applyRules(val, IS_NON_TRANSLITERATION).trim();
@@ -65,7 +65,7 @@ public class TransformUtils {
      */
     public static String getCumulusSimpleVal(String val){
         if(val.indexOf(LANG_SEPARATOR) > -1){
-            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1, val.length()), 
+            return applyRules(val.substring(val.indexOf(LANG_SEPARATOR) + 1),
                     IS_RSS).trim();
         } else {
             return applyRules(val, IS_RSS).trim();
@@ -112,7 +112,7 @@ public class TransformUtils {
     public static String getCumulusValTranslit(String val){
         if(val.indexOf(LANG_SEPARATOR)>-1){
             return applyRules(val.substring(val.indexOf(LANG_SEPARATOR)+1
-                    , val.length()), IS_TRANSLITERATION_REX).trim();
+            ), IS_TRANSLITERATION_REX).trim();
         } else {
             return applyRules(val, IS_TRANSLITERATION_REX).trim();
         }
@@ -179,14 +179,8 @@ public class TransformUtils {
      */
     public static boolean isTocTitle(String val, String lang, String defLang){
         if(val.indexOf(LANG_SEPARATOR)>-1){
-            if(val.startsWith(lang + LANG_SEPARATOR)){
-                return true;
-            }
-            return false;
-        } else if (lang.equals(defLang)){
-            return true;
-        } 
-        return false;
+            return val.startsWith(lang + LANG_SEPARATOR);
+        } else return lang.equals(defLang);
 
     }
 
@@ -220,7 +214,7 @@ public class TransformUtils {
      */
     public static String getTocTitle(String val, String lang) {
         if(val.startsWith(lang + LANG_SEPARATOR)){
-            return val.substring(val.indexOf(LANG_SEPARATOR)+1,val.length());
+            return val.substring(val.indexOf(LANG_SEPARATOR)+1);
         } else {   
             return val;
         }

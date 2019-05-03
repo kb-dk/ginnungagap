@@ -7,8 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.utils.BooleanUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
 import dk.kb.yggdrasil.utils.YamlTools;
 
@@ -18,6 +23,12 @@ import dk.kb.yggdrasil.utils.YamlTools;
  * <ul>
  *   <li>ginnungagap:</li>
  *   <ul>
+ *     <li>local:</li>
+ *     <ul>
+ *       <li>output_path: $output_path</li>
+ *       <li>archive_path: $archive_path</li>
+ *       <li>test: $TEST (optional - default no)</li>
+ *     </ul>
  *     <li>bitrepository:</li>
  *     <ul>
  *       <li>settings_dir: $settings dir path</li>
@@ -37,9 +48,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *     <li>workflow:</li>
  *     <ul>
  *       <li>interval: $interval</li>
- *       <li>update_retention_in_days: $update_retention_in_days (optional)</li>
  *       <li>retain_dir: $retain_dir</li>
- *       <li>workflows: <br/>- $workflow_1<br/>- $workflow_2<br/>- ...</li>
  *     </ul>
  *     <li>transformation:</li>
  *     <ul>
@@ -47,6 +56,11 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *       <li>xslt_dir: $xslt_dir</li>
  *       <li>required_fields_file: $required_fields_file</li>
  *       <li>metadata_temp_dir: $metadata_temp_dir</li>
+ *     </ul>
+ *     <li>mail:</li>
+ *     <ul>
+ *       <li>sender: $sender</li>
+ *       <li>receiver: <br/>- $receiver1<br/>- $receiver2<br/>- ...</li>
  *     </ul>
  *   </ul>
  * </ul>
@@ -58,6 +72,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  * The configuration file must be in the YAML format.
  */
 @SuppressWarnings("unchecked")
+@Component
 public class Configuration {
 
     /** Ginnungagap root element.*/
@@ -93,12 +108,8 @@ public class Configuration {
     protected static final String CONF_WORKFLOW = "workflow";
     /** The workflow interval leaf-element.*/
     protected static final String CONF_WORKFLOW_INTERVAL = "interval";
-    /** [OPTIONAL] The workflow update retention in days leaf-element.*/
-    protected static final String CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS = "update_retention_in_days";
     /** The workflow retain directory path leaf-element.*/
     protected static final String CONF_WORKFLOW_RETAIN_DIR = "retain_dir";
-    /** The workflow names of workflows array leaf-element.*/
-    protected static final String CONF_WORKFLOW_WORKFLOWS = "workflows";
     
     /** Transformation node-element.*/
     protected static final String CONF_TRANSFORMATION = "transformation";
@@ -111,6 +122,22 @@ public class Configuration {
     /** Transformation metadata temp file leaf-element.*/
     protected static final String CONF_TRANSFORMATION_METADATA_TEMP_FILE= "metadata_temp_dir";
     
+    /** Local node-element.*/
+    protected static final String CONF_LOCAL = "local";
+    /** Local output dir path leaf-element.*/
+    protected static final String CONF_LOCAL_OUTPUT_PATH = "output_path";
+    /** Local archive dir path leaf-element.*/
+    protected static final String CONF_LOCAL_ARCHIVE_PATH = "archive_path";
+    /** [OPTIONAL] Local test boolean leaf-element. Default not test.*/
+    protected static final String CONF_LOCAL_TEST = "test";
+
+    /** Mail node-element.*/
+    protected static final String CONF_MAIL = "mail";
+    /** The mail sender leaf-element.*/
+    protected static final String CONF_MAIL_SENDER = "sender";
+    /** The mail receivers array leaf-element.*/
+    protected static final String CONF_MAIL_RECEIVERS = "receivers";
+    
     /** Whether Cumulus should have write access. */
     protected static final boolean CUMULUS_WRITE_ACCESS = true;
     
@@ -122,14 +149,22 @@ public class Configuration {
     protected final TransformationConfiguration transformationConf;
     /** The configuration for the workflows*/
     protected final WorkflowConfiguration workflowConfiguration;
+    /** The configuration for the local output folders and tests.*/
+    protected final LocalConfiguration localConfiguration;
+    /** The configuration for the mail.*/
+    protected final MailConfiguration mailConfiguration;
     
     /**
      * Constructor.
-     * @param confFile The file with the Ginnungagap configuration, in the described format.
+     * @param confPath The file with the Ginnungagap configuration, in the described format.
      */
     @SuppressWarnings("rawtypes")
-    public Configuration(File confFile) {
+    @Autowired
+    public Configuration(@Value("#{ @environment['GINNUNGAGAP_CONF'] ?: 'ginnungagap.yml'}") String confPath) {
+        ArgumentCheck.checkNotNullOrEmpty(confPath, "String confPath");
+        File confFile = new File(confPath);
         ArgumentCheck.checkExistsNormalFile(confFile, "File confFile");
+        
         try {
             LinkedHashMap<String, LinkedHashMap> map = YamlTools.loadYamlSettings(confFile);
             
@@ -145,12 +180,18 @@ public class Configuration {
                     "Configuration must contain the '" + CONF_TRANSFORMATION + "' element.");
             ArgumentCheck.checkTrue(confMap.containsKey(CONF_WORKFLOW), 
                     "Configuration must contain the '" + CONF_WORKFLOW + "' element.");
-            
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_LOCAL), 
+                    "Configuration must contain the '" + CONF_LOCAL + "' element.");
+            ArgumentCheck.checkTrue(confMap.containsKey(CONF_MAIL),
+                    "Configuration must contain the '" + CONF_MAIL + "' element.");
+
             this.bitmagConf = loadBitmagConf((Map<String, Object>) confMap.get(CONF_BITREPOSITORY));
             this.cumulusConf = loadCumulusConfiguration((Map<String, Object>) confMap.get(CONF_CUMULUS));
             this.transformationConf = loadTransformationConfiguration(
                     (Map<String, Object>) confMap.get(CONF_TRANSFORMATION));
             this.workflowConfiguration = loadWorkflowConfiguration((Map<String, Object>) confMap.get(CONF_WORKFLOW));
+            this.localConfiguration = loadLocalConfiguration((Map<String, Object>) confMap.get(CONF_LOCAL));
+            this.mailConfiguration = loadMailConfiguration((Map<String, Object>) confMap.get(CONF_MAIL));
         } catch (Exception e) {
             throw new ArgumentCheck("Issue loading the configurations from file '" + confFile.getAbsolutePath() + "'",
                     e);
@@ -230,17 +271,13 @@ public class Configuration {
     protected WorkflowConfiguration loadWorkflowConfiguration(Map<String, Object> map) {
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_INTERVAL), 
                 "Missing workflow element '" + CONF_WORKFLOW_INTERVAL + "'");
-        ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_WORKFLOWS), 
-                "Missing workflow element '" + CONF_WORKFLOW_WORKFLOWS + "'");
         ArgumentCheck.checkTrue(map.containsKey(CONF_WORKFLOW_RETAIN_DIR), 
                 "Missing workflow element '" + CONF_WORKFLOW_RETAIN_DIR + "'");
         
         int interval = (int) map.get(CONF_WORKFLOW_INTERVAL);
-        File retainDir = new File((String) map.get(CONF_WORKFLOW_RETAIN_DIR));
-        Integer updateRetentionInDays = (Integer) map.get(CONF_WORKFLOW_UPDATE_RETENTION_IN_DAYS);
-        List<String> workflows = (List<String>) map.get(CONF_WORKFLOW_WORKFLOWS);
+        File retainDir = FileUtils.getDirectory((String) map.get(CONF_WORKFLOW_RETAIN_DIR));
         
-        return new WorkflowConfiguration(interval, updateRetentionInDays, retainDir, workflows);
+        return new WorkflowConfiguration(interval, retainDir);
     }
     
     /**
@@ -273,6 +310,48 @@ public class Configuration {
         return new TransformationConfiguration(xsltDir, xsdDir, metadataTempDir, requiredFields);
     }
     
+    /**
+     * Retrieves the local configuration from the map.
+     * @param map The local map.
+     * @return The local configuration.
+     */
+    protected LocalConfiguration loadLocalConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_ARCHIVE_PATH), 
+                "Missing Local element '" + CONF_LOCAL_ARCHIVE_PATH + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_LOCAL_OUTPUT_PATH), 
+                "Missing Local element '" + CONF_LOCAL_OUTPUT_PATH + "'");
+
+        File outputDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_OUTPUT_PATH));
+        File archiveDir = FileUtils.getDirectory((String) map.get(CONF_LOCAL_ARCHIVE_PATH));
+        boolean isTest = false;
+        if(map.containsKey(CONF_LOCAL_TEST)) {
+            isTest = BooleanUtils.extractBoolean(map.get(CONF_LOCAL_TEST));
+        }
+        
+        return new LocalConfiguration(archiveDir, outputDir, isTest);
+    }
+
+    /**
+     * Retrieves the mail configuration from the map.
+     * @param map The mail map.
+     * @return The map configuration.
+     */
+    protected MailConfiguration loadMailConfiguration(Map<String, Object> map) {
+        ArgumentCheck.checkTrue(map.containsKey(CONF_MAIL_SENDER),
+                "Missing Mail element '" + CONF_MAIL_SENDER + "'");
+        ArgumentCheck.checkTrue(map.containsKey(CONF_MAIL_RECEIVERS),
+                "Missing Mail element '" + CONF_MAIL_RECEIVERS + "'");
+
+        List<String> receivers = (List<String>) map.get(CONF_MAIL_RECEIVERS);
+
+        return new MailConfiguration((String) map.get(CONF_MAIL_SENDER), receivers);
+    }
+    
+    /** @return The local configuration. */
+    public LocalConfiguration getLocalConfiguration() {
+        return localConfiguration;
+    }
+    
     /** @return The configuration for the bitrepository.*/
     public BitmagConfiguration getBitmagConf() {
         return bitmagConf;
@@ -291,5 +370,16 @@ public class Configuration {
     /** @return The configuration for the transformation.*/
     public TransformationConfiguration getTransformationConf() {
         return transformationConf;
+    }
+
+    /** @return The configuration for the mail.*/
+    public MailConfiguration getMailConfiguration() { return mailConfiguration; }
+    
+    /**
+     * A version of Cumulus configuration without the password.
+     * @return The viewable configuration for accessing Cumulus.
+     */
+    public ViewableCumulusConfiguration getViewableCumulusConfiguration() {
+        return new ViewableCumulusConfiguration(cumulusConf);
     }
 }

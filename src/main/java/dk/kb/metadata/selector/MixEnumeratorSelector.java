@@ -153,11 +153,7 @@ public final class MixEnumeratorSelector {
      * @return Whether it is valid or not.
      */
     public static Boolean validMeteringMode(String meteringMode) {
-        if(meteringMode == null || meteringMode.isEmpty() || meteringMode.equals("0")) {
-            return false;
-        }
-
-        return true;
+        return meteringMode != null && !meteringMode.isEmpty() && !meteringMode.equals("0");
     }
 
     /**
@@ -329,10 +325,6 @@ public final class MixEnumeratorSelector {
      * @return Whether it is valid or not.
      */
     public static Boolean validExposureBias(String exposureBias) {
-        if(exposureBias == null || exposureBias.isEmpty() || exposureBias.equalsIgnoreCase("0")) {
-            return false;
-        }
-
-        return true;
+        return exposureBias != null && !exposureBias.isEmpty() && !exposureBias.equalsIgnoreCase("0");
     }
 }
