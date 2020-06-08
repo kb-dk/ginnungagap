@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dk.kb.ginnungagap.utils.YamlTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,6 @@ import dk.kb.cumulus.config.CumulusConfiguration;
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.utils.BooleanUtils;
 import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.yggdrasil.utils.YamlTools;
 
 /**
  * The configurations in YAML format.

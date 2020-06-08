@@ -1,19 +1,18 @@
 package dk.kb.ginnungagap.archive;
 
-import java.io.File;
-import java.util.Map;
-
+import dk.kb.ginnungagap.archive.bitmag.Bitrepository;
+import dk.kb.ginnungagap.archive.bitmag.BitrepositoryConfig;
+import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.exception.BitmagException;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.utils.FileUtils;
 import org.bitrepository.access.getchecksums.conversation.ChecksumsCompletePillarEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.ginnungagap.utils.ChecksumUtils;
-import dk.kb.ginnungagap.utils.FileUtils;
-import dk.kb.yggdrasil.bitmag.Bitrepository;
-import dk.kb.yggdrasil.bitmag.BitrepositoryConfig;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
+import java.io.File;
+import java.util.Map;
 
 /**
  * Bitrepository archive.
@@ -62,7 +61,7 @@ public class BitmagArchive implements Archive {
     public File getFile(String warcId, String collectionId) {
         try {
             return bitrepository.getFile(warcId, collectionId, null);
-        } catch(YggdrasilException e) {
+        } catch(BitmagException e) {
             throw new IllegalStateException("Could not retrieve the file '" + warcId + "' from collection '"
                     + collectionId + "'.", e);
         }

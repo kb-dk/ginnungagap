@@ -38,8 +38,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <yggdrasil.version>1.3.8</yggdrasil.version>
     <logback.version>1.1.7</logback.version>
+    <bitrepository.version>1.9</bitrepository.version>
     <jwat.version>1.1.1</jwat.version>
     <assembly.home.env.name>GINNUNGAGAP_HOME</assembly.home.env.name>
     <assembly.home.env.name.ref>${GINNUNGAGAP_HOME}</assembly.home.env.name.ref>
@@ -108,6 +108,16 @@
       <version>1.4.01</version>
     </dependency>
     <dependency>
+      <groupId>org.bitrepository.reference</groupId>
+      <artifactId>bitrepository-core</artifactId>
+      <version>${bitrepository.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bitrepository.reference</groupId>
+      <artifactId>bitrepository-client</artifactId>
+      <version>${bitrepository.version}</version>
+    </dependency>
+    <dependency>
       <groupId>dk.kb</groupId>
       <artifactId>kb-cumulus-api</artifactId>
       <version>0.1.3</version>
@@ -118,17 +128,6 @@
       <version>10</version>
       <scope>system</scope>
       <systemPath>/usr/local/Cumulus_Java_SDK/CumulusJC.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>dk.kb.yggdrasil</groupId>
-      <artifactId>Yggdrasil</artifactId>
-      <version>${yggdrasil.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jwat</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
