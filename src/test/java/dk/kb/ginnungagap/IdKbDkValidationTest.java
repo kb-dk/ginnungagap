@@ -1,17 +1,16 @@
 package dk.kb.ginnungagap;
 
-import java.io.File;
-import java.io.FileInputStream;
-
+import dk.kb.ginnungagap.transformation.xml.XmlEntityResolver;
+import dk.kb.ginnungagap.transformation.xml.XmlErrorHandler;
+import dk.kb.ginnungagap.transformation.xml.XmlValidationResult;
+import dk.kb.ginnungagap.transformation.xml.XmlValidator;
+import dk.kb.ginnungagap.utils.StringUtils;
+import junit.framework.Assert;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.utils.StringUtils;
-import dk.kb.yggdrasil.xslt.XmlEntityResolver;
-import dk.kb.yggdrasil.xslt.XmlErrorHandler;
-import dk.kb.yggdrasil.xslt.XmlValidationResult;
-import dk.kb.yggdrasil.xslt.XmlValidator;
-import junit.framework.Assert;
+import java.io.File;
+import java.io.FileInputStream;
 
 public class IdKbDkValidationTest extends ExtendedTestCase {
 
