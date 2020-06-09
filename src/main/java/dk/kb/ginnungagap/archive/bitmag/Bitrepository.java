@@ -198,7 +198,7 @@ public class Bitrepository {
         String putFileMessage = "Putting the file '" + packageFile + "' with the file id '"
                 + fileId + "' from " + config.getComponentId();
 
-        GinnugagapBlockingEventHandler putFileEventHandler = new GinnugagapBlockingEventHandler(collectionID,
+        GinnungagapBlockingEventHandler putFileEventHandler = new GinnungagapBlockingEventHandler(collectionID,
                 config.getMaxNumberOfFailingPillars());
         try {
             client.putFile(collectionID, url, fileId, packageFile.length(), validationChecksum, requestChecksum,

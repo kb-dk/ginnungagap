@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  * Eventhandler for Yggdrasil.
  * Extends the BlockingEventHandler by allowing failures of some pillars.
  */
-public class GinnugagapBlockingEventHandler extends BlockingEventHandler {
+public class GinnungagapBlockingEventHandler extends BlockingEventHandler {
     /** Logging mechanism. */
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -24,7 +24,7 @@ public class GinnugagapBlockingEventHandler extends BlockingEventHandler {
      * @param collectionId The id for the collection where the events occur.
      * @param maxNumberOfFailures The maximum number of failures.
      */
-    public GinnugagapBlockingEventHandler(String collectionId, int maxNumberOfFailures) {
+    public GinnungagapBlockingEventHandler(String collectionId, int maxNumberOfFailures) {
         super();
         this.pillars = SettingsUtils.getPillarIDsForCollection(collectionId);
         this.maxFailures = maxNumberOfFailures;
