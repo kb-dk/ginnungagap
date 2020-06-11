@@ -5,11 +5,21 @@ import dk.kb.ginnungagap.exception.WarcException;
 import org.jwat.common.ContentType;
 import org.jwat.common.RandomAccessFileOutputStream;
 import org.jwat.common.Uri;
-import org.jwat.warc.*;
+import org.jwat.warc.WarcConcurrentTo;
+import org.jwat.warc.WarcConstants;
+import org.jwat.warc.WarcDigest;
+import org.jwat.warc.WarcHeader;
+import org.jwat.warc.WarcRecord;
+import org.jwat.warc.WarcWriter;
+import org.jwat.warc.WarcWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.List;
 

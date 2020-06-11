@@ -6,7 +6,14 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -48,7 +55,7 @@ public class XmlEntityResolver implements EntityResolver {
                      */
                     try {
                         logger.info(" Loading cached: " + file.getAbsolutePath());
-                        return new InputSource(new BufferedReader(new InputStreamReader(new FileInputStream(file), 
+                        return new InputSource(new BufferedReader(new InputStreamReader(new FileInputStream(file),
                                 Charset.defaultCharset())));
                     } catch (FileNotFoundException e) {
                         logger.warn(e.toString(), e);

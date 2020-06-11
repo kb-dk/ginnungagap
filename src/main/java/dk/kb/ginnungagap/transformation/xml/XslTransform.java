@@ -56,14 +56,11 @@ public class XslTransform {
                 raf.write(bytes);
                 raf.close();
                 result = xmlValidator.validate(outputFile, entityResolver, errorHandler);
-                if (result != null) {
-                    System.out.println("       bDtd: " + result.bDtdUsed);
-                    System.out.println("       bXsd: " + result.bXsdUsed);
-                    System.out.println("bWellformed: " + result.bWellformed);
-                    System.out.println("     bValid: " + result.bValid);
-                } else {
-                    System.out.println("Unable to validate file!");
-                }
+
+                System.out.println("       bDtd: " + result.bDtdUsed);
+                System.out.println("       bXsd: " + result.bXsdUsed);
+                System.out.println("bWellformed: " + result.bWellformed);
+                System.out.println("     bValid: " + result.bValid);
             } catch (TransformerConfigurationException e) {
                 e.printStackTrace();
             } catch (TransformerException e) {

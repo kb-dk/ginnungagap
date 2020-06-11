@@ -4,7 +4,11 @@ import dk.kb.ginnungagap.exception.ArgumentCheck;
 import dk.kb.ginnungagap.exception.WarcException;
 import org.jwat.warc.WarcDigest;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

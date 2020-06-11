@@ -31,8 +31,15 @@ import org.bitrepository.modify.putfile.PutFileClient;
 import org.bitrepository.protocol.FileExchange;
 import org.bitrepository.protocol.ProtocolComponentFactory;
 import org.bitrepository.protocol.messagebus.MessageBus;
+import org.bitrepository.protocol.security.BasicMessageAuthenticator;
+import org.bitrepository.protocol.security.BasicMessageSigner;
+import org.bitrepository.protocol.security.BasicOperationAuthorizor;
+import org.bitrepository.protocol.security.BasicSecurityManager;
+import org.bitrepository.protocol.security.MessageAuthenticator;
+import org.bitrepository.protocol.security.MessageSigner;
+import org.bitrepository.protocol.security.OperationAuthorizor;
+import org.bitrepository.protocol.security.PermissionStore;
 import org.bitrepository.protocol.security.SecurityManager;
-import org.bitrepository.protocol.security.*;
 import org.bitrepository.settings.repositorysettings.ClientSettings;
 import org.bitrepository.settings.repositorysettings.Collection;
 
@@ -305,7 +312,6 @@ public class Bitrepository {
         OutputHandler output = new DefaultOutputHandler(Bitrepository.class);
 
         output.debug("Instantiation GetFileID outputFormatter.");
-        // TODO: change to non pagingClient
         GetFileIDsOutputFormatter outputFormatter = new GetFileIDsInfoFormatter(output);
 
         long timeout = getClientTimeout(bitmagSettings);
