@@ -1,14 +1,14 @@
 package dk.kb.ginnungagap.config;
 
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.exception.YamlException;
+import dk.kb.ginnungagap.utils.YamlTools;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
-import dk.kb.yggdrasil.utils.YamlTools;
 
 /**
  * The fields required for a Cumulus record to be preserved.<br/>
@@ -17,7 +17,7 @@ import dk.kb.yggdrasil.utils.YamlTools;
  *   <li>Fields with must be present and having content</li>
  *   <li>Field which must exist and writable (though not required to contain.</li>
  * </ul>
- * 
+ *
  * The required fields file must be structured in the following way:
  * <ul>
  *   <li>required_fields</li>
@@ -78,23 +78,25 @@ public class RequiredFields {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static RequiredFields loadRequiredFieldsFile(File requiredFieldsFile) {
         ArgumentCheck.checkExistsNormalFile(requiredFieldsFile, "File requiredFieldsFile");
+        LinkedHashMap<String, LinkedHashMap> map = null;
         try {
-            LinkedHashMap<String, LinkedHashMap> map = YamlTools.loadYamlSettings(requiredFieldsFile);
-            ArgumentCheck.checkTrue(map.containsKey(RFF_ROOT), "Reqiuired Fields File '" 
+            map = YamlTools.loadYamlSettings(requiredFieldsFile);
+            ArgumentCheck.checkTrue(map.containsKey(RFF_ROOT), "Reqiuired Fields File '"
                     + requiredFieldsFile.getAbsolutePath() + "' must contain the element '" + RFF_ROOT + "'.");
             LinkedHashMap<String, Object> rootMap = map.get(RFF_ROOT);
 
-            ArgumentCheck.checkTrue(rootMap.containsKey(RFF_BASE), "Reqiuired Fields File '" 
+            ArgumentCheck.checkTrue(rootMap.containsKey(RFF_BASE), "Reqiuired Fields File '"
                     + requiredFieldsFile.getAbsolutePath() + "' must contain the element '" + RFF_BASE + "'.");
-            ArgumentCheck.checkTrue(rootMap.containsKey(RFF_WRITABLE), "Reqiuired Fields File '" 
+            ArgumentCheck.checkTrue(rootMap.containsKey(RFF_WRITABLE), "Reqiuired Fields File '"
                     + requiredFieldsFile.getAbsolutePath() + "' must contain the element '" + RFF_WRITABLE+ "'.");
 
             List<String> baseFields = (List<String>) rootMap.get(RFF_BASE);
             List<String> wriableFields = (List<String>) rootMap.get(RFF_WRITABLE);
 
             return new RequiredFields(baseFields, wriableFields);
-        } catch (YggdrasilException e) {
-            throw new ArgumentCheck("The file '" + requiredFieldsFile.getAbsolutePath() + "' cannot be parsed", e);
+        } catch (YamlException e) {
+            throw new ArgumentCheck("The YAML file '" + requiredFieldsFile.getAbsolutePath()
+                    + "' could not be properly read.", e);
         }
     }
 }

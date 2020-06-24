@@ -1,5 +1,20 @@
 package dk.kb.ginnungagap.archive;
 
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.exception.WarcException;
+import dk.kb.ginnungagap.utils.ChecksumUtils;
+import dk.kb.ginnungagap.warc.Digest;
+import dk.kb.ginnungagap.warc.WarcWriterWrapper;
+import org.jwat.common.ContentType;
+import org.jwat.common.Uri;
+import org.jwat.warc.WarcDigest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,22 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import org.jwat.common.ContentType;
-import org.jwat.common.Uri;
-import org.jwat.warc.WarcDigest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import dk.kb.cumulus.Constants;
-import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.ginnungagap.utils.ChecksumUtils;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
-import dk.kb.yggdrasil.warc.Digest;
-import dk.kb.yggdrasil.warc.WarcWriterWrapper;
 
 /**
  * Packages the warc files.
@@ -72,9 +71,9 @@ public class WarcPacker implements Closeable {
     /**
      * Write the warc info of the WARC file.
      * This should be done as the first thing after instantiating a new WARC file. 
-     * @throws YggdrasilException If it fails to write the warc info.
+     * @throws WarcException If it fails to write the warc info.
      */
-    protected void writeWarcinfo() throws YggdrasilException {
+    protected void writeWarcinfo() throws WarcException {
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             Digest digestor = new Digest(bitmagConf.getAlgorithm());
@@ -193,7 +192,7 @@ public class WarcPacker implements Closeable {
             this.isClosed = true;
             try {
                 this.warcWrapper.close();
-            } catch (YggdrasilException e) {
+            } catch (WarcException e) {
                 throw new IllegalStateException("Issue occured while closing the resources of the warc file", e);
             }
         }

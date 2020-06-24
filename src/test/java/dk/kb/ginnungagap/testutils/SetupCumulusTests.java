@@ -1,14 +1,13 @@
 package dk.kb.ginnungagap.testutils;
 
+import dk.kb.cumulus.config.CumulusConfiguration;
+import dk.kb.ginnungagap.config.TestConfiguration;
+import dk.kb.ginnungagap.utils.YamlTools;
+import org.testng.SkipException;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
-
-import org.testng.SkipException;
-
-import dk.kb.cumulus.config.CumulusConfiguration;
-import dk.kb.ginnungagap.config.TestConfiguration;
-import dk.kb.yggdrasil.utils.YamlTools;
 
 public class SetupCumulusTests {
 
