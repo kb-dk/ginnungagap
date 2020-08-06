@@ -104,6 +104,7 @@ public class BitmagPreserver {
         for(Map.Entry<String, WarcPacker> warc : warcPackerForCollection.entrySet()) {
             if(warc.getValue().getSize() > conf.getBitmagConf().getWarcFileSizeLimit()) {
                 String collectionId = warc.getKey();
+                log.info("debug: In checkConditions. ");
                 uploadWarcFile(collectionId);
             }
         }
@@ -125,7 +126,10 @@ public class BitmagPreserver {
     protected synchronized void uploadWarcFile(String collectionId) {
         synchronized(warcPackerForCollection) {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
+            log.info("In uploadWarcFile: collectionId= {}", collectionId);
+            log.info("isClosed value, before: {}", wp.isClosed);
             wp.close();
+            log.info("isClosed value, after: {}", wp.isClosed);
             if(!wp.hasContent()) {
                 log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
                 FileUtils.deleteFile(wp.getWarcFile());

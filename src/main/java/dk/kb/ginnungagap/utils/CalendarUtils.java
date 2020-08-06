@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
@@ -29,7 +30,8 @@ public class CalendarUtils {
      */
     public static String dateToText(Date date) {
         ArgumentCheck.checkNotNull(date, "Date date");
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzzz");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzzz",
+                Locale.forLanguageTag("DA"));
         return formatter.format(date);
     }
 }
