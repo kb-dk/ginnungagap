@@ -75,6 +75,7 @@ public class WarcPacker implements Closeable {
      * @throws YggdrasilException If it fails to write the warc info.
      */
     protected void writeWarcinfo() throws YggdrasilException {
+        log.info("debug: In writeWarcinfo");
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             Digest digestor = new Digest(bitmagConf.getAlgorithm());
@@ -123,6 +124,7 @@ public class WarcPacker implements Closeable {
      */
     protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
             String uuid) {
+        log.info("debug: In packResource");
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             try (InputStream in = new FileInputStream(resourceFile)) {
@@ -144,6 +146,7 @@ public class WarcPacker implements Closeable {
      * @param warcRecordId The id of the WARC record.
      */
     protected void packMetadata(File metadataFile, Uri refersTo, String warcRecordId) {
+        log.info("debug: In packMetadata");
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
         synchronized(warcWrapper) {
