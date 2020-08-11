@@ -46,6 +46,7 @@ public class UpdateController {
     @RequestMapping("/" + PATH + "/run")
     public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="")
                                                 String catalog) {
+        log.info("\n ***************");
         log.info("Running the update preservation workflow (for catalog: " + catalog + ").");
         workflow.startManually(catalog);
         
