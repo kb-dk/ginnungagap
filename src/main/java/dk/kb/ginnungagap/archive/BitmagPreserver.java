@@ -36,7 +36,7 @@ public class BitmagPreserver {
     protected Configuration conf;
 
     /** Mapping between active warc packers and their collection.*/
-    protected Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
+    protected final Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
     
     /**
      * Retrieves the Warc packer for a given Bitrepository collection.
@@ -47,8 +47,10 @@ public class BitmagPreserver {
     protected WarcPacker getWarcPacker(String collectionId) {
         synchronized(warcPackerForCollection) {
             if(!warcPackerForCollection.containsKey(collectionId)) {
+                log.info("debug: create new WarPacker, collection: {}", collectionId);
                 warcPackerForCollection.put(collectionId, new WarcPacker(conf.getBitmagConf()));
             }
+            log.info("debug: return WarcPacker for collection: {}", collectionId);
             return warcPackerForCollection.get(collectionId);
         }
     }
@@ -59,6 +61,7 @@ public class BitmagPreserver {
      */
     public void packRecordResource(CumulusRecord record) {
         WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+        log.info("debug: In packRecordResource");
         File resourceFile = record.getFile();
         wp.packRecordAssetFile(record, resourceFile);
         wp.addRecordToPackagedList(record);
@@ -72,6 +75,7 @@ public class BitmagPreserver {
     public void packRecordMetadata(CumulusRecord record, File metadataFile) {
         try {
             WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+            log.info("debug: In packRecordMetadata");
             String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
@@ -93,6 +97,7 @@ public class BitmagPreserver {
             warcRecordId = metadataFile.getName();
         }
         WarcPacker wp = getWarcPacker(collectionID);
+        log.info("debug: packRepresentationMetadata: WarcPacker created");
         wp.packMetadata(metadataFile, null, warcRecordId);
     }
     
@@ -126,10 +131,10 @@ public class BitmagPreserver {
     protected synchronized void uploadWarcFile(String collectionId) {
         synchronized(warcPackerForCollection) {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
-            log.info("In uploadWarcFile: collectionId= {}", collectionId);
-            log.info("isClosed value, before: {}", wp.isClosed);
+            log.info("debug: In uploadWarcFile: collectionId= {}", collectionId);
+            log.info("debug: isClosed value, before: {}", wp.isClosed);
             wp.close();
-            log.info("isClosed value, after: {}", wp.isClosed);
+            log.info("debug: isClosed value, after: {}", wp.isClosed);
             if(!wp.hasContent()) {
                 log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
                 FileUtils.deleteFile(wp.getWarcFile());

@@ -149,6 +149,7 @@ public class WarcPacker implements Closeable {
         log.info("debug: In packMetadata");
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
+        log.info("WarcRecordId: {}", warcRecordId);
         synchronized(warcWrapper) {
             try (InputStream in = new FileInputStream(metadataFile)) {
                 String uuid = metadataFile.getName();
