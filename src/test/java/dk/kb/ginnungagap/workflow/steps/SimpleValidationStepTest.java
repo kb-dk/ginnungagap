@@ -74,7 +74,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_OK));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -112,7 +112,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verify(record).getFieldValue(eq(Constants.FieldNames.ARCHIVE_MD5));
@@ -149,7 +149,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -185,7 +185,7 @@ public class SimpleValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);

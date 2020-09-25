@@ -62,7 +62,7 @@ public abstract class ValidationStep extends WorkflowStep {
      */
     protected void setInvalid(CumulusRecord record, String message, WorkflowReport report) {
         report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), message, catalogName);
-        record.setStringValueInField(Constants.FieldNames.BEVARING_CHECK, 
+        record.setStringEnumValueForField(Constants.FieldNames.BEVARING_CHECK,
                 Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE);
         record.setStringValueInField(Constants.FieldNames.BEVARING_CHECK_STATUS, message);
     }
@@ -74,7 +74,7 @@ public abstract class ValidationStep extends WorkflowStep {
      */
     protected void setValid(CumulusRecord record, WorkflowReport report) {
         report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
-        record.setStringValueInField(Constants.FieldNames.BEVARING_CHECK, 
+        record.setStringEnumValueForField(Constants.FieldNames.BEVARING_CHECK,
                 Constants.FieldValues.PRESERVATION_VALIDATION_OK);
         String message = "Validated at: " + CalendarUtils.getCurrentDate();
         record.setStringValueInField(Constants.FieldNames.BEVARING_CHECK_STATUS, message);
