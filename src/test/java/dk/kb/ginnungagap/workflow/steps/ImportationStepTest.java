@@ -111,7 +111,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_IMPORTATION),
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_NONE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verify(record).getFieldValueForNonStringField(eq(Constants.FieldNames.ASSET_REFERENCE));
@@ -152,7 +152,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_IMPORTATION),
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -191,7 +191,7 @@ public class ImportationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_IMPORTATION),
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -260,7 +260,7 @@ public class ImportationStepTest extends ExtendedTestCase {
 
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RESOURCE_PACKAGE_ID));
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_IMPORTATION),
                 eq(Constants.FieldValues.PRESERVATION_IMPORT_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_IMPORTATION_STATUS), anyString());
         verify(record).getUUID();

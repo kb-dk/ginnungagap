@@ -126,7 +126,7 @@ public class ImportationStep extends WorkflowStep {
      */
     protected void setInvalid(CumulusRecord record, String message, WorkflowReport report) {
         report.addFailedRecord(CumulusPreservationUtils.getRecordName(record), message, catalogName);
-        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION, 
+        record.setStringEnumValueForField(Constants.FieldNames.BEVARING_IMPORTATION,
                 Constants.FieldValues.PRESERVATION_IMPORT_FAILURE);
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);
     }
@@ -138,7 +138,7 @@ public class ImportationStep extends WorkflowStep {
      */
     protected void setValid(CumulusRecord record, WorkflowReport report) {
         report.addSuccessRecord(CumulusPreservationUtils.getRecordName(record), catalogName);
-        record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION,
+        record.setStringEnumValueForField(Constants.FieldNames.BEVARING_IMPORTATION,
                 Constants.FieldValues.PRESERVATION_IMPORT_NONE);
         String message = "Imported at: " + CalendarUtils.getCurrentDate();
         record.setStringValueInField(Constants.FieldNames.BEVARING_IMPORTATION_STATUS, message);
