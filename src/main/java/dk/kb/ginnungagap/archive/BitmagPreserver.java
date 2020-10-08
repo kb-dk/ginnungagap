@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URISyntaxException;
 //import java.util.Collections;
-//import java.util.Collections;
 //import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +38,7 @@ public class BitmagPreserver {
     protected Configuration conf;
 
     /** Mapping between active warc packers and their collection.*/
+//    protected final Map<String, WarcPacker> warcPackerForCollection = new HashMap<String, WarcPacker>(); // original
     protected final Map<String, WarcPacker> warcPackerForCollection =  new ConcurrentHashMap<String, WarcPacker>();
 //    protected final Map<String, WarcPacker> warcPackerForCollection = Collections.synchronizedMap(new HashMap<String, WarcPacker>();
 
@@ -135,7 +135,7 @@ public class BitmagPreserver {
      * @param collectionId The id of the collection to upload to.
      */
     protected synchronized void uploadWarcFile(String collectionId) {
-        synchronized(warcPackerForCollection) {
+        /*synchronized(warcPackerForCollection)*/ {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
             log.debug("In uploadWarcFile: collectionId= {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             wp.close();
