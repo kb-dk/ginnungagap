@@ -15,8 +15,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.HashMap;
+//import java.util.Collections;
+//import java.util.Collections;
+//import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
@@ -36,8 +39,9 @@ public class BitmagPreserver {
     protected Configuration conf;
 
     /** Mapping between active warc packers and their collection.*/
-    protected final Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
-    
+    protected final Map<String, WarcPacker> warcPackerForCollection =  new ConcurrentHashMap<String, WarcPacker>();
+//    protected final Map<String, WarcPacker> warcPackerForCollection = Collections.synchronizedMap(new HashMap<String, WarcPacker>();
+
     /**
      * Retrieves the Warc packer for a given Bitrepository collection.
      * If no Warc packer exists for the given Bitrepository collection, then a new one is created.
@@ -106,10 +110,10 @@ public class BitmagPreserver {
      * If any of the them satisfies the conditions, then the file is finished and sent to the archive.
      */
     public void checkConditions() {
+        log.debug("In checkConditions. ");
         for(Map.Entry<String, WarcPacker> warc : warcPackerForCollection.entrySet()) {
             if(warc.getValue().getSize() > conf.getBitmagConf().getWarcFileSizeLimit()) {
                 String collectionId = warc.getKey();
-                log.debug("In checkConditions. ");
                 uploadWarcFile(collectionId);
             }
         }
@@ -119,7 +123,9 @@ public class BitmagPreserver {
      * Uploads all warc files to their given collection.
      */
     public void uploadAll() {
+        log.debug("In uploadAll");
         for(String collectionId : warcPackerForCollection.keySet()) {
+            log.debug("uploadAll: collectionID: {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             uploadWarcFile(collectionId);
         }
     }
@@ -131,7 +137,7 @@ public class BitmagPreserver {
     protected synchronized void uploadWarcFile(String collectionId) {
         synchronized(warcPackerForCollection) {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
-            log.debug("In uploadWarcFile: collectionId= {}", collectionId);
+            log.debug("In uploadWarcFile: collectionId= {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             wp.close();
             if(!wp.hasContent()) {
                 log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
