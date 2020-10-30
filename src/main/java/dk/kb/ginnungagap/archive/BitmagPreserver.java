@@ -135,7 +135,7 @@ public class BitmagPreserver {
      * @param collectionId The id of the collection to upload to.
      */
     protected synchronized void uploadWarcFile(String collectionId) {
-        /*synchronized(warcPackerForCollection)*/ {
+        synchronized(warcPackerForCollection) {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
             log.debug("In uploadWarcFile: collectionId= {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             wp.close();
