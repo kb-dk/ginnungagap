@@ -258,7 +258,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record, times(2)).getUUID();
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_OK));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -301,7 +301,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getUUID();
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);
@@ -340,7 +340,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
         verify(record).getFieldValue(eq(Constants.FieldNames.COLLECTION_ID));
         verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getUUID();
-        verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK), 
+        verify(record).setStringEnumValueForField(eq(Constants.FieldNames.BEVARING_CHECK),
                 eq(Constants.FieldValues.PRESERVATION_VALIDATION_FAILURE));
         verify(record).setStringValueInField(eq(Constants.FieldNames.BEVARING_CHECK_STATUS), anyString());
         verifyNoMoreInteractions(record);

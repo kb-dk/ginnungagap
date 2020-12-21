@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * API for packaging data from Cumulus in Warc files and sending it to the Bitrepository.
@@ -36,8 +37,10 @@ public class BitmagPreserver {
     protected Configuration conf;
 
     /** Mapping between active warc packers and their collection.*/
-    protected Map<String, WarcPacker> warcPackerForCollection =  new HashMap<String, WarcPacker>();
-    
+//    protected final Map<String, WarcPacker> warcPackerForCollection = new HashMap<String, WarcPacker>(); // original
+    protected final Map<String, WarcPacker> warcPackerForCollection =  new ConcurrentHashMap<String, WarcPacker>();
+//    protected final Map<String, WarcPacker> warcPackerForCollection = Collections.synchronizedMap(new HashMap<String, WarcPacker>();
+
     /**
      * Retrieves the Warc packer for a given Bitrepository collection.
      * If no Warc packer exists for the given Bitrepository collection, then a new one is created.
@@ -47,8 +50,10 @@ public class BitmagPreserver {
     protected WarcPacker getWarcPacker(String collectionId) {
         synchronized(warcPackerForCollection) {
             if(!warcPackerForCollection.containsKey(collectionId)) {
+                log.debug("Create new WarPacker, collection: {}", collectionId);
                 warcPackerForCollection.put(collectionId, new WarcPacker(conf.getBitmagConf()));
             }
+            log.debug("Return WarcPacker for collection: {}", collectionId);
             return warcPackerForCollection.get(collectionId);
         }
     }
@@ -59,6 +64,7 @@ public class BitmagPreserver {
      */
     public void packRecordResource(CumulusRecord record) {
         WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+        log.debug("In packRecordResource");
         File resourceFile = record.getFile();
         wp.packRecordAssetFile(record, resourceFile);
         wp.addRecordToPackagedList(record);
@@ -72,6 +78,7 @@ public class BitmagPreserver {
     public void packRecordMetadata(CumulusRecord record, File metadataFile) {
         try {
             WarcPacker wp = getWarcPacker(record.getFieldValue(Constants.FieldNames.COLLECTION_ID));
+            log.debug("In packRecordMetadata");
             String fileGuid = GuidExtractionUtils.extractGuid(record.getFieldValue(Constants.FieldNames.GUID));
 
             Uri refersToUri = new Uri("urn:uuid:" + fileGuid);
@@ -93,6 +100,7 @@ public class BitmagPreserver {
             warcRecordId = metadataFile.getName();
         }
         WarcPacker wp = getWarcPacker(collectionID);
+        log.debug("packRepresentationMetadata: WarcPacker created");
         wp.packMetadata(metadataFile, null, warcRecordId);
     }
     
@@ -101,6 +109,7 @@ public class BitmagPreserver {
      * If any of the them satisfies the conditions, then the file is finished and sent to the archive.
      */
     public void checkConditions() {
+        log.debug("In checkConditions. ");
         for(Map.Entry<String, WarcPacker> warc : warcPackerForCollection.entrySet()) {
             if(warc.getValue().getSize() > conf.getBitmagConf().getWarcFileSizeLimit()) {
                 String collectionId = warc.getKey();
@@ -113,7 +122,9 @@ public class BitmagPreserver {
      * Uploads all warc files to their given collection.
      */
     public void uploadAll() {
+        log.debug("In uploadAll");
         for(String collectionId : warcPackerForCollection.keySet()) {
+            log.debug("uploadAll: collectionID: {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             uploadWarcFile(collectionId);
         }
     }
@@ -125,6 +136,7 @@ public class BitmagPreserver {
     protected synchronized void uploadWarcFile(String collectionId) {
         synchronized(warcPackerForCollection) {
             WarcPacker wp = warcPackerForCollection.get(collectionId);
+            log.debug("In uploadWarcFile: collectionId= {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             wp.close();
             if(!wp.hasContent()) {
                 log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
