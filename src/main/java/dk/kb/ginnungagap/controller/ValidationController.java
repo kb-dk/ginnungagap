@@ -45,8 +45,9 @@ public class ValidationController {
     @RequestMapping("/" + PATH + "/run")
     public RedirectView runWorkflow(@RequestParam(value="catalog", required=false, defaultValue="")
                                                 String catalog) {
-        log.info("\n ***************");
+        log.info("\n ***************\n");
         log.info("Running the validation workflow (for catalog: " + catalog + ").");
+        log.info("\n ***************");
         workflow.startManually(catalog);
         
         try {

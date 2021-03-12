@@ -140,8 +140,9 @@ public class BitmagPreserver {
             log.debug("In uploadWarcFile: collectionId= {}, thread ID: {}", collectionId, Thread.currentThread().getId());
             wp.close();
             if(!wp.hasContent()) {
-                log.debug("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
+                log.info("WARC file without content for collection '" + collectionId + "' will not be uploaded.");
                 FileUtils.deleteFile(wp.getWarcFile());
+                warcPackerForCollection.remove(collectionId);
                 return;
             }
 
