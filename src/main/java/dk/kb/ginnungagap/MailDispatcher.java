@@ -60,7 +60,7 @@ public class MailDispatcher {
                 bodyPart.setText(report.getMainContentForMail());
                 multipart.addBodyPart(bodyPart);
 
-                if(report.getNumberOfSuccesses() > 1) {
+                if(report.getNumberOfSuccesses() >= 1) {
                     MimeBodyPart successAttachmentPart = new MimeBodyPart();
                     successAttachmentPart.setDataHandler(new DataHandler(new ByteArrayDataSource(
                             report.getSuccessContentForMail().getBytes(StandardCharsets.UTF_8), "text/text")));
@@ -68,11 +68,11 @@ public class MailDispatcher {
                     multipart.addBodyPart(successAttachmentPart);
                 }
 
-                if(report.getNumberOfFailures() > 1) {
+                if(report.getNumberOfFailures() >= 1) {
                     MimeBodyPart failureAttachmentPart = new MimeBodyPart();
                     failureAttachmentPart.setDataHandler(new DataHandler(new ByteArrayDataSource(
                             report.getFailedContentForMail().getBytes(StandardCharsets.UTF_8), "text/text")));
-                    failureAttachmentPart.setFileName("success.txt");
+                    failureAttachmentPart.setFileName("success.txt"); // "fail.txt" ??
                     multipart.addBodyPart(failureAttachmentPart);
 
                 }
