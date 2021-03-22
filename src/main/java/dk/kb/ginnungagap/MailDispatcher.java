@@ -72,7 +72,7 @@ public class MailDispatcher {
                     MimeBodyPart failureAttachmentPart = new MimeBodyPart();
                     failureAttachmentPart.setDataHandler(new DataHandler(new ByteArrayDataSource(
                             report.getFailedContentForMail().getBytes(StandardCharsets.UTF_8), "text/text")));
-                    failureAttachmentPart.setFileName("fail.txt");
+                    failureAttachmentPart.setFileName("success.txt");
                     multipart.addBodyPart(failureAttachmentPart);
 
                 }
