@@ -48,6 +48,7 @@ public class PreservationController {
                                                 String catalog) {
         log.info("\n ***************");
         log.info("Running the preservation workflow (for catalog: " + catalog + ").");
+        log.info("\n ***************");
         workflow.startManually(catalog);
         
         try {

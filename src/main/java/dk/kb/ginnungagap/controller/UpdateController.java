@@ -48,6 +48,7 @@ public class UpdateController {
                                                 String catalog) {
         log.info("\n ***************");
         log.info("Running the update preservation workflow (for catalog: " + catalog + ").");
+        log.info("\n ***************");
         workflow.startManually(catalog);
         
         try {

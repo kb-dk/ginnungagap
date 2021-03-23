@@ -47,6 +47,7 @@ public class ValidationController {
                                                 String catalog) {
         log.info("\n ***************");
         log.info("Running the validation workflow (for catalog: " + catalog + ").");
+        log.info("\n ***************");
         workflow.startManually(catalog);
         
         try {
