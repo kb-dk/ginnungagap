@@ -70,15 +70,16 @@ public class CumulusPreservationUtils {
     /**
      * Initializes the intellectual entity UUID for the representation of this record.
      * If it already exists, then it is 
-     * @param record The record to have its intellectual entity UUID initialised.
+     * @param record The record to have its representation intellectual entity UUID initialised.
      */
     protected static void initRepresentationIntellectualEntityUUID(CumulusRecord record) {
         String uuid = record.getFieldValueOrNull(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
         if(uuid == null || uuid.isEmpty()) {
             record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID, 
                     UUID.randomUUID().toString());
+            log.info("Setting uuid value for 'Representation intellectual guid': " + uuid);
         } else {
-            log.trace("Already has a value for the related intellectual object of the representation");
+            log.info("Already has a value for the 'Representation intellectual guid': " + uuid);
         }
     }
     
@@ -92,8 +93,9 @@ public class CumulusPreservationUtils {
         if(uuid == null || uuid.isEmpty()) {
             record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY, 
                     UUID.randomUUID().toString());
+            log.info("Setting uuid value for 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
         } else {
-            log.trace("Already has a value for the related intellectual object of the representation");
+            log.info("Already has a value for the 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
         }
     }
 
