@@ -70,7 +70,7 @@ public class CumulusPreservationUtils {
     /**
      * Initializes the intellectual entity UUID for the representation of this record.
      * If it already exists, then it is 
-     * @param record The record to have its representation intellectual entity UUID initialised.
+     * @param record The record to have its intellectual entity UUID initialised.
      */
     protected static void initRepresentationIntellectualEntityUUID(CumulusRecord record) {
         String uuid = record.getFieldValueOrNull(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
