@@ -77,9 +77,8 @@ public class CumulusPreservationUtils {
         if(uuid == null || uuid.isEmpty()) {
             record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID, 
                     UUID.randomUUID().toString());
-            log.info("Setting uuid value for 'Representation intellectual guid': " + uuid);
         } else {
-            log.info("Already has a value for the 'Representation intellectual guid': " + uuid);
+            log.trace("Already has a value for the related intellectual object of the representation");
         }
     }
     
@@ -93,9 +92,8 @@ public class CumulusPreservationUtils {
         if(uuid == null || uuid.isEmpty()) {
             record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY, 
                     UUID.randomUUID().toString());
-            log.info("Setting uuid value for 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
         } else {
-            log.info("Already has a value for the 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
+            log.trace("Already has a value for the related intellectual object of the representation");
         }
     }
 
