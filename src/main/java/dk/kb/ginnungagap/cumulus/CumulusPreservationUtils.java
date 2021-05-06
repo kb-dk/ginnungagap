@@ -1,6 +1,7 @@
 package dk.kb.ginnungagap.cumulus;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +36,8 @@ public class CumulusPreservationUtils {
      * @param record The Cumulus record to be initialized.
      */
     public static void initialiseRecordForPreservation(CumulusRecord record) {
-        initIntellectualEntityUUID(record);
+        log.info("initialiseRecordForPreservation, Stack traces: " +
+                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
         initRecordChecksum(record);
         
         resetMetadataGuid(record);
@@ -46,6 +48,9 @@ public class CumulusPreservationUtils {
      * @param record The Cumulus record to have its representaiton initialized.
      */
     public static void initializeRecordRepresentaitonForPreservation(CumulusRecord record) {
+        log.info("initializeRecordRepresentaitonForPreservation, Stack traces: " +
+                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //todo log.debug
+
         initRepresentationIntellectualEntityUUID(record);
         resetRepresentationMetadataGuid(record);
     }
@@ -75,9 +80,10 @@ public class CumulusPreservationUtils {
     protected static void initRepresentationIntellectualEntityUUID(CumulusRecord record) {
         String uuid = record.getFieldValueOrNull(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
         if(uuid == null || uuid.isEmpty()) {
-            record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID, 
-                    UUID.randomUUID().toString());
+            uuid = UUID.randomUUID().toString();
             log.info("Setting uuid value for 'Representation intellectual guid': " + uuid);
+            record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID,
+                    uuid);
         } else {
             log.info("Already has a value for the 'Representation intellectual guid': " + uuid);
         }
@@ -91,9 +97,10 @@ public class CumulusPreservationUtils {
         String uuid = record.getFieldValueOrNull(
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         if(uuid == null || uuid.isEmpty()) {
-            record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY, 
-                    UUID.randomUUID().toString());
+            uuid = UUID.randomUUID().toString();
             log.info("Setting uuid value for 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
+            record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY,
+                    uuid);
         } else {
             log.info("Already has a value for the 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
         }
