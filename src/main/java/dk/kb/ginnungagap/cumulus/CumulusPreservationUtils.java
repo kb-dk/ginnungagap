@@ -38,6 +38,7 @@ public class CumulusPreservationUtils {
     public static void initialiseRecordForPreservation(CumulusRecord record) {
         log.info("initialiseRecordForPreservation, Stack traces: " +
                 Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
+        initIntellectualEntityUUID(record);
         initRecordChecksum(record);
         
         resetMetadataGuid(record);
