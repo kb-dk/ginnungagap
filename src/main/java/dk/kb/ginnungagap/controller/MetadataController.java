@@ -102,7 +102,7 @@ public class MetadataController {
                 metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
             }
             Resource resource = new UrlResource(metadataFile.toURI());
-            
+            Thread.sleep(100000); //FIXME: Implement as asynchronous call, DeferredResult
             return ResponseEntity.ok()
                     .contentType(MediaType.TEXT_XML)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
