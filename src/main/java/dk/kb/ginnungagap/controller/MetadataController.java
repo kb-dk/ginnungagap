@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import dk.kb.cumulus.Constants;
 import dk.kb.cumulus.CumulusRecord;
@@ -73,12 +75,14 @@ public class MetadataController {
      * @return The response containing the metadata file.
      */
     @RequestMapping("/metadata/extract")
-    public ResponseEntity<Resource> extractMetadata(@RequestParam(value="ID",required=true) String id,
+    public DeferredResult <ResponseEntity<Resource>> extractMetadata(
+            @RequestParam(value="ID",required=true) String id,
             @RequestParam(value="idType", required=false, defaultValue="UUID") String idType,
             @RequestParam(value="catalog", required=true) String catalog,
             @RequestParam(value="metadataType", required=false, defaultValue="METS") String metadataType,
-            @RequestParam(value="source", required=false, defaultValue="cumulus") String source) {        
+            @RequestParam(value="source", required=false, defaultValue="cumulus") String source) {
         try {
+            DeferredResult<ResponseEntity<Resource>> output = new DeferredResult<>(180000L);
             log.info("Extracting '" + metadataType + "' metadata for '" + id + "' from catalog '" + catalog + "'.");
             String filename = id + ".xml";
             File metadataFile;
@@ -101,12 +105,18 @@ public class MetadataController {
             } else {
                 metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
             }
+            output.onTimeout(()-> log.info("Request timeout"));
+            output.onTimeout(()->
+                    output.setErrorResult(
+                    ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
+                            .body("Request timeout")));
+            output.onCompletion(()-> log.info("Process getting metadata complete"));
             Resource resource = new UrlResource(metadataFile.toURI());
-            Thread.sleep(100000); //FIXME: Implement as asynchronous call, DeferredResult
-            return ResponseEntity.ok()
+            output.setResult(ResponseEntity.ok()
                     .contentType(MediaType.TEXT_XML)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-                    .body(resource);
+                    .body(resource));
+            return output;
         } catch (Exception e) {
             log.warn("Failed to retrieve metadata", e);
             throw new IllegalStateException("Failed to extract metadata", e);
@@ -158,6 +168,7 @@ public class MetadataController {
         }
         
         WarcUtils.extractRecord(warcFile, recordId, outputFile);
+        log.info("Metadata file extracted.");
         return outputFile;
     }
     
