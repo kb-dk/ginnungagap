@@ -125,7 +125,7 @@ public class PreservationStep extends WorkflowStep {
      */
     protected void sendRecordToPreservation(CumulusRecord record) throws Exception {
         try {
-            log.info("Sending record: {} to preservation", record.getFieldValue(Constants.FieldNames.RECORD_NAME)); //todo: log.debug
+//            log.trace("Sending record: {} to preservation", record.getFieldValue(Constants.FieldNames.RECORD_NAME)); //todo: log.debug dhe
             CumulusPreservationUtils.initialiseRecordForPreservation(record);
 
             record.validateFieldsExists(conf.getRequiredFields().getWritableFields());
@@ -136,7 +136,7 @@ public class PreservationStep extends WorkflowStep {
             preserveIntellectuelEntity(record);
 
             if(record.isMasterAsset()) {
-                log.info("Record {} is Master asset. Initialize Representation", record.getFieldValue(Constants.FieldNames.RECORD_NAME));
+//                log.trace("Record {} is Master asset. Initialize Representation", record.getFieldValue(Constants.FieldNames.RECORD_NAME)); // dhe
                 CumulusPreservationUtils.initializeRecordRepresentaitonForPreservation(record);
 
                 transformAndPreserveRepresentation(record);

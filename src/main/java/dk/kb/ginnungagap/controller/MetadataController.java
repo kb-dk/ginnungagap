@@ -168,7 +168,7 @@ public class MetadataController {
         }
         
         WarcUtils.extractRecord(warcFile, recordId, outputFile);
-        log.info("Metadata file extracted.");
+//        log.trace("Metadata file extracted."); //dhe
         return outputFile;
     }
     
