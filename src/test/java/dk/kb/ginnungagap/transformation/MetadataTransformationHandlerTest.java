@@ -75,52 +75,52 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
 
-    @Test
-    public void testTransformationWithBext() throws Exception {
-        addDescription("Test the transformation of a Cumulus XML file with BEXT metadata.");
-        File xmlFile = new File("src/test/resources/540.xml");
-        assertTrue(xmlFile.isFile());
-        MetadataTransformer transformer = new MetadataTransformer(xsltFile);
+//    @Test
+//    public void testTransformationWithBext() throws Exception {
+//        addDescription("Test the transformation of a Cumulus XML file with BEXT metadata.");
+//        File xmlFile = new File("src/test/resources/540.xml");
+//        assertTrue(xmlFile.isFile());
+//        MetadataTransformer transformer = new MetadataTransformer(xsltFile);
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//
+//        addStep("Transform the Cumulus XML", "METS");
+//        transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
+//
+//        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+//        try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
+//            fos.write(out.toByteArray());
+//            fos.flush();
+//        }
+//
+//        addStep("Validate the METS", "");
+//        transformationHandler.validate(new FileInputStream(metadataFile));
+//    }
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        addStep("Transform the Cumulus XML", "METS");
-        transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
-
-        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-        try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
-            fos.write(out.toByteArray());
-            fos.flush();
-        }
-
-        addStep("Validate the METS", "");
-        transformationHandler.validate(new FileInputStream(metadataFile));
-    }
-
-    @Test
-    public void testTransformationWithAudioTracks() throws Exception {
-        addDescription("Test the transformation of a Cumulus XML file with tracks and BEXT metadata.");
-        File xmlFile = new File("src/test/resources/audio_example_1345.xml");
-        assertTrue(xmlFile.isFile());
-        
-        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-        
-        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-
-        addStep("Transform the Cumulus XML", "METS");
-        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
-
-        if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
-                System.out.println(text);
-            }
-        }
-
-        addStep("Validate the METS", "");
-        transformationHandler.validate(new FileInputStream(metadataFile));
-
-    }
+//    @Test
+//    public void testTransformationWithAudioTracks() throws Exception {
+//        addDescription("Test the transformation of a Cumulus XML file with tracks and BEXT metadata.");
+//        File xmlFile = new File("src/test/resources/audio_example_1345.xml");
+//        assertTrue(xmlFile.isFile());
+//
+//        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+//
+//        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+//
+//        addStep("Transform the Cumulus XML", "METS");
+//        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+//
+//        if(writeOutput) {
+//            try (InputStream is = new FileInputStream(metadataFile)) {
+//                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+//                System.out.println(text);
+//            }
+//        }
+//
+//        addStep("Validate the METS", "");
+//        transformationHandler.validate(new FileInputStream(metadataFile));
+//
+//    }
 
     @Test
     public void testCatalogStructmapTransformation() throws Exception {
@@ -287,36 +287,36 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
     
-    @Test
-    public void testTransformationWithCompleteAudioMetadata() throws Exception {
-        addDescription("Test the transformation of a Cumulus XML file with all metadata fields for audio files.");
-        File xmlFile = new File("src/test/resources/cumulus_extract_with_all_fields.xml");
-        assertTrue(xmlFile.isFile());
-        
-        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-        
-        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-
-        addStep("Transform the Cumulus XML", "METS");
-        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
-
-        if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
-                System.out.println(text);
-            }
-        }
-
-        addStep("Validate the METS", "");
-        transformationHandler.validate(new FileInputStream(metadataFile));
-        
-        if(writeOutput) {
-            try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
-                System.out.println(text);
-            }
-        }
-    }
+//    @Test
+//    public void testTransformationWithCompleteAudioMetadata() throws Exception {
+//        addDescription("Test the transformation of a Cumulus XML file with all metadata fields for audio files.");
+//        File xmlFile = new File("src/test/resources/cumulus_extract_with_all_fields.xml");
+//        assertTrue(xmlFile.isFile());
+//
+//        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+//
+//        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+//
+//        addStep("Transform the Cumulus XML", "METS");
+//        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+//
+//        if(writeOutput) {
+//            try (InputStream is = new FileInputStream(metadataFile)) {
+//                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+//                System.out.println(text);
+//            }
+//        }
+//
+//        addStep("Validate the METS", "");
+//        transformationHandler.validate(new FileInputStream(metadataFile));
+//
+//        if(writeOutput) {
+//            try (InputStream is = new FileInputStream(metadataFile)) {
+//                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+//                System.out.println(text);
+//            }
+//        }
+//    }
     
     @Test
     public void testTransformationOfUpdateMetadata() throws Exception {

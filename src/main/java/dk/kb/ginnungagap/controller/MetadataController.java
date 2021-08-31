@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 import dk.kb.metadata.utils.GuidExtractionUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,8 +103,12 @@ public class MetadataController {
             
             if(source.equalsIgnoreCase("archive")) {
                 metadataFile = getArchivedMetadata(filename, metadataType, record);
+                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                log.info("Contents from archive: \n" + data);
             } else {
                 metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
+                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                log.info("Contents from Cumulus: \n" + data);
             }
             output.onTimeout(()-> log.info("Request timeout"));
             output.onTimeout(()->
@@ -168,7 +173,7 @@ public class MetadataController {
         }
         
         WarcUtils.extractRecord(warcFile, recordId, outputFile);
-//        log.trace("Metadata file extracted."); //dhe
+        log.info("Metadata file extracted."); //dhe
         return outputFile;
     }
     
