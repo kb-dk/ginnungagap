@@ -36,8 +36,8 @@ public class CumulusPreservationUtils {
      * @param record The Cumulus record to be initialized.
      */
     public static void initialiseRecordForPreservation(CumulusRecord record) {
-//        log.trace("initialiseRecordForPreservation, Stack traces: " +
-//                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //dhe
+        log.trace("initialiseRecordForPreservation, Stack traces: " +
+                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //dhe
         initIntellectualEntityUUID(record);
         initRecordChecksum(record);
         
@@ -49,8 +49,8 @@ public class CumulusPreservationUtils {
      * @param record The Cumulus record to have its representaiton initialized.
      */
     public static void initializeRecordRepresentaitonForPreservation(CumulusRecord record) {
-//        log.trace("initializeRecordRepresentaitonForPreservation, Stack traces: " +
-//                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //todo log.debug dhe
+        log.trace("initializeRecordRepresentaitonForPreservation, Stack traces: " +
+                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //dhe
 
         initRepresentationIntellectualEntityUUID(record);
         resetRepresentationMetadataGuid(record);
@@ -82,11 +82,11 @@ public class CumulusPreservationUtils {
         String uuid = record.getFieldValueOrNull(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
         if(uuid == null || uuid.isEmpty()) {
             uuid = UUID.randomUUID().toString();
-//            log.trace("Setting uuid value for 'Representation intellectual guid': " + uuid); // dhe
+            log.trace("Setting uuid value for 'Representation intellectual guid': " + uuid);
             record.setStringValueInField(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID,
                     uuid);
         } else {
-//            log.trace("Already has a value for the 'Representation intellectual guid': " + uuid); //dhe
+            log.trace("Already has a value for the 'Representation intellectual guid': " + uuid);
         }
     }
     

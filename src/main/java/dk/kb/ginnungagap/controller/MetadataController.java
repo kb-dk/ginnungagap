@@ -110,10 +110,8 @@ public class MetadataController {
                 String data = FileUtils.readFileToString(metadataFile, "UTF-8");
                 log.info("Contents from Cumulus: \n" + data);
             }
-            output.onTimeout(()-> log.info("Request timeout"));
-            output.onTimeout(()->
-                    output.setErrorResult(
-                    ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
+//            output.onTimeout(()-> log.info("Request timeout"));
+            output.onTimeout(()-> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                             .body("Request timeout")));
             output.onCompletion(()-> log.info("Process getting metadata complete"));
             Resource resource = new UrlResource(metadataFile.toURI());

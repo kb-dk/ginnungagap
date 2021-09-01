@@ -125,7 +125,7 @@ public class PreservationStep extends WorkflowStep {
      */
     protected void sendRecordToPreservation(CumulusRecord record) throws Exception {
         try {
-//            log.trace("Sending record: {} to preservation", record.getFieldValue(Constants.FieldNames.RECORD_NAME)); //todo: log.debug dhe
+//            log.trace("Sending record: {} to preservation", record.getFieldValue(Constants.FieldNames.RECORD_NAME)); //dhe
             CumulusPreservationUtils.initialiseRecordForPreservation(record);
 
             record.validateFieldsExists(conf.getRequiredFields().getWritableFields());
