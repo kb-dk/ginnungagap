@@ -61,7 +61,7 @@ public class ConfigurationTest extends ExtendedTestCase {
         TestFileUtils.tearDown();
     }
     
-    @Test(enabled = false)
+    @Test
     public void testReadingConfigurationFile() throws Exception {
         assertTrue(confFileWithoutImport.isFile());
         assertTrue(requiredFieldsFile.isFile());
