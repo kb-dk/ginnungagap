@@ -144,9 +144,9 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(items).iterator();
         verify(items).getCount();
         verifyNoMoreInteractions(items);
-        
+
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
-        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
+        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
         verify(record, times(4)).getUUID();
@@ -205,14 +205,14 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(items).getCount();
         verifyNoMoreInteractions(items);
 
-        verify(record1).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
+        verify(record1, times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record1).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record1).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record1).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
         verify(record1, times(4)).getUUID();
         verifyNoMoreInteractions(record1);
 
-        verify(record2).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
+        verify(record2, times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record2).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record2).setStringEnumValueForField(eq(Constants.FieldNames.PRESERVATION_STATUS), eq(Constants.FieldValues.PRESERVATIONSTATE_ARCHIVAL_FAILED));
         verify(record2).setStringValueInField(eq(Constants.FieldNames.QA_ERROR), anyString());
@@ -284,7 +284,8 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(transformationHandler).getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION));
         verify(transformationHandler, times(4)).validate(any(InputStream.class));
         verifyNoMoreInteractions(transformationHandler);
-        
+
+        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID));
         verify(record).getFieldValue(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID));
@@ -361,7 +362,8 @@ public class PreservationStepTest extends ExtendedTestCase {
         verify(transformationHandler).getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY));
         verify(transformationHandler, times(2)).validate(any(InputStream.class));
         verifyNoMoreInteractions(transformationHandler);
-        
+
+        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.METADATA_GUID));
         verify(record).writeFieldMetadata(any(OutputStream.class));

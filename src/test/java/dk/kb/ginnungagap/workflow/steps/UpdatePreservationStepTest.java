@@ -208,7 +208,8 @@ public class UpdatePreservationStepTest extends ExtendedTestCase {
         verify(transformationHandler).getTransformer(eq(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION));
         verify(transformationHandler, times(4)).validate(any(InputStream.class));
         verifyNoMoreInteractions(transformationHandler);
-        
+
+        verify(record,times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.REPRESENTATION_METADATA_GUID));
         verify(record).getFieldValue(eq(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID));

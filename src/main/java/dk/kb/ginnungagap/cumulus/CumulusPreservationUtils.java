@@ -50,7 +50,7 @@ public class CumulusPreservationUtils {
      */
     public static void initializeRecordRepresentaitonForPreservation(CumulusRecord record) {
         log.trace("initializeRecordRepresentaitonForPreservation, Stack traces: " +
-                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n')); //dhe
+                Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
 
         initRepresentationIntellectualEntityUUID(record);
         resetRepresentationMetadataGuid(record);
@@ -99,11 +99,11 @@ public class CumulusPreservationUtils {
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY);
         if(uuid == null || uuid.isEmpty()) {
             uuid = UUID.randomUUID().toString();
-//            log.trace("Setting uuid value for 'relatedObjectIdentifierValue_intellectualEntity': " + uuid); // dhe
+            log.trace("Setting uuid value for 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
             record.setStringValueInField(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY,
                     uuid);
         } else {
-//            log.trace("Already has a value for the 'relatedObjectIdentifierValue_intellectualEntity': " + uuid); //dhe
+            log.trace("Already has a value for the 'relatedObjectIdentifierValue_intellectualEntity': " + uuid);
         }
     }
 

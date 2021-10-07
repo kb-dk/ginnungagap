@@ -53,27 +53,6 @@
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
 
-<!--  <developers>-->
-<!--    <developer>-->
-<!--      <name>Jonas Lindberg Frellesen</name>-->
-<!--      <email>jolf@kb.dk</email>-->
-<!--      <organization>kb</organization>-->
-<!--      <organizationUrl>http://kb.dk</organizationUrl>-->
-<!--      <roles>-->
-<!--        <role>Developer</role>-->
-<!--      </roles>-->
-<!--    </developer>-->
-<!--    <developer>-->
-<!--      <name>Claus Jensen</name>-->
-<!--      <email>cjen@kb.dk</email>-->
-<!--      <organization>kb</organization>-->
-<!--      <organizationUrl>http://kb.dk</organizationUrl>-->
-<!--      <roles>-->
-<!--        <role>Reviewer</role>-->
-<!--      </roles>-->
-<!--    </developer>-->
-<!--  </developers>-->
-
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -232,6 +211,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!-- Java 8 compatibility-->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.3</version>
+    </dependency>
     <!-- FOR TESTING -->
     <dependency>
       <groupId>org.testng</groupId>
@@ -255,53 +240,19 @@
 
   <build>
     <plugins>
-<!--      <plugin>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--      </plugin>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-war-plugin</artifactId>-->
-<!--        <version>3.2.2</version>-->
-<!--        &lt;!&ndash;configuration>-->
-<!--          <webResources>-->
-<!--            <resource>-->
-<!--              <filtering>true</filtering>-->
-<!--              <directory>src/main/resources</directory>-->
-<!--              <includes>-->
-<!--                <include>application.properties</include>-->
-<!--              </includes>-->
-<!--            </resource>-->
-<!--          </webResources>-->
-<!--        </configuration&ndash;&gt;-->
-<!--      </plugin>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-compiler-plugin</artifactId>-->
-<!--&lt;!&ndash;        <version>3.2</version>&ndash;&gt;-->
-<!--        <configuration>-->
-<!--          <source>1.8</source>-->
-<!--          <target>1.8</target>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-<!--        <version>3.0.0</version>-->
         <configuration>
-<!--          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>-->
           <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-<!--         <version>3.4</version>-->
         <configuration>
-<!--          <linkXref>true</linkXref>-->
           <sourceEncoding>utf-8</sourceEncoding>
           <minimumTokens>100</minimumTokens>
-<!--          <targetJdk>1.8</targetJdk>-->
         </configuration>
         <executions>
           <execution>
@@ -316,7 +267,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-<!--        <version>2.5</version>-->
         <configuration>
           <archive>                   
             <manifest>
@@ -329,7 +279,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-<!--        <version>2.5.3</version>-->
         <configuration>
           <archive>
             <manifest>
@@ -360,7 +309,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-<!--        <version>2.18.1</version>-->
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>true</reuseForks>
@@ -396,19 +344,6 @@
           </execution>
         </executions>
       </plugin>      
-<!--      <plugin>-->
-<!--        <artifactId>maven-assembly-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <archive>-->
-<!--            <manifest>-->
-<!--              <mainClass>fully.qualified.MainClass</mainClass>-->
-<!--            </manifest>-->
-<!--          </archive>-->
-<!--          <descriptorRefs>-->
-<!--            <descriptorRef>jar-with-dependencies</descriptorRef>-->
-<!--          </descriptorRefs>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -486,16 +421,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-<!--        <version>2.9</version>-->
         <configuration>
-<!--          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>-->
           <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-<!--        <version>3.0.0</version>-->
         <configuration>
           <failOnError>false</failOnError>
           <skip>true</skip>
@@ -504,7 +436,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-<!--        <version>3.0.0</version>-->
         <configuration>
           <configLocation>checkstyle.xml</configLocation>
         </configuration>

@@ -104,13 +104,12 @@ public class MetadataController {
             if(source.equalsIgnoreCase("archive")) {
                 metadataFile = getArchivedMetadata(filename, metadataType, record);
                 String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.info("Contents from archive: \n" + data);
+                log.trace("Contents from archive: \n" + data);
             } else {
                 metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
                 String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.info("Contents from Cumulus: \n" + data);
+                log.trace("Contents from Cumulus: \n" + data);
             }
-//            output.onTimeout(()-> log.info("Request timeout"));
             output.onTimeout(()-> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                             .body("Request timeout")));
             output.onCompletion(()-> log.info("Process getting metadata complete"));
@@ -171,7 +170,7 @@ public class MetadataController {
         }
         
         WarcUtils.extractRecord(warcFile, recordId, outputFile);
-        log.info("Metadata file extracted."); //dhe
+        log.trace("Metadata file extracted.");
         return outputFile;
     }
     
