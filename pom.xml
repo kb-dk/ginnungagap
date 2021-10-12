@@ -93,7 +93,7 @@
     <dependency>
       <groupId>dk.kb</groupId>
       <artifactId>kb-cumulus-api</artifactId>
-      <version>0.1.10</version>
+      <version>0.1.9</version>
     </dependency>
     <dependency>
       <groupId>com.canto</groupId>
