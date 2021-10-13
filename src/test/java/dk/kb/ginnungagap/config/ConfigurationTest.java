@@ -1,16 +1,8 @@
 package dk.kb.ginnungagap.config;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.utils.YamlTools;
 import org.bitrepository.common.utils.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
@@ -18,9 +10,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.yggdrasil.utils.YamlTools;
+import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static org.testng.Assert.*;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ConfigurationTest extends ExtendedTestCase {

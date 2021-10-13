@@ -1,9 +1,9 @@
 package dk.kb.ginnungagap.config;
 
+import dk.kb.ginnungagap.utils.HostName;
+
 import java.io.File;
 import java.util.UUID;
-
-import dk.kb.yggdrasil.utils.HostName;
 
 /**
  * Configuration for the bitrepository.

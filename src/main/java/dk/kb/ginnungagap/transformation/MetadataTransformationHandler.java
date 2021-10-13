@@ -14,6 +14,11 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import dk.kb.ginnungagap.exception.TransformationException;
+import dk.kb.ginnungagap.transformation.xml.XmlEntityResolver;
+import dk.kb.ginnungagap.transformation.xml.XmlErrorHandler;
+import dk.kb.ginnungagap.transformation.xml.XmlValidationResult;
+import dk.kb.ginnungagap.transformation.xml.XmlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -21,11 +26,6 @@ import org.w3c.dom.Node;
 
 import dk.kb.ginnungagap.config.Configuration;
 import dk.kb.ginnungagap.utils.StringUtils;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
-import dk.kb.yggdrasil.xslt.XmlEntityResolver;
-import dk.kb.yggdrasil.xslt.XmlErrorHandler;
-import dk.kb.yggdrasil.xslt.XmlValidationResult;
-import dk.kb.yggdrasil.xslt.XmlValidator;
 
 /**
  * Handler for the metadata transformers.
@@ -103,7 +103,7 @@ public class MetadataTransformationHandler {
                 throw new IllegalStateException("Failed validation: \nfatal errors: " + fatalErrors
                         + "\n other errors: " + errors + " \nwarnings: " + warnings);
             }
-        } catch (YggdrasilException e) {
+        } catch (TransformationException e) {
             throw new IOException("Could not validate the metadata.", e);
         }
     }

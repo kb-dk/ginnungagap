@@ -1,19 +1,18 @@
 package dk.kb.ginnungagap.transformation;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.transformation.xml.XslErrorListener;
+import dk.kb.ginnungagap.transformation.xml.XslTransformer;
+import dk.kb.ginnungagap.transformation.xml.XslUriResolver;
+import dk.kb.metadata.Cleaner;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
-
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.metadata.Cleaner;
-import dk.kb.yggdrasil.xslt.XslErrorListener;
-import dk.kb.yggdrasil.xslt.XslTransformer;
-import dk.kb.yggdrasil.xslt.XslUriResolver;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Transforms XML metadata through XSLT scripts.

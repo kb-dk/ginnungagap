@@ -1,34 +1,27 @@
 package dk.kb.ginnungagap.archive;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.UUID;
-
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.config.BitmagConfiguration;
+import dk.kb.ginnungagap.testutils.TestFileUtils;
+import dk.kb.ginnungagap.warc.Digest;
 import org.apache.commons.io.FileUtils;
 import org.jaccept.structure.ExtendedTestCase;
 import org.jwat.common.ContentType;
 import org.jwat.common.Uri;
 import org.jwat.warc.WarcDigest;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import dk.kb.cumulus.Constants;
-import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.config.BitmagConfiguration;
-import dk.kb.ginnungagap.testutils.TestFileUtils;
-import dk.kb.yggdrasil.warc.Digest;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.UUID;
+
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertTrue;
 
 public class WarcPackerTest extends ExtendedTestCase {
 

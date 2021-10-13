@@ -1,19 +1,18 @@
 package dk.kb.ginnungagap.utils;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import dk.kb.ginnungagap.exception.ArgumentCheck;
+import dk.kb.ginnungagap.exception.WarcException;
+import dk.kb.ginnungagap.warc.Digest;
 import org.bitrepository.access.getchecksums.conversation.ChecksumsCompletePillarEvent;
 import org.bitrepository.bitrepositoryelements.ChecksumType;
 import org.bitrepository.client.eventhandler.OperationEvent.OperationEventType;
 import org.bitrepository.common.utils.Base16Utils;
 import org.jwat.warc.WarcDigest;
 
-import dk.kb.ginnungagap.exception.ArgumentCheck;
-import dk.kb.yggdrasil.exceptions.YggdrasilException;
-import dk.kb.yggdrasil.warc.Digest;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class for dealing with checksums.
@@ -33,7 +32,7 @@ public class ChecksumUtils {
         try {
             Digest digestor = new Digest(algorithm);
             return digestor.getDigestOfFile(file);
-        } catch (YggdrasilException e) {
+        } catch (WarcException e) {
             throw new IllegalStateException("Could not calculate the checksum of the file '" 
                     + file.getAbsolutePath() + "'", e);
         }
