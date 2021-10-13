@@ -102,9 +102,9 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         addDescription("Test the transformation of a Cumulus XML file with tracks and BEXT metadata.");
         File xmlFile = new File("src/test/resources/audio_example_1345.xml");
         assertTrue(xmlFile.isFile());
-        
+
         MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-        
+
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
 
         addStep("Transform the Cumulus XML", "METS");
@@ -112,7 +112,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -140,7 +140,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -164,7 +164,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -188,7 +188,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -212,7 +212,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -250,7 +250,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(modsFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -265,7 +265,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(modsFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(modsFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -281,7 +281,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -292,9 +292,9 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         addDescription("Test the transformation of a Cumulus XML file with all metadata fields for audio files.");
         File xmlFile = new File("src/test/resources/cumulus_extract_with_all_fields.xml");
         assertTrue(xmlFile.isFile());
-        
+
         MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-        
+
         File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
 
         addStep("Transform the Cumulus XML", "METS");
@@ -302,17 +302,17 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
 
         addStep("Validate the METS", "");
         transformationHandler.validate(new FileInputStream(metadataFile));
-        
+
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -333,7 +333,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }
@@ -343,7 +343,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
-                String text = StreamUtils.extractInputStreamAsString(new FileInputStream(metadataFile));
+                String text = StreamUtils.extractInputStreamAsString(is);
                 System.out.println(text);
             }
         }

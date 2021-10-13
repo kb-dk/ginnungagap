@@ -202,7 +202,7 @@ public class PreservationWorkflowTest extends ExtendedTestCase {
         verify(record, times(3)).getUUID();
         verify(record).isMasterAsset();
         verify(record).writeFieldMetadata(any(OutputStream.class));
-        verify(record).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
+        verify(record, times(2)).getFieldValue(eq(Constants.FieldNames.RECORD_NAME));
         verify(record).getFieldValue(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         verify(record).getFieldValueOrNull(eq(Constants.FieldNames.CHECKSUM_ORIGINAL_MASTER));

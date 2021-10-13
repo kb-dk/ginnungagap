@@ -11,7 +11,7 @@
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
   <xsl:template name="pbcore_description">
-    <pbcore:pbcoreDescriptionDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html  https://pbcore.org/xsd/pbcore-2.0.xsd">
+    <pbcore:pbcoreDescriptionDocument xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html  http://id.kb.dk/standards/pbcore/version-2.1/pbcore-2.1.xsd">
       <!-- pbcore asset type -->
       <xsl:if test="field[@name='pbcoreAssetType']">
         <xsl:element name="pbcore:pbcoreAssetType">
@@ -211,5 +211,5 @@
         </xsl:if>
       </xsl:element>
     </pbcore:pbcoreInstiationDocument>
-  </xsl:template> 
+  </xsl:template>
 </xsl:stylesheet> 

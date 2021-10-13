@@ -43,7 +43,7 @@
         <input type="radio" id="metadataType2" name="metadataType" value="KBIDS">
         <label for="metadataType2">KBIDS</label>
       </p>
-      <p><b>Extract/Create</b>
+      <p><b>Source:</b>
         <input type="radio" id="source1" name="source" value="cumulus" checked>
         <label for="source1">Cumulus</label>
         <input type="radio" id="source2" name="source" value="archive">
