@@ -30,7 +30,7 @@ public class WarcUtils {
             try (OutputStream os = new FileOutputStream(outputFile)) {
                 StreamUtils.copyInputStreamToOutputStream(warcRecord.getPayloadContent(), os);
                 os.flush();
-                os.close();
+//                os.close();
             }
         }
 
