@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +76,10 @@ public class WarcPacker implements Closeable {
      * @throws YggdrasilException If it fails to write the warc info.
      */
     protected void writeWarcinfo() throws YggdrasilException {
-        log.debug("In writeWarcinfo");
+        if(isClosed) {
+            log.trace("writeWarcinfo:, Stack traces: " +
+                    Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
+        }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             Digest digestor = new Digest(bitmagConf.getAlgorithm());
@@ -124,7 +128,10 @@ public class WarcPacker implements Closeable {
      */
     protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
             String uuid) {
-        log.debug("In packResource");
+        if(isClosed) {
+            log.trace("packResource:, Stack traces: " +
+                    Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
+        }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             try (InputStream in = new FileInputStream(resourceFile)) {
@@ -146,7 +153,10 @@ public class WarcPacker implements Closeable {
      * @param warcRecordId The id of the WARC record.
      */
     protected void packMetadata(File metadataFile, Uri refersTo, String warcRecordId) {
-        log.debug("In packMetadata");
+        if(isClosed) {
+            log.trace("packResopackMetadataurce:, Stack traces: " +
+                    Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
+        }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
         log.info("WarcRecordId: {}", warcRecordId);
