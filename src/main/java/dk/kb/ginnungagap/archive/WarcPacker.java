@@ -77,7 +77,7 @@ public class WarcPacker implements Closeable {
      */
     protected void writeWarcinfo() throws YggdrasilException {
         if(isClosed) {
-            log.trace("writeWarcinfo:, Stack traces: " +
+            log.info("writeWarcinfo:, Stack traces: " +
                     Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
         }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
@@ -129,7 +129,7 @@ public class WarcPacker implements Closeable {
     protected synchronized void packResource(File resourceFile, WarcDigest blockDigest, ContentType contentType, 
             String uuid) {
         if(isClosed) {
-            log.trace("packResource:, Stack traces: " +
+            log.info("packResource:, Stack traces: " +
                     Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
         }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
@@ -154,7 +154,7 @@ public class WarcPacker implements Closeable {
      */
     protected void packMetadata(File metadataFile, Uri refersTo, String warcRecordId) {
         if(isClosed) {
-            log.trace("packResopackMetadataurce:, Stack traces: " +
+            log.info("packMetadata:, Stack traces: " +
                     Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
         }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
