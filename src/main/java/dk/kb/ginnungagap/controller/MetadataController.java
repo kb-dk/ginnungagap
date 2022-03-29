@@ -5,7 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.apache.commons.io.FileUtils;
@@ -239,6 +244,13 @@ public class MetadataController {
                     + ".raw.xml");
             try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
                 record.writeFieldMetadata(cumulusOut);
+
+                String absolutePath = cumulusMetadataFile.getAbsolutePath();
+                Path path = Paths.get(absolutePath);
+                Stream<String> lines = Files.lines(path);
+                String data = lines.collect(Collectors.joining("\n"));
+                lines.close();
+                log.info("cumulusMetadataFile output: {}", data);
             }
             try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
                 transformer.transformXmlMetadata(cumulusIn, os);
