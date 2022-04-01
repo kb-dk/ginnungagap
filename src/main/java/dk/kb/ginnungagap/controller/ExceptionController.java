@@ -35,7 +35,7 @@ public class ExceptionController implements ErrorController {
         return PATH;
     }
     
-    @Override
+//    @Override
     public String getErrorPath() {
         return PATH;
     }

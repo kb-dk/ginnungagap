@@ -139,7 +139,7 @@ public class FullValidationStep extends ValidationStep {
         try (OutputStream os = new FileOutputStream(tmpFile)) {
             StreamUtils.copyInputStreamToOutputStream(warcRecord.getPayloadContent(), os);
             os.flush();
-//            os.close();
+            os.close();
             digest = ChecksumUtils.calculateChecksum(tmpFile, ChecksumUtils.MD5_ALGORITHM);
         } finally {
             FileUtils.deleteFile(tmpFile);
