@@ -28,8 +28,9 @@ public class SetupCumulusTests {
 
         String username = cumulusLogin.get("login");
         String password = cumulusLogin.get("password");
+        String serverurl = cumulusLogin.get("serverurl");
         
-        CumulusConfiguration cConf = new CumulusConfiguration(true, "cumulus-core-test-01.kb.dk", username, password,
+        CumulusConfiguration cConf = new CumulusConfiguration(true, serverurl, username, password,
                 Arrays.asList(catalogNames));
         conf.setCumulusConf(cConf);
         
