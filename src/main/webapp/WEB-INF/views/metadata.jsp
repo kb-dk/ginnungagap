@@ -22,6 +22,10 @@
 </div>
 <div id="conf" class="container">
   <div class="container">
+    <form action="${pageContext.request.contextPath}/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="File" />
+      <input type="submit" value="Upload"/>
+    </form>
     <form action="${pageContext.request.contextPath}/metadata/extract">
       <p><b>ID:</b> <input type="text" name="ID" /></p>
       <p><b>ID Type:</b>
