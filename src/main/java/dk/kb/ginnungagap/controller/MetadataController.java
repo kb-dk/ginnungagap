@@ -234,6 +234,12 @@ public class MetadataController {
                 MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
 
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
+        if(record.isMasterAsset()) {
+//            String ieUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
+            metadataUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_METADATA_GUID);
+            transformer = metadataTransformer.getTransformer(
+                    MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
+        }
         try (OutputStream os = new FileOutputStream(metadataFile)) {
             File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");

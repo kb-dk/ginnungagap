@@ -2733,9 +2733,9 @@
     </xsl:choose>
       
     <!-- alternativ title -->
-    <xsl:if test="field[@name='Alternativ title']">
+    <xsl:if test="field[@name='Alternative title']">
       <xsl:element name="mods:titleInfo">
-        <xsl:for-each select="field[@name='Alternativ title']/value">
+        <xsl:for-each select="field[@name='Alternative title']/value">
           <xsl:attribute name="type">
             <xsl:value-of select="'alternative'" />
           </xsl:attribute>
