@@ -22,12 +22,13 @@
 </div>
 <div id="conf" class="container">
   <div class="container">
-    <form action="${pageContext.request.contextPath}/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="File" />
-      <input type="submit" value="Upload"/>
-    </form>
+<%--    <form action="${pageContext.request.contextPath}metadata/upload" method="POST" enctype="multipart/form-data">--%>
+<%--      <p><input type="file" name="file" />--%>
+<%--        <input type="submit" value="Upload File"/>--%>
+<%--    </p></form>--%>
     <form action="${pageContext.request.contextPath}/metadata/extract">
-      <p><b>ID:</b> <input type="text" name="ID" /></p>
+      <b> One or more comma separated IDs:</b>
+      <p><b>ID(s):</b> <input type="text" name="ID" style="height: auto; width: auto;"/></p>
       <p><b>ID Type:</b>
         <input type="radio" id="idType1" name="idType" value="UUID" checked>
         <label for="idType1">UUID</label>
