@@ -317,7 +317,7 @@
 
   <!-- START language -->
   <xsl:template name="mods_language">
-    <xsl:if test="field[@name='Udgivelsessprog'] or field[@name='Language']">
+    <xsl:if test="field[@name='Udgivelsessprog'] or field[@name='Language'] or field[@name='Languages']">
       <xsl:element name="mods:language">
         <!-- Udgivelsessprog eller Language -->
         <xsl:choose>
@@ -347,6 +347,21 @@
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
+          <!-- NKH -->
+          <xsl:when test="field[@name='Languages']">
+          <xsl:for-each select="field[@name='Languages']/value">
+            <xsl:element name="mods:languageTerm">
+              <xsl:attribute name="authority">
+                <xsl:value-of select="'rfc4646'" />
+              </xsl:attribute>
+              <xsl:attribute name="type">
+                <xsl:value-of select="'code'" />
+              </xsl:attribute>
+              <xsl:value-of select="." />
+            </xsl:element>
+          </xsl:for-each>
+        </xsl:when>
+        <!-- NKH -->
         </xsl:choose>
         
         <!-- Language, additional -->
