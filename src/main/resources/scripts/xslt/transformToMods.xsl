@@ -23,6 +23,7 @@
   <xsl:variable name="MODS_VERSION" select="'3.6'" />
   
   <xsl:variable name="mods_default_lang">
+    <xsl:message>Starting mods</xsl:message>
    <xsl:choose>
      <xsl:when test="record/field[@name='Cataloging language']">
        <xsl:value-of select="record/field[@name='Cataloging language']/value" />
@@ -347,21 +348,6 @@
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
-          <!-- NKH -->
-          <xsl:when test="field[@name='Languages']">
-            <xsl:for-each select="field[@name='Languages']/value">
-              <xsl:element name="mods:languageTerm">
-                <xsl:attribute name="authority">
-                  <xsl:value-of select="'rfc4646'" />
-                </xsl:attribute>
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'code'" />
-                </xsl:attribute>
-                <xsl:value-of select="." />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <!-- NKH -->
         </xsl:choose>
 
         <!-- Language, additional -->
@@ -377,6 +363,19 @@
               <xsl:value-of select="'Language, additional'" />
             </xsl:attribute>
             <xsl:value-of select="field[@name='Language, additional']/value" />
+          </xsl:element>
+        </xsl:if>
+
+        <!-- Languages -->
+        <xsl:if test="field[@name='Languages']">
+          <xsl:element name="mods:languageTerm">
+            <xsl:attribute name="authority">
+              <xsl:value-of select="'rfc4646'" />
+            </xsl:attribute>
+            <xsl:attribute name="type">
+              <xsl:value-of select="'code'" />
+            </xsl:attribute>
+            <xsl:value-of select="field[@name='Languages']/value" />
           </xsl:element>
         </xsl:if>
       </xsl:element>
