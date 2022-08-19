@@ -143,7 +143,6 @@ public class MetadataController {
                     .body("Request timeout")));
             output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
-//            Resource resource;
             Resource resource = new UrlResource(zippedXmls.toURI());
             output.setResult(ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
@@ -341,11 +340,11 @@ public class MetadataController {
         try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");
-            Path toPath = cumulusMetadataFile.toPath();
-            try (OutputStream cumulusOut = Files.newOutputStream(toPath)) {
+            Path cumulusMetadataFilePath = cumulusMetadataFile.toPath();
+            try (OutputStream cumulusOut = Files.newOutputStream(cumulusMetadataFilePath)) {
                 record.writeFieldMetadata(cumulusOut);
             }
-            try (InputStream cumulusIn = Files.newInputStream(toPath)) {
+            try (InputStream cumulusIn = Files.newInputStream(cumulusMetadataFilePath)) {
                 transformer.transformXmlMetadata(cumulusIn, os);
             } catch (Exception e){
                 log.error("Error in XML transformation: ", e);
