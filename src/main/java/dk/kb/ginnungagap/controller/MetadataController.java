@@ -22,23 +22,34 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
 /**
@@ -48,8 +59,10 @@ import java.util.zip.ZipOutputStream;
 public class MetadataController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(MetadataController.class);
-    // todo: make configurable
     static final String ZIP = ".zip";
+    // todo: make configurable
+//    String errorFile = "/usr/local/ginnungagap/tempDir/Error.txt";
+    String inputFilePath = "/usr/local/ginnungagap/tempDir/";
 
     /** The configuration.*/
     @Autowired
@@ -77,8 +90,7 @@ public class MetadataController {
     
     /**
      * The method for extracting metadata.
-     * @param id The ID of the record to extract metadata for.
-//     * @param ids The comma separated list of IDs to extract metadata for.
+     * @param id The ID(s) of the record to extract metadata for.
      * @param idType The type of ID for the Cumulus record, either UUID or Record Name.
      * @param catalog The catalog for the Cumulus record.
      * @param metadataType The type of metadata to extract, either METS or KBIDS.
@@ -94,65 +106,49 @@ public class MetadataController {
             @RequestParam(value="source", required=false, defaultValue="cumulus") String source) {
         try {
             DeferredResult<ResponseEntity<Resource>> output = new DeferredResult<>(180000L);
-            String filename = null;
+            String filename;
             File metadataFile;
-            CumulusRecord record = null;
-            File zippedXmls = null;
-//            File f = new File(conf.getTransformationConf().getMetadataTempDir()+"filename");
-//            if(f.exists()) {
-//            List<List<String>> rcds = new ArrayList<>();
-//                try (BufferedReader br = new BufferedReader(new FileReader(conf.getTransformationConf().getMetadataTempDir()+"filename"))) {
-//                    String line;
-//                    while ((line = br.readLine()) != null) {
-//                        String[] fileList = line.split("\\s*,\\s*");
-//                        rcds.add(Arrays.asList(values));
-//                    }
-//                }
-//            } else {
-//            }
+            CumulusRecord record;
+            File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            String[] fileList = new String[0];
+            //todo: make uploadable
+            Path path = Paths.get("/usr/local/ginnungagap/tempDir/" + "filename");
 
-            String[] fileList = id.split("\\s*,\\s*");
+            if(isNullOrEmpty(id)) {
+                fileList = getFileListFromFile(fileList, path);
+            }
+            else {
+                fileList = id.split("\\s*,\\s*");
+            }
+
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'.");
                 record = getCumulusRecord(fid, idType, catalog);
                 validateRecord(record);
-                try {
+                if(source.equalsIgnoreCase("archive")) {
+                    metadataFile = getArchivedMetadata(filename, metadataType, record);
+                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                    log.trace("Contents from archive: \n" + data);
+                } else {
                     metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-                    zippedXmls = addToZip(metadataFile, srcFiles);
-                } catch (Exception e) {
-                    throw new IllegalStateException(e);
+                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                    log.trace("Contents from Cumulus: \n" + data);
                 }
+                zippedXmls = addToZip(metadataFile, srcFiles);
             }
-//                log.info("Extracting '" + metadataType + "' metadata for '" + id + "' from catalog '" + catalog + "'.");
-//                filename = id + ".xml";
-//                record = getCumulusRecord(id, idType, catalog);
-//                validateRecord(record);
-            if(source.equalsIgnoreCase("archive")) {
-                metadataFile = getArchivedMetadata(filename, metadataType, record);
-                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.trace("Contents from archive: \n" + data);
-            } else {
-                metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.trace("Contents from Cumulus: \n" + data);
-            }
+
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body("Request timeout")));
             output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
-            Resource resource;
-            resource = new UrlResource(zippedXmls.toURI());
+//            Resource resource;
+            Resource resource = new UrlResource(zippedXmls.toURI());
             output.setResult(ResponseEntity.ok()
-                    .contentType(MediaType.valueOf("application/zip"))
+                    .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zippedXmls.getName() + "\"")
                     .body(resource));
-//                resource = new UrlResource(metadataFile.toURI());
-//                output.setResult(ResponseEntity.ok()
-//                        .contentType(MediaType.TEXT_XML)
-//                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-//                        .body(resource));
             return output;
         } catch (Exception e) {
             log.warn("Failed to retrieve metadata", e);
@@ -160,26 +156,71 @@ public class MetadataController {
         }
     }
 
-    private File addToZip(File metadataFile, List<String> srcFiles) throws IOException {
-        srcFiles.add(metadataFile.getAbsolutePath());
-        FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
-        ZipOutputStream zipOut = new ZipOutputStream(fos);
+//    @RequestMapping(value = "/metadata/upload", headers = "content-type=multipart/*", method = RequestMethod.POST)
+//    public ResponseEntity <Resource> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) throws MalformedURLException {
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        Path path = Paths.get(inputFilePath + fileName);
+//        try {
+//            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/files/download/")
+//                .path(fileName)
+//                .toUriString();
+//        Resource resource = new UrlResource(fileDownloadUri);
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.MULTIPART_MIXED)
+//                .header(HttpHeaders.CONTENT_DISPOSITION)
+//                .body(resource);
+//    }
 
-        for (String srcFile : srcFiles) {
-            File fileToZip = new File(srcFile);
-            FileInputStream fis = new FileInputStream(fileToZip);
-            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-            zipOut.putNextEntry(zipEntry);
-
-            byte[] bytes = new byte[1024];
-            int length;
-            while((length = fis.read(bytes)) >= 0) {
-                zipOut.write(bytes, 0, length);
+    private String[] getFileListFromFile(String[] fileList, Path path) {
+        if(path.toFile().exists()) {
+            List<String> filesList = null;
+            try (Stream<String> lines = Files.lines(path)) {
+                filesList = lines.collect(Collectors.toList());
+            } catch (IOException e) {
+                log.warn("Something went wrong reading file to list", e);
             }
-            fis.close();
+            if(!(filesList == null)) {
+                fileList = filesList.toArray(new String[0]);
+                log.info("filelist: {}", (Object) fileList);
+            }
+//                    path.toFile().delete();
         }
-        zipOut.close();
-        fos.close();
+        return fileList;
+    }
+
+    private File addToZip(File metadataFile, List<String> srcFiles)  {
+//        if(metadataFile == null) {
+//            metadataFile = new File(errorFile);
+//        }
+            try {
+                srcFiles.add(metadataFile.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+                ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+                for (String srcFile : srcFiles) {
+                    File fileToZip = new File(srcFile);
+                    FileInputStream fis = new FileInputStream(fileToZip);
+                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                    zipOut.putNextEntry(zipEntry);
+
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = fis.read(bytes)) >= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                    fis.close();
+                }
+                zipOut.close();
+                fos.close();
+
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed adding to zip", e);
+            }
         return new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
     }
 
@@ -216,7 +257,7 @@ public class MetadataController {
         File warcFile = archiveWrapper.getFile(warcId, collectionId);
         
         File outputFile = new File(conf.getBitmagConf().getTempDir(), filename);
-        String recordId = null;
+        String recordId;
         if(metadataType.equalsIgnoreCase("KBIDS")) {
             recordId = GuidExtractionUtils.extractGuid(record.getFieldValue(
                     Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
@@ -251,7 +292,7 @@ public class MetadataController {
             }
             createMetsMetadata(record, metadataFile);
         }
-        
+
         return metadataFile;
     }
     
@@ -269,11 +310,11 @@ public class MetadataController {
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         String fileUUID = record.getUUID();
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");
             CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, rawMetadataFile);
-            try (InputStream cumulusIn = new FileInputStream(rawMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(rawMetadataFile.toPath())) {
                 transformer.transformXmlMetadata(cumulusIn, os);
             }
             os.flush();
@@ -297,14 +338,17 @@ public class MetadataController {
             transformer = metadataTransformer.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
         }
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");
-            try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
+            Path toPath = cumulusMetadataFile.toPath();
+            try (OutputStream cumulusOut = Files.newOutputStream(toPath)) {
                 record.writeFieldMetadata(cumulusOut);
             }
-            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(toPath)) {
                 transformer.transformXmlMetadata(cumulusIn, os);
+            } catch (Exception e){
+                log.error("Error in XML transformation: ", e);
             }
             os.flush();
         }
@@ -324,21 +368,6 @@ public class MetadataController {
         return record;
     }
 
-
-//    @RequestMapping(value = "/metadata/upload", headers = "content-type=multipart/*", method = RequestMethod.POST)
-//    public ResponseEntity uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        Path path = Paths.get(inputFilePath + fileName);
-//        try {
-//            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/files/download/")
-//                .path(fileName)
-//                .toUriString();
-//        return ResponseEntity.ok(fileDownloadUri);
 
 //    public void handleUpload(@RequestParam("file") MultipartFile file)  {
 //

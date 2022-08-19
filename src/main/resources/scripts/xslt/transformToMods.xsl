@@ -3,7 +3,7 @@
 <xsl:transform version="1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xlink="http://www.w3.org.1999/xlink"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     
