@@ -22,13 +22,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,11 +34,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,8 +56,9 @@ public class MetadataController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(MetadataController.class);
     static final String ZIP = ".zip";
-    // todo: make configurable
-//    String errorFile = "/usr/local/ginnungagap/tempDir/Error.txt";
+
+    String uploadFile = "Dummy";
+
     String inputFilePath = "/usr/local/ginnungagap/tempDir/";
 
     /** The configuration.*/
@@ -110,12 +107,12 @@ public class MetadataController {
             File metadataFile;
             CumulusRecord record;
             File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
-            String[] fileList = new String[0];
-            //todo: make uploadable
-            Path path = Paths.get("/usr/local/ginnungagap/tempDir/" + "filename");
+            String[] fileList;
+
+            Path path = Paths.get(inputFilePath + uploadFile);
 
             if(isNullOrEmpty(id)) {
-                fileList = getFileListFromFile(fileList, path);
+                fileList = getFileListFromFile(path);
             }
             else {
                 fileList = id.split("\\s*,\\s*");
@@ -155,28 +152,36 @@ public class MetadataController {
         }
     }
 
-//    @RequestMapping(value = "/metadata/upload", headers = "content-type=multipart/*", method = RequestMethod.POST)
-//    public ResponseEntity <Resource> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) throws MalformedURLException {
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        Path path = Paths.get(inputFilePath + fileName);
-//        try {
-//            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/files/download/")
-//                .path(fileName)
-//                .toUriString();
-//        Resource resource = new UrlResource(fileDownloadUri);
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.MULTIPART_MIXED)
-//                .header(HttpHeaders.CONTENT_DISPOSITION)
-//                .body(resource);
-//    }
+    /**
+     * Upload a file containing a list of file IDs to extract metadata for
+     * @param file The uploaded file
+     * @param model Needed to add the 'catalogs' list to Metadata view
+     * @return return the Metadata view to enable setting 'ID type', 'catalog' etc
+     */
+    @RequestMapping(value = "/metadata/upload", headers = "content-type=multipart/form-data", method = RequestMethod.POST)
+    public String submit(@RequestParam("file") MultipartFile file, Model model) {
+        if (!file.isEmpty()) {
+            try {
+                uploadFile = file.getOriginalFilename();
+                file.transferTo(new File(inputFilePath + uploadFile));
+            } catch (IOException e) {
+                throw new IllegalStateException(e); //todo: make warning?
+            }
+        }
+        model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
+        return "metadata";
+    }
 
-    private String[] getFileListFromFile(String[] fileList, Path path) {
+    /**
+     * Help method to read a file line by line and return the result in a String array
+//     * @param list
+     * @param path Path to the file to read
+     * @return list of files as String aray
+     */
+    private String[] getFileListFromFile(Path path) {
+        String[] list = new String[0];
         if(path.toFile().exists()) {
+
             List<String> filesList = null;
             try (Stream<String> lines = Files.lines(path)) {
                 filesList = lines.collect(Collectors.toList());
@@ -184,20 +189,23 @@ public class MetadataController {
                 log.warn("Something went wrong reading file to list", e);
             }
             if(!(filesList == null)) {
-                fileList = filesList.toArray(new String[0]);
-                log.info("filelist: {}", (Object) fileList);
+                list = filesList.toArray(new String[0]);
+                log.trace("filelist: {}", (Object) list);
             }
 //                    path.toFile().delete();
         }
-        return fileList;
+        return list;
     }
 
-    private File addToZip(File metadataFile, List<String> srcFiles)  {
-//        if(metadataFile == null) {
-//            metadataFile = new File(errorFile);
-//        }
-            try {
-                srcFiles.add(metadataFile.getAbsolutePath());
+    /**
+     * Add a file to a Zip-file
+     * @param file The file to add
+     * @param srcFiles
+     * @return
+     */
+    private File addToZip(File file, List<String> srcFiles)  {
+        try {
+                srcFiles.add(file.getAbsolutePath());
                 FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
 
@@ -353,6 +361,13 @@ public class MetadataController {
         }
     }
 
+    /**
+     * Extract a Cumulus record
+     * @param id The id of the record
+     * @param idType The type of id (UUID or file name)
+     * @param catalog The Cumulus Catalog
+     * @return The Cumulus record
+     */
     private CumulusRecord getCumulusRecord(String id, String idType, String catalog) {
         CumulusRecord record;
         if(idType.equalsIgnoreCase("uuid")) {
