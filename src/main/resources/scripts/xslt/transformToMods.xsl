@@ -3,7 +3,7 @@
 <xsl:transform version="1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xlink="http://www.w3.org.1999/xlink"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
@@ -369,7 +369,7 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        
+
         <!-- Language, additional -->
         <xsl:if test="field[@name='Language, additional']">
           <xsl:element name="mods:languageTerm">
@@ -383,6 +383,19 @@
               <xsl:value-of select="'Language, additional'" />
             </xsl:attribute>
             <xsl:value-of select="field[@name='Language, additional']/value" />
+          </xsl:element>
+        </xsl:if>
+
+        <!-- Languages -->
+        <xsl:if test="field[@name='Languages']">
+          <xsl:element name="mods:languageTerm">
+            <xsl:attribute name="authority">
+              <xsl:value-of select="'rfc4646'" />
+            </xsl:attribute>
+            <xsl:attribute name="type">
+              <xsl:value-of select="'code'" />
+            </xsl:attribute>
+            <xsl:value-of select="field[@name='Languages']/value" />
           </xsl:element>
         </xsl:if>
       </xsl:element>
@@ -416,11 +429,10 @@
     </xsl:if>
   </xsl:template>
   <!-- END location -->
-  
-    
+
   <!-- START name -->
   <xsl:template name="mods_name">
-    <!-- Ophav || Creator 
+    <!-- Ophav || Creator
          (both with either "@Ophav rolle" or 'Ophav' & 'Creator' as role)-->
     <xsl:if test="field[@name='Ophav'] or field[@name='Creator']">
       <xsl:element name="mods:name">
@@ -479,8 +491,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Country (location) of recipient || Modtager, land 
+
+    <!-- Country (location) of recipient || Modtager, land
          (with both 'Country (location) of recipient' and 'Modtager, land' as role)-->
     <xsl:if test="field[@name='Country (location) of recipient'] or field[@name='Modtager, land']">
       <xsl:element name="mods:name">
@@ -527,8 +539,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Location of recipient || Modtager, sted 
+
+    <!-- Location of recipient || Modtager, sted
          (with both 'Location of recipient' and 'Modtager, sted' as role)-->
     <xsl:if test="field[@name='Location of recipient'] or field[@name='Modtager, sted']">
       <xsl:element name="mods:name">
@@ -576,7 +588,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Additional sender (personal) || Medafsender 
+    <!-- Additional sender (personal) || Medafsender
          (with both 'Additional sender (personal)' and 'Medafsender' as role)-->
     <xsl:if test="field[@name='Additional sender (personal)'] or field[@name='Medafsender']">
       <xsl:element name="mods:name">
@@ -624,7 +636,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Author || Forfatter 
+    <!-- Author || Forfatter
          (with both 'Author' and 'Forfatter' as role)-->
     <xsl:if test="field[@name='Author'] or field[@name='Forfatter']">
       <xsl:element name="mods:name">
@@ -672,7 +684,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Contributor || Bidragsyder 
+    <!-- Contributor || Bidragsyder
          (with both 'Contributor' and 'Bidragsyder' as role)-->
     <xsl:if test="field[@name='Contributor'] or field[@name='Bidragsyder']">
       <xsl:element name="mods:name">
@@ -719,7 +731,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-          
+
     <!-- Organisation -->
     <xsl:for-each select="field[@name='Organisation']/value">
       <xsl:element name="mods:name">
@@ -740,8 +752,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-    
-    <!-- Patron || Mæcen 
+
+    <!-- Patron || Mæcen
          (with both 'Patron' and 'Mæcen' as role)-->
     <xsl:if test="field[@name='Patron'] or field[@name='Mæcen']">
       <xsl:element name="mods:name">
@@ -788,8 +800,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Printer || Trykker 
+
+    <!-- Printer || Trykker
          (with both 'Printer' and 'Trykker' as role)-->
     <xsl:if test="field[@name='Printer'] or field[@name='Trykker']">
       <xsl:element name="mods:name">
@@ -836,8 +848,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Publisher || Udgiver 
+
+    <!-- Publisher || Udgiver
          (both with either "@Udgiver rolle" or 'Publisher' & 'Udgiver' as role)-->
     <xsl:if test="field[@name='Publisher'] or field[@name='Udgiver']">
       <xsl:element name="mods:name">
@@ -896,8 +908,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Scribe || Skriver 
+
+    <!-- Scribe || Skriver
          (with both 'Scribe' and 'Skriver' as role)-->
     <xsl:if test="field[@name='Scribe'] or field[@name='Skriver']">
       <xsl:element name="mods:name">
@@ -944,8 +956,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Sender (organization) || Afsender, Organisation 
+
+    <!-- Sender (organization) || Afsender, Organisation
          (with both 'Sender (organization)' and 'Afsender, Organisation' as role)-->
     <xsl:if test="field[@name='Sender (organization)'] or field[@name='Afsender, Organisation']">
       <xsl:element name="mods:name">
@@ -992,8 +1004,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Sender (person) || Afsender 
+
+    <!-- Sender (person) || Afsender
          (with both 'Sender (person)' and 'Afsender' as role)-->
     <xsl:if test="field[@name='Sender (person)'] or field[@name='Afsender']">
       <xsl:element name="mods:name">
@@ -1040,8 +1052,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Translator || Oversætter 
+
+    <!-- Translator || Oversætter
          (with both 'Translator' and 'Oversætter' as role)-->
     <xsl:if test="field[@name='Translator'] or field[@name='Oversætter']">
       <xsl:element name="mods:name">
@@ -1144,8 +1156,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Recipient (organization) || Modtager, Organisation 
+
+    <!-- Recipient (organization) || Modtager, Organisation
          (with both 'Recipient (organization)' and 'Modtager, Organisation' as role)-->
     <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
       <xsl:element name="mods:name">
@@ -1243,7 +1255,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Crowd_Person -->
     <xsl:if test="field[@name='Crowd_Person']">
       <xsl:element name="mods:name">
@@ -1266,7 +1278,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
   </xsl:template>
   <!-- END name -->
 
@@ -1281,7 +1293,6 @@
     </xsl:for-each>
 
   </xsl:template>
-  <!-- END name person -->
   
   <!-- START name ophav -->
   <xsl:template name="mods_name_ophav">
@@ -1364,6 +1375,7 @@
     
   </xsl:template>
   <!-- END name ophav or person -->
+  <!-- END name person -->
 
   <!-- START accessCondition (only for MODS:RIGHTS)-->
   <xsl:template name="cdl_accessCondition">
@@ -1373,7 +1385,6 @@
       <xsl:call-template name="cdl_person" />
     
   </xsl:template>
-  <!-- END accessCondition -->
 
   <!-- START name person -->
   <xsl:template name="cdl_person">
@@ -1451,6 +1462,7 @@
     </xsl:if>
   </xsl:template>
   <!-- END name ophav or person -->
+  <!-- END accessCondition -->
 
   <!-- START note -->
   <xsl:template name="mods_note">
@@ -1464,7 +1476,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Addiontional resources || Henvisninger -->
     <xsl:choose>
       <xsl:when test="field[@name='Additional resources']">
@@ -1516,7 +1528,7 @@
         </xsl:for-each>
       </xsl:when>
     </xsl:choose>
-      
+
     <!-- Extent || Omfang -->
     <xsl:choose>
       <xsl:when test="field[@name='Extent']">
@@ -1542,7 +1554,7 @@
         </xsl:for-each>
       </xsl:when>
     </xsl:choose>
-    
+
     <!-- Kommentar til indhold -->
     <xsl:for-each select="field[@name='Kommentar til indhold']/value">
       <xsl:element name="mods:note">
@@ -1553,7 +1565,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Selected references -->
     <xsl:for-each select="field[@name='Selected references']/value">
       <xsl:element name="mods:note">
@@ -1564,7 +1576,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Undertekst -->
     <xsl:for-each select="field[@name='Undertekst']/value">
       <xsl:element name="mods:note">
@@ -1575,7 +1587,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Situation -->
     <xsl:for-each select="field[@name='Situation']/value">
       <xsl:element name="mods:note">
@@ -1586,7 +1598,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Pladenummer -->
     <xsl:for-each select="field[@name='Pladenummer']/value">
       <xsl:element name="mods:note">
@@ -1597,7 +1609,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Intern note -->
     <xsl:for-each select="field[@name='Intern note']/value">
       <xsl:element name="mods:note">
@@ -1608,7 +1620,7 @@
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Crowd_Note -->
     <xsl:if test="field[@name='Crowd_Note']">
       <xsl:element name="mods:note">
@@ -1621,7 +1633,7 @@
         <xsl:value-of select="field[@name='Crowd_Note']/value" />
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Crowd_Kommentar -->
     <xsl:if test="field[@name='Crowd_Kommentar']">
       <xsl:element name="mods:note">
@@ -1637,27 +1649,27 @@
 
   </xsl:template>
   <!-- END note -->
-  
+
   <!-- START originInfo -->
   <xsl:template name="mods_originInfo">
-    <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or 
-          field[@name='Country (location) of sender'] or 
+    <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
+          field[@name='Country (location) of sender'] or
           field[@name='Udgivelsessted'] or field[@name='Location of origin'] or
           field[@name='Location of sender'] or
-          field[@name='Topografinr'] or field[@name='År'] or 
+          field[@name='Topografinr'] or field[@name='År'] or
           field[@name='Date of Origin'] or field[@name='Date not after'] or
-          field[@name='Dato ikke efter'] or field[@name='Date not before'] or 
+          field[@name='Dato ikke efter'] or field[@name='Date not before'] or
           field[@name='Dato ikke før'] or field[@name='Local Date'] or
           field[@name='Manual Date not after'] or
-          field[@name='Manual Date not before'] or 
+          field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
           field[@name='Presentation Date']">
-  
+
       <xsl:element name="mods:originInfo">
-        <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or 
-          field[@name='Udgivelsessted'] or 
+        <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
+          field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
-          field[@name='Location of origin'] or 
+          field[@name='Location of origin'] or
           field[@name='Location of sender'] or field[@name='Topografinr']">
           <xsl:element name="mods:place">
             <!-- Udgivelsesland || Country || Country (location) of sender -->
@@ -1696,7 +1708,7 @@
                 </xsl:for-each>
               </xsl:when>
             </xsl:choose>
-  
+
             <!-- Udgivelsessted || Location of origin || Location of sender -->
             <xsl:choose>
               <xsl:when test="field[@name='Udgivelsessted']">
@@ -1733,7 +1745,7 @@
                 </xsl:for-each>
               </xsl:when>
             </xsl:choose>
-          
+
             <xsl:for-each select="field[@name='Topografinr']/value">
               <xsl:element name="mods:placeTerm">
                 <xsl:attribute name="type">
@@ -1745,7 +1757,7 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:if>
-      
+
         <!-- År || Date of Origin -->
         <xsl:choose>
           <xsl:when test="field[@name='År']">
@@ -1771,7 +1783,7 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-      
+
         <!-- Date not after || Dato ikke efter -->
         <xsl:choose>
           <xsl:when test="field[@name='Date not after']">
@@ -1887,10 +1899,10 @@
             <xsl:call-template name="cumulus_get_value" />
           </xsl:element>
         </xsl:for-each>
-      
+
       </xsl:element>
     </xsl:if>
-    
+
     <!-- crowd -->
     <!-- Crowd_Bygningsnavn -->
     <xsl:if test="field[@name='Crowd_Bygningsnavn']">
@@ -2074,8 +2086,8 @@
 
   <!-- START physicalDescription -->
   <xsl:template name="mods_physicalDescription">
-    <xsl:if test="field[@name='Script'] or field[@name='Skrifttype'] 
-    or field[@name='Script: detail'] or field[@name='Skrifttype, detaljer'] 
+    <xsl:if test="field[@name='Script'] or field[@name='Skrifttype']
+    or field[@name='Script: detail'] or field[@name='Skrifttype, detaljer']
     or field[@name='Størrelse'] or field[@name='Dimentions']
     or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']">
       <xsl:element name="mods:physicalDescription">
@@ -2089,7 +2101,7 @@
                   <xsl:value-of select="'Script'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Skrifttype']">
@@ -2100,11 +2112,11 @@
                   <xsl:value-of select="'Skrifttype'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        
+
         <!-- Script: detail || Skrifttype, detaljer -->
         <xsl:choose>
           <xsl:when test="field[@name='Script: detail']">
@@ -2115,7 +2127,7 @@
                   <xsl:value-of select="'Script: detail'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Skrifttype, detaljer']">
@@ -2126,11 +2138,11 @@
                   <xsl:value-of select="'Skrifttype, detaljer'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        
+
         <!-- Størrelse || Dimentions -->
         <xsl:choose>
           <xsl:when test="field[@name='Størrelse']">
@@ -2141,7 +2153,7 @@
                   <xsl:value-of select="'Størrelse'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Dimentions']">
@@ -2152,11 +2164,11 @@
                   <xsl:value-of select="'Dimentions'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        
+
         <!-- Textarea || Tekstområde -->
         <xsl:choose>
           <xsl:when test="field[@name='Textarea']">
@@ -2167,7 +2179,7 @@
                   <xsl:value-of select="'Textarea'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Tekstområde']">
@@ -2178,11 +2190,11 @@
                   <xsl:value-of select="'Tekstområde'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>        
+              </xsl:element>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        
+
         <xsl:if test="field[@name='State']">
           <xsl:element name="mods:note">
             <xsl:attribute name="type">
@@ -2209,7 +2221,7 @@
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Record Creation Date']/value)" />
         </xsl:element>
       </xsl:if>
-      
+
       <!-- record change date -->
       <xsl:if test="field[@name='Record Modification Date']">
         <xsl:element name="mods:recordChangeDate">
@@ -2220,14 +2232,14 @@
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Record Modification Date']/value)" />
         </xsl:element>
       </xsl:if>
-      
+
       <!-- record identifier -->
       <xsl:if test="field[@name='record_id']">
         <xsl:element name="mods:recordIdentifier">
           <xsl:value-of select="field[@name='record_id']/value" />
         </xsl:element>
       </xsl:if>
-      
+
       <!-- language of cataloging -->
       <xsl:element name="mods:languageOfCataloging">
         <xsl:element name="mods:languageTerm">
@@ -2240,7 +2252,7 @@
           <xsl:value-of select="$mods_default_lang" />
         </xsl:element>
       </xsl:element>
-      
+
       <!-- record origin -->
       <xsl:for-each select="field[@name='Aleph_ID']/value">
         <xsl:element name="mods:recordOrigin">
@@ -2254,7 +2266,7 @@
           <xsl:value-of select="." />
         </xsl:element>
       </xsl:for-each>
-      
+
       <!-- record info note: page orientation -->
       <xsl:for-each select="field[@name='Pageorientation']/value">
         <xsl:element name="mods:recordInfoNote">
@@ -2316,7 +2328,7 @@
             <xsl:call-template name="title_info_content" />
           </xsl:element>
         </xsl:for-each>
-        
+
         <!-- Publikationsformat -->
         <xsl:if test="field[@name='Publikationsformat']">
           <xsl:element name="mods:physicalDescription">
@@ -2330,17 +2342,17 @@
         </xsl:if>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Event date, Event description, Event lable, Event participants, Event place, Event type -->
-    <xsl:if test="field[@name='Event date'] or field[@name='Event description'] or field[@name='Event label'] or 
+    <xsl:if test="field[@name='Event date'] or field[@name='Event description'] or field[@name='Event label'] or
             field[@name='Event participants'] or field[@name='Event place'] or field[@name='Event type']">
       <xsl:element name="mods:relatedItem">
-      
+
         <!-- Event type -->
         <xsl:attribute name="type">
           <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.relatedItemAttributeType(field[@name='Event type']/value, $type_of_event)" />
         </xsl:attribute>
-        
+
         <!-- Event description -->
         <xsl:if test="field[@name='Event description']">
           <xsl:element name="mods:physicalDescription">
@@ -2351,7 +2363,7 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:if>
-        
+
         <!-- Event date and Event place in originInfo -->
         <xsl:if test="field[@name='Event date'] or field[@name='Event participants'] or field[@name='Event place']">
           <xsl:element name="mods:originInfo">
@@ -2364,7 +2376,7 @@
                 <xsl:value-of select="." />
               </xsl:element>
             </xsl:for-each>
-        
+
             <!-- Event place -->
             <xsl:for-each select="field[@name='Event place']/value">
               <xsl:element name="mods:place">
@@ -2373,7 +2385,7 @@
                 </xsl:element>
               </xsl:element>
             </xsl:for-each>
-          
+
             <!-- Event participants -->
             <xsl:for-each select="field[@name='Event participants']/value">
               <xsl:element name="mods:publisher" >
@@ -2382,7 +2394,7 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:if>
-        
+
         <!-- Event label  -->
         <xsl:if test="field[@name='Event label']">
           <xsl:element name="mods:titleInfo">
@@ -2393,7 +2405,7 @@
         </xsl:if>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- URL (and URL-tekst) -->
     <xsl:if test="field[@name='URL']">
       <xsl:element name="mods:relatedItem">
@@ -2406,7 +2418,7 @@
           </xsl:attribute>
           <xsl:value-of select="field[@name='URL']/value" />
         </xsl:element>
-        
+
         <xsl:for-each select="field[@name='URL-tekst']/value">
           <xsl:element name="mods:note">
             <xsl:call-template name="cumulus_get_lang_attribute" />
@@ -2418,7 +2430,7 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Serie -->
     <xsl:for-each select="field[@name='Serie']/value">
       <xsl:element name="mods:relatedItem">
@@ -2453,8 +2465,8 @@
             <xsl:attribute name="type">
               <xsl:value-of select="'uri'" />
             </xsl:attribute>
-            <xsl:value-of select="concat($image_uri_base, 
-              substring-before(field[@name='Asset Reference']/value,'.tif'), 
+            <xsl:value-of select="concat($image_uri_base,
+              substring-before(field[@name='Asset Reference']/value,'.tif'),
               '.jpg')" />
           </xsl:element>
           <!-- URI thumbnail -->
@@ -2466,18 +2478,18 @@
               <xsl:attribute name="type">
                 <xsl:value-of select="'uri'" />
               </xsl:attribute>
-              <xsl:value-of select="concat($image_uri_base, '/w150/h150', 
-                substring-before(field[@name='Asset Reference']/value,'.tif'), 
+              <xsl:value-of select="concat($image_uri_base, '/w150/h150',
+                substring-before(field[@name='Asset Reference']/value,'.tif'),
                 '.jpg')" />
             </xsl:element>
           </xsl:if>
         </xsl:element>
       </xsl:if>
     </xsl:if>
-        
+
   </xsl:template>
   <!-- END relatedItem -->
-  
+
   <!-- START subject -->
   <xsl:template name="mods_subject">
     <!-- Bygningsnavn -->
@@ -2492,7 +2504,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-      
+
     <!-- Georeference -->
     <xsl:for-each select="field[@name='Georeference']/value">
       <xsl:element name="mods:subject">
@@ -2505,7 +2517,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Keywords -->
     <xsl:if test="field[@name='Keywords']">
       <xsl:element name="mods:subject">
@@ -2520,8 +2532,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Location || Lokalitet 
+
+    <!-- Location || Lokalitet
          with both 'Location' and 'Lokalitet' as genre.-->
     <xsl:if test="field[@name='Location'] or field[@name='Lokalitet']">
       <xsl:element name="mods:subject">
@@ -2557,7 +2569,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Motiv -->
     <xsl:for-each select="field[@name='Motiv']/value">
       <xsl:element name="mods:subject">
@@ -2621,8 +2633,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Organisation || Organisation, ophav 
+
+    <!-- Organisation || Organisation, ophav
          with both 'Organisation' and 'Organisation, ophav' as genre.-->
     <xsl:if test="field[@name='Organisation'] or field[@name='Organisation, ophav']">
       <xsl:element name="mods:subject">
@@ -2658,8 +2670,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Organisational affiliation of additional recipient || Medmodtagers organisation 
+
+    <!-- Organisational affiliation of additional recipient || Medmodtagers organisation
          with both 'Organisational affiliation of additional recipient' and 'Medmodtagers organisation' as genre.-->
     <xsl:if test="field[@name='Organisational affiliation of additional recipient'] or field[@name='Medmodtagers organisation']">
       <xsl:element name="mods:subject">
@@ -2695,8 +2707,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Organisation affiliation of recipient || Modtagers organisation 
+
+    <!-- Organisation affiliation of recipient || Modtagers organisation
          with both 'Organisation affiliation of recipient' and 'Modtagers organisation' as genre.-->
     <xsl:if test="field[@name='Organisation affiliation of recipient'] or field[@name='Modtagers organisation']">
       <xsl:element name="mods:subject">
@@ -2732,8 +2744,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Organisational affiliation of additional sender || Medsenders organisation 
+
+    <!-- Organisational affiliation of additional sender || Medsenders organisation
          with both 'Organisational affiliation of additional sender' and 'Medsenders organisation' as genre.-->
     <xsl:if test="field[@name='Organisational affiliation of additional sender'] or field[@name='Medsenders organisation']">
       <xsl:element name="mods:subject">
@@ -2769,8 +2781,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Organisational affiliation of sender || Afsenders organisation 
+
+    <!-- Organisational affiliation of sender || Afsenders organisation
          with both 'Organisational affiliation of sender' and 'Afsenders organisation' as genre.-->
     <xsl:if test="field[@name='Organisational affiliation of sender'] or field[@name='Afsenders organisation']">
       <xsl:element name="mods:subject">
@@ -2806,7 +2818,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Person -->
     <xsl:for-each select="field[@name='Person']/value">
       <xsl:element name="mods:subject">
@@ -2819,8 +2831,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-    
-    <!-- Additional recipient (personal) || Medmodtager 
+
+    <!-- Additional recipient (personal) || Medmodtager
          with both 'Additional recipient (personal)' and 'Medmodtager' as genre.-->
     <xsl:if test="field[@name='Additional recipient (personal)'] or field[@name='Medmodtager']">
       <xsl:element name="mods:subject">
@@ -2860,7 +2872,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- LCSH -->
     <xsl:for-each select="field[@name='LCSH']/value">
       <xsl:element name="mods:subject">
@@ -2873,7 +2885,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Sprog -->
     <xsl:for-each select="field[@name='Sprog']/value">
       <xsl:element name="mods:subject">
@@ -2886,7 +2898,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Crowd_Emneord -->
     <xsl:if test="field[@name='Crowd_Emneord']">
       <xsl:element name="mods:subject">
@@ -2901,7 +2913,7 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Crowd_Georeference -->
     <xsl:if test="field[@name='Crowd_Georeference']">
       <xsl:element name="mods:subject">
@@ -2936,7 +2948,6 @@
     </xsl:for-each>    
     
   </xsl:template>
-  <!-- END subject -->
 
   <!-- START subject ophav person -->
   <xsl:template name="mods_subject_ophav_person">
@@ -2997,7 +3008,8 @@
     </xsl:element>
        
   </xsl:template>
-  
+  <!-- END subject -->
+
   <!-- START tableOfContents -->
   <xsl:template name="mods_tableOfContents">
     <!-- NOTHING YET! -->
@@ -3009,7 +3021,7 @@
     <!-- NOTHING YET! -->
   </xsl:template>
   <!-- END targetAudience -->
-  
+
   <!-- START titleInfo -->
   <xsl:template name="mods_titleInfo">
     <!-- Titel eller Title -->
@@ -3033,7 +3045,7 @@
         </xsl:element>
       </xsl:when>
     </xsl:choose>
-      
+
     <!-- alternativ title -->
     <xsl:if test="field[@name='Alternative title']">
       <xsl:element name="mods:titleInfo">
