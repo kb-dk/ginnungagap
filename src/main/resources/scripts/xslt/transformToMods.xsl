@@ -1351,6 +1351,16 @@
           <!--<xsl:value-of select="field[@name='Andet navn']/value" /> -->
         <!--</xsl:element> -->
       <!--</xsl:if> -->
+      <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
+        <xsl:element name="mods:namePart">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'date'" />
+          </xsl:attribute>
+          <xsl:value-of select="field[@name='Født']/value" />
+          <xsl:value-of select="'/'" />
+          <xsl:value-of select="field[@name='Død']/value" />
+        </xsl:element>
+      </xsl:if>
       <xsl:if test="field[@name='Nationalitet']/value">
         <xsl:element name="mods:description">
           <xsl:value-of select="field[@name='Nationalitet']/value" />
@@ -2928,15 +2938,6 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-
-    <!-- Ophav Tabel -->
-    <xsl:for-each select="field[@name='Ophav-tabel']/table/row">
-      <xsl:if test="contains(field[@name='Rolle']/value, 'ophav materiale') or 
-      contains(field[@name='Rolle']/value, 'ophav motiv')">
-        <xsl:comment>MODS subject name ophav</xsl:comment> 
-        <xsl:call-template name="mods_subject_ophav_person" />    
-      </xsl:if>
-    </xsl:for-each>    
 
     <!-- Person Tabel -->
     <xsl:for-each select="field[@name='Person-tabel']/table/row">
