@@ -1,12 +1,14 @@
 package dk.kb.ginnungagap.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
+import dk.kb.cumulus.Constants;
+import dk.kb.cumulus.CumulusRecord;
+import dk.kb.ginnungagap.archive.ArchiveWrapper;
+import dk.kb.ginnungagap.config.Configuration;
+import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
+import dk.kb.ginnungagap.cumulus.CumulusWrapper;
+import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
+import dk.kb.ginnungagap.transformation.MetadataTransformer;
+import dk.kb.ginnungagap.utils.WarcUtils;
 import dk.kb.metadata.utils.GuidExtractionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -21,18 +23,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.multipart.MultipartFile;
 
-import dk.kb.cumulus.Constants;
-import dk.kb.cumulus.CumulusRecord;
-import dk.kb.ginnungagap.archive.ArchiveWrapper;
-import dk.kb.ginnungagap.config.Configuration;
-import dk.kb.ginnungagap.cumulus.CumulusPreservationUtils;
-import dk.kb.ginnungagap.cumulus.CumulusWrapper;
-import dk.kb.ginnungagap.transformation.MetadataTransformationHandler;
-import dk.kb.ginnungagap.transformation.MetadataTransformer;
-import dk.kb.ginnungagap.utils.WarcUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
+
 
 /**
  * Controller for dealing with the metadata creation/extraction.
@@ -41,7 +55,12 @@ import dk.kb.ginnungagap.utils.WarcUtils;
 public class MetadataController {
     /** The log.*/
     protected final Logger log = LoggerFactory.getLogger(MetadataController.class);
-    
+    static final String ZIP = ".zip";
+
+    String uploadFile = "Dummy";
+
+    String inputFilePath = "/usr/local/ginnungagap/tempDir/";
+
     /** The configuration.*/
     @Autowired
     protected Configuration conf;
@@ -68,7 +87,7 @@ public class MetadataController {
     
     /**
      * The method for extracting metadata.
-     * @param id The ID of the record to extract metadata for.
+     * @param id The ID(s) of the record to extract metadata for.
      * @param idType The type of ID for the Cumulus record, either UUID or Record Name.
      * @param catalog The catalog for the Cumulus record.
      * @param metadataType The type of metadata to extract, either METS or KBIDS.
@@ -77,46 +96,54 @@ public class MetadataController {
      */
     @RequestMapping("/metadata/extract")
     public DeferredResult <ResponseEntity<Resource>> extractMetadata(
-            @RequestParam(value="ID",required=true) String id,
+            @RequestParam(value="ID",required=false) String id,
             @RequestParam(value="idType", required=false, defaultValue="UUID") String idType,
             @RequestParam(value="catalog", required=true) String catalog,
             @RequestParam(value="metadataType", required=false, defaultValue="METS") String metadataType,
             @RequestParam(value="source", required=false, defaultValue="cumulus") String source) {
         try {
             DeferredResult<ResponseEntity<Resource>> output = new DeferredResult<>(180000L);
-            log.info("Extracting '" + metadataType + "' metadata for '" + id + "' from catalog '" + catalog + "'.");
-            String filename = id + ".xml";
+            String filename;
             File metadataFile;
+            CumulusRecord record;
+            File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            String[] fileList;
 
-            CumulusRecord record = null;
-            if(idType.equalsIgnoreCase("uuid")) {
-                record = cumulusWrapper.getServer().findCumulusRecord(catalog, id);
-            } else {
-                record = cumulusWrapper.getServer().findCumulusRecordByName(catalog, id);            
+            Path path = Paths.get(inputFilePath + uploadFile);
+
+            if(isNullOrEmpty(id)) {
+                fileList = getFileListFromFile(path);
             }
-            if(record == null) {
-                throw new IllegalStateException("No Cumulus record for '" + id + "' at catalog '" + catalog 
-                        + "' can be found!");
+            else {
+                fileList = id.split("\\s*,\\s*");
             }
-            
-            validateRecord(record);
-            
-            if(source.equalsIgnoreCase("archive")) {
-                metadataFile = getArchivedMetadata(filename, metadataType, record);
-                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.trace("Contents from archive: \n" + data);
-            } else {
-                metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-                String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                log.trace("Contents from Cumulus: \n" + data);
+
+            List<String> srcFiles = new ArrayList<>();
+            for (String fid : fileList) {
+                filename = fid + ".xml";
+                log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'.");
+                record = getCumulusRecord(fid, idType, catalog);
+                validateRecord(record);
+                if(source.equalsIgnoreCase("archive")) {
+                    metadataFile = getArchivedMetadata(filename, metadataType, record);
+                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                    log.trace("Contents from archive: \n" + data);
+                } else {
+                    metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
+                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                    log.trace("Contents from Cumulus: \n" + data);
+                }
+                zippedXmls = addToZip(metadataFile, srcFiles);
             }
-            output.onTimeout(()-> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
-                            .body("Request timeout")));
-            output.onCompletion(()-> log.info("Process getting metadata complete"));
-            Resource resource = new UrlResource(metadataFile.toURI());
+
+            output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
+                    .body("Request timeout")));
+            output.onCompletion(() -> log.trace("Process getting metadata complete"));
+
+            Resource resource = new UrlResource(zippedXmls.toURI());
             output.setResult(ResponseEntity.ok()
-                    .contentType(MediaType.TEXT_XML)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zippedXmls.getName() + "\"")
                     .body(resource));
             return output;
         } catch (Exception e) {
@@ -124,7 +151,101 @@ public class MetadataController {
             throw new IllegalStateException("Failed to extract metadata", e);
         }
     }
-    
+
+    /**
+     * Upload a file containing a list of file IDs to extract metadata for
+     * @param file The uploaded file
+     * @param model Needed to add the 'catalogs' list to Metadata view
+     * @return return the Metadata view to enable setting 'ID type', 'catalog' etc
+     */
+    @RequestMapping(value = "/metadata/upload", headers = "content-type=multipart/form-data", method = RequestMethod.POST)
+    public String submit(@RequestParam("file") MultipartFile file, Model model) {
+        if (!file.isEmpty()) {
+            try {
+                uploadFile = file.getOriginalFilename();
+                file.transferTo(new File(inputFilePath + uploadFile));
+            } catch (IOException e) {
+                throw new IllegalStateException(e); //todo: make warning?
+            }
+        }
+        model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
+        return "metadata";
+    }
+
+    /**
+     * Help method to read a file line by line and return the result in a String array
+//     * @param list
+     * @param path Path to the file to read
+     * @return list of files as String array
+     */
+    private String[] getFileListFromFile(Path path) {
+        String[] fList;
+        List<String> list = new ArrayList<>();
+        try (Stream<String> stream = Files.lines(path)) {
+            list = stream
+                    .filter(line -> !line.isEmpty())
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            log.warn("Something went wrong reading file to list", e);
+        }
+        fList = list.toArray(new String[0]);
+
+        return fList;
+
+//        String[] list = new String[0];
+//        if(path.toFile().exists()) {
+//
+//            List<String> filesList = null;
+//            try (Stream<String> lines = Files.lines(path)) {
+//                filesList = lines.collect(Collectors.toList());
+//            } catch (IOException e) {
+//                log.warn("Something went wrong reading file to list", e);
+//            }
+//            if(!(filesList == null)) {
+//                list = filesList.toArray(new String[0]);
+//                log.trace("filelist: {}", (Object) list);
+//            }
+
+
+//          //          path.toFile().delete();
+//       return list;
+
+    }
+
+    /**
+     * Add a file to a Zip-file
+     * @param file The file to add
+     * @param srcFiles The list of files
+     * @return The updated zip-file
+     */
+    private File addToZip(File file, List<String> srcFiles)  {
+        try {
+                srcFiles.add(file.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+                ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+                for (String srcFile : srcFiles) {
+                    File fileToZip = new File(srcFile);
+                    FileInputStream fis = new FileInputStream(fileToZip);
+                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                    zipOut.putNextEntry(zipEntry);
+
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = fis.read(bytes)) >= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                    fis.close();
+                }
+                zipOut.close();
+                fos.close();
+
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed adding to zip", e);
+            }
+        return new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+    }
+
     /**
      * Validates that the record is at least ready for preservation.
      * @param record The record.
@@ -158,7 +279,7 @@ public class MetadataController {
         File warcFile = archiveWrapper.getFile(warcId, collectionId);
         
         File outputFile = new File(conf.getBitmagConf().getTempDir(), filename);
-        String recordId = null;
+        String recordId;
         if(metadataType.equalsIgnoreCase("KBIDS")) {
             recordId = GuidExtractionUtils.extractGuid(record.getFieldValue(
                     Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
@@ -193,7 +314,7 @@ public class MetadataController {
             }
             createMetsMetadata(record, metadataFile);
         }
-        
+
         return metadataFile;
     }
     
@@ -211,11 +332,11 @@ public class MetadataController {
                 Constants.FieldNames.RELATED_OBJECT_IDENTIFIER_VALUE_INTELLECTUEL_ENTITY));
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         String fileUUID = record.getUUID();
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");
             CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, rawMetadataFile);
-            try (InputStream cumulusIn = new FileInputStream(rawMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(rawMetadataFile.toPath())) {
                 transformer.transformXmlMetadata(cumulusIn, os);
             }
             os.flush();
@@ -235,21 +356,44 @@ public class MetadataController {
 
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         if(record.isMasterAsset()) {
-//            String ieUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_INTELLECTUAL_ENTITY_UUID);
             metadataUUID = record.getFieldValue(Constants.FieldNames.REPRESENTATION_METADATA_GUID);
             transformer = metadataTransformer.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
         }
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
                     + ".raw.xml");
-            try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
+            Path cumulusMetadataFilePath = cumulusMetadataFile.toPath();
+            try (OutputStream cumulusOut = Files.newOutputStream(cumulusMetadataFilePath)) {
                 record.writeFieldMetadata(cumulusOut);
             }
-            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(cumulusMetadataFilePath)) {
                 transformer.transformXmlMetadata(cumulusIn, os);
+            } catch (Exception e){
+                log.error("Error in XML transformation: ", e);
             }
             os.flush();
         }
+    }
+
+    /**
+     * Extract a Cumulus record
+     * @param id The id of the record
+     * @param idType The type of id (UUID or file name)
+     * @param catalog The Cumulus Catalog
+     * @return The Cumulus record
+     */
+    private CumulusRecord getCumulusRecord(String id, String idType, String catalog) {
+        CumulusRecord record;
+        if(idType.equalsIgnoreCase("uuid")) {
+            record = cumulusWrapper.getServer().findCumulusRecord(catalog, id);
+        } else {
+            record = cumulusWrapper.getServer().findCumulusRecordByName(catalog, id);
+        }
+        if(record == null) {
+            throw new IllegalStateException("No Cumulus record for '" + id + "' at catalog '" + catalog
+                    + "' can be found!");
+        }
+        return record;
     }
 }
