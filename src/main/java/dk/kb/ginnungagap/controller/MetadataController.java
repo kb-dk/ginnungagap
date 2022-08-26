@@ -176,32 +176,47 @@ public class MetadataController {
      * Help method to read a file line by line and return the result in a String array
 //     * @param list
      * @param path Path to the file to read
-     * @return list of files as String aray
+     * @return list of files as String array
      */
     private String[] getFileListFromFile(Path path) {
-        String[] list = new String[0];
-        if(path.toFile().exists()) {
-
-            List<String> filesList = null;
-            try (Stream<String> lines = Files.lines(path)) {
-                filesList = lines.collect(Collectors.toList());
-            } catch (IOException e) {
-                log.warn("Something went wrong reading file to list", e);
-            }
-            if(!(filesList == null)) {
-                list = filesList.toArray(new String[0]);
-                log.trace("filelist: {}", (Object) list);
-            }
-//                    path.toFile().delete();
+        String[] fList;
+        List<String> list = new ArrayList<>();
+        try (Stream<String> stream = Files.lines(path)) {
+            list = stream
+                    .filter(line -> !line.isEmpty())
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            log.warn("Something went wrong reading file to list", e);
         }
-        return list;
+        fList = list.toArray(new String[0]);
+
+        return fList;
+
+//        String[] list = new String[0];
+//        if(path.toFile().exists()) {
+//
+//            List<String> filesList = null;
+//            try (Stream<String> lines = Files.lines(path)) {
+//                filesList = lines.collect(Collectors.toList());
+//            } catch (IOException e) {
+//                log.warn("Something went wrong reading file to list", e);
+//            }
+//            if(!(filesList == null)) {
+//                list = filesList.toArray(new String[0]);
+//                log.trace("filelist: {}", (Object) list);
+//            }
+
+
+//          //          path.toFile().delete();
+//       return list;
+
     }
 
     /**
      * Add a file to a Zip-file
      * @param file The file to add
-     * @param srcFiles
-     * @return
+     * @param srcFiles The list of files
+     * @return The updated zip-file
      */
     private File addToZip(File file, List<String> srcFiles)  {
         try {
@@ -381,48 +396,4 @@ public class MetadataController {
         }
         return record;
     }
-
-
-//    public void handleUpload(@RequestParam("file") MultipartFile file)  {
-//
-//        if (!file.isEmpty()) {
-//            try {
-//                file.transferTo(new File(inputFilePath));
-//            } catch (IOException e) {
-//                throw new IllegalStateException(e);
-//            }
-//        }
-
-//        File metadataFile;
-//        String filename;
-//        String metadataType = "METS";
-//        String idType = "NAME";
-//        String catalog = "Samlingsbilleder";
-//        Path inputFileP = Paths.get(inputFilePath);
-//        List<String> fileList = Arrays.asList(str.split("\\s*,\\s*"));
-//
-//
-//        try (Stream<String> lines = Files.lines(inputFileP)) {
-//            fileList = lines.collect(Collectors.toList());
-//        }
-//        catch (IOException e){
-//            log.info("File was not read to list", e);
-//        }
-//        if(!(fileList == null)){
-//            for (String id:fileList){
-//                filename = id + ".xml";
-//                log.info("Extracting '" + metadataType + "' metadata for '" + id + "' from catalog '" + catalog + "'.");
-//                CumulusRecord record = getCumulusRecord(id, idType, catalog);
-//                validateRecord(record);
-//                try {
-//                    metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-//                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-//                    log.trace("Contents from Cumulus: \n" + data);
-//                } catch (Exception e) {
-//                    throw new IllegalStateException(e);
-//                }
-//                deleteFile(inputFileP.toFile());
-//            }
-//        }
-//    }
 }
