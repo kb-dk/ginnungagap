@@ -168,27 +168,88 @@
   
   <!-- START accessCondition (only for MODS:RIGHTS)-->
   <xsl:template name="mods_accessCondition">
-    <xsl:for-each select="field[@name='Copyright']/value">
-      <xsl:element name="mods:accessCondition">
+
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="displayLabel">
+        <xsl:value-of select="'Copyright'" />
+      </xsl:attribute>
+      <xsl:for-each select="field[@name='Copyright']/value">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:call-template name="cumulus_get_value" />
-      </xsl:element>
-    </xsl:for-each>
-    
-    <xsl:for-each select="field[@name='Copyright Notice']/value">
-      <xsl:element name="mods:accessCondition">
+      </xsl:for-each>
+    </xsl:element>
+
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="displayLabel">
+        <xsl:value-of select="'Copyright Notice'" />
+      </xsl:attribute>
+      <xsl:for-each select="field[@name='Copyright Notice']/value">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:call-template name="cumulus_get_value" />
-      </xsl:element>
+      </xsl:for-each>
+    </xsl:element>
+
+    <xsl:element name="mods:note">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'pligtaflevering'" />
+      </xsl:attribute>
+      <xsl:for-each select="field[@name='Pligtafleveret']/value">
+        <xsl:call-template name="cumulus_get_value" />
+      </xsl:for-each>
+    </xsl:element>
+
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'restriction on access'" />
+      </xsl:attribute>  
+    <xsl:for-each select="field[@name='Blokeret']/value">
+          <xsl:call-template name="cumulus_get_value" />
     </xsl:for-each>
+    </xsl:element>
     
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'restriction on access note'" />
+      </xsl:attribute>
+      <xsl:for-each select="field[@name='Blokeringsnote']/value">
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:call-template name="cumulus_get_value" />
+      </xsl:for-each>
+    </xsl:element>
+
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'use and reproduction'" />
+      </xsl:attribute>
+      <xsl:attribute name="displayLabel">
+        <xsl:value-of select="'Restricted'" />
+      </xsl:attribute>
+      <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:call-template name="cumulus_get_value" />
+      </xsl:for-each>
+    </xsl:element>
+
+    <xsl:element name="mods:accessCondition">
+      <xsl:attribute name="type">
+        <xsl:value-of select="'use and reproduction note'" />
+      </xsl:attribute>
+      <xsl:attribute name="displayLabel">
+        <xsl:value-of select="'Restricted'" />
+      </xsl:attribute>
+    <xsl:for-each select="field[@name='Visningsnote']/value">
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:call-template name="cumulus_get_value" />
+    </xsl:for-each>
+    </xsl:element>
+
     <!-- Start the CDL accessCondition -->
     <xsl:element name="mods:accessCondition">
       <cdl:copyright xsi:schemaLocation="{$CDL_LOCATION}" copyright.status="{$CDL_COPYRIGHT_STATUS}" publication.status="{$CDL_PUBLICATION_STATUS}">     
         <xsl:call-template name="cdl_accessCondition" />
       </cdl:copyright>
     </xsl:element>
-    
+
   </xsl:template>
   <!-- END accessCondition -->
 
