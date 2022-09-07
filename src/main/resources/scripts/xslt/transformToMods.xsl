@@ -21,8 +21,8 @@
   
   <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
   
-  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd'" />
-  <xsl:variable name="MODS_VERSION" select="'3.6'" />
+  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
+  <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
   <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/rights-access-metadata/master/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
@@ -1403,15 +1403,16 @@
           <xsl:value-of select="field[@name='Fornavn']/value" />
         </xsl:element>
       </xsl:if>
-      <!-- alternativeName is not supported in version 3.6 of MODS -->
-      <!--<xsl:if test="field[@name='Andet navn']/value"> -->
-        <!--<xsl:element name="mods:alternativeName"> -->
-          <!--<xsl:attribute name="type"> -->
-            <!--<xsl:value-of select="'nickname'" /> -->
-          <!--</xsl:attribute> -->
-          <!--<xsl:value-of select="field[@name='Andet navn']/value" /> -->
-        <!--</xsl:element> -->
-      <!--</xsl:if> -->
+      <xsl:if test="field[@name='Andet navn']/value">
+        <xsl:element name="mods:alternativeName">
+          <xsl:attribute name="altType">
+            <xsl:value-of select="'nickname'" />
+          </xsl:attribute>
+          <xsl:element name="mods:namePart">
+            <xsl:value-of select="field[@name='Andet navn']/value" />
+          </xsl:element>          
+        </xsl:element>
+      </xsl:if>
       <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
         <xsl:element name="mods:namePart">
           <xsl:attribute name="type">
@@ -3034,15 +3035,16 @@
             <xsl:value-of select="field[@name='Fornavn']/value" />
           </xsl:element>
         </xsl:if>
-        <!-- alternativeName is not supported in version 3.6 of MODS -->
-        <!--<xsl:if test="field[@name='Andet navn']/value"> -->
-          <!--<xsl:element name="mods:alternativeName"> -->
-            <!--<xsl:attribute name="type"> -->
-              <!--<xsl:value-of select="'nickname'" /> -->
-            <!--</xsl:attribute> -->
-            <!--<xsl:value-of select="field[@name='Andet navn']/value" /> -->
-          <!--</xsl:element> -->
-        <!--</xsl:if> -->
+        <xsl:if test="field[@name='Andet navn']/value">
+          <xsl:element name="mods:alternativeName">
+            <xsl:attribute name="altType">
+              <xsl:value-of select="'nickname'" />
+            </xsl:attribute>
+            <xsl:element name="mods:namePart">
+              <xsl:value-of select="field[@name='Andet navn']/value" />
+            </xsl:element>          
+          </xsl:element>
+        </xsl:if>
         <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
           <xsl:element name="mods:namePart">
             <xsl:attribute name="type">

@@ -94,7 +94,7 @@
     <dependency>
       <groupId>dk.kb</groupId>
       <artifactId>kb-cumulus-api</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.1-SNAPHOT</version>
       <exclusions>
         <exclusion>
           <groupId>com.canto</groupId>
