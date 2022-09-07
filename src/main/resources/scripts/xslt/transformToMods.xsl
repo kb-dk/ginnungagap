@@ -169,79 +169,89 @@
   <!-- START accessCondition (only for MODS:RIGHTS)-->
   <xsl:template name="mods_accessCondition">
 
-    <xsl:element name="mods:accessCondition">
+
       <xsl:attribute name="displayLabel">
         <xsl:value-of select="'Copyright'" />
       </xsl:attribute>
       <xsl:for-each select="field[@name='Copyright']/value">
+        <xsl:element name="mods:accessCondition">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:call-template name="cumulus_get_value" />
+        </xsl:element>
       </xsl:for-each>
-    </xsl:element>
 
-    <xsl:element name="mods:accessCondition">
-      <xsl:attribute name="displayLabel">
-        <xsl:value-of select="'Copyright Notice'" />
-      </xsl:attribute>
+<!--      <xsl:attribute name="displayLabel">-->
+<!--        <xsl:value-of select="'Copyright Notice'" />-->
+<!--      </xsl:attribute>-->
       <xsl:for-each select="field[@name='Copyright Notice']/value">
+        <xsl:element name="mods:accessCondition">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:call-template name="cumulus_get_value" />
+        </xsl:element>
       </xsl:for-each>
-    </xsl:element>
 
-    <xsl:element name="mods:note">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'pligtaflevering'" />
-      </xsl:attribute>
-      <xsl:for-each select="field[@name='Pligtafleveret']/value">
-        <xsl:call-template name="cumulus_get_value" />
-      </xsl:for-each>
-    </xsl:element>
+    <xsl:if test="field[@name='Pligtafleveret']">
+      <xsl:element name="mods:note">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'pligtaflevering'" />
+        </xsl:attribute>
+        <xsl:value-of select="field[@name='Pligtafleveret']/value" />
+      </xsl:element>
+    </xsl:if>
 
-    <xsl:element name="mods:accessCondition">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'restriction on access'" />
-      </xsl:attribute>  
-    <xsl:for-each select="field[@name='Blokeret']/value">
+    <xsl:if test="field[@name='Blokeret']">
+      <xsl:element name="mods:accessCondition">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'restriction on access'" />
+        </xsl:attribute>
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Access Status'" />
+        </xsl:attribute>
+        <xsl:value-of select="field[@name='Blokeret']/value" />
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:if test="field[@name='Blokeringsnote']">
+      <xsl:element name="mods:accessCondition">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'restriction on access note'" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Blokeringsnote']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:call-template name="cumulus_get_value" />
-    </xsl:for-each>
-    </xsl:element>
-    
-    <xsl:element name="mods:accessCondition">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'restriction on access note'" />
-      </xsl:attribute>
-      <xsl:for-each select="field[@name='Blokeringsnote']/value">
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:call-template name="cumulus_get_value" />
-      </xsl:for-each>
-    </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
 
-    <xsl:element name="mods:accessCondition">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'use and reproduction'" />
-      </xsl:attribute>
-      <xsl:attribute name="displayLabel">
-        <xsl:value-of select="'Restricted'" />
-      </xsl:attribute>
-      <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:call-template name="cumulus_get_value" />
-      </xsl:for-each>
-    </xsl:element>
+    <xsl:if test="field[@name='Særlige visningsvilkår']">
+      <xsl:element name="mods:accessCondition">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'use and reproduction'" />
+        </xsl:attribute>
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Restricted'" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
 
-    <xsl:element name="mods:accessCondition">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'use and reproduction note'" />
-      </xsl:attribute>
-      <xsl:attribute name="displayLabel">
-        <xsl:value-of select="'Restricted'" />
-      </xsl:attribute>
-    <xsl:for-each select="field[@name='Visningsnote']/value">
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:call-template name="cumulus_get_value" />
-    </xsl:for-each>
-    </xsl:element>
+    <xsl:if test="field[@name='Visningsnote']">
+      <xsl:element name="mods:accessCondition">
+        <xsl:attribute name="type">
+          <xsl:value-of select="'use and reproduction note'" />
+        </xsl:attribute>
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Restricted'" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Visningsnote']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
 
     <!-- Start the CDL accessCondition -->
     <xsl:element name="mods:accessCondition">
