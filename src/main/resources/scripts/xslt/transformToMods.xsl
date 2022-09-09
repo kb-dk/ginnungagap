@@ -191,28 +191,22 @@
     </xsl:for-each>
 
     <xsl:if test="field[@name='Blokeret']">
-      <xsl:variable name="blok1">
+      <xsl:variable name="BLOK">
         <xsl:copy-of select="field[@name='Blokeret']/value"/>
       </xsl:variable>
-      <xsl:variable name="blok2">
-        <xsl:choose>
-          <xsl:when test="$blok1 = 'true'">
-            <xsl:value-of select="'Blokeret'"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="'Ikke blokeret'"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:element name="mods:accessCondition">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'restriction on access'" />
-        </xsl:attribute>
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Access Status'" />
-        </xsl:attribute>
-        <xsl:value-of select="$blok2" />
-      </xsl:element>
+      <xsl:choose>
+        <xsl:when test="$BLOK = 'true'">
+          <xsl:element name="mods:accessCondition">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'restriction on access'" />
+            </xsl:attribute>
+            <xsl:attribute name="displayLabel">
+              <xsl:value-of select="'Access Status'" />
+            </xsl:attribute>
+            <xsl:value-of select="'Blokeret'" />
+          </xsl:element>
+        </xsl:when>
+      </xsl:choose>
     </xsl:if>
 
     <xsl:if test="field[@name='Blokeringsnote']">
@@ -228,18 +222,53 @@
     </xsl:if>
 
     <xsl:if test="field[@name='Særlige visningsvilkår']">
-      <xsl:element name="mods:accessCondition">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'use and reproduction'" />
-        </xsl:attribute>
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Restricted'" />
-        </xsl:attribute>
-        <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:for-each>
-      </xsl:element>
+      <xsl:variable name="SVV">
+        <xsl:copy-of select="field[@name='Særlige visningsvilkår']/value"/>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$SVV = 'Ejermærke' or $SVV = 'CC-BY' or $SVV = 'Vandmærke'">
+          <xsl:element name="mods:accessCondition">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'use and reproduction'" />
+            </xsl:attribute>
+            <xsl:attribute name="displayLabel">
+              <xsl:value-of select="'Restricted'" />
+            </xsl:attribute>
+            <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:when>
+        <xsl:when test="$SVV = 'Visning kun på stedet' or $SVV = 'Kun visning af metadata'">
+          <xsl:element name="mods:accessCondition">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'restriction on access'" />
+            </xsl:attribute>
+            <xsl:attribute name="displayLabel">
+              <xsl:value-of select="'Access Status'" />
+            </xsl:attribute>
+            <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:element name="mods:accessCondition">
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'use and reproduction'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="displayLabel">-->
+<!--              <xsl:value-of select="'Restricted'" />-->
+<!--            </xsl:attribute>-->
+            <xsl:for-each select="field[@name='Særlige visningsvilkår']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
 
     <xsl:if test="field[@name='Visningsnote']">
@@ -258,25 +287,20 @@
     </xsl:if>
 
     <xsl:if test="field[@name='Pligtafleveret']">
-      <xsl:variable name="pligt1">
+      <xsl:variable name="PLIGT">
         <xsl:copy-of select="field[@name='Pligtafleveret']/value"/>
       </xsl:variable>
-      <xsl:variable name="pligt2">
-        <xsl:choose>
-          <xsl:when test="$pligt1 = 'true'">
-            <xsl:value-of select="'Pligtafleveret'"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="'Ikke pligtafleveret'"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:element name="mods:accessCondition">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'pligtaflevering'" />
-        </xsl:attribute>
-        <xsl:value-of select="$pligt2" />
-      </xsl:element>
+      <xsl:choose>
+        <xsl:when test="$PLIGT = 'true'">
+          <xsl:value-of select="'Pligtafleveret'"/>
+          <xsl:element name="mods:accessCondition">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'pligtaflevering'" />
+            </xsl:attribute>
+            <xsl:value-of select="'Pligtafleveret'" />
+          </xsl:element>
+        </xsl:when>
+      </xsl:choose>
     </xsl:if>
 
     <!-- Start the CDL accessCondition -->
