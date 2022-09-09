@@ -77,8 +77,6 @@
       <xsl:call-template name="mods_name" />
       <!-- mods:ophav -->
       <xsl:call-template name="mods_name_ophav" />
-      <!-- mods:person -->
-      <xsl:call-template name="mods_name_person" />
       <!-- mods:note -->
       <xsl:call-template name="mods_note" />
       <!-- mods:originInfo -->
@@ -128,8 +126,6 @@
       <xsl:call-template name="mods_name" />
       <!-- mods:ophav -->
       <xsl:call-template name="mods_name_ophav" />
-      <!-- mods:person -->
-      <xsl:call-template name="mods_name_person" />
       <!-- mods:note -->
       <xsl:call-template name="mods_note" />
       <!-- mods:originInfo -->
@@ -1403,18 +1399,6 @@
   </xsl:template>
   <!-- END name -->
 
-  <!-- START name person -->
-  <xsl:template name="mods_name_person">
-    <!-- Person Tabel -->
-    <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:comment>MODS name person</xsl:comment> 
-      <xsl:call-template name="mods_name_ophav_person">
-        <xsl:with-param name="tabel" select = "'person'" />
-      </xsl:call-template>
-    </xsl:for-each>
-
-  </xsl:template>
-  
   <!-- START name ophav -->
   <xsl:template name="mods_name_ophav">
     <!-- Ophav Tabel -->
@@ -1513,24 +1497,9 @@
   <xsl:template name="cdl_accessCondition">
       <!-- cdl:ophav -->
       <xsl:call-template name="cdl_ophav" />
-      <!-- cdl:person -->
-      <xsl:call-template name="cdl_person" />
     
   </xsl:template>
 
-  <!-- START name person -->
-  <xsl:template name="cdl_person">
-    <!-- Person Tabel -->
-    <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:comment>CDL name person</xsl:comment> 
-      <xsl:call-template name="cdl_ophav_person">
-        <xsl:with-param name="tabel" select = "'person'" />
-      </xsl:call-template>
-    </xsl:for-each>
-
-  </xsl:template>
-  <!-- END name person -->
-  
   <!-- START name ophav -->
   <xsl:template name="cdl_ophav">
     <!-- Ophav Tabel -->
