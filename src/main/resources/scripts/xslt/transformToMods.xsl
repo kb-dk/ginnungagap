@@ -164,27 +164,28 @@
   
   <!-- START accessCondition (only for MODS:RIGHTS)-->
   <xsl:template name="mods_accessCondition">
-
-
-    <xsl:for-each select="field[@name='Copyright']/value">
-      <xsl:element name="mods:accessCondition">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Copyright'" />
-        </xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:call-template name="cumulus_get_value" />
-      </xsl:element>
-    </xsl:for-each>
-
-    <xsl:for-each select="field[@name='Copyright Notice']/value">
-      <xsl:element name="mods:accessCondition">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Copyright Notice'" />
-        </xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:call-template name="cumulus_get_value" />
-      </xsl:element>
-    </xsl:for-each>
+<!--TODO: To be removed -->
+<!--    -->
+<!--    <xsl:for-each select="field[@name='Copyright']/value">-->
+<!--      <xsl:element name="mods:accessCondition">-->
+<!--        <xsl:attribute name="displayLabel">-->
+<!--          <xsl:value-of select="'Copyright'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:call-template name="cumulus_get_value" />-->
+<!--      </xsl:element>-->
+<!--    </xsl:for-each>-->
+<!--TODO: To be removed-->
+<!--    -->
+<!--    <xsl:for-each select="field[@name='Copyright Notice']/value">-->
+<!--      <xsl:element name="mods:accessCondition">-->
+<!--        <xsl:attribute name="displayLabel">-->
+<!--          <xsl:value-of select="'Copyright Notice'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:call-template name="cumulus_get_value" />-->
+<!--      </xsl:element>-->
+<!--    </xsl:for-each>-->
 
     <xsl:if test="field[@name='Blokeret']">
       <xsl:variable name="BLOK">
@@ -347,7 +348,19 @@
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
-    
+
+    <xsl:if test="field[@name='Materialeteknik']/value">
+      <xsl:element name="mods:genre">
+        <xsl:attribute name="authority" >
+          <xsl:value-of select="'gmgpc'" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Materialeteknik']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
   </xsl:template>
   <!-- END genre -->
   
@@ -560,65 +573,66 @@
 
   <!-- START name -->
   <xsl:template name="mods_name">
+<!--    ToDo: to be removed-->
     <!-- Ophav || Creator
          (both with either "@Ophav rolle" or 'Ophav' & 'Creator' as role)-->
-    <xsl:if test="field[@name='Ophav'] or field[@name='Creator']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="field[@name='Ophav']">
-            <xsl:for-each select="field[@name='Ophav']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Creator']">
-            <xsl:for-each select="field[@name='Creator']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-        <xsl:element name="mods:role">
-          <xsl:choose>
-            <xsl:when test="field[@name='Ophav rolle']">
-              <xsl:element name="mods:roleTerm">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'text'" />
-                </xsl:attribute>
-                <xsl:value-of select="field[@name='Ophav rolle']/value" />
-              </xsl:element>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:element name="mods:roleTerm">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'text'" />
-                </xsl:attribute>
-                <xsl:attribute name="lang">
-                  <xsl:value-of select="'da'" />
-                </xsl:attribute>
-                <xsl:value-of select="'Ophav'" />
-              </xsl:element>
-              <xsl:element name="mods:roleTerm">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'text'" />
-                </xsl:attribute>
-                <xsl:attribute name="lang">
-                  <xsl:value-of select="'en'" />
-                </xsl:attribute>
-                <xsl:value-of select="'Creator'" />
-              </xsl:element>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Ophav'] or field[@name='Creator']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="type">-->
+<!--          <xsl:value-of select="'personal'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Ophav']">-->
+<!--            <xsl:for-each select="field[@name='Ophav']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Creator']">-->
+<!--            <xsl:for-each select="field[@name='Creator']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--        <xsl:element name="mods:role">-->
+<!--          <xsl:choose>-->
+<!--            <xsl:when test="field[@name='Ophav rolle']">-->
+<!--              <xsl:element name="mods:roleTerm">-->
+<!--                <xsl:attribute name="type">-->
+<!--                  <xsl:value-of select="'text'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:value-of select="field[@name='Ophav rolle']/value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:when>-->
+<!--            <xsl:otherwise>-->
+<!--              <xsl:element name="mods:roleTerm">-->
+<!--                <xsl:attribute name="type">-->
+<!--                  <xsl:value-of select="'text'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:attribute name="lang">-->
+<!--                  <xsl:value-of select="'da'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:value-of select="'Ophav'" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:roleTerm">-->
+<!--                <xsl:attribute name="type">-->
+<!--                  <xsl:value-of select="'text'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:attribute name="lang">-->
+<!--                  <xsl:value-of select="'en'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:value-of select="'Creator'" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:otherwise>-->
+<!--          </xsl:choose>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
     <!-- Country (location) of recipient || Modtager, land
          (with both 'Country (location) of recipient' and 'Modtager, land' as role)-->
@@ -1683,7 +1697,7 @@
       <xsl:element name="mods:note">
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:attribute name="type">
-          <xsl:value-of select="'Selected references'" />
+          <xsl:value-of select="'citation/reference'" />
         </xsl:attribute>
         <xsl:call-template name="cumulus_get_value" />
       </xsl:element>
@@ -1913,10 +1927,7 @@
         <xsl:choose>
           <xsl:when test="field[@name='År']">
             <xsl:for-each select="field[@name='År']/value">
-              <xsl:element name="mods:dateOther">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'År'" />
-                </xsl:attribute>
+              <xsl:element name="mods:dateCreated">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
@@ -1924,16 +1935,38 @@
           </xsl:when>
           <xsl:when test="field[@name='Date of Origin']">
             <xsl:for-each select="field[@name='Date of Origin']/value">
-              <xsl:element name="mods:dateOther">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'Date of Origin'" />
-                </xsl:attribute>
+              <xsl:element name="mods:dateCreated">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
+
+        <!-- Captured Date || Date Time Original-->
+        <xsl:if test="field[@name='Captured Date'] or field[@name='Date Time Original']">
+          <xsl:choose>
+            <xsl:when test="field[@name='Date Time Original']">
+              <xsl:element name="mods:dateCaptured">
+                <xsl:attribute name="encoding">
+                  <xsl:value-of select="'w3cdtf'" />
+                </xsl:attribute>
+                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
+              </xsl:element>
+            </xsl:when>
+            <xsl:when test="field[@name='Captured Date']">
+              <xsl:element name="mods:dateCaptured">
+                <xsl:attribute name="encoding">
+                  <xsl:value-of select="'w3cdtf'" />
+                </xsl:attribute>
+                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
+              </xsl:element>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:if>
+
 
         <!-- Date not after || Dato ikke efter -->
         <xsl:choose>
@@ -2250,7 +2283,7 @@
   <xsl:template name="mods_physicalDescription">
     <xsl:if test="field[@name='Script'] or field[@name='Skrifttype']
     or field[@name='Script: detail'] or field[@name='Skrifttype, detaljer']
-    or field[@name='Størrelse'] or field[@name='Dimentions']
+    or field[@name='Størrelse'] or field[@name='Dimensions']
     or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']">
       <xsl:element name="mods:physicalDescription">
         <!-- Script || Skrifttype -->
@@ -2305,7 +2338,7 @@
           </xsl:when>
         </xsl:choose>
 
-        <!-- Størrelse || Dimentions -->
+        <!-- Størrelse || Dimensions -->
         <xsl:choose>
           <xsl:when test="field[@name='Størrelse']">
             <xsl:for-each select="field[@name='Størrelse']/value">
@@ -2318,12 +2351,12 @@
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
-          <xsl:when test="field[@name='Dimentions']">
-            <xsl:for-each select="field[@name='Dimentions']/value">
+          <xsl:when test="field[@name='Dimensions']">
+            <xsl:for-each select="field[@name='Dimensions']/value">
               <xsl:element name="mods:form">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
                 <xsl:attribute name="type">
-                  <xsl:value-of select="'Dimentions'" />
+                  <xsl:value-of select="'Dimensions'" />
                 </xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
@@ -2380,35 +2413,9 @@
           <xsl:attribute name="encoding">
             <xsl:value-of select="'w3cdtf'" />
           </xsl:attribute>
-          <xsl:attribute name="displayLabel">
-            <xsl:value-of select="'Record Creation Date'" />
-          </xsl:attribute>
           <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Record Creation Date']/value)" />
         </xsl:element>
-      </xsl:if>
-
-      <xsl:if test="field[@name='Captured Date'] or field[@name='Date Time Original']">
-        <xsl:choose>
-          <xsl:when test="field[@name='Date Time Original']">
-            <xsl:element name="mods:recordCreationDate">
-              <xsl:attribute name="displayLabel">
-                <xsl:value-of select="'Filskabelsesår'" />
-              </xsl:attribute>
-              <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
-            </xsl:element>
-          </xsl:when>
-        <xsl:when test="field[@name='Captured Date']">
-           <xsl:element name="mods:recordCreationDate">
-             <xsl:attribute name="displayLabel">
-               <xsl:value-of select="'Filskabelsesår'" />
-             </xsl:attribute>
-             <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
-           </xsl:element>
-         </xsl:when>
-       </xsl:choose>
       </xsl:if>
 
       <!-- record change date -->
@@ -2638,12 +2645,14 @@
     <!-- Seriebeskrivelse-->
     <xsl:if test="field[@name='Seriebeskrivelse']">
       <xsl:element name="mods:relatedItem">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'series'" />
-                </xsl:attribute>
+        <xsl:attribute name="type">
+          <xsl:value-of select="'series'" />
+        </xsl:attribute>
+        <xsl:element name="note" >
         <xsl:attribute name="displayLabel">
           <xsl:value-of select="'Seriebeskrivelse'" />
         </xsl:attribute>
+        </xsl:element>
         <xsl:for-each select="field[@name='Seriebeskrivelse']/value">
           <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:call-template name="cumulus_get_value" />
@@ -2657,12 +2666,13 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'series'" />
         </xsl:attribute>
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Serietitel'" />
-        </xsl:attribute>
+        <xsl:element name="titleInfo">
+          <xsl:attribute name="title">
+            <xsl:value-of select="'Serietitel'" />
+          </xsl:attribute>
+        </xsl:element>
         <xsl:for-each select="field[@name='Serietitel']/value">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
+          <xsl:call-template name="title_info_content" />
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
@@ -3041,18 +3051,19 @@
       </xsl:element>
     </xsl:if>
 
+<!--    todo: remove?-->
     <!-- Person -->
-    <xsl:for-each select="field[@name='Person']/value">
-      <xsl:element name="mods:subject">
-        <xsl:element name="mods:topic">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:element>
-        <xsl:element name="mods:genre">
-          <xsl:value-of select="'Person'" />
-        </xsl:element>
-      </xsl:element>
-    </xsl:for-each>
+<!--    <xsl:for-each select="field[@name='Person']/value">-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:element name="mods:topic">-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:call-template name="cumulus_get_value" />-->
+<!--        </xsl:element>-->
+<!--        <xsl:element name="mods:genre">-->
+<!--          <xsl:value-of select="'Person'" />-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:for-each>-->
 
     <!-- Additional recipient (personal) || Medmodtager
          with both 'Additional recipient (personal)' and 'Medmodtager' as genre.-->
@@ -3161,18 +3172,18 @@
     </xsl:for-each>
 
     <!-- Topografinummer -->
-    <xsl:if test="field[@name='Topografisk nr']/value">
-      <xsl:element name="mods:subject">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Topografinummer'" />
-        </xsl:attribute>
-        <xsl:for-each select="field[@name='Topografisk nr']">
-          <xsl:value-of select="'geograficCode authority='" />
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:for-each>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Topografisk nr']/value">-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:attribute name="displayLabel">-->
+<!--          <xsl:value-of select="'Topografinummer'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:for-each select="field[@name='Topografisk nr']">-->
+<!--          <xsl:value-of select="'geograficCode authority='" />-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:call-template name="cumulus_get_value" />-->
+<!--        </xsl:for-each>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
   </xsl:template>
   <!-- END subject -->
@@ -3342,11 +3353,17 @@
   <!-- START typeOfResource -->
   <xsl:template name="mods_typeOfResource">
     <xsl:element name="mods:typeOfResource">
-      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(
-          field[@name='Materialebetegnelse']/value, 
-          field[@name='Resourcedescription']/value, 
-          field[@name='Generel materialebetegnelse']/value, 
-          field[@name='General Resourcedescription']/value)" />
+      <!--      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(-->
+      <!--          field[@name='Materialebetegnelse']/value, -->
+      <!--          field[@name='Resourcedescription']/value, -->
+      <!--          field[@name='Generel materialebetegnelse']/value, -->
+      <!--          field[@name='General Resourcedescription']/value)" />-->
+      <xsl:attribute name="displayLabel">
+        <xsl:value-of select="'Materialebetegnelse/Generel materialebetegnelse'" />
+      </xsl:attribute>
+      <xsl:value-of select="field[@name='Materialebetegnelse']/value" />
+      <xsl:value-of select="'/'" />
+      <xsl:value-of select="field[@name='Generel materialebetegnelse']/value" />
     </xsl:element>
   </xsl:template>
   <!-- END typeOfResource -->
