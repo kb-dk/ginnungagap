@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="http://id.kb.dk/dk-corporate-creator">
+    <xs:import namespace="http://id.kb.dk/dk-corporate-creator" schemaLocation="dk.xsd"/>
+
+<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd">-->
+<!--    <xs:import namespace="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd" schemaLocation="dk.xsd"/>-->
+
+<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/usr/local/ginnungagap/current/script/xsd">-->
+<!--        <xs:import namespace="/usr/local/ginnungagap/current/script/xsd" schemaLocation="/usr/local/ginnungagap/current/script/xsd/dk.xsd"/>-->
+
+
+    <!-- set up the types required by the schema -->
+    <xs:complexType name="year.defined">
+        <xs:annotation>
+            <xs:documentation>
+                Data elements that are in the form of a date are defined as
+                instances of the year.definition. The year.definition is a
+                simple string with an attribute, year.type. year.type allows the
+                coding of the level of precision of the year, such as "exact" or
+                "approximate" or "unknown".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="year.type">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Provides additional information about the year encoded.
+                            Three (3) enumerated values enforced by the copyrightMD schema:
+                            "exact", "approximate", and "unknown".
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:enumeration value="exact">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Year is known.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="approximate">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Year is unknown, but it is possible for a reasonable
+                                        estimation to be given based on additional available evidence.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="unknown">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Year is unknown and it is impossible to give a reasonable
+                                        estimate. This value should only rarely be used, and
+                                        institutions are encouraged to supply an approximate date for
+                                        undated materials whenever feasible.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="country.defined">
+        <xs:annotation>
+            <xs:documentation>
+                The country type is used for the country of publication and for
+                the country of creation. It allows the user to input either a
+                country name, or an ISO 3166-1 alpha 2-letter country code (as
+                an attribute), or both.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="iso.code" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="copyright.status">
+        <xs:annotation>
+            <xs:documentation>
+                Indicates copyright status for the resource. Six (6) enumerated
+                values enforced by the copyrightMD schema: "copyrighted", "pd",
+                "pd_usfed", "pd_holder", "pd_expired", and "unknown".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="copyrighted">
+                <xs:annotation>
+                    <xs:documentation>
+                        Under copyright.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="pd">
+                <xs:annotation>
+                    <xs:documentation>
+                        Public domain: No further information.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="pd_usfed">
+                <xs:annotation>
+                    <xs:documentation>
+                        Public domain: US Federal document.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="pd_holder">
+                <xs:annotation>
+                    <xs:documentation>
+                        Public domain: Item dedicated to the public domain by the rights holder.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="pd_expired">
+                <xs:annotation>
+                    <xs:documentation>
+                        Public domain: Item in the public domain because of expiration of copyright based on U.S. law.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="unknown">
+                <xs:annotation>
+                    <xs:documentation>
+                        Copyright status of the resource is unknown.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="publication.status">
+        <xs:annotation>
+            <xs:documentation>
+                Indicates the publication status for the resource. Three (3)
+                enumerated values enforced by the copyrightMD schema:
+                "published", "unpublished", and "unknown".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="published">
+                <xs:annotation>
+                    <xs:documentation>
+                        Resource is published.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="unpublished">
+                <xs:annotation>
+                    <xs:documentation>
+                        Resource is unpublished.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="unknown">
+                <xs:annotation>
+                    <xs:documentation>
+                        Publication status of the resource is unknown.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="copyright">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for copyright-related information for the
+                resource. Data values must be encoded either in attributes or
+                subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" ref="c:publication"/>
+                <xs:element minOccurs="0" ref="c:creation"/>
+                <xs:element minOccurs="0" ref="c:creator"/>
+                <xs:element minOccurs="0" ref="c:rights.holder"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:services"/>
+                <xs:element minOccurs="0" ref="c:notice"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:general.note"/>
+            </xs:choice>
+            <xs:attribute name="copyright.status" use="required" type="c:copyright.status"/>
+            <xs:attribute name="publication.status" use="required" type="c:publication.status"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="publication">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for publication information regarding the
+                resource. Use only for published works. Data values must be
+                encoded in subelements. When &lt;publication&gt; is used, also
+                use the following encoding: &lt;copyright
+                publication.status="published"&gt;.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" ref="c:country.publication"/>
+                <xs:element minOccurs="0" ref="c:year.copyright"/>
+                <xs:element minOccurs="0" ref="c:year.renewal"/>
+                <xs:element minOccurs="0" ref="c:year.publication"/>
+                <xs:element minOccurs="0" ref="c:publisher"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:note"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="country.publication" type="c:country.defined"/>
+    <xs:element name="year.copyright" type="c:year.defined"/>
+    <xs:element name="year.renewal" type="c:year.defined"/>
+    <xs:element name="year.publication" type="c:year.defined"/>
+    <xs:element name="publisher" type="xs:string"/>
+    <xs:element name="note" type="xs:string"/>
+    <xs:element name="creation">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for information about the creation of
+                the resource. Unpublished resources are evaluated for
+                copyright status based on the year of creation and the
+                country in which creation occurred. Use primarily for
+                unpublished resources, but can also be used for
+                published resources if creation information is known
+                and significant to the copyright analysis. Data values
+                must be encoded in subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element minOccurs="0" ref="c:year.creation"/>
+                <xs:element minOccurs="0" ref="c:country.creation"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="year.creation" type="c:year.defined"/>
+    <xs:element name="country.creation" type="c:country.defined"/>
+    <xs:element name="creator">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for information about the creator(s) of the resource. Use primarily for unpublished resources, but can also be used for published resources if creation information is known and significant to the copyright analysis. Data values must be encoded in subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:creator.person"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:creator.corporate"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="dk:creator.corporate"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:note"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="creator.person">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for information regarding an
+                individual responsible for creating the
+                resource. For unpublished resources created by
+                an individual (or individuals), information
+                regarding her/his death date is critical for
+                evaluating copyright status. Families, though
+                viable creators of resources, are not legally
+                recognized as such in terms of copyright
+                analysis. If a family name is the only name
+                available as a creator of a resource, treat as
+                an unknown creator in terms of copyright
+                metadata and provide relevant information
+                about the family in the descriptive metadata
+                for the resource. Data values must be encoded
+                in subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element minOccurs="0" ref="c:name"/>
+                <xs:element minOccurs="0" ref="c:year.birth"/>
+                <xs:element minOccurs="0" ref="c:year.death"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="name" type="xs:string"/>
+    <xs:element name="year.birth" type="c:year.defined"/>
+    <xs:element name="year.death" type="c:year.defined"/>
+    <xs:element name="creator.corporate" type="xs:string"/>
+    <xs:element name="rights.holder">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for information about the rights holder for
+                the resource and contact information for the rights holder or
+                rights holder's designee. Use to direct users to the
+                appropriate point for questions about rights and permissions
+                related to the resource. Data values must be encoded in
+                subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:name"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="contact" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:note"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="services">
+        <xs:annotation>
+            <xs:documentation>
+                Wrapper element for information relating to services that
+                might be offered relating to the resource, such as providing
+                copies. Data values must be encoded in subelements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="contact">
+                    <xs:complexType/>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="c:note"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="notice" type="xs:string"/>
+    <xs:element name="general.note" type="xs:string"/>
+</xs:schema>

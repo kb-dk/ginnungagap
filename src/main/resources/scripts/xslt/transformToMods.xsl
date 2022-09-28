@@ -7,8 +7,8 @@
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-    xmlns:dk="http://id.kb.dk/dk-corporate-creator"
-    
+    xmlns:dk="https://raw.githubusercontent.com/kb-dk/rights-access-metadata/master/dk.xsd"
+
     extension-element-prefixes="java">
 
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
@@ -1477,8 +1477,12 @@
           <xsl:attribute name="altType">
             <xsl:value-of select="'nickname'" />
           </xsl:attribute>
-          <xsl:element name="mods:namePart">
-            <xsl:value-of select="field[@name='Andet navn']/value" />
+          <xsl:element name="mods:namePart"> <!--ToDo: Skal vist læses med cumulus_get_lang_attribute-->
+            <xsl:for-each select="field[@name='Andet navn']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+<!--            <xsl:value-of select="field[@name='Andet navn']/value" />-->
           </xsl:element>          
         </xsl:element>
       </xsl:if>
@@ -3172,18 +3176,18 @@
     </xsl:for-each>
 
     <!-- Topografinummer -->
-<!--    <xsl:if test="field[@name='Topografisk nr']/value">-->
-<!--      <xsl:element name="mods:subject">-->
-<!--        <xsl:attribute name="displayLabel">-->
-<!--          <xsl:value-of select="'Topografinummer'" />-->
-<!--        </xsl:attribute>-->
-<!--        <xsl:for-each select="field[@name='Topografisk nr']">-->
-<!--          <xsl:value-of select="'geograficCode authority='" />-->
-<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--          <xsl:call-template name="cumulus_get_value" />-->
-<!--        </xsl:for-each>-->
-<!--      </xsl:element>-->
-<!--    </xsl:if>-->
+    <xsl:if test="field[@name='Topografisk nr']/value">
+      <xsl:element name="mods:subject">
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Topografinummer'" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Topografisk nr']">
+          <xsl:value-of select="'geograficCode authority='" />
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
 
   </xsl:template>
   <!-- END subject -->
@@ -3217,7 +3221,11 @@
               <xsl:value-of select="'nickname'" />
             </xsl:attribute>
             <xsl:element name="mods:namePart">
-              <xsl:value-of select="field[@name='Andet navn']/value" />
+              <xsl:for-each select="field[@name='Andet navn']/value">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:for-each>
+<!--              <xsl:value-of select="field[@name='Andet navn']/value" />-->
             </xsl:element>          
           </xsl:element>
         </xsl:if>
@@ -3268,8 +3276,8 @@
       <xsl:when test="field[@name='Titel']">
         <xsl:element name="mods:titleInfo">
           <xsl:for-each select="field[@name='Titel']/value">
-            <xsl:call-template name="title_info_content" />
             <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="title_info_content" />
           </xsl:for-each>
           <xsl:call-template name="subtitle_info_content" />
         </xsl:element>
@@ -3277,8 +3285,8 @@
       <xsl:when test="field[@name='Title']">
         <xsl:element name="mods:titleInfo">
           <xsl:for-each select="field[@name='Title']/value">
-            <xsl:call-template name="title_info_content" />
             <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="title_info_content" />
           </xsl:for-each>
           <xsl:call-template name="subtitle_info_content" />
         </xsl:element>
@@ -3352,19 +3360,27 @@
 
   <!-- START typeOfResource -->
   <xsl:template name="mods_typeOfResource">
-    <xsl:element name="mods:typeOfResource">
-      <!--      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(-->
-      <!--          field[@name='Materialebetegnelse']/value, -->
-      <!--          field[@name='Resourcedescription']/value, -->
-      <!--          field[@name='Generel materialebetegnelse']/value, -->
-      <!--          field[@name='General Resourcedescription']/value)" />-->
-      <xsl:attribute name="displayLabel">
-        <xsl:value-of select="'Materialebetegnelse/Generel materialebetegnelse'" />
-      </xsl:attribute>
-      <xsl:value-of select="field[@name='Materialebetegnelse']/value" />
-      <xsl:value-of select="'/'" />
-      <xsl:value-of select="field[@name='Generel materialebetegnelse']/value" />
-    </xsl:element>
+    <xsl:if test="field[@name='Generel materialebetegnelse']">
+      <xsl:element name="mods:typeOfResource">
+        <!--      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(-->
+        <!--          field[@name='Materialebetegnelse']/value, -->
+        <!--          field[@name='Resourcedescription']/value, -->
+        <!--          field[@name='Generel materialebetegnelse']/value, -->
+        <!--          field[@name='General Resourcedescription']/value)" />-->
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Generel materialebetegnelse'" />
+        </xsl:attribute>
+        <xsl:value-of select="field[@name='Generel materialebetegnelse']/value" />
+      </xsl:element>
+    </xsl:if>
+    <xsl:if test="field[@name='Materialebetegnelse']">
+      <xsl:element name="mods:typeOfResource">
+        <xsl:attribute name="displayLabel">
+          <xsl:value-of select="'Materialebetegnelse'" />
+        </xsl:attribute>
+        <xsl:value-of select="field[@name='Materialebetegnelse']/value" />
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
   <!-- END typeOfResource -->
   
