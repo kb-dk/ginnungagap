@@ -24,7 +24,7 @@
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
-  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/rights-access-metadata/master/copyright-md.xsd'" />
+  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
   <!-- <xsl:variable name="CDL_VERSION" select="'1.0'" /> -->
@@ -1832,14 +1832,16 @@
           field[@name='Manual Date not after'] or
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
-          field[@name='Presentation Date']">
+          field[@name='Presentation Date'] ">
+<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']-->
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender'] or field[@name='Topografinr']">
+          field[@name='Location of sender'] or
+          field[@name='Topografinr']">
           <xsl:element name="mods:place">
             <!-- Udgivelsesland || Country || Country (location) of sender -->
             <xsl:choose>
@@ -1947,30 +1949,25 @@
           </xsl:when>
         </xsl:choose>
 
-        <!-- Captured Date || Date Time Original-->
-        <xsl:if test="field[@name='Captured Date'] or field[@name='Date Time Original']">
-          <xsl:choose>
-            <xsl:when test="field[@name='Date Time Original']">
-              <xsl:element name="mods:dateCaptured">
-                <xsl:attribute name="encoding">
-                  <xsl:value-of select="'w3cdtf'" />
-                </xsl:attribute>
-                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+        <!-- Date Time Original || Captured Date-->
+        <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
+          <xsl:element name="mods:dateCaptured">
+            <xsl:attribute name="encoding">
+              <xsl:value-of select="'w3cdtf'" />
+            </xsl:attribute>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
-              </xsl:element>
-            </xsl:when>
-            <xsl:when test="field[@name='Captured Date']">
-              <xsl:element name="mods:dateCaptured">
-                <xsl:attribute name="encoding">
-                  <xsl:value-of select="'w3cdtf'" />
-                </xsl:attribute>
-                <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
-              </xsl:element>
-            </xsl:when>
-          </xsl:choose>
+          </xsl:element>
         </xsl:if>
-
+        <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
+          <xsl:element name="mods:dateCaptured">
+            <xsl:attribute name="encoding">
+              <xsl:value-of select="'w3cdtf'" />
+            </xsl:attribute>
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
+          </xsl:element>
+        </xsl:if>
 
         <!-- Date not after || Dato ikke efter -->
         <xsl:choose>

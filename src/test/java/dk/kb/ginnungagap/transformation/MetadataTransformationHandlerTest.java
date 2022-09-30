@@ -16,6 +16,7 @@ import java.util.List;
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import dk.kb.ginnungagap.config.Configuration;
@@ -75,6 +76,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
 
+//    @Ignore
     @Test
     public void testTransformationWithTables() throws Exception {
         addDescription("Test the transformation of a Cumulus XML file with Ophav-tabel and Person-tabel metadata.");
