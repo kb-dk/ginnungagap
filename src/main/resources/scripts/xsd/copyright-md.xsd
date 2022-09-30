@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="http://id.kb.dk/dk-corporate-creator">
-    <xs:import namespace="http://id.kb.dk/dk-corporate-creator" schemaLocation="dk.xsd"/>
-
-<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd">-->
-<!--    <xs:import namespace="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd" schemaLocation="dk.xsd"/>-->
-
-<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/usr/local/ginnungagap/current/script/xsd">-->
-<!--        <xs:import namespace="/usr/local/ginnungagap/current/script/xsd" schemaLocation="/usr/local/ginnungagap/current/script/xsd/dk.xsd"/>-->
-
-
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd">
+    <xs:import namespace="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd" schemaLocation="dk.xsd"/>
     <!-- set up the types required by the schema -->
     <xs:complexType name="year.defined">
         <xs:annotation>

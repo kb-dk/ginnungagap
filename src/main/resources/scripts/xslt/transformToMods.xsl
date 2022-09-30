@@ -7,7 +7,7 @@
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-    xmlns:dk="https://raw.githubusercontent.com/kb-dk/rights-access-metadata/master/dk.xsd"
+    xmlns:dk="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd"
 
     extension-element-prefixes="java">
 

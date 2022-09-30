@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/home/dahe/git/ginnungagap/src/main/resources/scripts/xsd">-->
-<!--<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="/usr/local/ginnungagap/current/script/xsd" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="/usr/local/ginnungagap/current/script/xsd">-->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://id.kb.dk/dk-corporate-creator" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="http://id.kb.dk/dk-corporate-creator">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd">
     <xs:import namespace="http://www.cdlib.org/inside/diglib/copyrightMD" schemaLocation="copyright-md.xsd"/>
     <xs:element name="creator.corporate">
         <xs:complexType>

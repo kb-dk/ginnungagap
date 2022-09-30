@@ -75,32 +75,32 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         }
     }
 
-//    @Test
-//    public void testTransformationWithTables() throws Exception {
-//        addDescription("Test the transformation of a Cumulus XML file with Ophav-tabel and Person-tabel metadata.");
-//        File xmlFile = new File("src/test/resources/000395.tif.raw.xml");
-//        assertTrue(xmlFile.isFile());
-//        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//
-//        addStep("Transform the Cumulus XML", "METS");
-//        try {
-//            transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
-//            File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
-//            try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
-//                fos.write(out.toByteArray());
-//                fos.flush();
-//            }
-//
-//            addStep("Validate the METS", "");
-//            transformationHandler.validate(new FileInputStream(metadataFile));
-//        } finally {
-//            if(writeOutput) {
-//                System.out.println(out);
-//            }
-//        }
-//    }
+    @Test
+    public void testTransformationWithTables() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with Ophav-tabel and Person-tabel metadata.");
+        File xmlFile = new File("src/test/resources/000395.tif.raw.xml");
+        assertTrue(xmlFile.isFile());
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        addStep("Transform the Cumulus XML", "METS");
+        try {
+            transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
+            File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+            try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
+                fos.write(out.toByteArray());
+                fos.flush();
+            }
+
+            addStep("Validate the METS", "");
+            transformationHandler.validate(new FileInputStream(metadataFile));
+        } finally {
+            if(writeOutput) {
+                System.out.println(out);
+            }
+        }
+    }
 
     @Test
     public void testTransformationWithBext() throws Exception {
