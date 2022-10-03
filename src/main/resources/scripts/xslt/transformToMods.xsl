@@ -24,7 +24,7 @@
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
-  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/copyright-md.xsd'" />
+  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/wip/src/main/resources/scripts/xsd/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
   <!-- <xsl:variable name="CDL_VERSION" select="'1.0'" /> -->
