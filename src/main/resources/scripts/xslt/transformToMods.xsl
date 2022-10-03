@@ -21,7 +21,8 @@
   
   <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
   
-  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
+<!--  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />-->
+  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
   <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/copyright-md.xsd'" />
@@ -1833,7 +1834,7 @@
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
           field[@name='Presentation Date'] ">
-<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']-->
+<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']">-->
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
