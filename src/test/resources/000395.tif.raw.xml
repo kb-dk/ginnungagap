@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<record>
+    <field data-type="string" name="Flash Mode">
+        <value>Flash not used, No strobe return detection function, No flash function, No red-eye reduction mode</value>
+    </field>
+    <field data-type="enumerator" name="Samlingsbilleder - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="enumerator" name="Department">
+        <value>KOB: Kort- og Billedafdelingen</value>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Image</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>f251bd991572a22262e137eaf8e2d828</value>
+    </field>
+    <field data-type="enumerator" name="objectIdentifierType">
+        <value>UUID</value>
+    </field>
+    <field data-type="string" name="File Format Identifier">
+        <value>image/tiff</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>5461</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{43b9e855-6804-4564-a6ab-79adb92ba32a}:CN=Tue Hejlskov Larsen,OU=Ansatte,OU=KB,DC=kb,DC=dk</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Langtidsbevaring fejlet</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Danske portrætter, Diverse, 2022-09-01 15:06:39, 2022-09-01 15:11:09, 2022-09-01 15:17:18, 2022-09-01 15:18:27, 2022-09-01 15:26:55, 2022-09-02 09:01:13</value>
+    </field>
+    <field data-type="string" name="Image Orientation">
+        <value>Top left</value>
+    </field>
+    <field data-type="string" name="Unique Item ID">
+        <value>d12c29d4287e463bb8ba0c07783c5a32</value>
+    </field>
+    <field data-type="enumerator" name="Color Model">
+        <value>RGB Color</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="Contrast">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="LCSH">
+        <value>sh85105182</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Tue Sep 13 15:46:25 CEST 2022</value>
+    </field>
+    <field data-type="string" name="Gain Control">
+        <value>None</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Note">
+        <value>W. 12103</value>
+        <value>Håndskrift Afd.</value>
+    </field>
+    <field data-type="string" name="LastCmdInitiated">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@b0f929</value>
+    </field>
+    <field data-type="string" name="Person">
+        <value>Tietgen, Carl Frederik (1829-1901) bank- og industrimand</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Samlingsbilleder DP</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1562804514</value>
+    </field>
+    <field data-type="string" name="Mastertransferstatus">
+        <value>OK</value>
+    </field>
+    <field data-type="string" name="Emneord">
+        <value>Carl Frederik Tietgen, f.19/3-1829 - 19/10-1901. Bank DirktÃ¸r. X,282,1955. W12103.</value>
+        <value>HÃ¥ndskrift Afd.</value>
+        <value>Det Kongelig biblotek.</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2019-06-28 02:23:17</value>
+    </field>
+    <field data-type="boolean" name="Copyright Applied">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="År">
+        <value>1872</value>
+    </field>
+    <field data-type="boolean" name="Renditions Manager - Create Renditions">
+        <value>true</value>
+    </field>
+    <field data-type="string" name="URL">
+        <value>https://www.kb.dk/find-materiale/samlinger/billedsamlingen</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>62</value>
+    </field>
+    <field data-type="enumerator" name="Generel materialebetegnelse">
+        <value>Billede, Todimensionalt billedmateriale </value>
+    </field>
+    <field data-type="integer" name="Color Channels">
+        <value>3</value>
+    </field>
+    <field data-type="string" name="Opstilling">
+        <value>Billedsamlingen. Danske portrætter, Tietgen, C. F. (1829-1901)</value>
+    </field>
+    <field data-type="enumerator" name="Samling">
+        <value>Billedsamlingen</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="date" name="Captured Date">
+        <value>Fri Jun 28 13:23:16 CEST 2019</value>
+    </field>
+    <field data-type="double" name="Image Height">
+        <value>12.616666666666667</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>Depot</value>
+    </field>
+    <field data-type="string" name="Ophav">
+        <value>I. W. Tegner &amp; Kittendorffs lith. Inst. (1850-1893) </value>
+        <value>Tegner, Isac Wilhelm (23.6.1815-21.12.1893) litograf </value>
+        <value>Kittendorff, Johan Adolph (5.4.1820-20.4.1902) litograf</value>
+    </field>
+    <field data-type="string" name="URL-tekst">
+        <value>Det Kgl. Biblioteks billedsamling</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>b9249f93-a109-47bd-bac7-3f48492b16a1</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>true</value>
+    </field>
+    <field data-type="double" name="Vertical Resolution">
+        <value>300.0</value>
+    </field>
+    <field data-type="string" name="White Balance Mode">
+        <value>Auto white balance</value>
+    </field>
+    <field data-type="string" name="Compression">
+        <value>Uncompressed</value>
+    </field>
+    <field data-type="string" name="Cataloging User ID">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>DAM\Samlingsbilleder\Samlingsbilleder\samlingsbilleder\1000</value>
+    </field>
+    <field data-type="string" name="IPTC Title">
+        <value>Carl Frederik Tietgen</value>
+    </field>
+    <field data-type="string" name="creatingApplication">
+        <value>Adobe Photoshop CC 2019</value>
+    </field>
+    <field data-type="string" name="QA_error">
+        <value>Failed to preserve record 'b1160330-717f-11e0-82d7-002185371280: </value>
+        <value>Failed validation: </value>
+        <value>fatal errors: []</value>
+        <value> other errors: [] </value>
+    </field>
+    <field data-type="string" name="compositionLevel">
+        <value>0</value>
+    </field>
+    <field data-type="enumerator" name="Copyright">
+        <value>Materialet er fri af ophavsret</value>
+    </field>
+    <field data-type="string" name="Headline">
+        <value>Carl Frederik Tietgen</value>
+    </field>
+    <field data-type="enumerator" name="Materialebetegnelse">
+        <value>Grafik</value>
+    </field>
+    <field data-type="enumerator" name="Ejerskab_farve">
+        <value>-65281</value>
+    </field>
+    <field data-type="string" name="PublishedByVersion">
+        <value>Publication workflow of iteration 6. Class = dk.kb.doms.components.workflow.iteration6.PublishWorkflow;Publish with QA version = $Revision: 1.9 $;Publish without QA version = $Revision: 1.3 $;productionRoot = /daglig_prod_iv_foto_2;undoRoot = /online_master_arkiv_3/undo/samlingsbilleder;publishNonArchivalRoot = /online_master_arkiv_3/non-archival/samlingsbilleder;productionRoot = /daglig_prod_iv_foto_2;</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>Cumulus</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>000395.tif</value>
+    </field>
+    <field data-type="string" name="ICC Profile Name">
+        <value>Adobe RGB (1998)</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Tue Sep 28 13:49:25 CEST 2004</value>
+    </field>
+    <field data-type="table" name="Ophav-tabel">
+        <table>
+            <row>
+                <field name="Født">
+                    <value>1820-4-5</value>
+                </field>
+                <field name="Slut år">
+                    <value>1893</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>69183e1fb32048ac8b9c255a20ca866e</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Johan Adolph</value>
+                </field>
+                <field name="Kooperation">
+                    <value>I. W. Tegner &amp; Kittendorffs lith. Inst. (1850-1893) </value>
+                </field>
+                <field name="Host Item ID">
+                    <value>5461</value>
+                </field>
+                <field name="Død">
+                    <value>1902-4-20</value>
+                </field>
+                <field name="Titel">
+                    <value>litograf</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Kittendorff</value>
+                </field>
+                <field name="ID">
+                    <value>147</value>
+                </field>
+                <field name="Start år">
+                    <value>1850</value>
+                </field>
+                <field name="Rolle">
+                    <value>ophav materiale</value>
+                </field>
+            </row>
+            <row>
+                <field name="Født">
+                    <value>1815-6-23</value>
+                </field>
+                <field name="Slut år">
+                    <value>1893</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>240da3df9a914daca0ea1de18637f915</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Isac Wilhelm</value>
+                </field>
+                <field name="Kooperation">
+                    <value>I. W. Tegner &amp; Kittendorffs lith. Inst. (1850-1893) </value>
+                </field>
+                <field name="Host Item ID">
+                    <value>5461</value>
+                </field>
+                <field name="Død">
+                    <value>1893-12-21</value>
+                </field>
+                <field name="Titel">
+                    <value>litograf</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Tegner</value>
+                </field>
+                <field name="ID">
+                    <value>148</value>
+                </field>
+                <field name="Start år">
+                    <value>1850</value>
+                </field>
+                <field name="Rolle">
+                    <value>ophav materiale</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="string" name="Asset Content Identifier">
+        <value>f251bd991572a22262e137eaf8e2d828</value>
+    </field>
+    <field data-type="enumerator" name="Color Mode">
+        <value>Color</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>b1160330-717f-11e0-82d7-002185371280</value>
+    </field>
+    <field data-type="double" name="Horizontal Resolution">
+        <value>300.0</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Samlingsbilleder</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Fri Jun 28 13:23:17 CEST 2019</value>
+    </field>
+    <field data-type="string" name="Renditions Manager Notes">
+        <value>[JPEG2000] Created rendition.</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>168</value>
+    </field>
+    <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
+        <value>86238ca0-758e-4cae-8b18-6a24f765a779</value>
+    </field>
+    <field data-type="string" name="Titel">
+        <value>C. F. Tietgen</value>
+    </field>
+    <field data-type="string" name="XMP Metadata">
+        <value>&amp;lt;?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?&amp;gt;</value>
+        <value>&amp;lt;x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 4.4.0"&amp;gt;</value>
+        <value>   &amp;lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:dc="http://purl.org/dc/elements/1.1/"&amp;gt;</value>
+        <value>         &amp;lt;dc:description&amp;gt;</value>
+        <value>            &amp;lt;rdf:Alt&amp;gt;</value>
+        <value>               &amp;lt;rdf:li xml:lang="x-default"&amp;gt;Carl Frederik Tietgen, f.19/3-1829 - 19/10-1901. Bank DirktÃ¸r. X,282,1955. W12103.&amp;#xA;HÃ¥ndskrift Afd.&amp;#xA;Det Kongelig biblotek.&amp;lt;/rdf:li&amp;gt;</value>
+        <value>            &amp;lt;/rdf:Alt&amp;gt;</value>
+        <value>         &amp;lt;/dc:description&amp;gt;</value>
+        <value>         &amp;lt;dc:format&amp;gt;image/tiff&amp;lt;/dc:format&amp;gt;</value>
+        <value>         &amp;lt;dc:title&amp;gt;</value>
+        <value>            &amp;lt;rdf:Alt&amp;gt;</value>
+        <value>               &amp;lt;rdf:li xml:lang="x-default"&amp;gt;Carl Frederik Tietgen&amp;lt;/rdf:li&amp;gt;</value>
+        <value>            &amp;lt;/rdf:Alt&amp;gt;</value>
+        <value>         &amp;lt;/dc:title&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmp="http://ns.adobe.com/xap/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;xmp:CreateDate&amp;gt;2019-06-16T14:17:26+02:00&amp;lt;/xmp:CreateDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:ModifyDate&amp;gt;2019-06-28T13:23:16+02:00&amp;lt;/xmp:ModifyDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:MetadataDate&amp;gt;2019-06-28T13:23:16+02:00&amp;lt;/xmp:MetadataDate&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"&amp;gt;</value>
+        <value>         &amp;lt;xmpRights:WebStatement&amp;gt;http://www.kb.dk&amp;lt;/xmpRights:WebStatement&amp;gt;</value>
+        <value>         &amp;lt;xmpRights:Marked&amp;gt;False&amp;lt;/xmpRights:Marked&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;photoshop:Headline&amp;gt;Carl Frederik Tietgen&amp;lt;/photoshop:Headline&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ColorMode&amp;gt;3&amp;lt;/photoshop:ColorMode&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ICCProfile&amp;gt;Adobe RGB (1998)&amp;lt;/photoshop:ICCProfile&amp;gt;</value>
+        <value>         &amp;lt;photoshop:DateCreated&amp;gt;2004-09-28&amp;lt;/photoshop:DateCreated&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"</value>
+        <value>            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:InstanceID&amp;gt;xmp.iid:ffcf1319-28fc-dc44-95fe-b720e0eb6056&amp;lt;/xmpMM:InstanceID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:DocumentID&amp;gt;xmp.did:ffcf1319-28fc-dc44-95fe-b720e0eb6056&amp;lt;/xmpMM:DocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:OriginalDocumentID&amp;gt;xmp.did:ffcf1319-28fc-dc44-95fe-b720e0eb6056&amp;lt;/xmpMM:OriginalDocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:History&amp;gt;</value>
+        <value>            &amp;lt;rdf:Seq&amp;gt;</value>
+        <value>               &amp;lt;rdf:li rdf:parseType="Resource"&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:action&amp;gt;created&amp;lt;/stEvt:action&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:instanceID&amp;gt;xmp.iid:ffcf1319-28fc-dc44-95fe-b720e0eb6056&amp;lt;/stEvt:instanceID&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:when&amp;gt;2019-06-16T14:17:26+02:00&amp;lt;/stEvt:when&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:softwareAgent&amp;gt;Adobe Photoshop CC 2019 (Windows)&amp;lt;/stEvt:softwareAgent&amp;gt;</value>
+        <value>               &amp;lt;/rdf:li&amp;gt;</value>
+        <value>            &amp;lt;/rdf:Seq&amp;gt;</value>
+        <value>         &amp;lt;/xmpMM:History&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>   &amp;lt;/rdf:RDF&amp;gt;</value>
+        <value>&amp;lt;/x:xmpmeta&amp;gt;</value>
+        <value>&amp;lt;?xpacket end="r"?&amp;gt;</value>
+    </field>
+    <field data-type="integer" name="Bits Per Channel">
+        <value>8</value>
+    </field>
+    <field data-type="string" name="Software">
+        <value>Adobe Photoshop CC 2019</value>
+    </field>
+    <field data-type="date" name="IPTC Date Created">
+        <value>Tue Sep 28 02:00:00 CEST 2004</value>
+    </field>
+    <field data-type="binary" name="Asset Reference">
+        <value>cumulus-core-01:/Depot/DAM/Samlingsbilleder/Samlingsbilleder/samlingsbilleder/1000/000395.tif</value>
+    </field>
+    <field data-type="integer" name="Unix File Identifier">
+        <value>-927420664</value>
+    </field>
+    <field data-type="table" name="Person-tabel">
+        <table>
+            <row>
+                <field name="Host Item ID">
+                    <value>5461</value>
+                </field>
+                <field name="Født">
+                    <value>1829-0-0</value>
+                </field>
+                <field name="Død">
+                    <value>1901-0-0</value>
+                </field>
+                <field name="Titel">
+                    <value>bank- og industrimand</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>14c13ac29ad4455bb61ffefa21c32d1d</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Tietgen</value>
+                </field>
+                <field name="ID">
+                    <value>345</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Carl Frederik</value>
+                </field>
+                <field name="Rolle">
+                    <value>motiv</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="string" name="KB Samling">
+        <value>K</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>000395.tif</value>
+    </field>
+    <field data-type="integer" name="Horizontal Pixels">
+        <value>2655</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Confidentiality">
+        <value>confidentialityLow</value>
+    </field>
+    <field data-type="string" name="LastCmdSucceeded">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@b0f929</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>30169480</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Logical">
+        <value>logicalStrategyMigration</value>
+    </field>
+    <field data-type="enumerator" name="Cataloging language">
+        <value>da</value>
+    </field>
+    <field data-type="string" name="Color Space">
+        <value>Uncalibrated</value>
+    </field>
+    <field data-type="string" name="Notes">
+        <value>Carl Frederik Tietgen, f.19/3-1829 - 19/10-1901. Bank DirktÃ¸r. X,282,1955. W12103.</value>
+        <value>HÃ¥ndskrift Afd.</value>
+        <value>Det Kongelig biblotek.</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>kb.dk</value>
+    </field>
+    <field data-type="string" name="PublicationDate">
+        <value>07-06-2008</value>
+    </field>
+    <field data-type="string" name="Saturation">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="Document Name">
+        <value>000395.tif</value>
+    </field>
+    <field data-type="string" name="Image URL">
+        <value>http://www.kb.dk</value>
+    </field>
+    <field data-type="string" name="Sharpness">
+        <value>Normal</value>
+    </field>
+    <field data-type="integer" name="Vertical Pixels">
+        <value>3785</value>
+    </field>
+    <field data-type="string" name="Subject">
+        <value>Carl Frederik Tietgen, f.19/3-1829 - 19/10-1901. Bank Dirktør. X,282,1955. W12103.</value>
+        <value>Håndskrift Afd.</value>
+        <value>Det Kongelig biblotek.</value>
+    </field>
+    <field data-type="double" name="Image Width">
+        <value>8.85</value>
+    </field>
+    <field data-type="string" name="Accessionsnr">
+        <value>x282-1955</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="long" name="Asset Data Size (Long)">
+        <value>30169480</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Thu Jul 11 15:21:54 CEST 2019</value>
+    </field>
+    <field data-type="boolean" name="Fotografisk Atelier">
+        <value>true</value>
+    </field>
+    <field data-type="string" name="Subject Distance Range">
+        <value>Unknown</value>
+    </field>
+    <field data-type="string" name="Exposure Mode">
+        <value>Auto exposure</value>
+    </field>
+    <field data-type="string" name="Scene Capture Type">
+        <value>Standard</value>
+    </field>
+    <field data-type="string" name="Custom Rendered">
+        <value>Normal process</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_BitSafety">
+        <value>bitSafetyMedium</value>
+    </field>
+    <field data-type="table" name="Renditions Manager">
+        <table>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon May 01 17:22:21 CEST 2017</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>5461</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Thu May 25 17:07:08 CEST 2017</value>
+                </field>
+                <field name="Rendition Name">
+                    <value>JPEG2000</value>
+                </field>
+                <field name="External Reference">
+                    <value>ID:dia-prod-iconv-02.kb.dk-46218-1494415227152-763373:1:1:1:1</value>
+                </field>
+                <field name="State">
+                    <value>Finished</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>34032</value>
+                </field>
+                <field name="Asset Reference">
+                    <value>cumulus-core-01:/Depot/DAMJP2/online_master_arkiv_3/non-archival/samlingsbilleder/1000/000395.jp2</value>
+                </field>
+                <field name="Notes">
+                    <value>[JPEG2000] Created rendition.</value>
+                </field>
+            </row>
+        </table>
+    </field>
+</record>
