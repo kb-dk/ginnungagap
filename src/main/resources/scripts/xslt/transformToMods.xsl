@@ -22,7 +22,7 @@
   <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
   
 <!--  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />-->
-  <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/mods-3-7.xsd'" />
+  <xsl:variable name="MODS_LOCATION" select="'http://id.kb.dk/standards/mods/version_3_7/ http://id.kb.dk/standards/mods/version_3_7/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
   <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd/copyright-md.xsd'" />
