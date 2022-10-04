@@ -7,7 +7,7 @@
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-    xmlns:dk="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd"
+    xmlns:dk="/usr/local/ginnungagap/current/script/xsd"
 
     extension-element-prefixes="java">
 
@@ -1949,26 +1949,6 @@
           </xsl:when>
         </xsl:choose>
 
-        <!-- Date Time Original || Captured Date-->
-        <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
-          <xsl:element name="mods:dateCaptured">
-            <xsl:attribute name="encoding">
-              <xsl:value-of select="'w3cdtf'" />
-            </xsl:attribute>
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
-          <xsl:element name="mods:dateCaptured">
-            <xsl:attribute name="encoding">
-              <xsl:value-of select="'w3cdtf'" />
-            </xsl:attribute>
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
-          </xsl:element>
-        </xsl:if>
-
         <!-- Date not after || Dato ikke efter -->
         <xsl:choose>
           <xsl:when test="field[@name='Date not after']">
@@ -2268,6 +2248,26 @@
         <xsl:value-of select="'edition'" />
       </xsl:attribute>
         <xsl:value-of select="field[@name='Udgave']/value" />
+      </xsl:element>
+    </xsl:if>
+
+    <!-- Date Time Original || Captured Date-->
+    <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
+      <xsl:element name="mods:dateCaptured">
+        <xsl:attribute name="encoding">
+          <xsl:value-of select="'w3cdtf'" />
+        </xsl:attribute>
+        <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
+      </xsl:element>
+    </xsl:if>
+    <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
+      <xsl:element name="mods:dateCaptured">
+        <xsl:attribute name="encoding">
+          <xsl:value-of select="'w3cdtf'" />
+        </xsl:attribute>
+        <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
       </xsl:element>
     </xsl:if>
 
