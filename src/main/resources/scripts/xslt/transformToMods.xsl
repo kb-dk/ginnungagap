@@ -5,7 +5,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:java="http://xml.apache.org/xalan/java"
-    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:mods="http://www.loc.gov/mods/v3" xmlns:md="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
     xmlns:dk="/usr/local/ginnungagap/current/script/xsd"
 
@@ -2253,21 +2253,25 @@
 
     <!-- Date Time Original || Captured Date-->
     <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
-      <xsl:element name="mods:dateCaptured">
-        <xsl:attribute name="encoding">
-          <xsl:value-of select="'w3cdtf'" />
-        </xsl:attribute>
-        <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+      <xsl:element name="mods:originInfo">
+        <xsl:element name="mods:dateCaptured">
+          <xsl:attribute name="encoding">
+            <xsl:value-of select="'w3cdtf'" />
+          </xsl:attribute>
+          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
+        </xsl:element>
       </xsl:element>
     </xsl:if>
     <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
-      <xsl:element name="mods:dateCaptured">
-        <xsl:attribute name="encoding">
-          <xsl:value-of select="'w3cdtf'" />
-        </xsl:attribute>
-        <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+      <xsl:element name="mods:originInfo">
+        <xsl:element name="mods:dateCaptured">
+          <xsl:attribute name="encoding">
+            <xsl:value-of select="'w3cdtf'" />
+          </xsl:attribute>
+          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
+        </xsl:element>
       </xsl:element>
     </xsl:if>
 
@@ -2739,17 +2743,15 @@
     </xsl:for-each>
 
     <!-- Georeference -->
-    <xsl:for-each select="field[@name='Georeference']/value">
+    <xsl:if test="field[@name='Georeference']/value">
       <xsl:element name="mods:subject">
-        <xsl:element name="mods:geographic">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:element>
-        <xsl:element name="mods:genre">
-          <xsl:value-of select="'Georeference'" />
+        <xsl:element name="mods:cartographics">
+          <xsl:element name="mods:coordinates">
+            <xsl:value-of select="field[@name='Georeference']/value" />
+          </xsl:element>
         </xsl:element>
       </xsl:element>
-    </xsl:for-each>
+    </xsl:if>
 
     <!-- Keywords -->
     <xsl:if test="field[@name='Keywords']">
