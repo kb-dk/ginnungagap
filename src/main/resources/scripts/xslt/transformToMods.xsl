@@ -2652,15 +2652,15 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'series'" />
         </xsl:attribute>
-        <xsl:element name="note" >
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Seriebeskrivelse'" />
-        </xsl:attribute>
+        <xsl:element name="mods:note" >
+          <xsl:attribute name="displayLabel">
+            <xsl:value-of select="'Seriebeskrivelse'" />
+          </xsl:attribute>
+          <xsl:for-each select="field[@name='Seriebeskrivelse']/value">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:for-each>
         </xsl:element>
-        <xsl:for-each select="field[@name='Seriebeskrivelse']/value">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:for-each>
       </xsl:element>
     </xsl:if>
 
@@ -2670,14 +2670,11 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'series'" />
         </xsl:attribute>
-        <xsl:element name="titleInfo">
-          <xsl:attribute name="title">
-            <xsl:value-of select="'Serietitel'" />
-          </xsl:attribute>
+        <xsl:element name="mods:titleInfo">
+          <xsl:for-each select="field[@name='Serietitel']/value">
+            <xsl:call-template name="title_info_content" />
+          </xsl:for-each>
         </xsl:element>
-        <xsl:for-each select="field[@name='Serietitel']/value">
-          <xsl:call-template name="title_info_content" />
-        </xsl:for-each>
       </xsl:element>
     </xsl:if>
 
@@ -3180,13 +3177,13 @@
           <xsl:value-of select="'Topografinummer'" />
         </xsl:attribute>
         <xsl:for-each select="field[@name='Topografisk nr']">
-          <xsl:value-of select="'geograficCode authority='" />
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
+          <xsl:element name="mods:geographicCode">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
-
   </xsl:template>
   <!-- END subject -->
 
