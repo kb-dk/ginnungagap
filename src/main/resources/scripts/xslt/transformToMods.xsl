@@ -5,9 +5,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:java="http://xml.apache.org/xalan/java"
-    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:mods="http://www.loc.gov/mods/v3" xmlns:md="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-    xmlns:dk="https://raw.githubusercontent.com/kb-dk/ginnungagap/MetaAccess/src/main/resources/scripts/xsd"
+    xmlns:dk="/usr/local/ginnungagap/current/script/xsd"
 
     extension-element-prefixes="java">
 
@@ -24,7 +24,7 @@
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
   
-  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD https://raw.githubusercontent.com/kb-dk/ginnungagap/wip/src/main/resources/scripts/xsd/copyright-md.xsd'" />
+  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD /usr/local/ginnungagap/current/script/xsd/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
   <!-- <xsl:variable name="CDL_VERSION" select="'1.0'" /> -->
@@ -1833,7 +1833,7 @@
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
           field[@name='Presentation Date'] ">
-<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']-->
+<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']">-->
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
@@ -1948,26 +1948,6 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-
-        <!-- Date Time Original || Captured Date-->
-        <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
-          <xsl:element name="mods:dateCaptured">
-            <xsl:attribute name="encoding">
-              <xsl:value-of select="'w3cdtf'" />
-            </xsl:attribute>
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
-          <xsl:element name="mods:dateCaptured">
-            <xsl:attribute name="encoding">
-              <xsl:value-of select="'w3cdtf'" />
-            </xsl:attribute>
-            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
-              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
-          </xsl:element>
-        </xsl:if>
 
         <!-- Date not after || Dato ikke efter -->
         <xsl:choose>
@@ -2268,6 +2248,30 @@
         <xsl:value-of select="'edition'" />
       </xsl:attribute>
         <xsl:value-of select="field[@name='Udgave']/value" />
+      </xsl:element>
+    </xsl:if>
+
+    <!-- Date Time Original || Captured Date-->
+    <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
+      <xsl:element name="mods:originInfo">
+        <xsl:element name="mods:dateCaptured">
+          <xsl:attribute name="encoding">
+            <xsl:value-of select="'w3cdtf'" />
+          </xsl:attribute>
+          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
+        </xsl:element>
+      </xsl:element>
+    </xsl:if>
+    <xsl:if test="field[@name='Captured Date'] and not(field[@name='Date Time Original'])">
+      <xsl:element name="mods:originInfo">
+        <xsl:element name="mods:dateCaptured">
+          <xsl:attribute name="encoding">
+            <xsl:value-of select="'w3cdtf'" />
+          </xsl:attribute>
+          <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
+              'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
+        </xsl:element>
       </xsl:element>
     </xsl:if>
 
@@ -2739,17 +2743,15 @@
     </xsl:for-each>
 
     <!-- Georeference -->
-    <xsl:for-each select="field[@name='Georeference']/value">
+    <xsl:if test="field[@name='Georeference']/value">
       <xsl:element name="mods:subject">
-        <xsl:element name="mods:geographic">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:element>
-        <xsl:element name="mods:genre">
-          <xsl:value-of select="'Georeference'" />
+        <xsl:element name="mods:cartographics">
+          <xsl:element name="mods:coordinates">
+            <xsl:value-of select="field[@name='Georeference']/value" />
+          </xsl:element>
         </xsl:element>
       </xsl:element>
-    </xsl:for-each>
+    </xsl:if>
 
     <!-- Keywords -->
     <xsl:if test="field[@name='Keywords']">

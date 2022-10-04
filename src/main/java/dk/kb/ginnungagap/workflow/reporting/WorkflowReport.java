@@ -93,7 +93,7 @@ public class WorkflowReport {
             res.append("\n");
         }
 
-        res.append("\n\nOhter failures: ");
+        res.append("\n\nOther failures: ");
         res.append(otherFailure.size());
         res.append("\n");
         for(String failure : otherFailure) {
