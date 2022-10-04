@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<record>
+    <field data-type="enumerator" name="Samlingsbilleder - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="string" name="Georeference">
+        <value>55.698485708594845, 10.50018310546875</value>
+    </field>
+    <field data-type="table" name="Samlingsbilleder - Workflow Activities">
+        <table>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 08:44:23 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 08:44:23 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Start workflow - [Resulting state=Forbereder validering]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+                </field>
+                <field name="Activity">
+                    <value>Start workflow</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>9004659860e14054b9589babcbcec763</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11593996</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Forbereder validering</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 08:44:58 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 08:44:58 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Valider ny fil - [Resulting state=Validerer fil] - [Permission Template=Samlingsbilleder ingen registrering]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Valider ny fil</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>5630ad2d38474a3bad51da3d73aa1a96</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594110</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Validerer fil</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 08:45:00 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 08:45:00 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Filvalidering ok - [Resulting state=Flytter fil]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Filvalidering ok</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>a1cffb9d0bb94df68c3a6aabcb7e4aa7</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594115</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Flytter fil</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 08:45:02 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 08:45:02 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Fil flyttet ok - [Resulting state=Behandler fil]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Fil flyttet ok</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>aeab864868c547d3a611eff5c3c55766</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594119</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Behandler fil</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 08:45:04 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 08:45:04 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Filbehandling ok - [Resulting state=Registrering] - [Permission Template=Samlingsbilleder registrering]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Filbehandling ok</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>84d29f70288c42598171a2dd8a251454</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594123</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Registrering</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 15:18:11 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 15:18:11 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Send til færdigregistreret - [Resulting state=Forbereder færdig-validering] - [Resulting assignment=]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{43b9e855-6804-4564-a6ab-79adb92ba32a}:CN=Amanda Kistrup Vallys,OU=Ansatte,OU=KB,DC=kb,DC=dk</value>
+                </field>
+                <field name="Activity">
+                    <value>Send til færdigregistreret</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>61306662e08248d1a9584baa410e080f</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594386</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{43b9e855-6804-4564-a6ab-79adb92ba32a}:CN=Amanda Kistrup Vallys,OU=Ansatte,OU=KB,DC=kb,DC=dk</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Forbereder færdig-validering</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 15:18:37 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 15:18:37 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Valider færdig post - [Resulting state=Validerer færdig post] - [Permission Template=Samlingsbilleder ingen registrering]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Valider færdig post</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>e9ffbe04acbc43dd9f04f4f047d1ad7a</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594459</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Validerer færdig post</value>
+                </field>
+            </row>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Sep 05 15:18:38 CEST 2022</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Sep 05 15:18:38 CEST 2022</value>
+                </field>
+                <field name="Description">
+                    <value>Godkend post - [Resulting state=Færdigregistreret] - [Resulting assignment=] - [Metadata Template=Færdigregistreret]</value>
+                </field>
+                <field name="Item Creation User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Activity">
+                    <value>Godkend post</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>69dfd8ba01284dc287a7bccfde485cb6</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>11594463</value>
+                </field>
+                <field name="Item Modification User">
+                    <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:Workflow system</value>
+                </field>
+                <field name="Workflow State">
+                    <value>Færdigregistreret</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Image</value>
+    </field>
+    <field data-type="boolean" name="Klar til AIM">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>2f75fa4786c1be0f0e1eff1f6506e1ca</value>
+    </field>
+    <field data-type="enumerator" name="objectIdentifierType">
+        <value>UUID</value>
+    </field>
+    <field data-type="string" name="File Format Identifier">
+        <value>image/tiff</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>1643806</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:bevaring</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Langtidsbevaring fejlet</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Emdrupborg Statsseminarium, Skolehistorie, 69 testfiler</value>
+    </field>
+    <field data-type="string" name="Image Orientation">
+        <value>Top left</value>
+    </field>
+    <field data-type="string" name="Unique Item ID">
+        <value>468b7a0a6f684465af756f6826628931</value>
+    </field>
+    <field data-type="enumerator" name="Color Model">
+        <value>RGB Color</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="enumerator" name="Hjemtaget som:">
+        <value>R</value>
+    </field>
+    <field data-type="string" name="Subtitle">
+        <value>Emdrupborg seminarie</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Tue Oct 04 11:28:37 CEST 2022</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Note">
+        <value>Beskrivelse: Emdrupborg seminarie Klasse/gruppe billede</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Samlingsbilleder</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1610324822</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2016-08-08 02:59:24</value>
+    </field>
+    <field data-type="string" name="År">
+        <value>1955</value>
+    </field>
+    <field data-type="string" name="URL">
+        <value>https://skolehistorie.au.dk/samlinger/skolehistorisk-fotosamling/</value>
+    </field>
+    <field data-type="string" name="Topografisk nr">
+        <value>0023</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>59</value>
+    </field>
+    <field data-type="string" name="Beskrivelse">
+        <value>Emdrupborg seminarie Klasse/gruppe billede</value>
+    </field>
+    <field data-type="enumerator" name="Generel materialebetegnelse">
+        <value>Billede, Todimensionalt billedmateriale </value>
+    </field>
+    <field data-type="enumerator" name="Pageorientation">
+        <value>LTR</value>
+    </field>
+    <field data-type="integer" name="Color Channels">
+        <value>3</value>
+    </field>
+    <field data-type="enumerator" name="Samling">
+        <value>Skolehistorie</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="string" name="Dimensions">
+        <value>100 x 150 mm</value>
+    </field>
+    <field data-type="double" name="Image Height">
+        <value>3.665</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>Depot</value>
+    </field>
+    <field data-type="string" name="URL-tekst">
+        <value>Skolehistorie.au.dk</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>eb7794e5-8775-41f5-a4cd-549fba78d730</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>true</value>
+    </field>
+    <field data-type="double" name="Vertical Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="enumerator" name="Hjemtaget af:">
+        <value>Københavns Museum</value>
+    </field>
+    <field data-type="string" name="Compression">
+        <value>Uncompressed</value>
+    </field>
+    <field data-type="string" name="Udgave">
+        <value>3. udgave: "Emdrupborgs skolehistorie" af Nielsen, Pia</value>
+    </field>
+    <field data-type="string" name="Cataloging User ID">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>DAM\test\Samlingsbilleder\0001\643\806</value>
+    </field>
+    <field data-type="string" name="DSM Nummer">
+        <value>0001</value>
+    </field>
+    <field data-type="string" name="creatingApplication">
+        <value>Omniscan 12.4 SR5 Build2118</value>
+    </field>
+    <field data-type="string" name="QA_error">
+        <value>Could not upload the file to the archive.</value>
+    </field>
+    <field data-type="string" name="compositionLevel">
+        <value>0</value>
+    </field>
+    <field data-type="enumerator" name="Copyright">
+        <value>Materialet er muligvis beskyttet af ophavsret</value>
+    </field>
+    <field data-type="enumerator" name="Materialebetegnelse">
+        <value>Fotografi</value>
+    </field>
+    <field data-type="enumerator" name="Ejerskab_farve">
+        <value>-6710887</value>
+    </field>
+    <field data-type="string" name="Selected references">
+        <value>"Emdrupborgs skolehistorie" af Nielsen, Pia (1995)</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>cumulus</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>SKF_dsm_0001.tif</value>
+    </field>
+    <field data-type="string" name="ICC Profile Name">
+        <value>Adobe RGB (1998)</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Fri Feb 19 08:53:50 CET 2021</value>
+    </field>
+    <field data-type="string" name="Asset Content Identifier">
+        <value>2f75fa4786c1be0f0e1eff1f6506e1ca</value>
+    </field>
+    <field data-type="enumerator" name="Color Mode">
+        <value>Color</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>45319150-2ce6-11ed-81b4-005056882ec3</value>
+    </field>
+    <field data-type="double" name="Horizontal Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Samlingsbilleder</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Mon Aug 08 12:59:24 CEST 2016</value>
+    </field>
+    <field data-type="string" name="Renditions Manager Notes">
+        <value>[JPEG2000] Created rendition.</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>117</value>
+    </field>
+    <field data-type="binary" name="Original Asset Reference">
+        <value>cumulus-core-01:/Depot/DAM/Samlingsbilleder/Emdrup/fotosamling/SKF_dsm_0001.tif</value>
+    </field>
+    <field data-type="enumerator" name="Særlige visningsvilkår">
+        <value>Ejermærke</value>
+    </field>
+    <field data-type="string" name="Item Creation User">
+        <value>U:{98ca1422-0171-4d1d-8b84-8cdda4ab70ae}:cumulus</value>
+    </field>
+    <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
+        <value>673c6b53-bcdd-4f47-85de-564f8a0938e1</value>
+    </field>
+    <field data-type="string" name="Titel">
+        <value>Klasse/gruppe billede</value>
+    </field>
+    <field data-type="integer" name="Bits Per Channel">
+        <value>8</value>
+    </field>
+    <field data-type="string" name="Software">
+        <value>Omniscan 12.4 SR5 Build2118</value>
+    </field>
+    <field data-type="date" name="Date Time Original">
+        <value>Fri Jul 17 13:35:49 CEST 2009</value>
+    </field>
+    <field data-type="binary" name="Asset Reference">
+        <value>cumulus-core-test-01:/Depot/DAM/test/Samlingsbilleder/0001/643/806/SKF_dsm_0001.tif</value>
+    </field>
+    <field data-type="string" name="KB Samling">
+        <value>K</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>SKF_dsm_0001.tif</value>
+    </field>
+    <field data-type="integer" name="Horizontal Pixels">
+        <value>1934</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Confidentiality">
+        <value>confidentialityLow</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>8506662</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Logical">
+        <value>logicalStrategyMigration</value>
+    </field>
+    <field data-type="enumerator" name="Cataloging language">
+        <value>da</value>
+    </field>
+    <field data-type="enumerator" name="Ejermærke">
+        <value>Intet ejermærke</value>
+    </field>
+    <field data-type="boolean" name="Klar til for- og bagside">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="Serietitel">
+        <value>Emdrupborg Statsseminarium</value>
+    </field>
+    <field data-type="enumerator" name="Materialeteknik">
+        <value>Fotogravure</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>kb.dk</value>
+    </field>
+    <field data-type="string" name="Document Name">
+        <value>SKF_dsm_0001.tif</value>
+    </field>
+    <field data-type="string" name="Scale">
+        <value>1:1000</value>
+    </field>
+    <field data-type="integer" name="Vertical Pixels">
+        <value>1466</value>
+    </field>
+    <field data-type="double" name="Image Width">
+        <value>4.835</value>
+    </field>
+    <field data-type="string" name="Accessionsnr">
+        <value>dsm_0001</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="long" name="Asset Data Size (Long)">
+        <value>8506662</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Mon Jan 11 09:27:02 CET 2021</value>
+    </field>
+    <field data-type="string" name="Seriebeskrivelse">
+        <value>Klassen samler sig om Emdrupborg seminarie</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_BitSafety">
+        <value>bitSafetyMedium</value>
+    </field>
+    <field data-type="table" name="Renditions Manager">
+        <table>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Fri Feb 19 15:14:53 CET 2021</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1643806</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Fri Feb 19 16:35:36 CET 2021</value>
+                </field>
+                <field name="Rendition Name">
+                    <value>JPEG2000</value>
+                </field>
+                <field name="External Reference">
+                    <value>ID:dia-prod-iconv-02.kb.dk-37044-1578387891788-1175391:1:1:1:1</value>
+                </field>
+                <field name="State">
+                    <value>Finished</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Samlingsbilleder</value>
+                </field>
+                <field name="ID">
+                    <value>456007</value>
+                </field>
+                <field name="Asset Reference">
+                    <value>cumulus-core-01:/Depot/DAMJP2/DAM/Samlingsbilleder/Emdrup/fotosamling/dsm_0001.jp2</value>
+                </field>
+                <field name="Notes">
+                    <value>[JPEG2000] Created rendition.</value>
+                </field>
+            </row>
+        </table>
+    </field>
+</record>
