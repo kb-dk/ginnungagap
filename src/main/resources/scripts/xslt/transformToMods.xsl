@@ -2244,10 +2244,9 @@
     <!-- Udgave -->
     <xsl:if test="field[@name='Udgave']">
       <xsl:element name="mods:originInfo">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'edition'" />
-      </xsl:attribute>
-        <xsl:value-of select="field[@name='Udgave']/value" />
+        <xsl:element name="mods:edition">
+          <xsl:value-of select="field[@name='Udgave']/value" />
+        </xsl:element>
       </xsl:element>
     </xsl:if>
 

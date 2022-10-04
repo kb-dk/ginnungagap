@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -88,7 +89,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
         addStep("Transform the Cumulus XML", "METS");
         try {
-            transformer.transformXmlMetadata(new FileInputStream(xmlFile), out);
+            transformer.transformXmlMetadata(Files.newInputStream(xmlFile.toPath()), out);
             File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
             try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
                 fos.write(out.toByteArray());
@@ -96,7 +97,34 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
             }
 
             addStep("Validate the METS", "");
-            transformationHandler.validate(new FileInputStream(metadataFile));
+            transformationHandler.validate(Files.newInputStream(metadataFile.toPath()));
+        } finally {
+            if(writeOutput) {
+                System.out.println(out);
+            }
+        }
+    }
+
+    @Test
+    public void testTransformationWithUpdatedFields() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with newly added and updated fields.");
+        File xmlFile = new File("src/test/resources/SKF_dsm_0001.tif.raw.xml");
+        assertTrue(xmlFile.isFile());
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        addStep("Transform the Cumulus XML", "METS");
+        try {
+            transformer.transformXmlMetadata(Files.newInputStream(xmlFile.toPath()), out);
+            File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+            try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
+                fos.write(out.toByteArray());
+                fos.flush();
+            }
+
+            addStep("Validate the METS", "");
+            transformationHandler.validate(Files.newInputStream(metadataFile.toPath()));
         } finally {
             if(writeOutput) {
                 System.out.println(out);
