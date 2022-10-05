@@ -3354,28 +3354,58 @@
   <!-- END titleInfo -->
 
   <!-- START typeOfResource -->
+
+<!--          ModsEnumeratorSelector.typeOfResource is not needed as of mods.xsd v. 3.7 -->
+  <!--      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(-->
+  <!--          field[@name='Materialebetegnelse']/value, -->
+  <!--          field[@name='Resourcedescription']/value, -->
+  <!--          field[@name='Generel materialebetegnelse']/value, -->
+  <!--          field[@name='General Resourcedescription']/value)" />-->
+
   <xsl:template name="mods_typeOfResource">
-    <xsl:if test="field[@name='Generel materialebetegnelse']">
+    <xsl:if test="field[@name='Generel materialebetegnelse'] or field[@name='Generel Resource Description']">
       <xsl:element name="mods:typeOfResource">
-        <!--      <xsl:value-of select="java:dk.kb.metadata.selector.ModsEnumeratorSelector.typeOfResource(-->
-        <!--          field[@name='Materialebetegnelse']/value, -->
-        <!--          field[@name='Resourcedescription']/value, -->
-        <!--          field[@name='Generel materialebetegnelse']/value, -->
-        <!--          field[@name='General Resourcedescription']/value)" />-->
         <xsl:attribute name="displayLabel">
           <xsl:value-of select="'Generel materialebetegnelse'" />
         </xsl:attribute>
-        <xsl:value-of select="field[@name='Generel materialebetegnelse']/value" />
+        <xsl:choose>
+          <xsl:when test="field[@name='Generel materialebetegnelse']">
+            <xsl:for-each select="field[@name='Generel materialebetegnelse']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Generel Resource Description']">
+            <xsl:for-each select="field[@name='Generel Resource Description']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
       </xsl:element>
     </xsl:if>
-    <xsl:if test="field[@name='Materialebetegnelse']">
+    <xsl:if test="field[@name='Materialebetegnelse'] or field[@name='Resource Description']">
       <xsl:element name="mods:typeOfResource">
         <xsl:attribute name="displayLabel">
           <xsl:value-of select="'Materialebetegnelse'" />
         </xsl:attribute>
-        <xsl:value-of select="field[@name='Materialebetegnelse']/value" />
+        <xsl:choose>
+          <xsl:when test="field[@name='Materialebetegnelse']">
+            <xsl:for-each select="field[@name='Materialebetegnelse']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Resource Description']">
+            <xsl:for-each select="field[@name='Resource Description']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
       </xsl:element>
     </xsl:if>
+
   </xsl:template>
   <!-- END typeOfResource -->
   
