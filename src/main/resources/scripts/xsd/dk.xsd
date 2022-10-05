@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://id.kb.dk/dk-corporate-creator" xmlns:c="http://www.cdlib.org/inside/diglib/copyrightMD" xmlns:dk="http://id.kb.dk/dk-corporate-creator">
-    <xs:import namespace="http://www.cdlib.org/inside/diglib/copyrightMD" schemaLocation="https://raw.githubusercontent.com/kb-dk/ginnungagap/wip/src/main/resources/scripts/xsd/copyright-md.xsd"/>
+    <xs:import namespace="http://www.cdlib.org/inside/diglib/copyrightMD" schemaLocation="https://raw.githubusercontent.com/kb-dk/ginnungagap/dkCdlSRL/src/main/resources/scripts/xsd/copyright-md.xsd"/>
     <xs:element name="creator.corporate">
         <xs:complexType>
             <xs:sequence>
