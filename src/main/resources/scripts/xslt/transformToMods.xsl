@@ -316,14 +316,6 @@
 
   <!-- START genre -->
   <xsl:template name="mods_genre">
-    <!-- Catalog Name -->
-    <xsl:element name="mods:genre">
-      <xsl:attribute name="type">
-        <xsl:value-of select="'Catalog Name'" />
-      </xsl:attribute>
-      <xsl:value-of select="field[@name='Catalog Name']/value" />
-    </xsl:element>
-    
     <!-- Genre -->
     <xsl:for-each select="field[@name='Genre']/value">
       <xsl:element name="mods:genre">
@@ -1416,7 +1408,6 @@
   <xsl:template name="mods_name_ophav">
     <!-- Ophav Tabel -->
     <xsl:for-each select="field[@name='Ophav-tabel']/table/row">
-      <xsl:comment>MODS name ophav</xsl:comment> 
       <xsl:call-template name="mods_name_ophav_person">
         <xsl:with-param name="tabel" select = "'ophav'" />
       </xsl:call-template>
@@ -1521,7 +1512,6 @@
   <xsl:template name="cdl_ophav">
     <!-- Ophav Tabel -->
     <xsl:for-each select="field[@name='Ophav-tabel']/table/row">
-      <xsl:comment>CDL name ophav</xsl:comment>     
       <xsl:call-template name="cdl_ophav_person">
         <xsl:with-param name="tabel" select = "'ophav'" />
       </xsl:call-template>
@@ -1800,6 +1790,12 @@
       </xsl:element>
     </xsl:if>
 
+    <!-- Catalog Name -->
+    <xsl:element name="mods:note">
+      <xsl:attribute name="diplayLabel">Catalog Name</xsl:attribute>
+      <xsl:value-of select="field[@name='Catalog Name']/value" />
+    </xsl:element>
+
   </xsl:template>
   <!-- END note -->
 
@@ -1809,7 +1805,7 @@
           field[@name='Country (location) of sender'] or
           field[@name='Udgivelsessted'] or field[@name='Location of origin'] or
           field[@name='Location of sender'] or
-          field[@name='Topografinr'] or field[@name='År'] or
+          field[@name='Topografinummer'] or field[@name='År'] or
           field[@name='Date of Origin'] or field[@name='Date not after'] or
           field[@name='Dato ikke efter'] or field[@name='Date not before'] or
           field[@name='Dato ikke før'] or field[@name='Local Date'] or
@@ -1817,7 +1813,6 @@
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
           field[@name='Presentation Date'] ">
-<!--      or field[@name='Date Time Original'] or field[@name='Captured Date']">-->
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
@@ -1825,7 +1820,7 @@
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
           field[@name='Location of sender'] or
-          field[@name='Topografinr']">
+          field[@name='Topografinummer']">
           <xsl:element name="mods:place">
             <!-- Udgivelsesland || Country || Country (location) of sender -->
             <xsl:choose>
@@ -1901,15 +1896,15 @@
               </xsl:when>
             </xsl:choose>
 
-            <xsl:for-each select="field[@name='Topografinr']/value">
-              <xsl:element name="mods:placeTerm">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'code'" />
-                </xsl:attribute>
-                <xsl:call-template name="cumulus_get_lang_attribute" />
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
+<!--            <xsl:for-each select="field[@name='Topografinummer']/value">-->
+<!--              <xsl:element name="mods:placeTerm">-->
+<!--                <xsl:attribute name="type">-->
+<!--                  <xsl:value-of select="'code'" />-->
+<!--                </xsl:attribute>-->
+<!--                <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
           </xsl:element>
         </xsl:if>
 
@@ -2234,7 +2229,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Date Time Original || Captured Date-->
+    <!-- Date Time Original || Captured Date, only one of them can be present-->
     <xsl:if test="field[@name='Date Time Original'] and not(field[@name='Captured Date'])">
       <xsl:element name="mods:originInfo">
         <xsl:element name="mods:dateCaptured">
@@ -3152,18 +3147,15 @@
     <xsl:for-each select="field[@name='Person-tabel']/table/row">
       <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or 
       contains(field[@name='Rolle']/value, 'Motiv')">
-        <xsl:comment>MODS subject name person</xsl:comment> 
-        <xsl:call-template name="mods_subject_ophav_person" />    
+        <xsl:call-template name="mods_subject_ophav_person" />
       </xsl:if>
     </xsl:for-each>
 
     <!-- Topografinummer -->
-    <xsl:if test="field[@name='Topografisk nr']/value">
+    <xsl:if test="field[@name='Topografinummer']/value">
       <xsl:element name="mods:subject">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Topografinummer'" />
-        </xsl:attribute>
-        <xsl:for-each select="field[@name='Topografisk nr']">
+        <xsl:attribute name="displayLabel">Topografinummer</xsl:attribute>
+        <xsl:for-each select="field[@name='Topografinummer']">
           <xsl:element name="mods:geographicCode">
             <xsl:call-template name="cumulus_get_lang_attribute" />
             <xsl:call-template name="cumulus_get_value" />
