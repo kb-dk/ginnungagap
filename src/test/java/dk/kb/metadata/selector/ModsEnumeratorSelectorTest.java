@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.jaccept.structure.ExtendedTestCase;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 public class ModsEnumeratorSelectorTest extends ExtendedTestCase {
@@ -17,6 +18,7 @@ public class ModsEnumeratorSelectorTest extends ExtendedTestCase {
         Assert.assertNotNull(as);
     }
     
+    @Ignore
     @Test
     public void testTypeOfResourceSuccessDefault() {
         addDescription("Test the typeOfResource when given the default resulting values.");
@@ -24,14 +26,16 @@ public class ModsEnumeratorSelectorTest extends ExtendedTestCase {
             Assert.assertEquals(ModsEnumeratorSelector.typeOfResource(Arrays.asList(s)), s);
         }
     }
-    
+
+    @Ignore
     @Test
     public void testTypeOfResourceWithEmptyElement() {
         addDescription("Test the typeOfResource when given the empty or null values.");
         Assert.assertEquals(ModsEnumeratorSelector.typeOfResource(Arrays.asList("", defaultTypeOfResourceValue)), defaultTypeOfResourceValue);
         Assert.assertEquals(ModsEnumeratorSelector.typeOfResource(Arrays.asList(null, defaultTypeOfResourceValue)), defaultTypeOfResourceValue);
     }
-    
+
+    @Ignore
     @Test
     public void testTypeOfResourceWithConvertionElements() {
         addDescription("Test the typeOfResource when given the conversion elements.");
@@ -44,6 +48,7 @@ public class ModsEnumeratorSelectorTest extends ExtendedTestCase {
         Assert.assertEquals(ModsEnumeratorSelector.typeOfResource(Arrays.asList("Smaatryk")), ModsEnumeratorSelector.TYPE_OF_RESOURCE_STILL_IMAGE);
     }
 
+    @Ignore
     @Test
     public void testTypeOfResourceBadValue() {
         addDescription("Test the typeOfResource when given an incorrect value.");

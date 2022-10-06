@@ -52,6 +52,8 @@ public final class ModsEnumeratorSelector {
                     TYPE_OF_RESOURCE_MIXED_MATERIAL, TYPE_OF_RESOURCE_NO_VALUE)));
 
     /**
+     * ModsEnumeratorSelector.typeOfResource is not needed as of mods.xsd v. 3.7
+     *
      * A method for passing the 4 arguments from the XSLT MODS transformation of the typeOfResource.
      * They will be changed into a collection and passed into the other typeOfResource method,
      * where the values will be parsed, and the first valid value will be chosen.
@@ -61,15 +63,19 @@ public final class ModsEnumeratorSelector {
      * @param value4 The value of the field General Resourcedescription
      * @return The validated value.
      */
+    @Deprecated
     public static String typeOfResource(String value1, String value2, String value3, String value4) {
         return typeOfResource(Arrays.asList(value1, value2, value3, value4));
     }
     
     /**
+     * ModsEnumeratorSelector.typeOfResource is not needed as of mods.xsd v. 3.7
+     *
      * Selects a given valid entry for the field 'mods:typeOfResource'.
      * @param values The values. 
      * @return The evaluated value, or the empty value.
      */
+    @Deprecated
     public static String typeOfResource(Collection<String> values) {
         for(String value : values) {
             if(value == null || value.isEmpty()) {
