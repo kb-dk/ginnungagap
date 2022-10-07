@@ -333,17 +333,17 @@
       </xsl:element>
     </xsl:for-each>
 
-    <xsl:if test="field[@name='Materialeteknik']/value">
-      <xsl:element name="mods:genre">
-        <xsl:attribute name="authority" >
-          <xsl:value-of select="'gmgpc'" />
-        </xsl:attribute>
-        <xsl:for-each select="field[@name='Materialeteknik']/value">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:call-template name="cumulus_get_value" />
-        </xsl:for-each>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Materialeteknik']/value">-->
+<!--      <xsl:element name="mods:genre">-->
+<!--        <xsl:attribute name="authority" >-->
+<!--          <xsl:value-of select="'gmgpc'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:for-each select="field[@name='Materialeteknik']/value">-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:call-template name="cumulus_get_value" />-->
+<!--        </xsl:for-each>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
   </xsl:template>
   <!-- END genre -->
@@ -1771,9 +1771,9 @@
     <!-- Hjemtaget som-->
     <xsl:if test="field[@name='Hjemtaget som:']">
       <xsl:element name="mods:note">
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'provenance'" />
-                </xsl:attribute>
+        <xsl:attribute name="type">
+          <xsl:value-of select="'provenance'" />
+        </xsl:attribute>
         <xsl:attribute name="displayLabel">Hjemtaget som</xsl:attribute>
         <xsl:value-of select="field[@name='Hjemtaget som:']/value" />
       </xsl:element>
@@ -1792,7 +1792,7 @@
 
     <!-- Catalog Name -->
     <xsl:element name="mods:note">
-      <xsl:attribute name="diplayLabel">Catalog Name</xsl:attribute>
+      <xsl:attribute name="displayLabel">Catalog Name</xsl:attribute>
       <xsl:value-of select="field[@name='Catalog Name']/value" />
     </xsl:element>
 
@@ -2383,6 +2383,19 @@
         </xsl:if>
       </xsl:element>
     </xsl:if>
+
+    <xsl:if test="field[@name='Materialeteknik']/value">
+      <xsl:element name="mods:physicalDescription">
+        <xsl:element name="mods:form">
+          <xsl:attribute name="type" >Materialeteknik</xsl:attribute>
+          <xsl:for-each select="field[@name='Materialeteknik']/value">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:for-each>
+        </xsl:element>
+      </xsl:element>
+    </xsl:if>
+
   </xsl:template>
   <!-- END physicalDescription -->
 
