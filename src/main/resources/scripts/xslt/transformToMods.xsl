@@ -1819,8 +1819,7 @@
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender'] or
-          field[@name='Topografinummer']">
+          field[@name='Location of sender']">
           <xsl:element name="mods:place">
             <!-- Udgivelsesland || Country || Country (location) of sender -->
             <xsl:choose>
