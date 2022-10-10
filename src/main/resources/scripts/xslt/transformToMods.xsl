@@ -2398,11 +2398,10 @@
     <xsl:if test="field[@name='Publiceringsformat']">
       <xsl:for-each select="field[@name='Publiceringsformat']/value">
         <xsl:element name="mods:physicalDescription">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:attribute name="displayLabel">
-            <xsl:value-of select="'Size'" />
-          </xsl:attribute>
-          <xsl:call-template name="cumulus_get_value" />
+          <xsl:element name="mods:extent">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
         </xsl:element>
       </xsl:for-each>
     </xsl:if>
