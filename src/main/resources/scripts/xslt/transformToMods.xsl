@@ -2395,6 +2395,18 @@
       </xsl:element>
     </xsl:if>
 
+    <xsl:if test="field[@name='Publiceringsformat']">
+      <xsl:for-each select="field[@name='Publiceringsformat']/value">
+        <xsl:element name="mods:physicalDescription">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:attribute name="displayLabel">
+            <xsl:value-of select="'Size'" />
+          </xsl:attribute>
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:element>
+      </xsl:for-each>
+    </xsl:if>
+
   </xsl:template>
   <!-- END physicalDescription -->
 
@@ -2792,23 +2804,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Motiv -->
-    <xsl:if test="field[@name='Motiv']">
-      <xsl:for-each select="field[@name='Motiv']/value">
-        <xsl:element name="mods:subject">
-          <xsl:attribute name="displayLabel">Motiv</xsl:attribute>
-          <xsl:element name="mods:topic">
-            <xsl:call-template name="cumulus_get_lang_attribute" />
-            <xsl:call-template name="cumulus_get_value" />
-          </xsl:element>
-          <!--        <xsl:element name="mods:genre">-->
-          <!--          <xsl:value-of select="'Motiv'" />-->
-          <!--        </xsl:element>-->
-        </xsl:element>
-      </xsl:for-each>
-    </xsl:if>
-
-    <!-- Målestok || Målestock || Scale 
+    <!-- Målestok || Målestock || Scale
          with both 'Målestok', 'Målestock' and 'Scale' as scale.-->
     <xsl:if test="field[@name='Målestok'] or field[@name='Målestock'] or field[@name='Scale']">
       <xsl:element name="mods:subject">
@@ -2857,6 +2853,22 @@
 <!--          <xsl:value-of select="'Scale'" />-->
 <!--        </xsl:element>-->
       </xsl:element>
+    </xsl:if>
+
+    <!-- Motiv -->
+    <xsl:if test="field[@name='Motiv']">
+      <xsl:for-each select="field[@name='Motiv']/value">
+        <xsl:element name="mods:subject">
+          <xsl:attribute name="displayLabel">Motiv</xsl:attribute>
+          <xsl:element name="mods:topic">
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
+          <!--        <xsl:element name="mods:genre">-->
+          <!--          <xsl:value-of select="'Motiv'" />-->
+          <!--        </xsl:element>-->
+        </xsl:element>
+      </xsl:for-each>
     </xsl:if>
 
     <!-- Organisation || Organisation, ophav
