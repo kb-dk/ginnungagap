@@ -108,7 +108,7 @@ public class MetadataController {
             CumulusRecord record;
             File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
             String[] fileList;
-
+            boolean validateOk = true;
             Path path = Paths.get(inputFilePath + uploadFile);
 
             if(isNullOrEmpty(id)) {
@@ -123,15 +123,23 @@ public class MetadataController {
                 filename = fid + ".xml";
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'.");
                 record = getCumulusRecord(fid, idType, catalog);
-                validateRecord(record);
+                try {
+                    validateRecord(record);
+                } catch (IllegalStateException e) {
+                    validateOk = false;
+                }
                 if(source.equalsIgnoreCase("archive")) {
                     metadataFile = getArchivedMetadata(filename, metadataType, record);
                     String data = FileUtils.readFileToString(metadataFile, "UTF-8");
                     log.trace("Contents from archive: \n" + data);
                 } else {
-                    metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                    log.trace("Contents from Cumulus: \n" + data);
+                    if(validateOk) {
+                        metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
+                        String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                        log.trace("Contents from Cumulus: \n" + data);
+                    } else {
+                        metadataFile = new File("ValidationError: " + record.getFieldValue(Constants.FieldNames.RECORD_NAME));
+                    }
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
             }
@@ -165,7 +173,7 @@ public class MetadataController {
                 uploadFile = file.getOriginalFilename();
                 file.transferTo(new File(inputFilePath + uploadFile));
             } catch (IOException e) {
-                throw new IllegalStateException(e); //todo: make warning?
+                throw new IllegalStateException(e);
             }
         }
         model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
@@ -191,25 +199,6 @@ public class MetadataController {
         fList = list.toArray(new String[0]);
 
         return fList;
-
-//        String[] list = new String[0];
-//        if(path.toFile().exists()) {
-//
-//            List<String> filesList = null;
-//            try (Stream<String> lines = Files.lines(path)) {
-//                filesList = lines.collect(Collectors.toList());
-//            } catch (IOException e) {
-//                log.warn("Something went wrong reading file to list", e);
-//            }
-//            if(!(filesList == null)) {
-//                list = filesList.toArray(new String[0]);
-//                log.trace("filelist: {}", (Object) list);
-//            }
-
-
-//          //          path.toFile().delete();
-//       return list;
-
     }
 
     /**
