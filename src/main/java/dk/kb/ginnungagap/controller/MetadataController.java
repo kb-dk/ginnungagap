@@ -123,8 +123,7 @@ public class MetadataController {
                 filename = fid + ".xml";
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
                 record = getCumulusRecord(fid, idType, catalog);
-                String recordName = record.getFieldValue(Constants.FieldNames.RECORD_NAME);
-                String errorRecordName = inputFilePath + "Error_" + recordName + ".txt";
+                String errorRecordName = inputFilePath + "Error_" + record.getFieldValue(Constants.FieldNames.RECORD_NAME) + ".txt";
                 try {
                     validateRecord(record);
                     if(source.equalsIgnoreCase("archive")) {
