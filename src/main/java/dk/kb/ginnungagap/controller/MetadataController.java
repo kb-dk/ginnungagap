@@ -157,16 +157,6 @@ public class MetadataController {
         }
     }
 
-    private File makeErrorFile(String errorRecord, String fileContent) throws IOException {
-        File metadataFile;
-        metadataFile = new File(errorRecord);
-        metadataFile.createNewFile();
-        FileWriter fw = new FileWriter(errorRecord);
-        fw.write(fileContent);
-        fw.close();
-        return metadataFile;
-    }
-
     /**
      * Upload a file containing a list of file IDs to extract metadata for
      * @param file The uploaded file
@@ -185,6 +175,25 @@ public class MetadataController {
         }
         model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
         return "metadata";
+    }
+
+    /**
+     * Create a file containing exception text
+     * @param errorFile path to the file instance
+     * @param fileContent What is put into the file
+     * @return the file with error text
+     */
+    private File makeErrorFile(String errorFile, String fileContent) {
+        File file = new File(errorFile);
+        try {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(errorFile);
+            fw.write(fileContent);
+            fw.close();
+        } catch (IOException e) {
+            throw new IllegalStateException("Creating an error file failed", e);
+        }
+        return file;
     }
 
     /**
