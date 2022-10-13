@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -108,7 +109,6 @@ public class MetadataController {
             CumulusRecord record;
             File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
             String[] fileList;
-            boolean validateOk = true;
             Path path = Paths.get(inputFilePath + uploadFile);
 
             if(isNullOrEmpty(id)) {
@@ -121,25 +121,23 @@ public class MetadataController {
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
-                log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'.");
+                log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
                 record = getCumulusRecord(fid, idType, catalog);
+                String recordName = record.getFieldValue(Constants.FieldNames.RECORD_NAME);
+                String errorRecordName = inputFilePath + "Error_" + recordName + ".txt";
                 try {
                     validateRecord(record);
-                } catch (IllegalStateException e) {
-                    validateOk = false;
-                }
-                if(source.equalsIgnoreCase("archive")) {
-                    metadataFile = getArchivedMetadata(filename, metadataType, record);
-                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                    log.trace("Contents from archive: \n" + data);
-                } else {
-                    if(validateOk) {
+                    if(source.equalsIgnoreCase("archive")) {
+                        metadataFile = getArchivedMetadata(filename, metadataType, record);
+                        String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                        log.trace("Contents from archive: \n" + data);
+                    } else {
                         metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
                         String data = FileUtils.readFileToString(metadataFile, "UTF-8");
                         log.trace("Contents from Cumulus: \n" + data);
-                    } else {
-                        metadataFile = new File("ValidationError: " + record.getFieldValue(Constants.FieldNames.RECORD_NAME));
                     }
+                } catch (Exception e) {
+                    metadataFile = makeErrorFile(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
             }
@@ -158,6 +156,16 @@ public class MetadataController {
             log.warn("Failed to retrieve metadata", e);
             throw new IllegalStateException("Failed to extract metadata", e);
         }
+    }
+
+    private File makeErrorFile(String errorRecord, String fileContent) throws IOException {
+        File metadataFile;
+        metadataFile = new File(errorRecord);
+        metadataFile.createNewFile();
+        FileWriter fw = new FileWriter(errorRecord);
+        fw.write(fileContent);
+        fw.close();
+        return metadataFile;
     }
 
     /**
