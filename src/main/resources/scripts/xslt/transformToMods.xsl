@@ -1803,8 +1803,7 @@
     <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
           field[@name='Country (location) of sender'] or
           field[@name='Udgivelsessted'] or field[@name='Location of origin'] or
-          field[@name='Location of sender'] or
-          field[@name='Topografinummer'] or field[@name='Local Date'] or
+          field[@name='Location of sender'] or field[@name='Local Date'] or
           field[@name='Manual Date not after'] or
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
