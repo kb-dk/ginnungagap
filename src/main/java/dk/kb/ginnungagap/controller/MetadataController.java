@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +45,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -136,7 +136,7 @@ public class MetadataController {
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
-                    metadataFile = makeErrorFile(errorRecordName, e.toString());
+                    metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
             }
@@ -178,27 +178,7 @@ public class MetadataController {
     }
 
     /**
-     * Create a file containing exception text
-     * @param errorFile path to the file instance
-     * @param fileContent What is put into the file
-     * @return the file with error text
-     */
-    private File makeErrorFile(String errorFile, String fileContent) {
-        File file = new File(errorFile);
-        try {
-            file.createNewFile();
-            FileWriter fw = new FileWriter(errorFile);
-            fw.write(fileContent);
-            fw.close();
-        } catch (IOException e) {
-            throw new IllegalStateException("Creating an error file failed", e);
-        }
-        return file;
-    }
-
-    /**
      * Help method to read a file line by line and return the result in a String array
-//     * @param list
      * @param path Path to the file to read
      * @return list of files as String array
      */
