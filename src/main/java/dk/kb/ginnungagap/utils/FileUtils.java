@@ -3,6 +3,7 @@ package dk.kb.ginnungagap.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -145,5 +146,24 @@ public class FileUtils {
                 + "'", e);
         }
         return res;
+    }
+
+    /**
+     * Create a file containing the given text
+     * @param pathToFile path to the file instance
+     * @param fileContent What is put into the file
+     * @return the file with error text
+     */
+    public static File createFileWithText(String pathToFile, String fileContent) {
+        File file = new File(pathToFile);
+        try {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(pathToFile);
+            fw.write(fileContent);
+            fw.close();
+        } catch (IOException e) {
+            throw new IllegalStateException("Creating an error file failed", e);
+        }
+        return file;
     }
 }

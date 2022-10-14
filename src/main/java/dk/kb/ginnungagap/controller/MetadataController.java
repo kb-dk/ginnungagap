@@ -45,6 +45,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -108,7 +109,6 @@ public class MetadataController {
             CumulusRecord record;
             File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
             String[] fileList;
-
             Path path = Paths.get(inputFilePath + uploadFile);
 
             if(isNullOrEmpty(id)) {
@@ -121,17 +121,22 @@ public class MetadataController {
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
-                log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'.");
+                log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
                 record = getCumulusRecord(fid, idType, catalog);
-                validateRecord(record);
-                if(source.equalsIgnoreCase("archive")) {
-                    metadataFile = getArchivedMetadata(filename, metadataType, record);
-                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                    log.trace("Contents from archive: \n" + data);
-                } else {
-                    metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
-                    String data = FileUtils.readFileToString(metadataFile, "UTF-8");
-                    log.trace("Contents from Cumulus: \n" + data);
+                String errorRecordName = inputFilePath + "Error_" + record.getFieldValue(Constants.FieldNames.RECORD_NAME) + ".txt";
+                try {
+                    validateRecord(record);
+                    if(source.equalsIgnoreCase("archive")) {
+                        metadataFile = getArchivedMetadata(filename, metadataType, record);
+                        String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                        log.trace("Contents from archive: \n" + data);
+                    } else {
+                        metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
+                        String data = FileUtils.readFileToString(metadataFile, "UTF-8");
+                        log.trace("Contents from Cumulus: \n" + data);
+                    }
+                } catch (Exception e) {
+                    metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
             }
@@ -165,7 +170,7 @@ public class MetadataController {
                 uploadFile = file.getOriginalFilename();
                 file.transferTo(new File(inputFilePath + uploadFile));
             } catch (IOException e) {
-                throw new IllegalStateException(e); //todo: make warning?
+                throw new IllegalStateException(e);
             }
         }
         model.addAttribute("catalogs", conf.getCumulusConf().getCatalogs());
@@ -174,7 +179,6 @@ public class MetadataController {
 
     /**
      * Help method to read a file line by line and return the result in a String array
-//     * @param list
      * @param path Path to the file to read
      * @return list of files as String array
      */
@@ -191,25 +195,6 @@ public class MetadataController {
         fList = list.toArray(new String[0]);
 
         return fList;
-
-//        String[] list = new String[0];
-//        if(path.toFile().exists()) {
-//
-//            List<String> filesList = null;
-//            try (Stream<String> lines = Files.lines(path)) {
-//                filesList = lines.collect(Collectors.toList());
-//            } catch (IOException e) {
-//                log.warn("Something went wrong reading file to list", e);
-//            }
-//            if(!(filesList == null)) {
-//                list = filesList.toArray(new String[0]);
-//                log.trace("filelist: {}", (Object) list);
-//            }
-
-
-//          //          path.toFile().delete();
-//       return list;
-
     }
 
     /**
