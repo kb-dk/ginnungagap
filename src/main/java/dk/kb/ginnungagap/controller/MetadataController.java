@@ -119,7 +119,6 @@ public class MetadataController {
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
-                String errorRecordName;
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
                 try {
                     record = getCumulusRecord(fid, idType, catalog);
@@ -134,7 +133,7 @@ public class MetadataController {
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
-                    errorRecordName = inputFilePath + "Error_" + fid + ".txt";
+                    String errorRecordName = inputFilePath + "Error_" + fid + ".txt";
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
