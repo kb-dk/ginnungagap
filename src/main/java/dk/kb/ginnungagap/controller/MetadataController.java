@@ -113,18 +113,16 @@ public class MetadataController {
 
             if(isNullOrEmpty(id)) {
                 fileList = getFileListFromFile(path);
-            }
-            else {
+            } else {
                 fileList = id.split("\\s*,\\s*");
             }
-
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
+                String errorRecordName;
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
-                record = getCumulusRecord(fid, idType, catalog);
-                String errorRecordName = inputFilePath + "Error_" + record.getFieldValue(Constants.FieldNames.RECORD_NAME) + ".txt";
                 try {
+                    record = getCumulusRecord(fid, idType, catalog);
                     validateRecord(record);
                     if(source.equalsIgnoreCase("archive")) {
                         metadataFile = getArchivedMetadata(filename, metadataType, record);
@@ -136,6 +134,7 @@ public class MetadataController {
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
+                    errorRecordName = inputFilePath + "Error_" + fid + ".txt";
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
