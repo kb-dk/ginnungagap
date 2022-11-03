@@ -204,29 +204,29 @@ public class MetadataController {
      */
     private File addToZip(File file, List<String> srcFiles)  {
         try {
-                srcFiles.add(file.getAbsolutePath());
-                FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
-                ZipOutputStream zipOut = new ZipOutputStream(fos);
+            srcFiles.add(file.getAbsolutePath());
+            FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-                for (String srcFile : srcFiles) {
-                    File fileToZip = new File(srcFile);
-                    FileInputStream fis = new FileInputStream(fileToZip);
-                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                    zipOut.putNextEntry(zipEntry);
+            for (String srcFile : srcFiles) {
+                File fileToZip = new File(srcFile);
+                FileInputStream fis = new FileInputStream(fileToZip);
+                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                zipOut.putNextEntry(zipEntry);
 
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = fis.read(bytes)) >= 0) {
-                        zipOut.write(bytes, 0, length);
-                    }
-                    fis.close();
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    zipOut.write(bytes, 0, length);
                 }
-                zipOut.close();
-                fos.close();
-
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed adding to zip", e);
+                fis.close();
             }
+            zipOut.close();
+            fos.close();
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed adding to zip", e);
+        }
         return new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
     }
 
