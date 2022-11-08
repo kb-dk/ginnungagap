@@ -113,18 +113,15 @@ public class MetadataController {
 
             if(isNullOrEmpty(id)) {
                 fileList = getFileListFromFile(path);
-            }
-            else {
+            } else {
                 fileList = id.split("\\s*,\\s*");
             }
-
             List<String> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
-                record = getCumulusRecord(fid, idType, catalog);
-                String errorRecordName = inputFilePath + "Error_" + record.getFieldValue(Constants.FieldNames.RECORD_NAME) + ".txt";
                 try {
+                    record = getCumulusRecord(fid, idType, catalog);
                     validateRecord(record);
                     if(source.equalsIgnoreCase("archive")) {
                         metadataFile = getArchivedMetadata(filename, metadataType, record);
@@ -136,6 +133,7 @@ public class MetadataController {
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
+                    String errorRecordName = inputFilePath + "Error_" + fid + ".txt";
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
@@ -205,29 +203,29 @@ public class MetadataController {
      */
     private File addToZip(File file, List<String> srcFiles)  {
         try {
-                srcFiles.add(file.getAbsolutePath());
-                FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
-                ZipOutputStream zipOut = new ZipOutputStream(fos);
+            srcFiles.add(file.getAbsolutePath());
+            FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-                for (String srcFile : srcFiles) {
-                    File fileToZip = new File(srcFile);
-                    FileInputStream fis = new FileInputStream(fileToZip);
-                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                    zipOut.putNextEntry(zipEntry);
+            for (String srcFile : srcFiles) {
+                File fileToZip = new File(srcFile);
+                FileInputStream fis = new FileInputStream(fileToZip);
+                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                zipOut.putNextEntry(zipEntry);
 
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = fis.read(bytes)) >= 0) {
-                        zipOut.write(bytes, 0, length);
-                    }
-                    fis.close();
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    zipOut.write(bytes, 0, length);
                 }
-                zipOut.close();
-                fos.close();
-
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed adding to zip", e);
+                fis.close();
             }
+            zipOut.close();
+            fos.close();
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed adding to zip", e);
+        }
         return new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
     }
 
