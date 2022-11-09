@@ -1755,7 +1755,7 @@
     </xsl:if>
 
     <!-- Beskrivelse-->
-    <xsl:if test="field[@name='Beskrivelse']">
+    <xsl:if test="field[@name='Beskrivelse']  or field[@name='Description']">
       <xsl:element name="mods:note">
 <!--        <xsl:attribute name="type">-->
 <!--          <xsl:value-of select="'use and reproduction note'" />-->
@@ -1763,7 +1763,20 @@
         <xsl:attribute name="displayLabel">
           <xsl:value-of select="'Beskrivelse'" />
         </xsl:attribute>
-        <xsl:value-of select="field[@name='Beskrivelse']/value" />
+        <xsl:choose>
+          <xsl:when test="field[@name='Beskrivelse']">
+            <xsl:for-each select="field[@name='Beskrivelse']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Description']">
+            <xsl:for-each select="field[@name='Description']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
       </xsl:element>
     </xsl:if>
 
