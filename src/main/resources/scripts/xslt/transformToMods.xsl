@@ -2418,6 +2418,28 @@
       </xsl:for-each>
     </xsl:if>
 
+<!--    <xsl:if test="field[@name='Color Codes']">-->
+<!--      <xsl:element name="mods:physicalDescription">-->
+<!--        <xsl:element name="mods:note">-->
+<!--          <xsl:attribute name="type" >AIM Color Codes</xsl:attribute>-->
+<!--          <xsl:for-each select="field[@name='Color Codes']/value">-->
+<!--&lt;!&ndash;            <xsl:call-template name="cumulus_get_lang_attribute" />&ndash;&gt;-->
+<!--            <xsl:call-template name="cumulus_get_value" />-->
+<!--          </xsl:for-each>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
+
+<!--    <xsl:if test="field[@name='Pageorientation']">-->
+<!--      <xsl:for-each select="field[@name='Pageorientation']/value">-->
+<!--        <xsl:element name="mods:note">-->
+<!--          <xsl:attribute name="displayLabel">Pageorientation</xsl:attribute>-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:call-template name="cumulus_get_value" />-->
+<!--        </xsl:element>-->
+<!--      </xsl:for-each>-->
+<!--    </xsl:if>-->
+
   </xsl:template>
   <!-- END physicalDescription -->
 
@@ -2482,13 +2504,13 @@
       </xsl:for-each>
 
       <!-- record info note: page orientation -->
-      <xsl:for-each select="field[@name='Pageorientation']/value">
-        <xsl:element name="mods:recordInfoNote">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:value-of select="." />
-        </xsl:element>
-      </xsl:for-each>
-    </xsl:element>
+<!--      <xsl:for-each select="field[@name='Pageorientation']/value">-->
+<!--        <xsl:element name="mods:recordInfoNote">-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:value-of select="." />-->
+<!--        </xsl:element>-->
+<!--      </xsl:for-each>-->
+<!--    </xsl:element>-->
   </xsl:template>
   <!-- END recordInfo -->
 
@@ -3178,14 +3200,6 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Person Tabel -->
-    <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or 
-      contains(field[@name='Rolle']/value, 'Motiv')">
-        <xsl:call-template name="mods_subject_ophav_person" />
-      </xsl:if>
-    </xsl:for-each>
-
     <!-- Topografinummer -->
     <xsl:if test="field[@name='Topografinummer']/value">
       <xsl:element name="mods:subject">
@@ -3198,6 +3212,15 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
+
+    <!-- Person Tabel -->
+    <xsl:for-each select="field[@name='Person-tabel']/table/row">
+      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or
+      contains(field[@name='Rolle']/value, 'Motiv')">
+        <xsl:call-template name="mods_subject_ophav_person" />
+      </xsl:if>
+    </xsl:for-each>
+
   </xsl:template>
   <!-- END subject -->
 
@@ -3235,7 +3258,7 @@
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:for-each>
 <!--              <xsl:value-of select="field[@name='Andet navn']/value" />-->
-            </xsl:element>          
+            </xsl:element>
           </xsl:element>
         </xsl:if>
         <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">

@@ -215,6 +215,9 @@
                 <field name="Fornavn">
                     <value>Johan Adolph</value>
                 </field>
+<!--                <field name="Andet navn">-->
+<!--                    <value>J. A. Kittendorff</value>-->
+<!--                </field>-->
                 <field name="Kooperation">
                     <value>I. W. Tegner &amp; Kittendorffs lith. Inst. (1850-1893) </value>
                 </field>
@@ -397,6 +400,9 @@
                 <field name="Død">
                     <value>1901-0-0</value>
                 </field>
+<!--                <field name="Andet navn">-->
+<!--                    <value>C. F. Tietgen</value>-->
+<!--                </field>-->
                 <field name="Titel">
                     <value>bank- og industrimand</value>
                 </field>
