@@ -191,6 +191,16 @@
     <field data-type="string" name="Record Name">
         <value>000395.tif</value>
     </field>
+    <field data-type="string" name="Color Codes">
+        <value>1% 403c37</value>
+        <value>44% d0beab</value>
+        <value>8% aa9b8a</value>
+        <value>3% 58514a</value>
+        <value>3% 837566</value>
+        <value>2% 605243</value>
+        <value>1% 82766c</value>
+        <value>9% d3c5ba</value>
+    </field>
     <field data-type="string" name="ICC Profile Name">
         <value>Adobe RGB (1998)</value>
     </field>
@@ -215,9 +225,9 @@
                 <field name="Fornavn">
                     <value>Johan Adolph</value>
                 </field>
-<!--                <field name="Andet navn">-->
-<!--                    <value>J. A. Kittendorff</value>-->
-<!--                </field>-->
+                <field name="Andet navn">
+                    <value>J. A. Kittendorff</value>
+                </field>
                 <field name="Kooperation">
                     <value>I. W. Tegner &amp; Kittendorffs lith. Inst. (1850-1893) </value>
                 </field>
@@ -400,9 +410,9 @@
                 <field name="Død">
                     <value>1901-0-0</value>
                 </field>
-<!--                <field name="Andet navn">-->
-<!--                    <value>C. F. Tietgen</value>-->
-<!--                </field>-->
+                <field name="Andet navn">
+                    <value>C. F. Tietgen</value>
+                </field>
                 <field name="Titel">
                     <value>bank- og industrimand</value>
                 </field>
