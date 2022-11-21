@@ -152,20 +152,20 @@ public class TransformUtils {
      * @return rfc4646 Sprogkode
      */
     public static String getCumulusLang(String val, String defaultLang){
-        if(val.indexOf(LANG_SEPARATOR)>-1){
+        if(val.contains(LANG_SEPARATOR)){
             String langCode = val.substring(0, val.indexOf(LANG_SEPARATOR));  
             if(langCode.matches(
                     "^[a-z][a-z][a-z]?(-[a-z]{4}(-[1-9]{3}|-[a-zA-Z]{2})?)?$")){
                 return langCode;
-            } else{
-                log.warn("LanguageCode '" + langCode + "' is not rfc4646");
+            } else {
+                log.debug("LanguageCode '" + langCode + "' is not rfc4646, returning defaultLang");
                 return defaultLang;
             }
         } else {
             if(defaultLang.matches("^[a-z][a-z][a-z]?(-[a-z]{4}(-[1-9]{3}|-[a-zA-Z]{2})?)?$")){
                 return defaultLang;
             } else {
-                log.warn("LanguageCode '" + defaultLang + "' is not rfc4646");
+                log.debug("LanguageCode '" + defaultLang + "' is not rfc4646, returning defaultLang");
                 return defaultLang;
             }
         }    

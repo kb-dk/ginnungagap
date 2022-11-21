@@ -206,21 +206,21 @@
             </xsl:choose>
           </xsl:element>
           <!-- imageProducer NDD id="8.2.2" -->
-          <xsl:if test="field[@name='Creator'] or field[@name='Owner'] or field[@name='Source']">
-            <xsl:element name="mix:imageProducer">
-              <xsl:choose>
-                <xsl:when test="field[@name='Creator']">
-                  <xsl:value-of select="field[@name='Creator']/value" />
-                </xsl:when>
-                <xsl:when test="field[@name='Owner']">
-                  <xsl:value-of select="field[@name='Owner']/value" />
-                </xsl:when>
-                <xsl:when test="field[@name='Source']">
-                  <xsl:value-of select="field[@name='Source']/value" />
-                </xsl:when>
-              </xsl:choose>
-            </xsl:element>
-          </xsl:if>
+<!--          <xsl:if test="field[@name='Creator'] or field[@name='Owner'] or field[@name='Source']">-->
+<!--            <xsl:element name="mix:imageProducer">-->
+<!--              <xsl:choose>-->
+<!--                <xsl:when test="field[@name='Creator']">-->
+<!--                  <xsl:value-of select="field[@name='Creator']/value" />-->
+<!--                </xsl:when>-->
+<!--                <xsl:when test="field[@name='Owner']">-->
+<!--                  <xsl:value-of select="field[@name='Owner']/value" />-->
+<!--                </xsl:when>-->
+<!--                <xsl:when test="field[@name='Source']">-->
+<!--                  <xsl:value-of select="field[@name='Source']/value" />-->
+<!--                </xsl:when>-->
+<!--              </xsl:choose>-->
+<!--            </xsl:element>-->
+<!--          </xsl:if>-->
         </xsl:element>
         <!-- End mix/ImageCaptureMetadata/GeneralCaptureInformation NDD id="8.2" -->
 

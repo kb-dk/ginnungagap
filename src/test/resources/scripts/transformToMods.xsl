@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- FOR 'BILLEDER' -->
 <xsl:transform version="1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

@@ -81,7 +81,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
     @Test
     public void testTransformationWithTables() throws Exception {
         addDescription("Test the transformation of a Cumulus XML file with Ophav-tabel and Person-tabel metadata.");
-        File xmlFile = new File("src/test/resources/000395.tif.raw.xml");
+        File xmlFile = new File("src/test/resources/tables.tif.raw.xml");
         assertTrue(xmlFile.isFile());
         MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
 
