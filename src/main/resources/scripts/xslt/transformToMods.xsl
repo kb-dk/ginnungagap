@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- FOR 'BILLEDER' -->
 <xsl:transform version="1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,15 +15,15 @@
 
   <!-- START defining variables -->
   <xsl:variable name="image_uri_base" select="'http://www.kb.dk/imageService'"/>
-  
+
   <xsl:variable name="type_of_resource" select="''" />
   <xsl:variable name="type_of_event" select="'references'" />
-  
+
   <xsl:variable name="ID" select="java:dk.kb.metadata.utils.GuidExtractionUtils.extractGuid(record/field[@name='GUID']/value)" />
-  
+
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
-  
+
   <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD /usr/local/ginnungagap/current/script/xsd/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
@@ -38,7 +38,7 @@
    </xsl:choose>
   </xsl:variable>
   <!-- END defining variables -->
- 
+
   <!-- RETRIEVAL FUNCTIONS -->
   <!-- Retrieve the language of a 'Cumulus' field and apply it as attribute. -->
   <xsl:template name="cumulus_get_lang_attribute">
@@ -55,7 +55,7 @@
 
   <!-- MODS TEMPLATE BASE (whole mods) -->
   <xsl:template name="mods">
-  
+
     <!-- Begin the MODS document -->
     <mods:mods xsi:schemaLocation="{$MODS_LOCATION}" version="{$MODS_VERSION}">
       <!-- mods:abstract -->
@@ -103,7 +103,7 @@
       <xsl:call-template name="mods_typeOfResource" />
     </mods:mods>
   </xsl:template>
-  
+
   <!-- MODS MASTER ASSET TEMPLATE BASE -->
   <xsl:template name="mods_for_representation_mets">
     <!-- Begin the MODS document -->
@@ -150,18 +150,18 @@
   <!-- MODS RIGHTS TEMPLATE BASE -->
   <xsl:template name="mods_rights">
     <!-- Begin the MODS document -->
-    <mods:mods xsi:schemaLocation="{$MODS_LOCATION}" version="{$MODS_VERSION}">     
+    <mods:mods xsi:schemaLocation="{$MODS_LOCATION}" version="{$MODS_VERSION}">
       <!-- mods:accessCondition -->
       <xsl:call-template name="mods_accessCondition" />
     </mods:mods>
   </xsl:template>
-  
+
   <!-- START abstract -->
   <xsl:template name="mods_abstract">
     <!-- NOTHING YET! -->
   </xsl:template>
   <!-- End abstract -->
-  
+
   <!-- START accessCondition (only for MODS:RIGHTS)-->
   <xsl:template name="mods_accessCondition">
 <!--TODO: To be removed -->
@@ -287,7 +287,7 @@
 
     <!-- Start the CDL accessCondition -->
     <xsl:element name="mods:accessCondition">
-      <cdl:copyright xsi:schemaLocation="{$CDL_LOCATION}" copyright.status="{$CDL_COPYRIGHT_STATUS}" publication.status="{$CDL_PUBLICATION_STATUS}">     
+      <cdl:copyright xsi:schemaLocation="{$CDL_LOCATION}" copyright.status="{$CDL_COPYRIGHT_STATUS}" publication.status="{$CDL_PUBLICATION_STATUS}">
         <xsl:call-template name="cdl_accessCondition" />
       </cdl:copyright>
     </xsl:element>
@@ -322,7 +322,7 @@
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Categories -->
     <xsl:for-each select="field[@name='Categories']/value">
       <xsl:element name="mods:genre">
@@ -347,7 +347,7 @@
 
   </xsl:template>
   <!-- END genre -->
-  
+
   <!-- START identifiers for records -->
   <xsl:template name="mods_identifier_for_records">
     <!-- GUID -->
@@ -359,7 +359,7 @@
         <xsl:value-of select="concat('urn:uuid:', $ID)" />
       </xsl:element>
     </xsl:if>
-     
+
     <!-- Record Name -->
     <xsl:for-each select="field[@name='Record Name']/value">
       <xsl:element name="mods:identifier">
@@ -369,7 +369,7 @@
         <xsl:value-of select="." />
       </xsl:element>
     </xsl:for-each>
-    
+
     <!-- Asset Reference -->
     <xsl:if test="field[@name='Asset Reference']">
         <xsl:element name="mods:identifier">
@@ -379,7 +379,7 @@
           <xsl:value-of select="field[@name='Asset Reference']/value" />
         </xsl:element>
     </xsl:if>
-    
+
     <!-- Original Asset Reference -->
     <xsl:if test="field[@name='Original Asset Reference']">
         <xsl:element name="mods:identifier">
@@ -391,7 +391,7 @@
     </xsl:if>
   </xsl:template>
   <!-- END identifiers for records -->
-  
+
   <!-- START identifiers for both records and representations -->
   <xsl:template name="mods_identifier">
 
@@ -420,7 +420,7 @@
         </xsl:element>
       </xsl:when>
     </xsl:choose>
-    
+
     <!-- Scannenummer || Scan Number -->
     <xsl:choose>
       <xsl:when test="field[@name='Scannenummer']">
@@ -1221,8 +1221,8 @@
         </xsl:element>
       </xsl:element>
     </xsl:if>
-    
-    <!-- Recipient || Recipient (personal) || Modtager 
+
+    <!-- Recipient || Recipient (personal) || Modtager
          (with both 'Recipient', Recipient (personal) and 'Modtager' as role)-->
     <xsl:if test="field[@name='Recipient'] or field[@name='Recipient (personal)'] or field[@name='Modtager']">
       <xsl:element name="mods:name">
@@ -1414,11 +1414,11 @@
 
   </xsl:template>
   <!-- END name ophav -->
-  
+
   <!-- START name ophav or person-->
   <xsl:template name="mods_name_ophav_person">
   <!-- Ophav or Person Tabel -->
-    <xsl:param name = "tabel" />    
+    <xsl:param name = "tabel" />
     <!-- <xsl:value-of select = "$tabel" /> -->
     <xsl:element name="mods:name">
       <xsl:attribute name="type">
@@ -1461,7 +1461,7 @@
               <xsl:call-template name="cumulus_get_value" />
             </xsl:for-each>
 <!--            <xsl:value-of select="field[@name='Andet navn']/value" />-->
-          </xsl:element>          
+          </xsl:element>
         </xsl:element>
       </xsl:if>
       <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
@@ -1495,7 +1495,7 @@
         </xsl:if>
       </xsl:if>
     </xsl:element>
-    
+
   </xsl:template>
   <!-- END name ophav or person -->
   <!-- END name person -->
@@ -1504,7 +1504,7 @@
   <xsl:template name="cdl_accessCondition">
       <!-- cdl:ophav -->
       <xsl:call-template name="cdl_ophav" />
-    
+
   </xsl:template>
 
   <!-- START name ophav -->
@@ -1519,11 +1519,11 @@
   </xsl:template>
   <!-- END name ophav -->
 
-  
+
   <!-- START name ophav or person-->
   <xsl:template name="cdl_ophav_person">
   <!-- Ophav or Person Tabel -->
-    <xsl:param name = "tabel" />    
+    <xsl:param name = "tabel" />
     <!-- <xsl:value-of select = "$tabel" /> -->
     <xsl:if test="field[@name='Efternavn']/value or field[@name='Fornavn']/value">
       <xsl:element name="cdl:creator">
@@ -1537,12 +1537,12 @@
             <xsl:element name="cdl:year.birth">
               <xsl:value-of select="field[@name='Født']/value" />
             </xsl:element>
-          </xsl:if> 
+          </xsl:if>
           <xsl:if test="field[@name='Død']/value">
             <xsl:element name="cdl:year.death">
               <xsl:value-of select="field[@name='Død']/value" />
             </xsl:element>
-          </xsl:if> 
+          </xsl:if>
         </xsl:element>
       </xsl:element>
     </xsl:if>
@@ -1565,7 +1565,7 @@
           </xsl:element>
         </xsl:if>
         </xsl:element>
-      </xsl:element>   
+      </xsl:element>
     </xsl:if>
   </xsl:template>
   <!-- END name ophav or person -->
@@ -2405,6 +2405,17 @@
       </xsl:for-each>
     </xsl:if>
 
+    <!--Physicaldescription note: Pageorientation-->
+    <xsl:if test="field[@name='Pageorientation']">
+      <xsl:element name="mods:physicalDescription">
+        <xsl:for-each select="field[@name='Pageorientation']/value">
+          <xsl:element name="mods:note">
+            <xsl:attribute name="displayLabel">Pageorientation</xsl:attribute>
+            <xsl:value-of select="."/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
   <!-- END physicalDescription -->
 
@@ -2468,13 +2479,16 @@
         </xsl:element>
       </xsl:for-each>
 
+
       <!-- record info note: page orientation -->
+      <!--
       <xsl:for-each select="field[@name='Pageorientation']/value">
         <xsl:element name="mods:recordInfoNote">
           <xsl:call-template name="cumulus_get_lang_attribute" />
           <xsl:value-of select="." />
         </xsl:element>
       </xsl:for-each>
+      -->
     </xsl:element>
   </xsl:template>
   <!-- END recordInfo -->
@@ -3167,7 +3181,7 @@
 
     <!-- Person Tabel -->
     <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or 
+      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or
       contains(field[@name='Rolle']/value, 'Motiv')">
         <xsl:call-template name="mods_subject_ophav_person" />
       </xsl:if>
@@ -3222,7 +3236,7 @@
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:for-each>
 <!--              <xsl:value-of select="field[@name='Andet navn']/value" />-->
-            </xsl:element>          
+            </xsl:element>
           </xsl:element>
         </xsl:if>
         <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
@@ -3300,7 +3314,7 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Transcribed title || Transskriberet titel -->
     <xsl:choose>
       <xsl:when test="field[@name='Transcribed title']">
@@ -3326,7 +3340,7 @@
         </xsl:for-each>
       </xsl:when>
     </xsl:choose>
-    
+
     <!-- Original title -->
     <xsl:if test="field[@name='Original title']">
       <xsl:element name="mods:titleInfo">
@@ -3338,7 +3352,7 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
-    
+
     <!-- Crowd_Titel -->
     <xsl:if test="field[@name='Crowd_Titel']">
       <xsl:element name="mods:titleInfo">
@@ -3350,7 +3364,7 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
-    
+
   </xsl:template>
   <!-- END titleInfo -->
 
@@ -3409,7 +3423,7 @@
 
   </xsl:template>
   <!-- END typeOfResource -->
-  
+
   <xsl:template name="title_info_content">
     <xsl:if test="java:dk.kb.metadata.utils.TransformUtils.isCumulusValNonSort(.)">
       <xsl:element name="mods:nonSort">
@@ -3430,7 +3444,7 @@
       </xsl:choose>
     </xsl:element>
   </xsl:template>
-  
+
   <xsl:template name="subtitle_info_content">
     <xsl:for-each select="field[@name='Subtitle']/value">
       <xsl:element name="mods:subTitle">
@@ -3445,5 +3459,5 @@
       </xsl:element>
     </xsl:for-each>
   </xsl:template>
-    
+
 </xsl:transform> 
