@@ -2280,13 +2280,6 @@
         </xsl:element>
       </xsl:for-each>
 
-      <!-- record info note: page orientation -->
-<!--      <xsl:for-each select="field[@name='Pageorientation']/value">-->
-<!--        <xsl:element name="mods:recordInfoNote">-->
-<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--          <xsl:value-of select="." />-->
-<!--        </xsl:element>-->
-<!--      </xsl:for-each>-->
     </xsl:element>
   </xsl:template>
   <!-- END recordInfo -->
@@ -2298,12 +2291,8 @@
       <xsl:when test="field[@name='Collection']">
         <xsl:for-each select="field[@name='Collection']/value">
           <xsl:element name="mods:relatedItem">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'series'" />
-            </xsl:attribute>
-            <xsl:attribute name="displayLabel">
-              <xsl:value-of select="'Collection'" />
-            </xsl:attribute>
+            <xsl:attribute name="type">host</xsl:attribute>
+            <xsl:attribute name="displayLabel">Collection</xsl:attribute>
             <xsl:element name="mods:titleInfo">
               <xsl:call-template name="title_info_content" />
             </xsl:element>
@@ -2313,12 +2302,8 @@
       <xsl:when test="field[@name='Samling']">
         <xsl:for-each select="field[@name='Samling']/value">
           <xsl:element name="mods:relatedItem">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'series'" />
-            </xsl:attribute>
-            <xsl:attribute name="displayLabel">
-              <xsl:value-of select="'Samling'" />
-            </xsl:attribute>
+            <xsl:attribute name="type">host</xsl:attribute>
+            <xsl:attribute name="displayLabel">Samling</xsl:attribute>
             <xsl:element name="mods:titleInfo">
               <xsl:call-template name="title_info_content" />
             </xsl:element>
@@ -2418,6 +2403,7 @@
         </xsl:if>
       </xsl:element>
     </xsl:if>
+    <!-- End Event-->
 
     <!-- URL (and URL-tekst) -->
     <xsl:if test="field[@name='URL']">
