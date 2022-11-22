@@ -2064,7 +2064,37 @@
     or field[@name='Pageorientation'] or field[@name='Color Codes']
     or field[@name='Materialeteknik'] or field[@name='Publiceringsformat']">
       <xsl:element name="mods:physicalDescription">
-        <!-- Removed script and skrifttype -->
+        <!-- Script || Skrifttype -->
+        <xsl:choose>
+          <xsl:when test="field[@name='Script']">
+            <xsl:for-each select="field[@name='Script']/value">
+              <xsl:element name="mods:note">
+                <xsl:attribute name="type">
+                  <xsl:value-of select="'additional physical form'" />
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                  <xsl:value-of select="'Script'" />
+                </xsl:attribute>
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Skrifttype']">
+            <xsl:for-each select="field[@name='Skrifttype']/value">
+              <xsl:element name="mods:note">
+                <xsl:attribute name="type">
+                  <xsl:value-of select="'additional physical form'" />
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                  <xsl:value-of select="'Skrifttype'" />
+                </xsl:attribute>
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
 
         <!-- Script: detail || Skrifttype, detaljer -->
         <xsl:choose>
