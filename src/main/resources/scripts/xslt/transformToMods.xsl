@@ -1697,7 +1697,7 @@
     <!-- Crowd_Note -->
     <xsl:if test="field[@name='Crowd_Note']">
       <xsl:element name="mods:note">
-        <xsl:attribute name="displayLabel">
+        <xsl:attribute name="altRepGroup">
           <xsl:value-of select="'crowd'" />
         </xsl:attribute>
         <xsl:attribute name="type">
@@ -1710,7 +1710,7 @@
     <!-- Crowd_Kommentar -->
     <xsl:if test="field[@name='Crowd_Kommentar']">
       <xsl:element name="mods:note">
-        <xsl:attribute name="displayLabel">
+        <xsl:attribute name="altRepGroup">
           <xsl:value-of select="'crowd'" />
         </xsl:attribute>
         <xsl:attribute name="type">
@@ -1721,15 +1721,23 @@
     </xsl:if>
 
     <!-- Beskrivelse-->
-    <xsl:if test="field[@name='Beskrivelse']">
+    <xsl:if test="field[@name='Beskrivelse']  or field[@name='Description']">
       <xsl:element name="mods:note">
-<!--        <xsl:attribute name="type">-->
-<!--          <xsl:value-of select="'use and reproduction note'" />-->
-<!--        </xsl:attribute>-->
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Beskrivelse'" />
-        </xsl:attribute>
-        <xsl:value-of select="field[@name='Beskrivelse']/value" />
+        <xsl:attribute name="displayLabel">Description</xsl:attribute>
+        <xsl:choose>
+          <xsl:when test="field[@name='Beskrivelse']">
+            <xsl:for-each select="field[@name='Beskrivelse']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Description']">
+            <xsl:for-each select="field[@name='Description']/value">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
       </xsl:element>
     </xsl:if>
 
@@ -1739,7 +1747,7 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'provenance'" />
         </xsl:attribute>
-        <xsl:attribute name="displayLabel">Hjemtaget som</xsl:attribute>
+        <xsl:attribute name="displayLabel">Incorporated as</xsl:attribute>
         <xsl:value-of select="field[@name='Hjemtaget som:']/value" />
       </xsl:element>
     </xsl:if>
@@ -1750,7 +1758,7 @@
         <xsl:attribute name="type">
           <xsl:value-of select="'provenance'" />
         </xsl:attribute>
-        <xsl:attribute name="displayLabel">Hjemtaget af</xsl:attribute>
+        <xsl:attribute name="displayLabel">Incorporated by</xsl:attribute>
         <xsl:value-of select="field[@name='Hjemtaget af:']/value" />
       </xsl:element>
     </xsl:if>
@@ -1928,179 +1936,6 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- crowd -->
-    <!-- Crowd_Bygningsnavn -->
-    <xsl:if test="field[@name='Crowd_Bygningsnavn']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Bygningsnavn'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Bygningsnavn']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Sted -->
-    <xsl:if test="field[@name='Crowd_Sted']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Sted'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Sted']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Lokalitet -->
-    <xsl:if test="field[@name='Crowd_Lokalitet']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Lokalitet'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Lokalitet']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Vejnavn -->
-    <xsl:if test="field[@name='Crowd_Vejnavn']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Vejnavn'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Vejnavn']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Husnummer -->
-    <xsl:if test="field[@name='Crowd_Husnummer']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Husnummer'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Husnummer']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Postnummer -->
-    <xsl:if test="field[@name='Crowd_Postnummer']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Postnummer'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Postnummer']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_By -->
-    <xsl:if test="field[@name='Crowd_By']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'By'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_By']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_By -->
-    <xsl:if test="field[@name='Crowd_Sogn']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Sogn'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Sogn']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-    <!-- Crowd_Matrikelnummer -->
-    <xsl:if test="field[@name='Crowd_Matrikelnummer']">
-      <xsl:element name="mods:originInfo">
-        <xsl:attribute name="displayLabel">
-          <xsl:value-of select="'Matrikelnummer'" />
-        </xsl:attribute>
-        <xsl:attribute name="eventType">
-          <xsl:value-of select="'crowd'" />
-        </xsl:attribute>
-        <xsl:element name="mods:place">
-          <xsl:element name="mods:placeTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Crowd_Matrikelnummer']/value" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
-
     <!-- Udgave -->
     <xsl:if test="field[@name='Udgave']">
       <xsl:element name="mods:originInfo">
@@ -2195,9 +2030,6 @@
       <xsl:element name="mods:originInfo">
         <xsl:attribute name="altRepGroup">surrogate</xsl:attribute>
         <xsl:element name="mods:dateCaptured">
-<!--          <xsl:attribute name="encoding">-->
-<!--            <xsl:value-of select="'w3cdtf'" />-->
-<!--          </xsl:attribute>-->
           <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Date Time Original']/value)" />
         </xsl:element>
@@ -2208,9 +2040,6 @@
       <xsl:element name="mods:originInfo">
         <xsl:attribute name="altRepGroup">surrogate</xsl:attribute>
         <xsl:element name="mods:dateCaptured">
-<!--          <xsl:attribute name="encoding">-->
-<!--            <xsl:value-of select="'w3cdtf'" />-->
-<!--          </xsl:attribute>-->
           <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getDateTime(
               'EEE MMM dd HH:mm:ss z yyy', field[@name='Captured Date']/value)" />
         </xsl:element>
@@ -2231,7 +2060,9 @@
     <xsl:if test="field[@name='Script'] or field[@name='Skrifttype']
     or field[@name='Script: detail'] or field[@name='Skrifttype, detaljer']
     or field[@name='Størrelse'] or field[@name='Dimensions']
-    or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']">
+    or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']
+    or field[@name='Pageorientation'] or field[@name='Color Codes']
+    or field[@name='Materialeteknik'] or field[@name='Publiceringsformat']">
       <xsl:element name="mods:physicalDescription">
         <!-- Script || Skrifttype -->
         <xsl:choose>
