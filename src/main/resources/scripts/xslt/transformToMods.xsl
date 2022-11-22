@@ -3245,6 +3245,22 @@
       </xsl:element>
     </xsl:if>
 
+    <xsl:if test="field[@name='Manuscript']">
+      <xsl:variable name="SET">
+        <xsl:copy-of select="field[@name='Manuscript']/value"/>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$SET = 'yes' or $SET = 'ja'">
+          <xsl:element name="mods:typeOfResource">
+            <xsl:attribute name="manuscript">
+              <xsl:value-of select="field[@name='Titel']/value" />
+            </xsl:attribute>
+            <xsl:value-of select="'tekst(håndskrift)'" />
+          </xsl:element>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:if>
+
   </xsl:template>
   <!-- END typeOfResource -->
 
