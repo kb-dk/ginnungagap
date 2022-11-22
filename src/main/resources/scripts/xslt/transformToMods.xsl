@@ -1763,6 +1763,19 @@
       </xsl:element>
     </xsl:if>
 
+    <!-- Contents need Cumulus file with Contents
+    <xsl:if test="field[@name='Contents']">
+      <xsl:for-each select="field[@name='Contents']/value">
+        <xsl:element name="mods:note">
+          <xsl:attribute name="type">
+            <xsl:value-of select="'content'"/>
+          </xsl:attribute>
+          <xsl:call-template name="cumulus_get_lang_attribute"/>
+          <xsl:call-template name="cumulus_get_value"/>
+        </xsl:element>
+      </xsl:for-each>
+    </xsl:if>
+    -->
     <!-- Catalog Name -->
     <xsl:element name="mods:note">
       <xsl:attribute name="displayLabel">Catalog Name</xsl:attribute>
@@ -2062,7 +2075,8 @@
     or field[@name='Størrelse'] or field[@name='Dimensions']
     or field[@name='Textarea'] or field[@name='Tekstområde'] or field[@name='State']
     or field[@name='Pageorientation'] or field[@name='Color Codes']
-    or field[@name='Materialeteknik'] or field[@name='Publiceringsformat']">
+    or field[@name='Materialeteknik'] or field[@name='Publiceringsformat']
+    or field[@name='Medium']">
       <xsl:element name="mods:physicalDescription">
         <!-- Script || Skrifttype -->
         <xsl:choose>
@@ -2220,6 +2234,15 @@
           </xsl:element>
         </xsl:for-each>
 
+        <xsl:for-each select="field[@name='Medium']/value">
+          <xsl:element name="mods:form">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'additional physical form'" />
+            </xsl:attribute>
+            <xsl:call-template name="cumulus_get_lang_attribute" />
+            <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
+        </xsl:for-each>
       </xsl:element> <!--mods:physicalDescription-->
     </xsl:if>
 
