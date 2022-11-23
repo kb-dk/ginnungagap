@@ -46,6 +46,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
+import static dk.kb.ginnungagap.utils.FileUtils.deleteFile;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -137,6 +138,7 @@ public class MetadataController {
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
+                deleteFile(metadataFile);
             }
 
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
