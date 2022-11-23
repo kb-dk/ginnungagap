@@ -1763,7 +1763,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Contents need Cumulus file with Contents
+    <!-- Contents -->
     <xsl:if test="field[@name='Contents']">
       <xsl:for-each select="field[@name='Contents']/value">
         <xsl:element name="mods:note">
@@ -1775,7 +1775,7 @@
         </xsl:element>
       </xsl:for-each>
     </xsl:if>
-    -->
+
     <!-- Catalog Name -->
     <xsl:element name="mods:note">
       <xsl:attribute name="displayLabel">Catalog Name</xsl:attribute>
