@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.Objects;
 
 import dk.kb.ginnungagap.exception.ArgumentCheck;
 
@@ -165,5 +167,20 @@ public class FileUtils {
             throw new IllegalStateException("Creating an error file failed", e);
         }
         return file;
+    }
+
+    /**
+     * Delete files with specified extension
+     * @param folder the folder from which the files should be deleted
+     * @param extension the extension of the files to be deleted
+     */
+    public static void deleteFilesInFolder(File folder, String extension) {
+        try {
+            Arrays.stream(Objects.requireNonNull(folder.listFiles()))
+                    .filter(f -> f.getName().endsWith(extension))
+                    .forEach(File::delete);
+        } catch (Exception e) {
+            throw new IllegalStateException("Temp file could not be deleted", e);
+        }
     }
 }
