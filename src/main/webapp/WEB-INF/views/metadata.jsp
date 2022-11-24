@@ -22,6 +22,7 @@
 </div>
 <div id="conf" class="container">
   <div class="container">
+      <b>Max file size is 250 lines</b><br/>
     <form action="${pageContext.request.contextPath}/metadata/upload" method="POST" enctype="multipart/form-data">
       <p><input type="file" name="file" />
         <input type="submit" value="Upload File"/>
@@ -52,8 +53,8 @@
       <p><b>Source:</b>
         <input type="radio" id="source1" name="source" value="cumulus" checked>
         <label for="source1">Cumulus</label>
-        <input type="radio" id="source2" name="source" value="archive">
-        <label for="source2">Archive</label>
+<%--        <input type="radio" id="source2" name="source" value="archive">--%>
+<%--        <label for="source2">Archive</label>--%>
       </p>
       <button type="retrieve" class="primary submit-btn">Retrieve</button>
     </form>
