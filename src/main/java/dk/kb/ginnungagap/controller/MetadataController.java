@@ -46,7 +46,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
-import static dk.kb.ginnungagap.utils.FileUtils.deleteFile;
+import static dk.kb.ginnungagap.utils.FileUtils.deleteFilesInFolder;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -134,16 +134,20 @@ public class MetadataController {
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
-                    String errorRecordName = inputFilePath + "Error_" + fid + ".txt";
+                    String errorRecordName = inputFilePath + "metadata/" + "Error_" + fid + ".txt";
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
                 zippedXmls = addToZip(metadataFile, srcFiles);
-                deleteFile(metadataFile);
             }
 
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body("Request timeout")));
-            output.onCompletion(() -> log.trace("Process getting metadata complete"));
+            output.onCompletion(() -> {
+                log.trace("Process getting metadata complete");
+                File folder = new File(inputFilePath + "metadata");
+                deleteFilesInFolder(folder, ".xml");
+                deleteFilesInFolder(folder, ".txt");
+            });
 
             Resource resource = new UrlResource(zippedXmls.toURI());
             output.setResult(ResponseEntity.ok()
@@ -191,6 +195,9 @@ public class MetadataController {
                     .collect(Collectors.toList());
         } catch (IOException e) {
             log.warn("Something went wrong reading file to list", e);
+        }
+        if(list.size() > 250){
+            throw new IllegalStateException("Max file size is 250 lines");
         }
         fList = list.toArray(new String[0]);
 
