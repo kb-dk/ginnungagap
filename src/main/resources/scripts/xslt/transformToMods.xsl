@@ -27,6 +27,9 @@
   <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD /usr/local/ginnungagap/current/script/xsd/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
+<!--  <xsl:variable name="CATALOG">-->
+<!--    <xsl:copy-of select="field[@name='Catalog Name']/value"/>-->
+<!--  </xsl:variable>-->
   <!-- <xsl:variable name="CDL_VERSION" select="'1.0'" /> -->
 
   <xsl:variable name="mods_default_lang">
@@ -541,66 +544,73 @@
 
   <!-- START name -->
   <xsl:template name="mods_name">
-    <!-- Ophav || Creator ToDo: to be removed
+    <!-- Ophav || Creator
          (both with either "@Ophav rolle" or 'Ophav' & 'Creator' as role)-->
-<!--    <xsl:if test="field[@name='Ophav'] or field[@name='Creator']">-->
-<!--      <xsl:element name="mods:name">-->
-<!--        <xsl:attribute name="type">-->
-<!--          <xsl:value-of select="'personal'" />-->
-<!--        </xsl:attribute>-->
-<!--        <xsl:choose>-->
-<!--          <xsl:when test="field[@name='Ophav']">-->
-<!--            <xsl:for-each select="field[@name='Ophav']/value">-->
-<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--              <xsl:element name="mods:namePart">-->
-<!--                <xsl:call-template name="cumulus_get_value" />-->
-<!--              </xsl:element>-->
-<!--            </xsl:for-each>-->
-<!--          </xsl:when>-->
-<!--          <xsl:when test="field[@name='Creator']">-->
-<!--            <xsl:for-each select="field[@name='Creator']/value">-->
-<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--              <xsl:element name="mods:namePart">-->
-<!--                <xsl:call-template name="cumulus_get_value" />-->
-<!--              </xsl:element>-->
-<!--            </xsl:for-each>-->
-<!--          </xsl:when>-->
-<!--        </xsl:choose>-->
-<!--        <xsl:element name="mods:role">-->
-<!--          <xsl:choose>-->
-<!--            <xsl:when test="field[@name='Ophav rolle']">-->
-<!--              <xsl:element name="mods:roleTerm">-->
-<!--                <xsl:attribute name="type">-->
-<!--                  <xsl:value-of select="'text'" />-->
-<!--                </xsl:attribute>-->
-<!--                <xsl:value-of select="field[@name='Ophav rolle']/value" />-->
-<!--              </xsl:element>-->
-<!--            </xsl:when>-->
-<!--            <xsl:otherwise>-->
-<!--              <xsl:element name="mods:roleTerm">-->
-<!--                <xsl:attribute name="type">-->
-<!--                  <xsl:value-of select="'text'" />-->
-<!--                </xsl:attribute>-->
-<!--                <xsl:attribute name="lang">-->
-<!--                  <xsl:value-of select="'da'" />-->
-<!--                </xsl:attribute>-->
-<!--                <xsl:value-of select="'Ophav'" />-->
-<!--              </xsl:element>-->
-<!--              <xsl:element name="mods:roleTerm">-->
-<!--                <xsl:attribute name="type">-->
-<!--                  <xsl:value-of select="'text'" />-->
-<!--                </xsl:attribute>-->
-<!--                <xsl:attribute name="lang">-->
-<!--                  <xsl:value-of select="'en'" />-->
-<!--                </xsl:attribute>-->
-<!--                <xsl:value-of select="'Creator'" />-->
-<!--              </xsl:element>-->
-<!--            </xsl:otherwise>-->
-<!--          </xsl:choose>-->
-<!--        </xsl:element>-->
-<!--      </xsl:element>-->
-<!--    </xsl:if>-->
+    <xsl:variable name="CATALOG">
+      <xsl:copy-of select="field[@name='Catalog Name']/value"/>
+    </xsl:variable>
 
+    <xsl:choose>
+      <xsl:when test="$CATALOG = 'Luftfoto OM'">
+        <xsl:if test="field[@name='Ophav'] or field[@name='Creator']">
+          <xsl:element name="mods:name">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'personal'" />
+            </xsl:attribute>
+            <xsl:choose>
+              <xsl:when test="field[@name='Ophav']">
+                <xsl:for-each select="field[@name='Ophav']/value">
+                  <xsl:call-template name="cumulus_get_lang_attribute" />
+                  <xsl:element name="mods:namePart">
+                    <xsl:call-template name="cumulus_get_value" />
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:when test="field[@name='Creator']">
+                <xsl:for-each select="field[@name='Creator']/value">
+                  <xsl:call-template name="cumulus_get_lang_attribute" />
+                  <xsl:element name="mods:namePart">
+                    <xsl:call-template name="cumulus_get_value" />
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:when>
+            </xsl:choose>
+            <xsl:element name="mods:role">
+              <xsl:choose>
+                <xsl:when test="field[@name='Ophav rolle']">
+                  <xsl:element name="mods:roleTerm">
+                    <xsl:attribute name="type">
+                      <xsl:value-of select="'text'" />
+                    </xsl:attribute>
+                    <xsl:value-of select="field[@name='Ophav rolle']/value" />
+                  </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:element name="mods:roleTerm">
+                    <xsl:attribute name="type">
+                      <xsl:value-of select="'text'" />
+                    </xsl:attribute>
+                    <xsl:attribute name="lang">
+                      <xsl:value-of select="'da'" />
+                    </xsl:attribute>
+                    <xsl:value-of select="'Ophav'" />
+                  </xsl:element>
+                  <xsl:element name="mods:roleTerm">
+                    <xsl:attribute name="type">
+                      <xsl:value-of select="'text'" />
+                    </xsl:attribute>
+                    <xsl:attribute name="lang">
+                      <xsl:value-of select="'en'" />
+                    </xsl:attribute>
+                    <xsl:value-of select="'Creator'" />
+                  </xsl:element>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
+      </xsl:when>
+    </xsl:choose>
     <!-- Country (location) of recipient || Modtager, land
          (with both 'Country (location) of recipient' and 'Modtager, land' as role)-->
     <xsl:if test="field[@name='Country (location) of recipient'] or field[@name='Modtager, land']">
@@ -2852,18 +2862,25 @@
 
 <!--    todo: remove?-->
     <!-- Person -->
-<!--    <xsl:for-each select="field[@name='Person']/value">-->
-<!--      <xsl:element name="mods:subject">-->
-<!--        <xsl:element name="mods:topic">-->
-<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--          <xsl:call-template name="cumulus_get_value" />-->
-<!--        </xsl:element>-->
-<!--        <xsl:element name="mods:genre">-->
-<!--          <xsl:value-of select="'Person'" />-->
-<!--        </xsl:element>-->
-<!--      </xsl:element>-->
-<!--    </xsl:for-each>-->
+    <xsl:variable name="CATALOG">
+      <xsl:copy-of select="field[@name='Catalog Name']/value"/>
+    </xsl:variable>
 
+    <xsl:choose>
+      <xsl:when test="$CATALOG = 'Luftfoto OM'">
+        <xsl:for-each select="field[@name='Person']/value">
+          <xsl:element name="mods:subject">
+            <xsl:element name="mods:topic">
+              <xsl:call-template name="cumulus_get_lang_attribute" />
+              <xsl:call-template name="cumulus_get_value" />
+            </xsl:element>
+            <xsl:element name="mods:genre">
+              <xsl:value-of select="'Person'" />
+            </xsl:element>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:when>
+    </xsl:choose>
     <!-- Additional recipient (personal) || Medmodtager
          with both 'Additional recipient (personal)' and 'Medmodtager' as genre.-->
     <xsl:if test="field[@name='Additional recipient (personal)'] or field[@name='Medmodtager']">
