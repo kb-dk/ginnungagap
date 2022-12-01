@@ -1066,7 +1066,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Old Sender (organization) || Afsender, Organisation
+    <!-- Old: Sender (organization) || Afsender, Organisation
          (with both 'Sender (organization)' and 'Afsender, Organisation' as role)
     <xsl:if test="field[@name='Sender (organization)'] or field[@name='Afsender, Organisation']">
       <xsl:element name="mods:name">
@@ -1180,7 +1180,7 @@
       </xsl:element> <!-- mods:subject -->
     </xsl:if>
 
-    <!-- Old Sender (person) || Afsender
+    <!-- Old: Sender (person) || Afsender
          (with both 'Sender (person)' and 'Afsender' as role)
     <xsl:if test="field[@name='Sender (person)'] or field[@name='Afsender']">
       <xsl:element name="mods:name">
@@ -1343,7 +1343,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Old Recipient || Recipient (personal) || Modtager
+    <!-- Old: Recipient || Recipient (personal) || Modtager
          (with both 'Recipient', Recipient (personal) and 'Modtager' as role)
     <xsl:if test="field[@name='Recipient'] or field[@name='Recipient (personal)'] or field[@name='Modtager']">
       <xsl:element name="mods:name">
@@ -1465,24 +1465,24 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
-        <xsl:element name="mods:subject">
-          <xsl:attribute name="altRepGroup">
-            <xsl:value-of select="'rcp1'"/>
-          </xsl:attribute>
-          <xsl:element name="mods:hierarchicalGeographic">
-            <xsl:element name="mods:city">
-              <xsl:value-of select="field[@name='Location of recipient']/value" />
-            </xsl:element>
-            <xsl:element name="mods:country">
-              <xsl:value-of select="field[@name='Country (location) of recipient']/value" />
-            </xsl:element>
-          </xsl:element> <!--mods:hierarchicalGeographic -->
-        </xsl:element> <!-- mods:subject -->
       </xsl:element> <!-- mods:name -->
+      <xsl:element name="mods:subject">
+        <xsl:attribute name="altRepGroup">
+          <xsl:value-of select="'rcp1'"/>
+        </xsl:attribute>
+        <xsl:element name="mods:hierarchicalGeographic">
+          <xsl:element name="mods:city">
+            <xsl:value-of select="field[@name='Location of recipient']/value" />
+          </xsl:element>
+          <xsl:element name="mods:country">
+            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />
+          </xsl:element>
+        </xsl:element> <!--mods:hierarchicalGeographic -->
+      </xsl:element> <!-- mods:subject -->
     </xsl:if>
 
-    <!-- Recipient (organization) || Modtager, Organisation
-         (with both 'Recipient (organization)' and 'Modtager, Organisation' as role)-->
+    <!-- Old: Recipient (organization) || Modtager, Organisation
+         (with both 'Recipient (organization)' and 'Modtager, Organisation' as role)
     <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
       <xsl:element name="mods:name">
         <xsl:attribute name="type">
@@ -1527,6 +1527,56 @@
           </xsl:element>
         </xsl:element>
       </xsl:element>
+    </xsl:if>
+    -->
+
+    <!-- Recipient (organization) || Modtager, Organisation -->
+    <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
+      <xsl:element name="mods:name">
+        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
+        <xsl:attribute name="displayLabel">recipient</xsl:attribute>
+        <xsl:attribute name="type">corporate</xsl:attribute>
+        <xsl:call-template name="cumulus_get_lang_attribute" />
+        <xsl:choose>
+          <xsl:when test="field[@name='Recipient (organization)']">
+            <xsl:for-each select="field[@name='Recipient (organization)']/value">
+              <xsl:element name="mods:namePart">
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:element>
+              <xsl:element name="mods:role">
+                <xsl:element name="mods:roleTerm">
+                  <xsl:attribute name="type">code</xsl:attribute>
+                  <xsl:value-of select="'rcp'"/>
+                </xsl:element>
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="field[@name='Modtager, Organisation']">
+            <xsl:for-each select="field[@name='Modtager, Organisation']/value">
+              <xsl:element name="mods:namePart">
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:element>
+              <xsl:element name="mods:role">
+                <xsl:element name="mods:roleTerm">
+                  <xsl:attribute name="type">code</xsl:attribute>
+                  <xsl:value-of select="'rcp'"/>
+                </xsl:element>
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:element> <!-- mods:name -->
+      <xsl:element name="mods:subject">
+        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
+        <xsl:element name="mods:hierarchicalGeographic">
+          <xsl:element name="mods:city">
+            <xsl:value-of select="field[@name='Location of recipient']/value" />
+          </xsl:element>
+          <xsl:element name="mods:country">
+            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />
+          </xsl:element>
+        </xsl:element> <!--mods:hierarchicalGeographic -->
+      </xsl:element> <!-- mods:subject -->
     </xsl:if>
 
     <!-- Plademærke -->
