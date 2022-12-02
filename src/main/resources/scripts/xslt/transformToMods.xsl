@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- FOR 'BILLEDER' -->
 <xsl:transform version="1.0"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-               xmlns:xlink="http://www.w3.org/1999/xlink"
-               xmlns:java="http://xml.apache.org/xalan/java"
-               xmlns:mods="http://www.loc.gov/mods/v3"
-               xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-               xmlns:dk="/usr/local/ginnungagap/current/script/xsd" xmlns:xls="http://www.loc.gov/mods/v3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:java="http://xml.apache.org/xalan/java"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
+    xmlns:dk="/usr/local/ginnungagap/current/script/xsd"
 
-               extension-element-prefixes="java">
+    extension-element-prefixes="java">
 
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
@@ -1482,7 +1482,7 @@
     <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
       <xsl:element name="mods:name">
         <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
-        <xsl:attribute name="displayLabel">recipient</xsl:attribute>
+        <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
         <xsl:attribute name="type">corporate</xsl:attribute>
         <xsl:call-template name="cumulus_get_lang_attribute" />
         <xsl:choose>
