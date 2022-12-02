@@ -543,6 +543,7 @@
   <xsl:template name="mods_name">
     <!-- Ophav || Creator
          (both with either "@Ophav rolle" or 'Ophav' & 'Creator' as role)-->
+    <!--Only included if Catalog is Luftfoto -->
     <xsl:variable name="CATALOG">
       <xsl:copy-of select="field[@name='Catalog Name']/value"/>
     </xsl:variable>
@@ -1341,35 +1342,35 @@
       </xsl:element>
     </xsl:for-each>
 
-    <!-- Medvirkende -->
-    <xsl:if test="field[@name='Medvirkende']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:for-each select="field[@name='Medvirkende']/value">
-          <xsl:call-template name="cumulus_get_lang_attribute" />
-          <xsl:element name="mods:namePart">
-            <xsl:call-template name="cumulus_get_value" />
-          </xsl:element>
-        </xsl:for-each>
-        <xsl:element name="mods:role">
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:choose>
-              <xsl:when test="field[@name='Medvirkende rolle']">
-                <xsl:value-of select="field[@name='Medvirkende rolle']/value" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="'Medvirkende'" />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
+    <!-- Medvirkende todo: to be removed-->
+<!--    <xsl:if test="field[@name='Medvirkende']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="type">-->
+<!--          <xsl:value-of select="'personal'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:for-each select="field[@name='Medvirkende']/value">-->
+<!--          <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--          <xsl:element name="mods:namePart">-->
+<!--            <xsl:call-template name="cumulus_get_value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:for-each>-->
+<!--        <xsl:element name="mods:role">-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:choose>-->
+<!--              <xsl:when test="field[@name='Medvirkende rolle']">-->
+<!--                <xsl:value-of select="field[@name='Medvirkende rolle']/value" />-->
+<!--              </xsl:when>-->
+<!--              <xsl:otherwise>-->
+<!--                <xsl:value-of select="'Medvirkende'" />-->
+<!--              </xsl:otherwise>-->
+<!--            </xsl:choose>-->
+<!--          </xsl:element>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
     <!-- Crowd_Person moved to subject-->
 
@@ -2163,7 +2164,7 @@
           </xsl:when>
           <xsl:when test="field[@name='Dimensions']">
             <xsl:for-each select="field[@name='Dimensions']/value">
-              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>
+<!--              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>-->
               <xsl:element name="mods:extent">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
                 <xsl:call-template name="cumulus_get_value" />
@@ -2172,7 +2173,7 @@
           </xsl:when>
           <xsl:when test="field[@name='Size']">
             <xsl:for-each select="field[@name='Size']/value">
-              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>
+<!--              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>-->
               <xsl:element name="mods:extent">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
                 <xsl:call-template name="cumulus_get_value" />
@@ -2864,7 +2865,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Person -->
+    <!-- Person (Only included if Catalog is Luftfoto) -->
     <xsl:variable name="CATALOG">
       <xsl:copy-of select="field[@name='Catalog Name']/value"/>
     </xsl:variable>
@@ -3162,17 +3163,17 @@
   <!-- START titleInfo -->
   <xsl:template name="mods_titleInfo">
     <!-- Titel eller Title -->
-    <xsl:choose>
-      <xsl:when test="field[@name='Titel']">
-        <xsl:element name="mods:titleInfo">
-          <xsl:for-each select="field[@name='Titel']/value">
-            <xsl:call-template name="cumulus_get_lang_attribute" />
-            <xsl:call-template name="title_info_content" />
-          </xsl:for-each>
-          <xsl:call-template name="subtitle_info_content" />
-        </xsl:element>
-      </xsl:when>
-      <xsl:when test="field[@name='Title']">
+<!--    <xsl:choose>-->
+<!--      <xsl:when test="field[@name='Titel']">-->
+<!--        <xsl:element name="mods:titleInfo">-->
+<!--          <xsl:for-each select="field[@name='Titel']/value">-->
+<!--            <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--            <xsl:call-template name="title_info_content" />-->
+<!--          </xsl:for-each>-->
+<!--          <xsl:call-template name="subtitle_info_content" />-->
+<!--        </xsl:element>-->
+<!--      </xsl:when>-->
+      <xsl:if test="field[@name='Title']">
         <xsl:element name="mods:titleInfo">
           <xsl:for-each select="field[@name='Title']/value">
             <xsl:call-template name="cumulus_get_lang_attribute" />
@@ -3180,8 +3181,8 @@
           </xsl:for-each>
           <xsl:call-template name="subtitle_info_content" />
         </xsl:element>
-      </xsl:when>
-    </xsl:choose>
+      </xsl:if>
+<!--    </xsl:choose>-->
 
     <!-- alternativ title -->
     <xsl:if test="field[@name='Alternative title']">
@@ -3304,10 +3305,10 @@
         <xsl:copy-of select="field[@name='Manuscript']/value"/>
       </xsl:variable>
       <xsl:choose>
-        <xsl:when test="$SET = 'yes' or $SET = 'ja'">
+        <xsl:when test="$SET = 'yes' or $SET = 'Yes' or $SET = 'ja'">
           <xsl:element name="mods:typeOfResource">
             <xsl:attribute name="manuscript">
-              <xsl:value-of select="field[@name='Titel']/value" />
+              <xsl:value-of select="field[@name='Manuscript']/value" />
             </xsl:attribute>
             <xsl:value-of select="'tekst(håndskrift)'" />
           </xsl:element>
