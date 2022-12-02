@@ -46,7 +46,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
-import static dk.kb.ginnungagap.utils.FileUtils.deleteFilesInFolder;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -142,12 +141,7 @@ public class MetadataController {
 
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body("Request timeout")));
-            output.onCompletion(() -> {
-                log.trace("Process getting metadata complete");
-                File folder = new File(inputFilePath + "metadata");
-                deleteFilesInFolder(folder, ".xml");
-                deleteFilesInFolder(folder, ".txt");
-            });
+            output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
             Resource resource = new UrlResource(zippedXmls.toURI());
             output.setResult(ResponseEntity.ok()
