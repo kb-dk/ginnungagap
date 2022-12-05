@@ -28,7 +28,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
     protected File xsltFile;
     
-    protected boolean writeOutput = true;
+    protected boolean writeOutput = false;
     
     MetadataTransformationHandler transformationHandler;
     
