@@ -28,7 +28,7 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
 
     protected File xsltFile;
     
-    protected boolean writeOutput = false;
+    protected boolean writeOutput = true;
     
     MetadataTransformationHandler transformationHandler;
     
@@ -398,6 +398,37 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
         addStep("Validate the METS", "");
         transformationHandler.validate(new FileInputStream(metadataFile));
         
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
+                String text = StreamUtils.extractInputStreamAsString(is);
+                System.out.println(text);
+            }
+        }
+    }
+
+    @Test
+    public void testOriginInfo() throws Exception {
+        addDescription("Test the transformation of a newly added originalInfo fields. Should be removed when tests are available for all catalogs");
+        File xmlFile = new File("src/test/resources/origin_info_test.xml");
+        assertTrue(xmlFile.isFile());
+
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+
+        File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+
+        addStep("Transform the Cumulus XML", "METS");
+        transformer.transformXmlMetadata(new FileInputStream(xmlFile), new FileOutputStream(metadataFile));
+
+        if(writeOutput) {
+            try (InputStream is = new FileInputStream(metadataFile)) {
+                String text = StreamUtils.extractInputStreamAsString(is);
+                System.out.println(text);
+            }
+        }
+
+        addStep("Validate the METS", "");
+        transformationHandler.validate(new FileInputStream(metadataFile));
+
         if(writeOutput) {
             try (InputStream is = new FileInputStream(metadataFile)) {
                 String text = StreamUtils.extractInputStreamAsString(is);
