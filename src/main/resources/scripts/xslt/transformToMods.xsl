@@ -2368,27 +2368,25 @@
             <xsl:for-each select="field[@name='Størrelse']/value">
               <xsl:element name="mods:form">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
-                <xsl:attribute name="type">
-                  <xsl:value-of select="'Størrelse'" />
-                </xsl:attribute>
+                <xsl:attribute name="type">Størrelse</xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Dimensions']">
             <xsl:for-each select="field[@name='Dimensions']/value">
-<!--              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>-->
-              <xsl:element name="mods:extent">
+              <xsl:element name="mods:form">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:attribute name="type">Dimensions</xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
           <xsl:when test="field[@name='Size']">
             <xsl:for-each select="field[@name='Size']/value">
-<!--              <xsl:attribute name="displayLabel">Dimensions</xsl:attribute>-->
-              <xsl:element name="mods:extent">
+              <xsl:element name="mods:form">
                 <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:attribute name="type">Dimensions</xsl:attribute>
                 <xsl:call-template name="cumulus_get_value" />
               </xsl:element>
             </xsl:for-each>
