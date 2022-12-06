@@ -608,149 +608,150 @@
         </xsl:if>
       </xsl:when>
     </xsl:choose>
-    <!-- Country (location) of recipient || Modtager, land
+
+    <!--todo: to be removed: Country (location) of recipient || Modtager, land
          (with both 'Country (location) of recipient' and 'Modtager, land' as role)-->
-    <xsl:if test="field[@name='Country (location) of recipient'] or field[@name='Modtager, land']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="field[@name='Country (location) of recipient']">
-            <xsl:for-each select="field[@name='Country (location) of recipient']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Modtager, land']">
-            <xsl:for-each select="field[@name='Modtager, land']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-        <xsl:element name="mods:role">
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'en'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Country (location) of recipient'" />
-          </xsl:element>
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'da'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Modtager, land'" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Country (location) of recipient'] or field[@name='Modtager, land']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="type">-->
+<!--          <xsl:value-of select="'personal'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Country (location) of recipient']">-->
+<!--            <xsl:for-each select="field[@name='Country (location) of recipient']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Modtager, land']">-->
+<!--            <xsl:for-each select="field[@name='Modtager, land']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--        <xsl:element name="mods:role">-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'en'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Country (location) of recipient'" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'da'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Modtager, land'" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
-    <!-- Location of recipient || Modtager, sted
+    <!-- todo: to be removed: Location of recipient || Modtager, sted
          (with both 'Location of recipient' and 'Modtager, sted' as role)-->
-    <xsl:if test="field[@name='Location of recipient'] or field[@name='Modtager, sted']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="field[@name='Location of recipient']">
-            <xsl:for-each select="field[@name='Location of recipient']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Modtager, sted']">
-            <xsl:for-each select="field[@name='Modtager, sted']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-        <xsl:element name="mods:role">
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'en'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Location of recipient'" />
-          </xsl:element>
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'da'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Modtager, sted'" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Location of recipient'] or field[@name='Modtager, sted']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="type">-->
+<!--          <xsl:value-of select="'personal'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Location of recipient']">-->
+<!--            <xsl:for-each select="field[@name='Location of recipient']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Modtager, sted']">-->
+<!--            <xsl:for-each select="field[@name='Modtager, sted']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--        <xsl:element name="mods:role">-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'en'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Location of recipient'" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'da'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Modtager, sted'" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
-    <!-- Additional sender (personal) || Medafsender
+    <!--todo: to be removed:  Additional sender (personal) || Medafsender
          (with both 'Additional sender (personal)' and 'Medafsender' as role)-->
-    <xsl:if test="field[@name='Additional sender (personal)'] or field[@name='Medafsender']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="field[@name='Additional sender (personal)']">
-            <xsl:for-each select="field[@name='Additional sender (personal)']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Medafsender']">
-            <xsl:for-each select="field[@name='Medafsender']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-        <xsl:element name="mods:role">
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'en'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Additional sender (personal)'" />
-          </xsl:element>
-          <xsl:element name="mods:roleTerm">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'text'" />
-            </xsl:attribute>
-            <xsl:attribute name="lang">
-              <xsl:value-of select="'da'" />
-            </xsl:attribute>
-            <xsl:value-of select="'Medafsender'" />
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
-    </xsl:if>
+<!--    <xsl:if test="field[@name='Additional sender (personal)'] or field[@name='Medafsender']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="type">-->
+<!--          <xsl:value-of select="'personal'" />-->
+<!--        </xsl:attribute>-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Additional sender (personal)']">-->
+<!--            <xsl:for-each select="field[@name='Additional sender (personal)']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Medafsender']">-->
+<!--            <xsl:for-each select="field[@name='Medafsender']/value">-->
+<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--        <xsl:element name="mods:role">-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'en'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Additional sender (personal)'" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:roleTerm">-->
+<!--            <xsl:attribute name="type">-->
+<!--              <xsl:value-of select="'text'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:attribute name="lang">-->
+<!--              <xsl:value-of select="'da'" />-->
+<!--            </xsl:attribute>-->
+<!--            <xsl:value-of select="'Medafsender'" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
     <!-- Author || Forfatter todo: remove
          (with both 'Author' and 'Forfatter' as role)-->
@@ -1122,54 +1123,54 @@
     </xsl:if>
     -->
 
-    <!-- Sender (organization) || Afsender, Organisation -->
-    <xsl:if test="field[@name='Sender (organization)'] or field[@name='Afsender, Organisation']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
-        <xsl:attribute name="displayLabel">Sender</xsl:attribute>
-        <xsl:attribute name="type">corporate</xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:choose>
-          <xsl:when test="field[@name='Sender (organization)']">
-            <xsl:for-each select="field[@name='Sender (organization)']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'aut'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Afsender, Organisation']">
-            <xsl:for-each select="field[@name='Afsender, Organisation']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'aut'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:element> <!-- mods:name -->
-      <xsl:element name="mods:subject">
-        <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
-        <xsl:element name="mods:hierarchicalGeographic">
-          <xsl:element name="mods:city">
-            <xsl:value-of select="field[@name='Location of sender']/value" />
-          </xsl:element>
-          <xsl:element name="mods:country">
-            <xsl:value-of select="field[@name='Country (location) of sender']/value" />
-          </xsl:element>
-        </xsl:element> <!--mods:hierarchicalGeographic -->
-      </xsl:element> <!-- mods:subject -->
-    </xsl:if>
+    <!--todo: to be removed (altRepGroup mm. skal i ophav-tabel): Sender (organization) || Afsender, Organisation -->
+<!--    <xsl:if test="field[@name='Sender (organization)'] or field[@name='Afsender, Organisation']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="altRepGroup">aut2</xsl:attribute>-->
+<!--        <xsl:attribute name="displayLabel">Sender</xsl:attribute>-->
+<!--        <xsl:attribute name="type">corporate</xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Sender (organization)']">-->
+<!--            <xsl:for-each select="field[@name='Sender (organization)']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'aut'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Afsender, Organisation']">-->
+<!--            <xsl:for-each select="field[@name='Afsender, Organisation']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'aut'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--      </xsl:element> &lt;!&ndash; mods:name &ndash;&gt;-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:attribute name="altRepGroup">aut2</xsl:attribute>-->
+<!--        <xsl:element name="mods:hierarchicalGeographic">-->
+<!--          <xsl:element name="mods:city">-->
+<!--            <xsl:value-of select="field[@name='Location of sender']/value" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:country">-->
+<!--            <xsl:value-of select="field[@name='Country (location) of sender']/value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element> &lt;!&ndash;mods:hierarchicalGeographic &ndash;&gt;-->
+<!--      </xsl:element> &lt;!&ndash; mods:subject &ndash;&gt;-->
+<!--    </xsl:if>-->
 
     <!-- Old: Sender (person) || Afsender
          (with both 'Sender (person)' and 'Afsender' as role)
@@ -1220,54 +1221,54 @@
     </xsl:if>
     -->
 
-    <!-- Sender (person) || Afsender -->
-    <xsl:if test="field[@name='Sender (person)'] or field[@name='Afsender']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>
-        <xsl:attribute name="displayLabel">Sender</xsl:attribute>
-        <xsl:attribute name="type">personal</xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:choose>
-          <xsl:when test="field[@name='Sender (person)']">
-            <xsl:for-each select="field[@name='Sender (person)']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'aut'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Afsender']">
-            <xsl:for-each select="field[@name='Afsender']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'aut'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:element> <!-- mods:name -->
-      <xsl:element name="mods:subject">
-        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>
-        <xsl:element name="mods:hierarchicalGeographic">
-          <xsl:element name="mods:city">
-            <xsl:value-of select="field[@name='Location of sender']/value" />
-          </xsl:element>
-          <xsl:element name="mods:country">
-            <xsl:value-of select="field[@name='Country (location) of sender']/value" />
-          </xsl:element>
-        </xsl:element> <!--mods:hierarchicalGeographic -->
-      </xsl:element> <!-- mods:subject -->
-    </xsl:if>
+    <!-- todo: to be removed (altRepGroup mm. skal i ophav-tabel) Sender (person) || Afsender -->
+<!--    <xsl:if test="field[@name='Sender (person)'] or field[@name='Afsender']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>-->
+<!--        <xsl:attribute name="displayLabel">Sender</xsl:attribute>-->
+<!--        <xsl:attribute name="type">personal</xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Sender (person)']">-->
+<!--            <xsl:for-each select="field[@name='Sender (person)']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'aut'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Afsender']">-->
+<!--            <xsl:for-each select="field[@name='Afsender']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'aut'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--      </xsl:element> &lt;!&ndash; mods:name &ndash;&gt;-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>-->
+<!--        <xsl:element name="mods:hierarchicalGeographic">-->
+<!--          <xsl:element name="mods:city">-->
+<!--            <xsl:value-of select="field[@name='Location of sender']/value" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:country">-->
+<!--            <xsl:value-of select="field[@name='Country (location) of sender']/value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element> &lt;!&ndash;mods:hierarchicalGeographic &ndash;&gt;-->
+<!--      </xsl:element> &lt;!&ndash; mods:subject &ndash;&gt;-->
+<!--    </xsl:if>-->
 
     <!-- Translator || Oversætter todo: to be removed
          (with both 'Translator' and 'Oversætter' as role)-->
@@ -1374,67 +1375,67 @@
     </xsl:if>
     -->
 
-    <!-- Recipient || Recipient (personal) || Modtager -->
-    <xsl:if test="field[@name='Recipient'] or field[@name='Recipient (personal)'] or field[@name='Modtager']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
-        <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
-        <xsl:attribute name="type">personal</xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:choose>
-          <xsl:when test="field[@name='Recipient']">
-            <xsl:for-each select="field[@name='Recipient']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'rcp'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Recipient (personal)']">
-            <xsl:for-each select="field[@name='Recipient (personal)']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'rcp'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Modtager']">
-            <xsl:for-each select="field[@name='Modtager']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'rcp'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:element> <!-- mods:name -->
-      <xsl:element name="mods:subject">
-        <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
-        <xsl:element name="mods:hierarchicalGeographic">
-          <xsl:element name="mods:city">
-            <xsl:value-of select="field[@name='Location of recipient']/value" />
-          </xsl:element>
-          <xsl:element name="mods:country">
-            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />
-          </xsl:element>
-        </xsl:element> <!--mods:hierarchicalGeographic -->
-      </xsl:element> <!-- mods:subject -->
-    </xsl:if>
+    <!--todo: to be removed (altRepGroup mm. skal i person-tabel) Recipient || Recipient (personal) || Modtager -->
+<!--    <xsl:if test="field[@name='Recipient'] or field[@name='Recipient (personal)'] or field[@name='Modtager']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>-->
+<!--        <xsl:attribute name="displayLabel">Recipient</xsl:attribute>-->
+<!--        <xsl:attribute name="type">personal</xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Recipient']">-->
+<!--            <xsl:for-each select="field[@name='Recipient']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'rcp'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Recipient (personal)']">-->
+<!--            <xsl:for-each select="field[@name='Recipient (personal)']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'rcp'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Modtager']">-->
+<!--            <xsl:for-each select="field[@name='Modtager']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'rcp'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--      </xsl:element> &lt;!&ndash; mods:name &ndash;&gt;-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>-->
+<!--        <xsl:element name="mods:hierarchicalGeographic">-->
+<!--          <xsl:element name="mods:city">-->
+<!--            <xsl:value-of select="field[@name='Location of recipient']/value" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:country">-->
+<!--            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element> &lt;!&ndash;mods:hierarchicalGeographic &ndash;&gt;-->
+<!--      </xsl:element> &lt;!&ndash; mods:subject &ndash;&gt;-->
+<!--    </xsl:if>-->
 
     <!-- Old: Recipient (organization) || Modtager, Organisation
          (with both 'Recipient (organization)' and 'Modtager, Organisation' as role)
@@ -1485,54 +1486,54 @@
     </xsl:if>
     -->
 
-    <!-- Recipient (organization) || Modtager, Organisation -->
-    <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
-        <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
-        <xsl:attribute name="type">corporate</xsl:attribute>
-        <xsl:call-template name="cumulus_get_lang_attribute" />
-        <xsl:choose>
-          <xsl:when test="field[@name='Recipient (organization)']">
-            <xsl:for-each select="field[@name='Recipient (organization)']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'rcp'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Modtager, Organisation']">
-            <xsl:for-each select="field[@name='Modtager, Organisation']/value">
-              <xsl:element name="mods:namePart">
-                <xsl:call-template name="cumulus_get_value" />
-              </xsl:element>
-              <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                  <xsl:attribute name="type">code</xsl:attribute>
-                  <xsl:value-of select="'rcp'"/>
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:element> <!-- mods:name -->
-      <xsl:element name="mods:subject">
-        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
-        <xsl:element name="mods:hierarchicalGeographic">
-          <xsl:element name="mods:city">
-            <xsl:value-of select="field[@name='Location of recipient']/value" />
-          </xsl:element>
-          <xsl:element name="mods:country">
-            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />
-          </xsl:element>
-        </xsl:element> <!--mods:hierarchicalGeographic -->
-      </xsl:element> <!-- mods:subject -->
-    </xsl:if>
+    <!--todo: to be removed (altRepGroup mm. skal i person-tabel) Recipient (organization) || Modtager, Organisation -->
+<!--    <xsl:if test="field[@name='Recipient (organization)'] or field[@name='Modtager, Organisation']">-->
+<!--      <xsl:element name="mods:name">-->
+<!--        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>-->
+<!--        <xsl:attribute name="displayLabel">Recipient</xsl:attribute>-->
+<!--        <xsl:attribute name="type">corporate</xsl:attribute>-->
+<!--        <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Recipient (organization)']">-->
+<!--            <xsl:for-each select="field[@name='Recipient (organization)']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'rcp'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Modtager, Organisation']">-->
+<!--            <xsl:for-each select="field[@name='Modtager, Organisation']/value">-->
+<!--              <xsl:element name="mods:namePart">-->
+<!--                <xsl:call-template name="cumulus_get_value" />-->
+<!--              </xsl:element>-->
+<!--              <xsl:element name="mods:role">-->
+<!--                <xsl:element name="mods:roleTerm">-->
+<!--                  <xsl:attribute name="type">code</xsl:attribute>-->
+<!--                  <xsl:value-of select="'rcp'"/>-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--      </xsl:element> &lt;!&ndash; mods:name &ndash;&gt;-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>-->
+<!--        <xsl:element name="mods:hierarchicalGeographic">-->
+<!--          <xsl:element name="mods:city">-->
+<!--            <xsl:value-of select="field[@name='Location of recipient']/value" />-->
+<!--          </xsl:element>-->
+<!--          <xsl:element name="mods:country">-->
+<!--            <xsl:value-of select="field[@name='Country (location) of recipient']/value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:element> &lt;!&ndash;mods:hierarchicalGeographic &ndash;&gt;-->
+<!--      </xsl:element> &lt;!&ndash; mods:subject &ndash;&gt;-->
+<!--    </xsl:if>-->
 
     <!-- Plademærke -->
     <xsl:for-each select="field[@name='Plademærke']/value">
@@ -1620,6 +1621,11 @@
             <xsl:value-of select="'cre'" />
           </xsl:element>
         </xsl:element>
+      </xsl:if>
+      <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or
+      contains(field[@name='Rolle']/value, 'supplerende afsender')">
+
+
       </xsl:if>
       <xsl:if test="field[@name='Efternavn']/value">
         <xsl:element name="mods:namePart">
