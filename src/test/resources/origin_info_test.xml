@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<record>
+  <!-- Fields to make the test run -->
+  <field name="GUID">
+    <value>Uid:dk:kb:doms:2007-01/5d2c97d0-648f-11e1-b7b0-0017a4f603c1</value>
+  </field>
+  <field name="compositionLevel">
+    <value>0</value>
+  </field>
+  <field name="preservationLevelValue_BitSafety">
+    <value>bitSafetyMax</value>
+  </field>
+  <field name="preservationLevelValue_Confidentiality">
+    <value>confidentialityVeryLow</value>
+  </field>
+  <field name="preservationLevelValue_Logical">
+    <value>logicalStrategyEmulation</value>
+  </field>
+  <field name="preservationLevelValue">
+    <value>Aktiv bit bevaring</value>
+  </field>
+  <!-- Fields to be tested -->
+  <field name="Country of origin">
+    <value>Country of origin</value>
+  </field>
+  <field name="Place of origin">
+    <value>Place of origin</value>
+  </field>
+</record>

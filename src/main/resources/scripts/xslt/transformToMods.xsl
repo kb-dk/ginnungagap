@@ -2020,14 +2020,18 @@
           field[@name='Manual Date not after'] or
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
-          field[@name='Presentation Date'] ">
+          field[@name='Presentation Date'] or
+          field[@name='Country of origin'] or
+          field[@name='Place of origin']">
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender']">
+          field[@name='Location of sender'] or
+          field[@name='Country of origin'] or
+          field[@name='Place of origin']">
           <xsl:element name="mods:place">
             <!-- Udgivelsesland || Country || Country (location) of sender -->
             <xsl:choose>
@@ -2064,6 +2068,17 @@
                   </xsl:element>
                 </xsl:for-each>
               </xsl:when>
+              <xsl:when test="field[@name='Country of origin']">
+                <xsl:for-each select="field[@name='Country of origin']/value">
+                  <xsl:element name="mods:placeTerm">
+                    <xsl:attribute name="type">
+                      <xsl:value-of select="'text'" />
+                    </xsl:attribute>
+                    <xsl:call-template name="cumulus_get_lang_attribute" />
+                    <xsl:call-template name="cumulus_get_value" />
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:when>
             </xsl:choose>
 
             <!-- Udgivelsessted || Location of origin || Location of sender -->
@@ -2092,6 +2107,17 @@
               </xsl:when>
               <xsl:when test="field[@name='Location of sender']">
                 <xsl:for-each select="field[@name='Location of sender']/value">
+                  <xsl:element name="mods:placeTerm">
+                    <xsl:attribute name="type">
+                      <xsl:value-of select="'text'" />
+                    </xsl:attribute>
+                    <xsl:call-template name="cumulus_get_lang_attribute" />
+                    <xsl:call-template name="cumulus_get_value" />
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:when test="field[@name='Place of origin']">
+                <xsl:for-each select="field[@name='Place of origin']/value">
                   <xsl:element name="mods:placeTerm">
                     <xsl:attribute name="type">
                       <xsl:value-of select="'text'" />
