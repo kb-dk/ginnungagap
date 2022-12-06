@@ -2013,7 +2013,6 @@
 
       <xsl:element name="mods:originInfo">
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
-          field[@name='Country of origin'] or
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
