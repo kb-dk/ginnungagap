@@ -2864,7 +2864,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Keywords -->
+    <!-- Keywords
     <xsl:if test="field[@name='Keywords']">
       <xsl:element name="mods:subject">
         <xsl:for-each select="field[@name='Keywords']/value">
@@ -2875,7 +2875,23 @@
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
+    -->
 
+    <!-- Keywords -->
+    <xsl:if test="field[@name='Keywords']">
+      <xsl:element name="mods:subject">
+        <xsl:call-template name="cumulus_get_lang_attribute"/>
+        <xsl:for-each select="field[@name='Keywords']/value">
+          <xsl:element name="mods:topic">
+            <xsl:attribute name="lang">
+              <xsl:value-of select="$mods_default_lang" />
+            </xsl:attribute>
+            <xsl:call-template name="cumulus_get_value"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    
     <!-- Målestok || Målestock || Scale
          with both 'Målestok', 'Målestock' and 'Scale' as scale.-->
     <xsl:if test="field[@name='Målestok'] or field[@name='Målestock'] or field[@name='Scale']">
