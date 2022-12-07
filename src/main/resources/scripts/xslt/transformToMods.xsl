@@ -1604,21 +1604,37 @@
     <xsl:param name = "tabel" />
     <!-- <xsl:value-of select = "$tabel" /> -->
     <xsl:element name="mods:name">
-<!--      <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or-->
-<!--      contains(field[@name='Rolle']/value, 'supplerende afsender')">-->
-<!--        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>-->
-<!--        <xsl:attribute name="displayLabel">Sender</xsl:attribute>-->
-<!--        <xsl:attribute name="type">personal</xsl:attribute>-->
-<!--        <xsl:element name="mods:role">-->
-<!--          <xsl:element name="mods:roleTerm">-->
-<!--            <xsl:attribute name="type">-->
-<!--              <xsl:value-of select="'code'" />-->
-<!--            </xsl:attribute>-->
-<!--            <xsl:value-of select="'aut'" />-->
-<!--          </xsl:element>-->
-<!--        </xsl:element>-->
+      <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or
+      contains(field[@name='Rolle']/value, 'supplerende afsender') and not(field[@name='Kooperation'])">
+        <xsl:attribute name="altRepGroup">aut1</xsl:attribute>
+        <xsl:attribute name="displayLabel">Sender</xsl:attribute>
+        <xsl:attribute name="type">personal</xsl:attribute>
+        <xsl:element name="mods:role">
+          <xsl:element name="mods:roleTerm">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'code'" />
+            </xsl:attribute>
+            <xsl:value-of select="'aut'" />
+          </xsl:element>
+        </xsl:element>
+      </xsl:if>
+      <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or
+      contains(field[@name='Rolle']/value, 'supplerende afsender') and (field[@name='Kooperation'])">
+        <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
+        <xsl:attribute name="displayLabel">Sender</xsl:attribute>
+        <xsl:attribute name="type">personal</xsl:attribute>
+        <xsl:element name="mods:role">
+          <xsl:element name="mods:roleTerm">
+            <xsl:attribute name="type">
+              <xsl:value-of select="'code'" />
+            </xsl:attribute>
+            <xsl:value-of select="'aut'" />
+          </xsl:element>
+        </xsl:element>
 
-<!--      </xsl:if>-->
+      </xsl:if>
+
+
       <xsl:attribute name="type">
         <xsl:value-of select="'personal'" />
       </xsl:attribute>
@@ -2428,7 +2444,6 @@
               </xsl:element>
             </xsl:for-each>
           </xsl:when>
-
         </xsl:choose>
 
         <!-- Textarea || Tekstområde -->
