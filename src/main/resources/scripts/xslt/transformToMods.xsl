@@ -1403,8 +1403,8 @@
 
     <!--START specific roles handling-->
       <!--START personal-->
-    <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or
-    contains(field[@name='Rolle']/value, 'supplerende afsender') and
+    <xsl:if test="(contains(field[@name='Rolle']/value, 'afsender') or
+    contains(field[@name='Rolle']/value, 'supplerende afsender')) and
     not(field[@name='Kooperation']/value)">
       <xsl:element name="mods:name">
         <xsl:attribute name="altRepGroup">aut1</xsl:attribute>
@@ -1497,10 +1497,11 @@
       </xsl:if>
     </xsl:if>
       <!--END personal-->
-      <!--START Kooperation-->
-    <xsl:if test="contains(field[@name='Rolle']/value, 'afsender') or
-    contains(field[@name='Rolle']/value, 'supplerende afsender') and
-    (field[@name='Kooperation']/value)">
+
+      <!--START Kooperation -->
+    <xsl:if test="(contains(field[@name='Rolle']/value, 'afsender') or
+    contains(field[@name='Rolle']/value, 'supplerende afsender')) and
+    field[@name='Kooperation']/value">
       <xsl:element name="mods:name">
         <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
         <xsl:attribute name="displayLabel">Sender</xsl:attribute>
@@ -1587,13 +1588,12 @@
                 <xsl:value-of select="../../../field[@name='Country (location) of sender']/value" />
               </xsl:element>
             </xsl:if>
-          </xsl:element> <!--mods:hierarchicalGeographic -->
-        </xsl:element> <!-- mods:subject -->
+            </xsl:element> <!-- mods:hierarchicalGeographic -->
+          </xsl:element> <!-- mods:subject -->
       </xsl:if>
     </xsl:if>
       <!--END kooperation-->
-    <!--END specific roles handling-->
-
+    <!--END specific roles handling -->
 
     <xsl:if test="not(contains(field[@name='Rolle']/value, 'afsender')) and
     not(contains(field[@name='Rolle']/value, 'supplerende afsender')) ">
