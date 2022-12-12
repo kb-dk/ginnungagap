@@ -1478,18 +1478,18 @@
           </xsl:if>
         </xsl:if>
       </xsl:element> <!--mods:name-->
-      <xsl:if test="field[@name='Location of sender'] or field[@name='Country (location) of sender']">
+      <xsl:if test="../../../field[@name='Location of sender'] or ../../../field[@name='Country (location) of sender']">
         <xsl:element name="mods:subject">
           <xsl:attribute name="altRepGroup">aut1</xsl:attribute>
           <xsl:element name="mods:hierarchicalGeographic">
-            <xsl:if test="field[@name='Location of sender']">
+            <xsl:if test="../../../field[@name='Location of sender']">
               <xsl:element name="mods:city">
-                <xsl:value-of select="field[@name='Location of sender']/value" />
+                <xsl:value-of select="../../../field[@name='Location of sender']/value" />
               </xsl:element>
             </xsl:if>
-            <xsl:if test="field[@name='Country (location) of sender']">
+            <xsl:if test="../../../field[@name='Country (location) of sender']">
               <xsl:element name="mods:country">
-                <xsl:value-of select="field[@name='Country (location) of sender']/value" />
+                <xsl:value-of select="../../../field[@name='Country (location) of sender']/value" />
               </xsl:element>
             </xsl:if>
           </xsl:element> <!--mods:hierarchicalGeographic -->
@@ -1573,18 +1573,18 @@
           </xsl:if>
         </xsl:if>
       </xsl:element>
-      <xsl:if test="field[@name='Location of sender'] or field[@name='Country (location) of sender']">
+      <xsl:if test="../../../field[@name='Location of sender'] or ../../../field[@name='Country (location) of sender']">
         <xsl:element name="mods:subject">
           <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
           <xsl:element name="mods:hierarchicalGeographic">
-            <xsl:if test="field[@name='Location of sender']">
+            <xsl:if test="../../../field[@name='Location of sender']">
               <xsl:element name="mods:city">
-                <xsl:value-of select="field[@name='Location of sender']/value" />
+                <xsl:value-of select="../../../field[@name='Location of sender']/value" />
               </xsl:element>
             </xsl:if>
-            <xsl:if test="field[@name='Country (location) of sender']">
+            <xsl:if test="../../../field[@name='Country (location) of sender']">
               <xsl:element name="mods:country">
-                <xsl:value-of select="field[@name='Country (location) of sender']/value" />
+                <xsl:value-of select="../../../field[@name='Country (location) of sender']/value" />
               </xsl:element>
             </xsl:if>
           </xsl:element> <!--mods:hierarchicalGeographic -->
