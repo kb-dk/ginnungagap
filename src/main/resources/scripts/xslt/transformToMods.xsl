@@ -1951,7 +1951,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Beskrivelse-->
+    <!-- Beskrivelse -->
     <xsl:if test="field[@name='Beskrivelse']  or field[@name='Description']">
       <xsl:element name="mods:note">
         <xsl:attribute name="displayLabel">Description</xsl:attribute>
@@ -1969,6 +1969,17 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- IPTC Descripiton -->
+    <xsl:if test="field[@name='IPTC Description']">
+      <xsl:element name="mods:note">
+        <xsl:attribute name="displayLabel">Description</xsl:attribute>
+        <xsl:for-each select="field[@name='IPTC Description']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
       </xsl:element>
     </xsl:if>
 
