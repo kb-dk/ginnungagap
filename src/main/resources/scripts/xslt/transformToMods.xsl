@@ -3045,33 +3045,33 @@
     </xsl:if>
 
     <!-- Additional recipient (personal) || Medmodtager
-         with both 'Additional recipient (personal)' and 'Medmodtager' as genre.-->
-    <xsl:if test="field[@name='Additional recipient (personal)'] or field[@name='Medmodtager']">
-      <xsl:element name="mods:subject">
-        <xsl:choose>
-          <xsl:when test="field[@name='Additional recipient (personal)']">
-            <xsl:for-each select="field[@name='Additional recipient (personal)']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:when test="field[@name='Medmodtager']">
-            <xsl:for-each select="field[@name='Medmodtager']/value">
-              <xsl:element name="mods:cartographics">
-                <xsl:element name="mods:scale">
-                  <xsl:call-template name="cumulus_get_lang_attribute" />
-                  <xsl:call-template name="cumulus_get_value" />
-                </xsl:element>
-              </xsl:element>
-            </xsl:for-each>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:element>
-    </xsl:if>
+         with both 'Additional recipient (personal)' and 'Medmodtager' as genre. todo: to be removed-->
+<!--    <xsl:if test="field[@name='Additional recipient (personal)'] or field[@name='Medmodtager']">-->
+<!--      <xsl:element name="mods:subject">-->
+<!--        <xsl:choose>-->
+<!--          <xsl:when test="field[@name='Additional recipient (personal)']">-->
+<!--            <xsl:for-each select="field[@name='Additional recipient (personal)']/value">-->
+<!--              <xsl:element name="mods:cartographics">-->
+<!--                <xsl:element name="mods:scale">-->
+<!--                  <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--                  <xsl:call-template name="cumulus_get_value" />-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--          <xsl:when test="field[@name='Medmodtager']">-->
+<!--            <xsl:for-each select="field[@name='Medmodtager']/value">-->
+<!--              <xsl:element name="mods:cartographics">-->
+<!--                <xsl:element name="mods:scale">-->
+<!--                  <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--                  <xsl:call-template name="cumulus_get_value" />-->
+<!--                </xsl:element>-->
+<!--              </xsl:element>-->
+<!--            </xsl:for-each>-->
+<!--          </xsl:when>-->
+<!--        </xsl:choose>-->
+<!--      </xsl:element>-->
+<!--    </xsl:if>-->
 
     <!-- LCSH -->
     <xsl:for-each select="field[@name='LCSH']/value">
