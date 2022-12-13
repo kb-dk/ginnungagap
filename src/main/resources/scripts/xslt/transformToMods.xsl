@@ -2053,17 +2053,17 @@
                   </xsl:element>
                 </xsl:for-each>
               </xsl:when>
-              <xsl:when test="field[@name='Country (location) of sender']">
-                <xsl:for-each select="field[@name='Country (location) of sender']/value">
-                  <xsl:element name="mods:placeTerm">
-                    <xsl:attribute name="type">
-                      <xsl:value-of select="'code'" />
-                    </xsl:attribute>
-                    <xsl:call-template name="cumulus_get_lang_attribute" />
-                    <xsl:call-template name="cumulus_get_value" />
-                  </xsl:element>
-                </xsl:for-each>
-              </xsl:when>
+<!--              <xsl:when test="field[@name='Country (location) of sender']"> todo: to be removed. Moved to ophav-tabel-->
+<!--                <xsl:for-each select="field[@name='Country (location) of sender']/value">-->
+<!--                  <xsl:element name="mods:placeTerm">-->
+<!--                    <xsl:attribute name="type">-->
+<!--                      <xsl:value-of select="'code'" />-->
+<!--                    </xsl:attribute>-->
+<!--                    <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--                    <xsl:call-template name="cumulus_get_value" />-->
+<!--                  </xsl:element>-->
+<!--                </xsl:for-each>-->
+<!--              </xsl:when>-->
               <xsl:when test="field[@name='Country of origin']">
                 <xsl:for-each select="field[@name='Country of origin']/value">
                   <xsl:element name="mods:placeTerm">
@@ -2101,17 +2101,17 @@
                   </xsl:element>
                 </xsl:for-each>
               </xsl:when>
-              <xsl:when test="field[@name='Location of sender']">
-                <xsl:for-each select="field[@name='Location of sender']/value">
-                  <xsl:element name="mods:placeTerm">
-                    <xsl:attribute name="type">
-                      <xsl:value-of select="'text'" />
-                    </xsl:attribute>
-                    <xsl:call-template name="cumulus_get_lang_attribute" />
-                    <xsl:call-template name="cumulus_get_value" />
-                  </xsl:element>
-                </xsl:for-each>
-              </xsl:when>
+<!--              <xsl:when test="field[@name='Location of sender']"> todo: to be removed. Moved to ophav-tabel-->
+<!--                <xsl:for-each select="field[@name='Location of sender']/value">-->
+<!--                  <xsl:element name="mods:placeTerm">-->
+<!--                    <xsl:attribute name="type">-->
+<!--                      <xsl:value-of select="'text'" />-->
+<!--                    </xsl:attribute>-->
+<!--                    <xsl:call-template name="cumulus_get_lang_attribute" />-->
+<!--                    <xsl:call-template name="cumulus_get_value" />-->
+<!--                  </xsl:element>-->
+<!--                </xsl:for-each>-->
+<!--              </xsl:when>-->
               <xsl:when test="field[@name='Place of origin']">
                 <xsl:for-each select="field[@name='Place of origin']/value">
                   <xsl:element name="mods:placeTerm">
