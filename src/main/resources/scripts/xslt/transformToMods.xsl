@@ -1931,7 +1931,7 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Beskrivelse-->
+    <!-- Beskrivelse -->
     <xsl:if test="field[@name='Beskrivelse']  or field[@name='Description']">
       <xsl:element name="mods:note">
         <xsl:attribute name="displayLabel">Description</xsl:attribute>
@@ -1949,6 +1949,17 @@
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- IPTC Descripiton -->
+    <xsl:if test="field[@name='IPTC Description']">
+      <xsl:element name="mods:note">
+        <xsl:attribute name="displayLabel">Description</xsl:attribute>
+        <xsl:for-each select="field[@name='IPTC Description']/value">
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:call-template name="cumulus_get_value" />
+        </xsl:for-each>
       </xsl:element>
     </xsl:if>
 
@@ -2843,13 +2854,46 @@
       </xsl:element>
     </xsl:if>
 
-    <!-- Keywords -->
+    <!-- Keywords
     <xsl:if test="field[@name='Keywords']">
       <xsl:element name="mods:subject">
         <xsl:for-each select="field[@name='Keywords']/value">
           <xsl:element name="mods:topic">
             <xsl:call-template name="cumulus_get_lang_attribute" />
             <xsl:call-template name="cumulus_get_value" />
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    -->
+
+    <!-- Keywords -->
+    <xsl:if test="field[@name='Keywords']">
+      <xsl:element name="mods:subject">
+        <xsl:call-template name="cumulus_get_lang_attribute"/>
+        <xsl:for-each select="field[@name='Keywords']/value">
+          <xsl:element name="mods:topic">
+            <xsl:attribute name="lang">
+              <xsl:value-of select="$mods_default_lang" />
+            </xsl:attribute>
+            <xsl:call-template name="cumulus_get_value"/>
+          </xsl:element>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- Subject -->
+    <xsl:if test="field[@name='Subject']">
+      <xsl:element name="mods:subject">
+        <xsl:attribute name="lang">
+          <xsl:value-of select="$mods_default_lang" />
+        </xsl:attribute>
+        <xsl:for-each select="field[@name='Subject']/value">
+          <xsl:element name="mods:topic">
+            <xsl:attribute name="lang">
+              <xsl:value-of select="$mods_default_lang" />
+            </xsl:attribute>
+            <xsl:call-template name="cumulus_get_value"/>
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
