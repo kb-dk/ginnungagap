@@ -34,9 +34,9 @@
   <xsl:template match="record">
     <xsl:call-template name="mets_generator" />
   </xsl:template>
-  
+
   <xsl:template name="mets_generator">
-    <mets:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd">
+    <mets:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://id.kb.dk/standards/mets/version_1_11/mets.xsd">
       <xsl:attribute name="TYPE">
         <xsl:value-of select="'File'" />
       </xsl:attribute>

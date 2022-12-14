@@ -14,7 +14,7 @@
   <xsl:include href="transformToBext.xsl"/>
   
   <xsl:variable name="id" select="record/field[@name='objectIdentifierValue']/value"/>
-  <xsl:variable name="PREMIS_LOCATION" select="'http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd'" />
+  <xsl:variable name="PREMIS_LOCATION" select="'http://www.loc.gov/premis/v3 http://id.kb.dk/standards/premis/version_3_0/premis.xsd'" />
   <xsl:variable name="PREMIS_VERSION" select="'3.0'" />
 
   <xsl:template name="premis_preservation">
