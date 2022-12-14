@@ -1386,11 +1386,13 @@
   <!-- START name ophav -->
   <xsl:template name="mods_name_ophav">
     <!-- Ophav Tabel -->
-    <xsl:for-each select="field[@name='Ophav-tabel']/table/row">
-      <xsl:call-template name="mods_name_ophav_person">
-        <xsl:with-param name="tabel" select = "'ophav'" />
-      </xsl:call-template>
-    </xsl:for-each>
+    <xsl:if test="field[@name='Ophav-tabel']/table/row ">
+      <xsl:for-each select="field[@name='Ophav-tabel']/table/row">
+        <xsl:call-template name="mods_name_ophav_person">
+          <xsl:with-param name="tabel" select = "'ophav'" />
+        </xsl:call-template>
+      </xsl:for-each>
+    </xsl:if>
 
   </xsl:template>
   <!-- END name ophav -->
@@ -1470,13 +1472,13 @@
             <xsl:value-of select="field[@name='Titel']/value" />
           </xsl:element>
         </xsl:if>
-        <xsl:if test="contains($tabel, 'person')">
-          <xsl:if test="field[@name='Kooperation']/value">
-            <xsl:element name="mods:affiliation">
-              <xsl:value-of select="field[@name='Kooperation']/value" />
-            </xsl:element>
-          </xsl:if>
-        </xsl:if>
+<!--        <xsl:if test="contains($tabel, 'person')">-->
+<!--          <xsl:if test="field[@name='Kooperation']/value">-->
+<!--            <xsl:element name="mods:affiliation">-->
+<!--              <xsl:value-of select="field[@name='Kooperation']/value" />-->
+<!--            </xsl:element>-->
+<!--          </xsl:if>-->
+<!--        </xsl:if>-->
       </xsl:element> <!--mods:name-->
       <xsl:if test="../../../field[@name='Location of sender'] or ../../../field[@name='Country (location) of sender']">
         <xsl:element name="mods:subject">
@@ -1566,13 +1568,13 @@
             <xsl:value-of select="field[@name='Titel']/value" />
           </xsl:element>
         </xsl:if>
-        <xsl:if test="contains($tabel, 'person')">
-          <xsl:if test="field[@name='Kooperation']/value">
-            <xsl:element name="mods:affiliation">
-              <xsl:value-of select="field[@name='Kooperation']/value" />
-            </xsl:element>
-          </xsl:if>
-        </xsl:if>
+<!--        <xsl:if test="contains($tabel, 'person')">-->
+<!--          <xsl:if test="field[@name='Kooperation']/value">-->
+<!--            <xsl:element name="mods:affiliation">-->
+<!--              <xsl:value-of select="field[@name='Kooperation']/value" />-->
+<!--            </xsl:element>-->
+<!--          </xsl:if>-->
+<!--        </xsl:if>-->
       </xsl:element>
       <xsl:if test="../../../field[@name='Location of sender'] or ../../../field[@name='Country (location) of sender']">
         <xsl:element name="mods:subject">
@@ -1663,13 +1665,13 @@
           <xsl:value-of select="field[@name='Titel']/value" />
         </xsl:element>
       </xsl:if>
-      <xsl:if test="contains($tabel, 'person')">
-        <xsl:if test="field[@name='Kooperation']/value">
-          <xsl:element name="mods:affiliation">
-            <xsl:value-of select="field[@name='Kooperation']/value" />
-          </xsl:element>
-        </xsl:if>
-      </xsl:if>
+<!--      <xsl:if test="contains($tabel, 'person')">-->
+<!--        <xsl:if test="field[@name='Kooperation']/value">-->
+<!--          <xsl:element name="mods:affiliation">-->
+<!--            <xsl:value-of select="field[@name='Kooperation']/value" />-->
+<!--          </xsl:element>-->
+<!--        </xsl:if>-->
+<!--      </xsl:if>-->
     </xsl:element>
     </xsl:if>
 
@@ -3252,12 +3254,14 @@
     </xsl:if>
 
     <!-- Person Tabel -->
-    <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or
-      contains(field[@name='Rolle']/value, 'Motiv')">
+    <xsl:if test="field[@name='Person-tabel']/table/row ">
+      <xsl:for-each select="field[@name='Person-tabel']/table/row">
+        <!--      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or-->
+        <!--      contains(field[@name='Rolle']/value, 'Motiv')">-->
         <xsl:call-template name="mods_subject_ophav_person" />
-      </xsl:if>
-    </xsl:for-each>
+        <!--      </xsl:if>-->
+      </xsl:for-each>
+    </xsl:if>
 
   </xsl:template>
   <!-- END subject -->
@@ -3306,6 +3310,11 @@
               <xsl:value-of select="'termsOfAddress'" />
             </xsl:attribute>
             <xsl:value-of select="field[@name='Titel']/value" />
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="field[@name='Kooperation']/value">
+          <xsl:element name="mods:affiliation">
+            <xsl:value-of select="field[@name='Kooperation']/value" />
           </xsl:element>
         </xsl:if>
 
