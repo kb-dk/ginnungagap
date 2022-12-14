@@ -7,7 +7,7 @@
     xmlns:java="http://xml.apache.org/xalan/java"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:cdl="http://www.cdlib.org/inside/diglib/copyrightMD"
-    xmlns:dk="/usr/local/ginnungagap/current/script/xsd"
+    xmlns:dk="http://id.kb.dk/dk-corporate-creator"
 
     extension-element-prefixes="java">
 
@@ -24,7 +24,7 @@
   <xsl:variable name="MODS_LOCATION" select="'http://www.loc.gov/mods/v3 http://id.kb.dk/standards/mods/version_3_7/mods-3-7.xsd'" />
   <xsl:variable name="MODS_VERSION" select="'3.7'" />
 
-  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD /usr/local/ginnungagap/current/script/xsd/copyright-md.xsd'" />
+  <xsl:variable name="CDL_LOCATION" select="'http://www.cdlib.org/inside/diglib/copyrightMD http://id.kb.dk/schemas/dk-corporate-creator/copyright-md.xsd'" />
   <xsl:variable name="CDL_COPYRIGHT_STATUS" select="'copyrighted'"/>
   <xsl:variable name="CDL_PUBLICATION_STATUS" select="'unknown'"/>
   <!-- <xsl:variable name="CDL_VERSION" select="'1.0'" /> -->
