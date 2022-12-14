@@ -11,7 +11,7 @@
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
   <xsl:template name="mix">
-    <mix:mix xsi:schemaLocation="http://www.loc.gov/mix/v20 http://www.loc.gov/standards/mix/mix20/mix20.xsd">
+    <mix:mix xsi:schemaLocation="http://www.loc.gov/mix/v20 http://id.kb.dk/standards/mix/version_2_0/mix.xsd">
         
       <!-- Start mix/BasicDigitalObjectInformation NDD id="6" -->
       <xsl:element name="mix:BasicDigitalObjectInformation">
