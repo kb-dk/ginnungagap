@@ -136,10 +136,26 @@
 
       <!-- START amdSec -->
       <xsl:element name="mets:amdSec">
+        <!-- ADD PREMIS:OBJECT -->
+        <xsl:element name="mets:techMD">
+          <xsl:attribute name="CREATED">
+            <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
+          </xsl:attribute>
+          <xsl:attribute name="ID">
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.createNewMdId($PREMIS-OBJECT-ID)" />
+          </xsl:attribute>
+          <xsl:element name="mets:mdWrap">
+            <xsl:attribute name="MDTYPE">
+              <xsl:value-of select="'PREMIS:OBJECT'" />
+            </xsl:attribute>
+            <xsl:element name="mets:xmlData">
+              <xsl:call-template name="premis_object" />
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
         <!-- ADD MODS (rights) -->
         <xsl:if test="field[@name='Copyright'] or field[@name='Copyright Notice']/value
         or field[@name='Ophav-tabel']/table/row or field[@name='Person-tabel']/table/row">
-          <xsl:comment>Inside mets:rightsMD</xsl:comment>
           <xsl:element name="mets:rightsMD">
             <xsl:attribute name="CREATED">
               <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />
@@ -204,7 +220,7 @@
             <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-ID, ',', $PBCORE-DESCRIPTION-ID))" />
           </xsl:attribute>
           <xsl:attribute name="ADMID">
-            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID))" />
+            <xsl:value-of select="java:dk.kb.metadata.utils.MdIdHandler.getDivAttributeFor(concat($MODS-RIGHTS-ID, ',', $PREMIS-ID, ',', $PREMIS-AGENT-ID, ',', $PREMIS-EVENT-ID, ',', $PREMIS-REPRESENTATION-ID, ',', $PREMIS-OBJECT-ID))" />
           </xsl:attribute>
           <xsl:element name="mets:div">
             <xsl:attribute name="ORDER">

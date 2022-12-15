@@ -117,6 +117,7 @@
       <!-- mods:genre -->
       <xsl:call-template name="mods_genre" />
       <!-- mods:identifiers -->
+      <xsl:call-template name="mods_identifier_for_records" />
       <xsl:call-template name="mods_identifier" />
       <!-- mods:language -->
       <xsl:call-template name="mods_language" />
@@ -132,6 +133,8 @@
       <xsl:call-template name="mods_originInfo" />
       <!-- mods:part -->
       <xsl:call-template name="mods_part" />
+      <!-- mods:recordInfo -->
+      <xsl:call-template name="mods_recordInfo" />
       <!-- mods:physicalDescription -->
       <xsl:call-template name="mods_physicalDescription" />
       <!-- mods:relatedItem -->
@@ -1417,7 +1420,7 @@
             <xsl:attribute name="type">
               <xsl:value-of select="'code'" />
             </xsl:attribute>
-            <xsl:value-of select="'aut'" />
+            <xsl:value-of select="'cre'" />
           </xsl:element>
         </xsl:element>
         <xsl:if test="field[@name='Efternavn']/value">
@@ -1506,14 +1509,14 @@
     field[@name='Kooperation']/value">
       <xsl:element name="mods:name">
         <xsl:attribute name="altRepGroup">aut2</xsl:attribute>
-        <xsl:attribute name="displayLabel">Sender</xsl:attribute>
-        <xsl:attribute name="type">personal</xsl:attribute>
+        <xsl:attribute name="displayLabel">Sender (Organization)</xsl:attribute>
+        <xsl:attribute name="type">corporate</xsl:attribute>
         <xsl:element name="mods:role">
           <xsl:element name="mods:roleTerm">
             <xsl:attribute name="type">
               <xsl:value-of select="'code'" />
             </xsl:attribute>
-            <xsl:value-of select="'aut'" />
+            <xsl:value-of select="'cre'" />
           </xsl:element>
         </xsl:element>
         <xsl:if test="field[@name='Efternavn']/value">
@@ -2012,9 +2015,7 @@
   <!-- START originInfo -->
   <xsl:template name="mods_originInfo">
     <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
-          field[@name='Country (location) of sender'] or
-          field[@name='Udgivelsessted'] or field[@name='Location of origin'] or
-          field[@name='Location of sender'] or field[@name='Local Date'] or
+          field[@name='Udgivelsessted'] or field[@name='Location of origin'] or field[@name='Local Date'] or
           field[@name='Manual Date not after'] or
           field[@name='Manual Date not before'] or
           field[@name='Origin not after'] or field[@name='Origin not before'] or
@@ -2027,7 +2028,6 @@
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender'] or
           field[@name='Country of origin'] or
           field[@name='Place of origin']">
           <xsl:element name="mods:place">
