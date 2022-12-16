@@ -3409,6 +3409,53 @@
     </xsl:if>
     <!-- END Recipient (organization) -->
 
+    <!-- Person-tabel Recipient, different or no role -->
+    <xsl:if test="not(contains(field[@name='Rolle']/value, 'modtager')) and
+    not(contains(field[@name='Rolle']/value, 'supplerende modtager'))">
+      <xsl:element name="mods:subject">
+        <xsl:element name="mods:name">
+          <xsl:attribute name="type">personal</xsl:attribute>
+          <xsl:if test="field[@name='Efternavn']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">family</xsl:attribute>
+              <xsl:value-of select="field[@name='Efternavn']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Fornavn']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">given</xsl:attribute>
+              <xsl:value-of select="field[@name='Fornavn']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">date</xsl:attribute>
+              <xsl:value-of select="field[@name='Født']/value" />
+              <xsl:value-of select="'/'" />
+              <xsl:value-of select="field[@name='Død']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Nationalitet']/value">
+            <xsl:element name="mods:description">
+              <xsl:value-of select="field[@name='Nationalitet']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Titel']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">termsOfAddress</xsl:attribute>
+              <xsl:value-of select="field[@name='Titel']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Andet navn']/value">
+            <xsl:element name="mods:displayForm">
+              <xsl:value-of select="field[@name='Andet navn']/value" />
+            </xsl:element>
+          </xsl:if>
+        </xsl:element> <!-- END mods:name -->
+      </xsl:element> <!-- END mods:subject -->
+    </xsl:if>
+    <!-- END Person-tabel Recipient, different or no role -->
+
     <!-- OLD: Tabel-person recipient, different or no role
     <xsl:element name="mods:subject">
       <xsl:element name="mods:name">
