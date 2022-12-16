@@ -3309,7 +3309,10 @@
           </xsl:if>
           <xsl:if test="field[@name='Andet navn']/value">
             <xsl:element name="mods:displayForm">
-              <xsl:value-of select="field[@name='Andet navn']/value" />
+              <xsl:for-each select="field[@name='Andet navn']/value">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:for-each>
             </xsl:element>
           </xsl:if>
         </xsl:element> <!-- END mods:name -->
@@ -3381,7 +3384,10 @@
           </xsl:if>
           <xsl:if test="field[@name='Andet navn']/value">
             <xsl:element name="mods:displayForm">
-              <xsl:value-of select="field[@name='Andet navn']/value" />
+              <xsl:for-each select="field[@name='Andet navn']/value">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:for-each>
             </xsl:element>
           </xsl:if>
           <xsl:if test="field[@name='Kooperation']/value">
@@ -3448,7 +3454,10 @@
           </xsl:if>
           <xsl:if test="field[@name='Andet navn']/value">
             <xsl:element name="mods:displayForm">
-              <xsl:value-of select="field[@name='Andet navn']/value" />
+              <xsl:for-each select="field[@name='Andet navn']/value">
+                <xsl:call-template name="cumulus_get_lang_attribute" />
+                <xsl:call-template name="cumulus_get_value" />
+              </xsl:for-each>
             </xsl:element>
           </xsl:if>
         </xsl:element> <!-- END mods:name -->
