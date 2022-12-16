@@ -3260,6 +3260,78 @@
 
   <!-- START subject ophav person -->
   <xsl:template name="mods_subject_ophav_person">
+    <!-- Person-tabel Recipient (person) -->
+    <xsl:if test="(contains(field[@name='Rolle']/value, 'modtager') or
+    contains(field[@name='Rolle']/value, 'supplerende modtager')) and
+    not(field[@name='Kooperation']/value)">
+      <xsl:element name="mods:subject">
+        <xsl:element name="mods:name">
+          <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
+          <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
+          <xsl:attribute name="type">personal</xsl:attribute>
+          <xsl:call-template name="cumulus_get_lang_attribute" />
+          <xsl:element name="mods:role">
+            <xsl:element name="mods:roleTerm">
+              <xsl:attribute name="type">code</xsl:attribute>
+              <xsl:value-of select="'rcp'" />
+            </xsl:element>
+          </xsl:element>
+          <xsl:if test="field[@name='Efternavn']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">family</xsl:attribute>
+              <xsl:value-of select="field[@name='Efternavn']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Fornavn']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">given</xsl:attribute>
+              <xsl:value-of select="field[@name='Fornavn']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">date</xsl:attribute>
+              <xsl:value-of select="field[@name='Født']/value" />
+              <xsl:value-of select="'/'" />
+              <xsl:value-of select="field[@name='Død']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Nationalitet']/value">
+            <xsl:element name="mods:description">
+              <xsl:value-of select="field[@name='Nationalitet']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Titel']/value">
+            <xsl:element name="mods:namePart">
+              <xsl:attribute name="type">termsOfAddress</xsl:attribute>
+              <xsl:value-of select="field[@name='Titel']/value" />
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="field[@name='Andet navn']/value">
+            <xsl:element name="mods:displayForm">
+              <xsl:value-of select="field[@name='Andet navn']/value" />
+            </xsl:element>
+          </xsl:if>
+        </xsl:element> <!-- END mods:name -->
+        <xsl:if test="../../../field[@name='Location of recipient'] or ../../../field[@name='Country (location) of recipient']">
+          <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
+          <xsl:element name="mods:hierarchicalGeographic">
+            <xsl:if test="../../../field[@name='Location of recipient']">
+              <xsl:element name="mods:city">
+                <xsl:value-of select="../../../field[@name='Location of recipient']/value" />
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="../../../field[@name='Country (location) of recipient']">
+              <xsl:element name="mods:country">
+                <xsl:value-of select="../../../field[@name='Country (location) of recipient']/value" />
+              </xsl:element>
+            </xsl:if>
+          </xsl:element> <!--mods:hierarchicalGeographic -->
+        </xsl:if>
+      </xsl:element> <!-- END mods:subject -->
+    </xsl:if>
+    <!-- END Person-tabel Recipient (person) -->
+
     <!-- OLD: Tabel-person recipient, different or no role
     <xsl:element name="mods:subject">
       <xsl:element name="mods:name">
