@@ -3253,17 +3253,14 @@
 
     <!-- Person Tabel -->
     <xsl:for-each select="field[@name='Person-tabel']/table/row">
-      <xsl:if test="contains(field[@name='Rolle']/value, 'motiv') or
-      contains(field[@name='Rolle']/value, 'Motiv')">
-        <xsl:call-template name="mods_subject_ophav_person" />
-      </xsl:if>
+      <xsl:call-template name="mods_subject_ophav_person" />
     </xsl:for-each>
-
   </xsl:template>
   <!-- END subject -->
 
   <!-- START subject ophav person -->
   <xsl:template name="mods_subject_ophav_person">
+    <!-- OLD: Tabel-person recipient, different or no role
     <xsl:element name="mods:subject">
       <xsl:element name="mods:name">
         <xsl:attribute name="type">
@@ -3308,9 +3305,9 @@
             <xsl:value-of select="field[@name='Titel']/value" />
           </xsl:element>
         </xsl:if>
-
+        -->
         <!--      mods:subject/mods:name cannot have sub-element mods:alternativeName,
-                  thus making a mods:displayForm for this-->
+                  thus making a mods:displayForm for this
         <xsl:if test="field[@name='Andet navn']/value">
           <xsl:element name="mods:displayForm">
             <xsl:for-each select="field[@name='Andet navn']/value">
@@ -3319,8 +3316,8 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:if>
-      </xsl:element> <!--mods:name-->
-    </xsl:element> <!--mods:subject-->
+      </xsl:element>--> <!--mods:name
+    </xsl:element>--> <!--mods:subject-->
 
 <!--    <xsl:if test="field[@name='Andet navn']/value">-->
 <!--      <xsl:element name="mods:subject">-->
