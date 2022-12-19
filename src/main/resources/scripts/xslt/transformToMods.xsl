@@ -3265,8 +3265,8 @@
     contains(field[@name='Rolle']/value, 'supplerende modtager')) and
     not(field[@name='Kooperation']/value)">
       <xsl:element name="mods:subject">
+        <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
         <xsl:element name="mods:name">
-          <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
           <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
           <xsl:attribute name="type">personal</xsl:attribute>
           <xsl:call-template name="cumulus_get_lang_attribute" />
@@ -3317,7 +3317,6 @@
           </xsl:if>
         </xsl:element> <!-- END mods:name -->
         <xsl:if test="../../../field[@name='Location of recipient'] or ../../../field[@name='Country (location) of recipient']">
-          <xsl:attribute name="altRepGroup">rcp1</xsl:attribute>
           <xsl:element name="mods:hierarchicalGeographic">
             <xsl:if test="../../../field[@name='Location of recipient']">
               <xsl:element name="mods:city">
@@ -3340,8 +3339,8 @@
     contains(field[@name='Rolle']/value, 'supplerende modtager')) and
     field[@name='Kooperation']/value">
       <xsl:element name="mods:subject">
+        <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
         <xsl:element name="mods:name">
-          <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
           <xsl:attribute name="displayLabel">Recipient</xsl:attribute>
           <xsl:attribute name="type">corporate</xsl:attribute>
           <xsl:call-template name="cumulus_get_lang_attribute" />
@@ -3397,7 +3396,6 @@
           </xsl:if>
         </xsl:element> <!-- END mods:name -->
         <xsl:if test="../../../field[@name='Location of recipient'] or ../../../field[@name='Country (location) of recipient']">
-          <xsl:attribute name="altRepGroup">rcp2</xsl:attribute>
           <xsl:element name="mods:hierarchicalGeographic">
             <xsl:if test="../../../field[@name='Location of recipient']">
               <xsl:element name="mods:city">
