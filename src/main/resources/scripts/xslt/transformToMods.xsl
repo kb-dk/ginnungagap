@@ -2025,7 +2025,6 @@
           field[@name='Udgivelsessted'] or
           field[@name='Country (location) of sender'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender'] or
           field[@name='Country of origin'] or
           field[@name='Place of origin']">
           <xsl:element name="mods:place">
