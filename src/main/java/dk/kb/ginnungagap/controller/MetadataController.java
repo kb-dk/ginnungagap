@@ -34,9 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
+import static dk.kb.ginnungagap.utils.FileUtils.*;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -150,7 +148,7 @@ public class MetadataController {
             output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
             ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(zippedXmls.toPath()));
-            deleteTempDir(new File(targetPath));
+            deleteDir(new File(targetPath));
 
             output.setResult(ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
@@ -160,30 +158,6 @@ public class MetadataController {
         } catch (Exception e) {
             log.warn("Failed to retrieve metadata", e);
             throw new IllegalStateException("Failed to extract metadata", e);
-        }
-    }
-
-    /**
-     * Deletes temporary folder in tempDir
-     * @param directoryToBeDeleted
-     */
-    private void deleteTempDir(File directoryToBeDeleted) {
-        File[] allContents = directoryToBeDeleted.listFiles();
-        if (allContents != null) {
-            try {
-                for (File file : allContents) {
-                    log.info("Deleting file " + file.toString() + " from TempDir");
-                    Files.delete(file.toPath());
-                }
-                Files.delete(directoryToBeDeleted.toPath());
-            } catch (NoSuchFileException e) {
-                log.warn("Failed to delete file en tempDir", e);
-            } catch (DirectoryNotEmptyException e) {
-                log.warn("Failed to delete non empty directory in tempDir", e);;
-            } catch (IOException e) {
-                // File permission problems are caught here.
-                log.warn("Failed to cleanup in tempDir", e);
-            }
         }
     }
 
