@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Objects;
@@ -181,6 +183,28 @@ public class FileUtils {
                     .forEach(File::delete);
         } catch (Exception e) {
             throw new IllegalStateException("Temp file could not be deleted", e);
+        }
+    }
+
+    /**
+     * Deletes directory recursively
+     * @param directoryToBeDeleted
+     */
+    public static void deleteDir(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            try {
+                for (File file : allContents) {
+                    Files.delete(file.toPath());
+                }
+                Files.delete(directoryToBeDeleted.toPath());
+            } catch (NoSuchFileException e) {
+                throw new IllegalStateException("Failed to delete file", e);
+            } catch (DirectoryNotEmptyException e) {
+                throw new IllegalStateException("Failed to delete empty dir", e);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to delete dir", e);
+            }
         }
     }
 }
