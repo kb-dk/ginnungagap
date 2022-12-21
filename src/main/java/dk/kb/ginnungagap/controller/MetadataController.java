@@ -14,8 +14,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,8 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static dk.kb.ginnungagap.utils.FileUtils.createFileWithText;
+import static dk.kb.ginnungagap.utils.FileUtils.*;
 import static dk.kb.ginnungagap.utils.StringUtils.isNullOrEmpty;
 
 
@@ -107,7 +107,10 @@ public class MetadataController {
             String filename;
             File metadataFile;
             CumulusRecord record;
-            File zippedXmls = new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            String targetDir = UUID.randomUUID().toString();
+            String targetPath = conf.getTransformationConf().getMetadataTempDir() + "/" + targetDir;
+            new File(targetPath).mkdir();
+            File zippedXmls;
             String[] fileList;
             Path path = Paths.get(inputFilePath + uploadFile);
 
@@ -116,7 +119,7 @@ public class MetadataController {
             } else {
                 fileList = id.split("\\s*,\\s*");
             }
-            List<String> srcFiles = new ArrayList<>();
+            List<File> srcFiles = new ArrayList<>();
             for (String fid : fileList) {
                 filename = fid + ".xml";
                 log.info("Extracting '" + metadataType + "' metadata for '" + fid + "' from catalog '" + catalog + "'");
@@ -124,26 +127,29 @@ public class MetadataController {
                     record = getCumulusRecord(fid, idType, catalog);
                     validateRecord(record);
                     if(source.equalsIgnoreCase("archive")) {
-                        metadataFile = getArchivedMetadata(filename, metadataType, record);
+                        metadataFile = getArchivedMetadata(filename, metadataType, record, targetDir);
                         String data = FileUtils.readFileToString(metadataFile, "UTF-8");
                         log.trace("Contents from archive: \n" + data);
                     } else {
-                        metadataFile = getCumulusTransformedMetadata(filename, metadataType, record);
+                        metadataFile = getCumulusTransformedMetadata(filename, metadataType, record, targetPath);
                         String data = FileUtils.readFileToString(metadataFile, "UTF-8");
                         log.trace("Contents from Cumulus: \n" + data);
                     }
                 } catch (Exception e) {
-                    String errorRecordName = inputFilePath + "metadata/" + "Error_" + fid + ".txt";
+                    String errorRecordName = targetPath + "/" + "Error_" + fid + ".txt";
                     metadataFile = createFileWithText(errorRecordName, e.toString());
                 }
-                zippedXmls = addToZip(metadataFile, srcFiles);
+                srcFiles.add(metadataFile);
             }
+            zippedXmls = addToZip(srcFiles, targetPath);
 
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body("Request timeout")));
             output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
-            Resource resource = new UrlResource(zippedXmls.toURI());
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(zippedXmls.toPath()));
+            deleteDir(new File(targetPath));
+
             output.setResult(ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zippedXmls.getName() + "\"")
@@ -200,20 +206,17 @@ public class MetadataController {
 
     /**
      * Add a file to a Zip-file
-     * @param file The file to add
      * @param srcFiles The list of files
      * @return The updated zip-file
      */
-    private File addToZip(File file, List<String> srcFiles)  {
+    private File addToZip(List<File> srcFiles, String targetPath)  {
         try {
-            srcFiles.add(file.getAbsolutePath());
-            FileOutputStream fos = new FileOutputStream(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+            FileOutputStream fos = new FileOutputStream(targetPath + "/metadata" + ZIP);
             ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-            for (String srcFile : srcFiles) {
-                File fileToZip = new File(srcFile);
-                FileInputStream fis = new FileInputStream(fileToZip);
-                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+            for (File srcFile : srcFiles) {
+                FileInputStream fis = new FileInputStream(srcFile);
+                ZipEntry zipEntry = new ZipEntry(srcFile.getName());
                 zipOut.putNextEntry(zipEntry);
 
                 byte[] bytes = new byte[1024];
@@ -229,7 +232,7 @@ public class MetadataController {
         } catch (IOException e) {
             throw new IllegalStateException("Failed adding to zip", e);
         }
-        return new File(conf.getTransformationConf().getMetadataTempDir() + ZIP);
+        return new File(targetPath + "/metadata" + ZIP);
     }
 
     /**
@@ -258,13 +261,13 @@ public class MetadataController {
      * @return The extracted metadata file.
      * @throws Exception If it fails to extract the metadata from the archive.
      */
-    protected File getArchivedMetadata(String filename, String metadataType, CumulusRecord record) 
+    protected File getArchivedMetadata(String filename, String metadataType, CumulusRecord record, String targetDir)
             throws Exception {
         String warcId = record.getFieldValue(Constants.FieldNames.METADATA_PACKAGE_ID);
         String collectionId = record.getFieldValue(Constants.FieldNames.COLLECTION_ID);
         File warcFile = archiveWrapper.getFile(warcId, collectionId);
         
-        File outputFile = new File(conf.getBitmagConf().getTempDir(), filename);
+        File outputFile = new File(conf.getBitmagConf().getTempDir() + "/" + targetDir, filename);
         String recordId;
         if(metadataType.equalsIgnoreCase("KBIDS")) {
             recordId = GuidExtractionUtils.extractGuid(record.getFieldValue(
@@ -289,16 +292,16 @@ public class MetadataController {
      * @return The file with the metadata.
      * @throws Exception If it fails to extract or transform the metadata.
      */
-    protected File getCumulusTransformedMetadata(String filename, String metadataType, CumulusRecord record) 
+    protected File getCumulusTransformedMetadata(String filename, String metadataType, CumulusRecord record, String targetPath)
             throws Exception {
-        File metadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), filename);
+        File metadataFile = new File(targetPath, filename);
         if(metadataType.equalsIgnoreCase("KBIDS")) {
-            createKbidsMetadata(record, metadataFile);
+            createKbidsMetadata(record, metadataFile, targetPath);
         } else {
             if(!metadataType.equalsIgnoreCase("METS")) {
                 log.warn("Undecypherable metadata type '" + metadataType + "'. Deliver METS.");
             }
-            createMetsMetadata(record, metadataFile);
+            createMetsMetadata(record, metadataFile, targetPath);
         }
 
         return metadataFile;
@@ -310,7 +313,7 @@ public class MetadataController {
      * @param metadataFile The file where the metadata should be placed.
      * @throws Exception If it fails to create or transform the metadata, or writing it to the output file. 
      */
-    protected void createKbidsMetadata(CumulusRecord record, File metadataFile) throws Exception {
+    protected void createKbidsMetadata(CumulusRecord record, File metadataFile, String targetPath) throws Exception {
         MetadataTransformer transformer = metadataTransformer.getTransformer(
                 MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
 
@@ -319,8 +322,7 @@ public class MetadataController {
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         String fileUUID = record.getUUID();
         try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
-            File rawMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
-                    + ".raw.xml");
+            File rawMetadataFile = new File(targetPath, metadataUUID + ".raw.xml");
             CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, rawMetadataFile);
             try (InputStream cumulusIn = Files.newInputStream(rawMetadataFile.toPath())) {
                 transformer.transformXmlMetadata(cumulusIn, os);
@@ -335,7 +337,7 @@ public class MetadataController {
      * @param metadataFile The file where the metadata should be placed.
      * @throws Exception If it fails to create or transform the metadata, or writing it to the output file. 
      */
-    protected void createMetsMetadata(CumulusRecord record, File metadataFile) 
+    protected void createMetsMetadata(CumulusRecord record, File metadataFile, String targetPath)
             throws Exception {
         MetadataTransformer transformer = metadataTransformer.getTransformer(
                 MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
@@ -347,8 +349,7 @@ public class MetadataController {
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
         }
         try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
-            File cumulusMetadataFile = new File(conf.getTransformationConf().getMetadataTempDir(), metadataUUID 
-                    + ".raw.xml");
+            File cumulusMetadataFile = new File(targetPath, metadataUUID + ".raw.xml");
             Path cumulusMetadataFilePath = cumulusMetadataFile.toPath();
             try (OutputStream cumulusOut = Files.newOutputStream(cumulusMetadataFilePath)) {
                 record.writeFieldMetadata(cumulusOut);

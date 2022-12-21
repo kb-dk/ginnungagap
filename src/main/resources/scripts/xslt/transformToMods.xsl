@@ -236,7 +236,7 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:when>
-        <xsl:when test="$SVV = 'Visning kun på stedet' or $SVV = 'Visning kun af metadata'">
+        <xsl:when test="$SVV = 'Visning kun på stedet' or $SVV = 'Kun visning af metadata'">
           <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">
               <xsl:value-of select="'restriction on access'" />
@@ -2028,6 +2028,7 @@
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
           field[@name='Udgivelsessted'] or
           field[@name='Location of origin'] or
+          field[@name='Location of sender'] or
           field[@name='Country of origin'] or
           field[@name='Place of origin']">
           <xsl:element name="mods:place">
