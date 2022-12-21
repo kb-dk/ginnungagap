@@ -236,7 +236,7 @@
             </xsl:for-each>
           </xsl:element>
         </xsl:when>
-        <xsl:when test="$SVV = 'Visning kun på stedet' or $SVV = 'Kun visning af metadata'">
+        <xsl:when test="$SVV = 'Visning kun på stedet' or $SVV = 'Visning kun af metadata'">
           <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">
               <xsl:value-of select="'restriction on access'" />
