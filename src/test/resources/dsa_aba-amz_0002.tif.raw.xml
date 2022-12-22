@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<record>
+    <field data-type="string" name="Flash Mode">
+        <value>Flash not used, No strobe return detection function, No flash function, No red-eye reduction mode</value>
+    </field>
+    <field data-type="enumerator" name="Department">
+        <value>KOB: Kort- og Billedafdelingen</value>
+    </field>
+    <field data-type="enumerator" name="File Format Type">
+        <value>Image</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_ORIGINAL_MASTER">
+        <value>47d553b4ffeff4b4d49090205d20e9da</value>
+    </field>
+    <field data-type="enumerator" name="objectIdentifierType">
+        <value>UUID</value>
+    </field>
+    <field data-type="string" name="File Format Identifier">
+        <value>image/tiff</value>
+    </field>
+    <field data-type="integer" name="ID">
+        <value>1</value>
+    </field>
+    <field data-type="string" name="Item Modification User">
+        <value>U:{43b9e855-6804-4564-a6ab-79adb92ba32a}:CN=Dan Haarslev Egebo,OU=Ansatte,OU=KB,DC=kb,DC=dk</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_status">
+        <value>Langtidsbevaret</value>
+    </field>
+    <field data-type="string" name="Categories">
+        <value>Abamélek-Lazarew, Semen, 0001</value>
+    </field>
+    <field data-type="string" name="Image Orientation">
+        <value>Top left</value>
+    </field>
+    <field data-type="string" name="Country (location) of sender">
+        <value>ru</value>
+    </field>
+    <field data-type="string" name="Sender (person)">
+        <value>Abamélek-Lazarew, Semen</value>
+    </field>
+    <field data-type="string" name="Unique Item ID">
+        <value>aca2811cd39d492c90cb861b48eced2e</value>
+    </field>
+    <field data-type="enumerator" name="Color Model">
+        <value>RGB Color</value>
+    </field>
+    <field data-type="boolean" name="Undo">
+        <value>false</value>
+    </field>
+    <field data-type="string" name="Manuel Date not before">
+        <value>1889-12-25</value>
+    </field>
+    <field data-type="string" name="Contrast">
+        <value>Normal</value>
+    </field>
+    <field data-type="date" name="Item Modification Date">
+        <value>Tue Dec 13 15:05:06 CET 2022</value>
+    </field>
+    <field data-type="integer" name="size">
+        <value>20307860</value>
+    </field>
+    <field data-type="string" name="Gain Control">
+        <value>None</value>
+    </field>
+    <field data-type="enumerator" name="Thumbnail Rotation">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="LastCmdInitiated">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@1736003</value>
+    </field>
+    <field data-type="string" name="Production_Catalog">
+        <value>Letters DP</value>
+    </field>
+    <field data-type="enumerator" name="objectCategory">
+        <value>File</value>
+    </field>
+    <field data-type="string" name="Organisational affiliation of additional sender">
+        <value>it|San Donato</value>
+    </field>
+    <field data-type="string" name="Presentation date">
+        <value>1889-12-25</value>
+    </field>
+    <field data-type="integer" name="Asset Identifier">
+        <value>1544230444</value>
+    </field>
+    <field data-type="string" name="Mastertransferstatus">
+        <value>OK</value>
+    </field>
+    <field data-type="string" name="Asset Modification State Identifier">
+        <value>2018-11-26 01:53:01</value>
+    </field>
+    <field data-type="boolean" name="Copyright Applied">
+        <value>false</value>
+    </field>
+    <field data-type="boolean" name="RTL">
+        <value>false</value>
+    </field>
+    <field data-type="boolean" name="Renditions Manager - Create Renditions">
+        <value>true</value>
+    </field>
+    <field data-type="string" name="Language, additional">
+        <value>ru-Hebr</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Standard Deviation">
+        <value>17</value>
+    </field>
+    <field data-type="string" name="Sender (organization)">
+        <value>Special Committee for the Reinforcement of the Navy</value>
+    </field>
+    <field data-type="enumerator" name="Preservation_Repository">
+        <value>e-magasin</value>
+    </field>
+    <field data-type="string" name="ARCHIVE_MD5">
+        <value>5846658664b572c6c705aa60fd582248</value>
+    </field>
+    <field data-type="string" name="Organisational affiliation of additional recipient">
+        <value>da|Ny Carlsberg Glyptotek</value>
+    </field>
+    <field data-type="integer" name="Color Channels">
+        <value>3</value>
+    </field>
+    <field data-type="enumerator" name="Pageorientation">
+        <value>LTR</value>
+    </field>
+    <field data-type="string" name="Recipient (personal)">
+        <value>Simonsen, David</value>
+    </field>
+    <field data-type="string" name="CHECKSUM_DISPLAY_COPY">
+        <value>85bf446e882e4a594ac8462107342bc6</value>
+    </field>
+    <field data-type="string" name="formatName">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="date" name="Captured Date">
+        <value>Mon Nov 26 07:53:01 CET 2018</value>
+    </field>
+    <field data-type="double" name="Image Height">
+        <value>8.2175</value>
+    </field>
+    <field data-type="string" name="Volume Name">
+        <value>Depot</value>
+    </field>
+    <field data-type="string" name="Organisational affiliation of sender (personal)">
+        <value>?Special Committee for the Reinforcement of the Navy</value>
+    </field>
+    <field data-type="string" name="Recipient (organization)">
+        <value>fr|Alliance Israélite Universelle</value>
+    </field>
+    <field data-type="string" name="METADATA GUID">
+        <value>69f3a7ee-071c-4fad-ad41-a0dc2a3c9b4e</value>
+    </field>
+    <field data-type="string" name="Location of sender">
+        <value>Saint Petersbourg</value>
+    </field>
+    <field data-type="boolean" name="Published">
+        <value>true</value>
+    </field>
+    <field data-type="double" name="Vertical Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="string" name="White Balance Mode">
+        <value>Auto white balance</value>
+    </field>
+    <field data-type="date" name="Bevarings dato">
+        <value>Fri Nov 18 11:50:13 CET 2022</value>
+    </field>
+    <field data-type="string" name="Compression">
+        <value>Uncompressed</value>
+    </field>
+    <field data-type="string" name="Cataloging User ID">
+        <value>U:{43b9e855-6804-4564-a6ab-79adb92ba32a}:CN=Britta Lorckmann,OU=SPS,OU=NB,OU=KB,DC=kb,DC=dk</value>
+    </field>
+    <field data-type="string" name="Folder Name">
+        <value>DAM\LettersOM\LettersOM\judsam\2010\jan\dsa\aba-amz</value>
+    </field>
+    <field data-type="string" name="Date not after">
+        <value>1889-12-25</value>
+    </field>
+    <field data-type="string" name="IPTC Title">
+        <value>Uid:dk:kb:doms:2007-01/a05d8e80-6d63-11df-8c95-0016357f605f</value>
+    </field>
+    <field data-type="string" name="creatingApplication">
+        <value>Adobe Photoshop CC 2019</value>
+    </field>
+    <field data-type="string" name="compositionLevel">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Representation intellectual guid">
+        <value>94dbbe5c-6bca-41ad-83d1-6b31ec94d2c8</value>
+    </field>
+    <field data-type="string" name="PublishedByVersion">
+        <value>Publication workflow of iteration 9. Class = dk.kb.doms.components.workflow.iteration9.PublishTiffMasterWorkflow;Publish with QA version = $Revision: 1.5 $;Publish without QA version = $Revision: 1.4 $;productionRoot = /Letters;undoRoot = /online_master_arkiv/undo/Letters;publishNonArchivalRoot = /online_master_arkiv/non-archival/Letters;productionRoot = /Letters;</value>
+    </field>
+    <field data-type="string" name="Cataloging User">
+        <value>blo</value>
+    </field>
+    <field data-type="enumerator" name="Letters - Workflow State">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="string" name="formatVersion">
+        <value>0</value>
+    </field>
+    <field data-type="string" name="Record Name">
+        <value>dsa_aba-amz_0002.tif</value>
+    </field>
+    <field data-type="string" name="Date not before">
+        <value>1889-12-25</value>
+    </field>
+    <field data-type="string" name="ICC Profile Name">
+        <value>Adobe RGB (1998)</value>
+    </field>
+    <field data-type="date" name="Item Creation Date">
+        <value>Tue May 25 16:02:58 CEST 2010</value>
+    </field>
+    <field data-type="enumerator" name="messageDigestAlgorithm">
+        <value>MD5</value>
+    </field>
+    <field data-type="table" name="Ophav-tabel">
+        <table>
+            <row>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Født">
+                    <value>1857-0-0</value>
+                </field>
+                <field name="Død">
+                    <value>1916-0-0</value>
+                </field>
+                <field name="Nationalitet">
+                    <value>russisk</value>
+                </field>
+                <field name="Titel">
+                    <value>arkæolog</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>73b6beea204f4cd99a784502d6e0b65e</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Abamélek-Lazarew</value>
+                </field>
+                <field name="ID">
+                    <value>1</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Semen</value>
+                </field>
+                <field name="Rolle">
+                    <value>afsender</value>
+                </field>
+            </row>
+            <row>
+                <field name="Kooperation">
+                    <value>San Donato</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>f7325301abc1465081b0744c631ad51b</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Damidova</value>
+                </field>
+                <field name="ID">
+                    <value>2</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Maria P.</value>
+                </field>
+                <field name="Rolle">
+                    <value>supplerende afsender</value>
+                </field>
+            </row>
+            <row>
+                <field name="Kooperation">
+                    <value>Special Committee for the Reinforcement of the Navy</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>d5d475e102aa4a43882a5cb627a4341c</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="ID">
+                    <value>3</value>
+                </field>
+                <field name="Rolle">
+                    <value>afsender</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="string" name="Asset Content Identifier">
+        <value>1a8ebcd5b3108372e43848deb5f52e75</value>
+    </field>
+    <field data-type="enumerator" name="Color Mode">
+        <value>Color</value>
+    </field>
+    <field data-type="string" name="GUID">
+        <value>Uid:dk:kb:doms:2007-01/a05d8e80-6d63-11df-8c95-0016357f605f</value>
+    </field>
+    <field data-type="double" name="Horizontal Resolution">
+        <value>400.0</value>
+    </field>
+    <field data-type="string" name="Country (location) of recipient">
+        <value>dk</value>
+    </field>
+    <field data-type="string" name="Catalog Name">
+        <value>Letters OM</value>
+    </field>
+    <field data-type="date" name="Asset Modification Date">
+        <value>Mon Nov 26 07:53:01 CET 2018</value>
+    </field>
+    <field data-type="string" name="Bevarings metadata">
+        <value>http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd</value>
+        <value>http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd</value>
+        <value>http://www.loc.gov/mix/v20 http://www.loc.gov/standards/mix/mix20/mix20.xsd</value>
+        <value>http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd</value>
+    </field>
+    <field data-type="string" name="METADATA PACKAGE ID">
+        <value>0433b1a6-c6b6-4052-9542-5da78accb930</value>
+    </field>
+    <field data-type="string" name="Renditions Manager Notes">
+        <value>[JPEG2000] Created rendition.</value>
+    </field>
+    <field data-type="integer" name="Thumbnail Mean Value">
+        <value>233</value>
+    </field>
+    <field data-type="string" name="relatedObjectIdentifierValue_intellectualEntity">
+        <value>c8521788-1008-41ba-8472-a6bc22783375</value>
+    </field>
+    <field data-type="string" name="XMP Metadata">
+        <value>&amp;lt;?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?&amp;gt;</value>
+        <value>&amp;lt;x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 4.4.0"&amp;gt;</value>
+        <value>   &amp;lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmp="http://ns.adobe.com/xap/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;xmp:CreateDate&amp;gt;2009-09-28T16:37:15+01:00&amp;lt;/xmp:CreateDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:ModifyDate&amp;gt;2018-11-26T07:53:01+01:00&amp;lt;/xmp:ModifyDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:MetadataDate&amp;gt;2018-11-26T07:53:01+01:00&amp;lt;/xmp:MetadataDate&amp;gt;</value>
+        <value>         &amp;lt;xmp:CreatorTool&amp;gt;Adobe Photoshop CC 2019 (Windows)&amp;lt;/xmp:CreatorTool&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"</value>
+        <value>            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#"</value>
+        <value>            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:DerivedFrom rdf:parseType="Resource"&amp;gt;</value>
+        <value>            &amp;lt;stRef:instanceID&amp;gt;uuid:54f2d749-a81b-11de-a3a6-e9395eec3d75&amp;lt;/stRef:instanceID&amp;gt;</value>
+        <value>            &amp;lt;stRef:documentID&amp;gt;adobe:docid:photoshop:08b1a83b-a80e-11de-a3a6-e9395eec3d75&amp;lt;/stRef:documentID&amp;gt;</value>
+        <value>         &amp;lt;/xmpMM:DerivedFrom&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:DocumentID&amp;gt;adobe:docid:photoshop:693b7027-ac3c-11de-9991-dab0e71915f8&amp;lt;/xmpMM:DocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:InstanceID&amp;gt;xmp.iid:bdfd6597-f51d-fa44-afc7-7c6b0880d8aa&amp;lt;/xmpMM:InstanceID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:OriginalDocumentID&amp;gt;adobe:docid:photoshop:693b7027-ac3c-11de-9991-dab0e71915f8&amp;lt;/xmpMM:OriginalDocumentID&amp;gt;</value>
+        <value>         &amp;lt;xmpMM:History&amp;gt;</value>
+        <value>            &amp;lt;rdf:Seq&amp;gt;</value>
+        <value>               &amp;lt;rdf:li rdf:parseType="Resource"&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:action&amp;gt;saved&amp;lt;/stEvt:action&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:instanceID&amp;gt;xmp.iid:ca29d48d-756b-824d-8cbe-f85cbfcf444a&amp;lt;/stEvt:instanceID&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:when&amp;gt;2018-11-25T14:40:17+01:00&amp;lt;/stEvt:when&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:softwareAgent&amp;gt;Adobe Photoshop CC 2019 (Windows)&amp;lt;/stEvt:softwareAgent&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:changed&amp;gt;/&amp;lt;/stEvt:changed&amp;gt;</value>
+        <value>               &amp;lt;/rdf:li&amp;gt;</value>
+        <value>               &amp;lt;rdf:li rdf:parseType="Resource"&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:action&amp;gt;saved&amp;lt;/stEvt:action&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:instanceID&amp;gt;xmp.iid:bdfd6597-f51d-fa44-afc7-7c6b0880d8aa&amp;lt;/stEvt:instanceID&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:when&amp;gt;2018-11-26T07:53:01+01:00&amp;lt;/stEvt:when&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:softwareAgent&amp;gt;Adobe Photoshop CC 2019 (Windows)&amp;lt;/stEvt:softwareAgent&amp;gt;</value>
+        <value>                  &amp;lt;stEvt:changed&amp;gt;/&amp;lt;/stEvt:changed&amp;gt;</value>
+        <value>               &amp;lt;/rdf:li&amp;gt;</value>
+        <value>            &amp;lt;/rdf:Seq&amp;gt;</value>
+        <value>         &amp;lt;/xmpMM:History&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:dc="http://purl.org/dc/elements/1.1/"&amp;gt;</value>
+        <value>         &amp;lt;dc:format&amp;gt;image/tiff&amp;lt;/dc:format&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ColorMode&amp;gt;3&amp;lt;/photoshop:ColorMode&amp;gt;</value>
+        <value>         &amp;lt;photoshop:ICCProfile&amp;gt;Adobe RGB (1998)&amp;lt;/photoshop:ICCProfile&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>      &amp;lt;rdf:Description rdf:about=""</value>
+        <value>            xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"&amp;gt;</value>
+        <value>         &amp;lt;xmpRights:Marked&amp;gt;False&amp;lt;/xmpRights:Marked&amp;gt;</value>
+        <value>      &amp;lt;/rdf:Description&amp;gt;</value>
+        <value>   &amp;lt;/rdf:RDF&amp;gt;</value>
+        <value>&amp;lt;/x:xmpmeta&amp;gt;</value>
+        <value>&amp;lt;?xpacket end="r"?&amp;gt;</value>
+    </field>
+    <field data-type="integer" name="Bits Per Channel">
+        <value>8</value>
+    </field>
+    <field data-type="string" name="Software">
+        <value>Adobe Photoshop CC 2019</value>
+    </field>
+    <field data-type="string" name="ARCHIVE_FILENAME">
+        <value>KBDOMS-20140916062659-00214-dia-prod-dom-02.kb.dk.arc</value>
+    </field>
+    <field data-type="enumerator" name="Presentation Format">
+        <value>Browse</value>
+    </field>
+    <field data-type="string" name="preservationLevelDateAssigned">
+        <value>20140912</value>
+    </field>
+    <field data-type="date" name="IPTC Date Created">
+        <value>Mon Sep 28 15:37:15 CEST 2009</value>
+    </field>
+    <field data-type="integer" name="Unix File Identifier">
+        <value>-1174460213</value>
+    </field>
+    <field data-type="binary" name="Asset Reference">
+        <value>cumulus-core-01:/Depot/DAM/LettersOM/LettersOM/judsam/2010/jan/dsa/aba-amz/dsa_aba-amz_0002.tif</value>
+    </field>
+    <field data-type="table" name="Person-tabel">
+        <table>
+            <row>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Født">
+                    <value>1853-0-0</value>
+                </field>
+                <field name="Død">
+                    <value>1932-0-0</value>
+                </field>
+                <field name="Titel">
+                    <value>rabbiner</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>c938be25f124468cbdd317af6c37230b</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Simonsen</value>
+                </field>
+                <field name="ID">
+                    <value>1</value>
+                </field>
+                <field name="Fornavn">
+                    <value>David</value>
+                </field>
+                <field name="Rolle">
+                    <value>modtager</value>
+                </field>
+            </row>
+            <row>
+                <field name="Født">
+                    <value>1842-0-0</value>
+                </field>
+                <field name="Andet navn">
+                    <value>JC</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>6ba31414acfa490492b8c3ebcba14240</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="Fornavn">
+                    <value>Carl</value>
+                </field>
+                <field name="Kooperation">
+                    <value>Ny Carlsberg Glyptotek</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Død">
+                    <value>1914-0-0</value>
+                </field>
+                <field name="Type">
+                    <value>museum</value>
+                </field>
+                <field name="Efternavn">
+                    <value>Jacobsen</value>
+                </field>
+                <field name="ID">
+                    <value>2</value>
+                </field>
+                <field name="Start år">
+                    <value>1897</value>
+                </field>
+                <field name="Rolle">
+                    <value>supplerende modtager</value>
+                </field>
+            </row>
+            <row>
+                <field name="Kooperation">
+                    <value>Alliance Israélite Universelle</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Type">
+                    <value>organisation</value>
+                </field>
+                <field name="Unique Item ID">
+                    <value>7590706833e94f07b8cfc65bb3088423</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="ID">
+                    <value>4</value>
+                </field>
+                <field name="Start år">
+                    <value>1860</value>
+                </field>
+                <field name="Rolle">
+                    <value>modtager</value>
+                </field>
+            </row>
+        </table>
+    </field>
+    <field data-type="string" name="KB Samling">
+        <value>K</value>
+    </field>
+    <field data-type="string" name="Asset Name">
+        <value>dsa_aba-amz_0002.tif</value>
+    </field>
+    <field data-type="string" name="Extent">
+        <value>4 pp.</value>
+    </field>
+    <field data-type="binary" name="Related Sub Assets">
+        <value>
+            <name>dsa_aba-amz_0003.tif</name>
+            <uuid>f3146a04-5ad5-475d-8076-a24e42ae1607</uuid>
+            <order>2</order>
+        </value>
+        <value>
+            <name>dsa_aba-amz_0004.tif</name>
+            <uuid>a22f5c39-a40d-4dcf-838b-78d78f7ca8a1</uuid>
+            <order>3</order>
+        </value>
+        <value>
+            <name>dsa_aba-amz_0005.tif</name>
+            <uuid>8d46411d-68c1-45eb-95a4-01ca2f369d47</uuid>
+            <order>4</order>
+        </value>
+    </field>
+    <field data-type="integer" name="Horizontal Pixels">
+        <value>2058</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Confidentiality">
+        <value>confidentialityLow</value>
+    </field>
+    <field data-type="string" name="LastCmdSucceeded">
+        <value>dk.kb.doms.api.oais.sipdipcommands.SetFieldToConstantCmd@1736003</value>
+    </field>
+    <field data-type="integer" name="File Data Size">
+        <value>20317196</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_Logical">
+        <value>logicalStrategyMigration</value>
+    </field>
+    <field data-type="string" name="Color Space">
+        <value>Uncalibrated</value>
+    </field>
+    <field data-type="enumerator" name="Cataloging language">
+        <value>en</value>
+    </field>
+    <field data-type="string" name="Additional sender (personal)">
+        <value>Damidova, Maria P.</value>
+    </field>
+    <field data-type="string" name="Language">
+        <value>fr</value>
+    </field>
+    <field data-type="string" name="Additional recipient (personal)">
+        <value>Jacobsen, Carl</value>
+    </field>
+    <field data-type="string" name="Manuel Date not after">
+        <value>1889-12-25</value>
+    </field>
+    <field data-type="string" name="Server Name">
+        <value>kb.dk</value>
+    </field>
+    <field data-type="string" name="PublicationDate">
+        <value>01-06-2010</value>
+    </field>
+    <field data-type="string" name="Representation metadata guid">
+        <value>8b277159-0df8-48ac-8a7a-3e3c4019f1d4</value>
+    </field>
+    <field data-type="string" name="Saturation">
+        <value>Normal</value>
+    </field>
+    <field data-type="string" name="Document Name">
+        <value>dsa_aba-amz_0002.tif</value>
+    </field>
+    <field data-type="string" name="Location of recipient">
+        <value>København</value>
+    </field>
+    <field data-type="string" name="RESOURCE PACKAGE ID">
+        <value>0433b1a6-c6b6-4052-9542-5da78accb930</value>
+    </field>
+    <field data-type="string" name="Sharpness">
+        <value>Normal</value>
+    </field>
+    <field data-type="integer" name="Vertical Pixels">
+        <value>3287</value>
+    </field>
+    <field data-type="double" name="Image Width">
+        <value>5.145</value>
+    </field>
+    <field data-type="string" name="File Format">
+        <value>TIFF Image</value>
+    </field>
+    <field data-type="long" name="Asset Data Size (Long)">
+        <value>20317196</value>
+    </field>
+    <field data-type="enumerator" name="Registrationstate">
+        <value>Færdigregistreret</value>
+    </field>
+    <field data-type="date" name="Asset Creation Date">
+        <value>Sat Dec 08 00:54:04 CET 2018</value>
+    </field>
+    <field data-type="string" name="Subject Distance Range">
+        <value>Unknown</value>
+    </field>
+    <field data-type="string" name="Exposure Mode">
+        <value>Auto exposure</value>
+    </field>
+    <field data-type="string" name="Scene Capture Type">
+        <value>Standard</value>
+    </field>
+    <field data-type="string" name="Custom Rendered">
+        <value>Normal process</value>
+    </field>
+    <field data-type="enumerator" name="Publication_catalog">
+        <value>Letters OM</value>
+    </field>
+    <field data-type="enumerator" name="preservationLevelValue_BitSafety">
+        <value>bitSafetyMedium</value>
+    </field>
+    <field data-type="table" name="Renditions Manager">
+        <table>
+            <row>
+                <field name="Item Creation Date">
+                    <value>Mon Apr 03 14:31:01 CEST 2017</value>
+                </field>
+                <field name="Host Item ID">
+                    <value>1</value>
+                </field>
+                <field name="Item Modification Date">
+                    <value>Mon Apr 03 14:41:24 CEST 2017</value>
+                </field>
+                <field name="Rendition Name">
+                    <value>JPEG2000</value>
+                </field>
+                <field name="External Reference">
+                    <value>ID:dia-prod-iconv-02.kb.dk-41385-1491222372920-5:1:1:1:1</value>
+                </field>
+                <field name="State">
+                    <value>Finished</value>
+                </field>
+                <field name="Catalog Name">
+                    <value>Letters OM</value>
+                </field>
+                <field name="ID">
+                    <value>1</value>
+                </field>
+                <field name="Asset Reference">
+                    <value>cumulus-core-01:/Depot/DAMJP2/online_master_arkiv/non-archival/Letters/judsam/2010/jan/dsa/aba-amz/dsa_aba-amz_0002.jp2</value>
+                </field>
+                <field name="Notes">
+                    <value>[JPEG2000] Created rendition.</value>
+                </field>
+            </row>
+        </table>
+    </field>
+</record>

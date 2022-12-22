@@ -179,8 +179,7 @@
         </xsl:if>
         <!-- ADD MODS (rights) -->
         <xsl:if test="field[@name='Copyright'] or field[@name='Copyright Notice']/value 
-        or field[@name='Ophav']/table/row or field[@name='Person']/table/row">
-          <xsl:comment>Inside mets:rightsMD</xsl:comment> 
+        or field[@name='Ophav-tabel']/table/row or field[@name='Person-tabel']/table/row">
           <xsl:element name="mets:rightsMD">
             <xsl:attribute name="CREATED">
               <xsl:value-of select="java:dk.kb.metadata.utils.CalendarUtils.getCurrentDate()" />

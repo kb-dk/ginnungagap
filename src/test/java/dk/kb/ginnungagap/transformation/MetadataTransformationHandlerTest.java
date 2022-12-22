@@ -104,6 +104,32 @@ public class MetadataTransformationHandlerTest extends ExtendedTestCase {
             }
         }
     }
+    @Test
+    public void testTransformationWithTables2() throws Exception {
+        addDescription("Test the transformation of a Cumulus XML file with Ophav- and Person-table for Letters OM.");
+        File xmlFile = new File("src/test/resources/dsa_aba-amz_0002.tif.raw.xml");
+        assertTrue(xmlFile.isFile());
+        MetadataTransformer transformer = transformationHandler.getTransformer(MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        addStep("Transform the Cumulus XML", "METS");
+        try {
+            transformer.transformXmlMetadata(Files.newInputStream(xmlFile.toPath()), out);
+            File metadataFile = new File(TestFileUtils.getTempDir(), "output-metadata-" + Math.random() + ".xml");
+            try (FileOutputStream fos = new FileOutputStream(metadataFile)) {
+                fos.write(out.toByteArray());
+                fos.flush();
+            }
+
+            addStep("Validate the METS", "");
+            transformationHandler.validate(Files.newInputStream(metadataFile.toPath()));
+        } finally {
+            if(writeOutput) {
+                System.out.println(out);
+            }
+        }
+    }
 
     @Test
     public void testTransformationWithUpdatedFields() throws Exception {
