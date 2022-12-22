@@ -2028,7 +2028,6 @@
         <xsl:if test="field[@name='Udgivelsesland'] or field[@name='Country'] or
           field[@name='Udgivelsessted'] or
           field[@name='Location of origin'] or
-          field[@name='Location of sender'] or
           field[@name='Country of origin'] or
           field[@name='Place of origin']">
           <xsl:element name="mods:place">
