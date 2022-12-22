@@ -110,7 +110,7 @@ public class MetadataController {
             String targetDir = UUID.randomUUID().toString();
             String targetPath = conf.getTransformationConf().getMetadataTempDir() + "/" + targetDir;
             new File(targetPath).mkdir();
-            File zippedXmls;
+            File outputXml;
             String[] fileList;
             Path path = Paths.get(inputFilePath + uploadFile);
 
@@ -141,18 +141,22 @@ public class MetadataController {
                 }
                 srcFiles.add(metadataFile);
             }
-            zippedXmls = addToZip(srcFiles, targetPath);
+            if (srcFiles.size() == 1){
+                outputXml = srcFiles.get(0);
+            }else {
+                outputXml = addToZip(srcFiles, targetPath);
+            }
 
             output.onTimeout(() -> output.setErrorResult(ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body("Request timeout")));
             output.onCompletion(() -> log.trace("Process getting metadata complete"));
 
-            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(zippedXmls.toPath()));
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(outputXml.toPath()));
             deleteDir(new File(targetPath));
 
             output.setResult(ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/zip"))     //.contentType(MediaType.TEXT_XML)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zippedXmls.getName() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + outputXml.getName() + "\"")
                     .body(resource));
             return output;
         } catch (Exception e) {
