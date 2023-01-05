@@ -1573,13 +1573,11 @@
             <xsl:value-of select="field[@name='Titel']/value" />
           </xsl:element>
         </xsl:if>
-<!--        <xsl:if test="contains($tabel, 'person')">-->
-<!--          <xsl:if test="field[@name='Kooperation']/value">-->
-<!--            <xsl:element name="mods:affiliation">-->
-<!--              <xsl:value-of select="field[@name='Kooperation']/value" />-->
-<!--            </xsl:element>-->
-<!--          </xsl:if>-->
-<!--        </xsl:if>-->
+        <xsl:if test="field[@name='Kooperation']/value">
+          <xsl:element name="mods:affiliation">
+            <xsl:value-of select="field[@name='Kooperation']/value" />
+          </xsl:element>
+        </xsl:if>
       </xsl:element>
       <xsl:if test="../../../field[@name='Location of sender'] or ../../../field[@name='Country (location) of sender']">
         <xsl:element name="mods:subject">
@@ -1670,13 +1668,11 @@
           <xsl:value-of select="field[@name='Titel']/value" />
         </xsl:element>
       </xsl:if>
-<!--      <xsl:if test="contains($tabel, 'person')">-->
-<!--        <xsl:if test="field[@name='Kooperation']/value">-->
-<!--          <xsl:element name="mods:affiliation">-->
-<!--            <xsl:value-of select="field[@name='Kooperation']/value" />-->
-<!--          </xsl:element>-->
-<!--        </xsl:if>-->
-<!--      </xsl:if>-->
+      <xsl:if test="field[@name='Kooperation']/value">
+        <xsl:element name="mods:affiliation">
+          <xsl:value-of select="field[@name='Kooperation']/value" />
+        </xsl:element>
+      </xsl:if>
     </xsl:element>
     </xsl:if>
 
@@ -3471,80 +3467,6 @@
       </xsl:element> <!-- END mods:subject -->
     </xsl:if>
     <!-- END Person-tabel Recipient, different or no role -->
-
-    <!-- OLD: Tabel-person recipient, different or no role
-    <xsl:element name="mods:subject">
-      <xsl:element name="mods:name">
-        <xsl:attribute name="type">
-          <xsl:value-of select="'personal'" />
-        </xsl:attribute>
-        <xsl:if test="field[@name='Efternavn']/value">
-          <xsl:element name="mods:namePart">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'family'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Efternavn']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Fornavn']/value">
-          <xsl:element name="mods:namePart">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'given'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Fornavn']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Født']/value or field[@name='Død']/value">
-          <xsl:element name="mods:namePart">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'date'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Født']/value" />
-            <xsl:value-of select="'/'" />
-            <xsl:value-of select="field[@name='Død']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Nationalitet']/value">
-          <xsl:element name="mods:description">
-            <xsl:value-of select="field[@name='Nationalitet']/value" />
-          </xsl:element>
-        </xsl:if>
-        <xsl:if test="field[@name='Titel']/value">
-          <xsl:element name="mods:namePart">
-            <xsl:attribute name="type">
-              <xsl:value-of select="'termsOfAddress'" />
-            </xsl:attribute>
-            <xsl:value-of select="field[@name='Titel']/value" />
-          </xsl:element>
-        </xsl:if>
-        -->
-        <!--      mods:subject/mods:name cannot have sub-element mods:alternativeName,
-                  thus making a mods:displayForm for this
-        <xsl:if test="field[@name='Andet navn']/value">
-          <xsl:element name="mods:displayForm">
-            <xsl:for-each select="field[@name='Andet navn']/value">
-              <xsl:call-template name="cumulus_get_lang_attribute" />
-              <xsl:call-template name="cumulus_get_value" />
-            </xsl:for-each>
-          </xsl:element>
-        </xsl:if>
-      </xsl:element>--> <!--mods:name
-    </xsl:element>--> <!--mods:subject-->
-
-<!--    <xsl:if test="field[@name='Andet navn']/value">-->
-<!--      <xsl:element name="mods:subject">-->
-<!--        <xsl:element name="mods:name">-->
-<!--          <xsl:attribute name="displayLabel">Alternative Name</xsl:attribute>-->
-<!--          <xsl:attribute name="type">personal</xsl:attribute>-->
-<!--          <xsl:for-each select="field[@name='Andet navn']/value">-->
-<!--            <xsl:element name="mods:namePart">-->
-<!--              <xsl:call-template name="cumulus_get_lang_attribute" />-->
-<!--              <xsl:call-template name="cumulus_get_value" />-->
-<!--            </xsl:element>-->
-<!--          </xsl:for-each>-->
-<!--        </xsl:element>-->
-<!--      </xsl:element>-->
-<!--    </xsl:if>-->
 
   </xsl:template>
   <!-- END subject ophav person -->
