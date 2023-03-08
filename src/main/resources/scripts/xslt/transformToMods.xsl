@@ -2703,8 +2703,7 @@
                   <xsl:value-of select="'uri'" />
                 </xsl:attribute>
                 <xsl:value-of select="concat($image_uri_base, '/w150/h150',
-                substring-before(field[@name='Asset Reference']/value,'.tif'),
-                '.jpg')" />
+                substring-after(field[@name='Asset Reference']/value,'Depot/'))" />
               </xsl:element>
             </xsl:if>
           </xsl:element>
