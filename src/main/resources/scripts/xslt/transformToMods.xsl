@@ -14,7 +14,7 @@
   <xsl:output encoding="UTF-8" method="xml" indent="yes" />
 
   <!-- START defining variables -->
-  <xsl:variable name="image_uri_base" select="'http://www.kb.dk/imageService'"/>
+  <xsl:variable name="image_uri_base" select="'http://kb-images.kb.dk/'"/>
 
   <xsl:variable name="type_of_resource" select="''" />
   <xsl:variable name="type_of_event" select="'references'" />
@@ -2661,39 +2661,55 @@
   <xsl:template name="mods_relatedItem_File">
 
     <!-- URI image if it is an image -->
+<!--    <xsl:for-each select="field[@name='Renditions Manager']/table/row">-->
+<!--      <xsl:if test="field[@name='Asset Reference']/value">-->
+<!--        <xsl:element name="mods:identifier">-->
+<!--          <xsl:attribute name="displayLabel">-->
+<!--            <xsl:value-of select="'image'" />-->
+<!--          </xsl:attribute>-->
+<!--          <xsl:attribute name="type">-->
+<!--            <xsl:value-of select="'uri'" />-->
+<!--          </xsl:attribute>-->
+<!--          <xsl:value-of select="concat($image_uri_base,-->
+<!--              substring-after(field[@name='Asset Reference']/value,'Depot/'))" />-->
+<!--        </xsl:element>-->
+<!--      </xsl:if>-->
+<!--    </xsl:for-each>-->
+
     <xsl:if test="java:dk.kb.metadata.utils.FileFormatUtils.formatForMix(field[@name='formatName']/value)">
-      <xsl:if test="field[@name='Asset Reference']">
-        <xsl:element name="mods:relatedItem">
-          <xsl:attribute name="type">
-            <xsl:value-of select="'otherFormat'" />
-          </xsl:attribute>
-          <xsl:element name="mods:identifier">
-            <xsl:attribute name="displayLabel">
-              <xsl:value-of select="'image'" />
-            </xsl:attribute>
+      <xsl:for-each select="field[@name='Renditions Manager']/table/row">
+        <xsl:if test="field[@name='Asset Reference']">
+          <xsl:element name="mods:relatedItem">
             <xsl:attribute name="type">
-              <xsl:value-of select="'uri'" />
+              <xsl:value-of select="'otherFormat'" />
             </xsl:attribute>
-            <xsl:value-of select="concat($image_uri_base,
-              substring-before(field[@name='Asset Reference']/value,'.tif'),
-              '.jpg')" />
-          </xsl:element>
-          <!-- URI thumbnail -->
-          <xsl:if test="field[@name='Thumbnail'] and field[@name='Asset Reference']">
             <xsl:element name="mods:identifier">
               <xsl:attribute name="displayLabel">
-                <xsl:value-of select="'thumbnail'" />
+                <xsl:value-of select="'image'" />
               </xsl:attribute>
               <xsl:attribute name="type">
                 <xsl:value-of select="'uri'" />
               </xsl:attribute>
-              <xsl:value-of select="concat($image_uri_base, '/w150/h150',
+              <xsl:value-of select="concat($image_uri_base,
+              substring-after(field[@name='Asset Reference']/value,'Depot/'))" />
+            </xsl:element>
+            <!-- URI thumbnail -->
+            <xsl:if test="field[@name='Thumbnail'] and field[@name='Asset Reference']">
+              <xsl:element name="mods:identifier">
+                <xsl:attribute name="displayLabel">
+                  <xsl:value-of select="'thumbnail'" />
+                </xsl:attribute>
+                <xsl:attribute name="type">
+                  <xsl:value-of select="'uri'" />
+                </xsl:attribute>
+                <xsl:value-of select="concat($image_uri_base, '/w150/h150',
                 substring-before(field[@name='Asset Reference']/value,'.tif'),
                 '.jpg')" />
-            </xsl:element>
-          </xsl:if>
-        </xsl:element>
-      </xsl:if>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+      </xsl:for-each>
     </xsl:if>
 
   </xsl:template>
