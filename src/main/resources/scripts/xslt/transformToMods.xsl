@@ -138,6 +138,8 @@
       <!-- mods:physicalDescription -->
       <xsl:call-template name="mods_physicalDescription" />
       <!-- mods:relatedItem -->
+      <xsl:call-template name="mods_relatedItem_File" />
+      <!-- mods:relatedItem -->
       <xsl:call-template name="mods_relatedItem" />
       <!-- mods:subject -->
       <xsl:call-template name="mods_subject" />
