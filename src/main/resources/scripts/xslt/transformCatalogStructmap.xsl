@@ -21,7 +21,7 @@
   </xsl:template>
   
   <xsl:template name="structmap_generator">
-    <mets:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd">
+    <mets:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://id.kb.dk/standards/mets/version_1_11/mets.xsd">
       <xsl:attribute name="TYPE">
         <xsl:value-of select="'Representation'" />
       </xsl:attribute>

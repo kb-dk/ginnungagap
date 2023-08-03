@@ -2,7 +2,7 @@
 <METS_Profile xmlns="http://www.loc.gov/METS_Profile/v2"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
-  xsi:schemaLocation="http://www.loc.gov/METS_Profile/v2 http://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd"
+  xsi:schemaLocation="http://www.loc.gov/METS_Profile/v2 https://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd"
   STATUS="provisional" REGISTRATION="unregistered">
   <!-- TODO: determine exact URL. Also fix the 'draft' -->
   <URI ID="profile_URI" LOCTYPE="URL" ASSIGNEDBY="local">http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml</URI>
@@ -69,7 +69,7 @@
   </external_schema>
   <external_schema ID="extension_PBCORE">
     <name>PBCore</name>
-    <URL TARGETNAMESPACE="http://www.pbcore.org/PBCore/PBCoreNamespace.html">https://raw.githubusercontent.com/WGBH/PBCore_2.1/master/pbcore-2.1.xsd</URL>
+    <URL TARGETNAMESPACE="http://www.pbcore.org/PBCore/PBCoreNamespace.html">http://id.kb.dk/standards/pbcore/version-2.1/pbcore-2.1.xsd</URL>
     <context>mets/dmdSec/mdWrap[MDOTHERTYPE="PBCORE"]/xmlData</context>
     <context>mets/dmdSec/mdWrap[MDOTHERTYPE="PBCORE"]/xmlData</context>
     <note>
@@ -592,7 +592,7 @@
   </tool>
   
   <Appendix NUMBER="1">
-    <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html" xmlns:premis="http://www.loc.gov/premis/v3" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:mix="http://www.loc.gov/mix/v20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version111/mets.xsd" TYPE="File" OBJID="fc28c64f-8e6e-4d20-afb2-e314be587bf1" PROFILE="http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml">
+    <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html" xmlns:premis="http://www.loc.gov/premis/v3" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:mix="http://www.loc.gov/mix/v20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://id.kb.dk/standards/mets/version_1_11/mets.xsd" TYPE="File" OBJID="fc28c64f-8e6e-4d20-afb2-e314be587bf1" PROFILE="http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml">
       <mets:metsHdr CREATEDATE="2017-02-24T11:09:40.235+01:00">
         <mets:agent ID="kbDk" ROLE="CREATOR" TYPE="ORGANIZATION">
           <mets:name>kbDk</mets:name>
@@ -610,7 +610,7 @@
       <mets:dmdSec CREATED="2017-02-24T11:09:40.259+01:00" ID="Mods1">
         <mets:mdWrap MDTYPE="MODS">
           <mets:xmlData>
-            <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd">
+            <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.7" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://id.kb.dk/test/standards/mods/version_3_7/mods-3-7.xsd">
               <mods:genre type="KB Samling">H</mods:genre>
               <mods:genre type="Categories">Billedsamlingen, Albumsamlingen, 1992-485</mods:genre>
               <mods:identifier type="uri">urn:uuid:be9f16d0-da42-11e2-b191-005056887b70</mods:identifier>
@@ -643,7 +643,7 @@
         <mets:techMD CREATED="2017-02-24T11:09:40.409+01:00" ID="PremisObject1">
           <mets:mdWrap MDTYPE="PREMIS:OBJECT">
             <mets:xmlData>
-              <premis:object xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://www.loc.gov/standards/premis/v3/premis-v3-0.xsd" xsi:type="premis:file">
+              <premis:object xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://id.kb.dk/standards/premis/version_3_0/premis.xsd" xsi:type="premis:file">
                 <premis:objectIdentifier>
                   <premis:objectIdentifierType>UUID</premis:objectIdentifierType>
                   <premis:objectIdentifierValue>be9f16d0-da42-11e2-b191-005056887b70</premis:objectIdentifierValue>
@@ -678,7 +678,7 @@
                     <premis:formatNote>Validated by Cumulus version: 10.1.3</premis:formatNote>
                   </premis:format>
                   <premis:objectCharacteristicsExtension>
-                    <mix:mix xsi:schemaLocation="http://www.loc.gov/mix/v20 http://www.loc.gov/standards/mix/mix20/mix20.xsd">
+                    <mix:mix xsi:schemaLocation="http://www.loc.gov/mix/v20 http://id.kb.dk/standards/mix/version_2_0/mix.xsd">
                       <mix:BasicDigitalObjectInformation>
                         <mix:ObjectIdentifier>
                           <mix:objectIdentifierType>UUID</mix:objectIdentifierType>
