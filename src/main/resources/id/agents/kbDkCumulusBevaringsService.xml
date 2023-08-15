@@ -2,7 +2,7 @@
 <!-- 
      PREMIS for agent kbDkCumulusBevaringsService, som senere skal opdateres med mere MODS data, KB genereret UUID og link til registrering på id.loc.gov 
  -->
-<premis:agent xmlns:premis="http://www.loc.gov/premis/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/premis/v3 https://www.loc.gov/standards/premis/v3/premis-v3-0.xsd">
+<premis:agent xmlns:premis="http://www.loc.gov/premis/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/premis/v3 http://id.kb.dk/standards/premis/version_3_0/premis.xsd">
   <premis:agentIdentifier>
     <premis:agentIdentifierType>Local</premis:agentIdentifierType>
     <premis:agentIdentifierValue>kbDkCumulusBevaringsService</premis:agentIdentifierValue>
