@@ -2,7 +2,7 @@
 <METS_Profile xmlns="http://www.loc.gov/METS_Profile/v2"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
-  xsi:schemaLocation="http://www.loc.gov/METS_Profile/v2 http://id.kb.dk/test/standards/mets/profile_docs/mets.profile.v2-0.xsd"
+  xsi:schemaLocation="http://www.loc.gov/METS_Profile/v2 http://id.kb.dk/standards/mets/profile_docs/mets.profile.v2-0.xsd"
   STATUS="provisional" REGISTRATION="unregistered">
   <!-- TODO: determine exact URL. Also fix the 'draft' -->
   <URI ID="profile_URI" LOCTYPE="URL" ASSIGNEDBY="local">http://id.kb.dk/standards/mets/profiles/version_2/kbMetsProfile.xml</URI>
@@ -610,7 +610,7 @@
       <mets:dmdSec CREATED="2017-02-24T11:09:40.259+01:00" ID="Mods1">
         <mets:mdWrap MDTYPE="MODS">
           <mets:xmlData>
-            <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.7" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://id.kb.dk/test/standards/mods/version_3_7/mods-3-7.xsd">
+            <mods:mods xmlns:xlink="http://www.w3.org/1999/xlink" version="3.7" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://id.kb.dk/standards/mods/version_3_7/mods-3-7.xsd">
               <mods:genre type="KB Samling">H</mods:genre>
               <mods:genre type="Categories">Billedsamlingen, Albumsamlingen, 1992-485</mods:genre>
               <mods:identifier type="uri">urn:uuid:be9f16d0-da42-11e2-b191-005056887b70</mods:identifier>
