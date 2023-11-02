@@ -35,7 +35,7 @@ public class FullValidationStepTest extends ExtendedTestCase {
 
     String warcPath = "src/test/resources/warc/warcexample.warc";
     String warcRecordId = "random-file-uuid";
-    String warcFileChecksum = "5cbce357d343f30f2c215dcf1ee94c66";
+    String warcFileChecksum = "dc3c3c8e28f29cb14e32adf02e0eb1be";
     String warcRecordChecksum = "a2919627d81e5e53bf9e2bce13fa44ae";
     Long warcRecordSize = 36L;
     
