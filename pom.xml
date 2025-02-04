@@ -39,7 +39,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <yggdrasil.version>1.3.8</yggdrasil.version>
-    <logback.version>1.2.9</logback.version>
+    <logback.version>1.2.13</logback.version>
     <jwat.version>1.1.1</jwat.version>
     <springboot.version>2.5.12</springboot.version>
     <maven.compiler.source>1.8</maven.compiler.source>
