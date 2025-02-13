@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,6 +95,7 @@ public class MetadataController {
      * @param source The source for the metadata, either new created from Cumulus, or extracted from thhe archive.
      * @return The response containing the metadata file.
      */
+    @SuppressWarnings("JvmTaintAnalysis")
     @RequestMapping("/metadata/extract")
     public DeferredResult <ResponseEntity<Resource>> extractMetadata(
             @RequestParam(value="ID",required=false) String id,
@@ -184,7 +185,7 @@ public class MetadataController {
     /**
      * Help method to read a file line by line and return the result in a String array
      * @param path Path to the file to read
-     * @return list of files as String array
+     * @return String array with a list of files
      */
     private String[] getFileListFromFile(Path path) {
         String[] fList;
@@ -205,34 +206,35 @@ public class MetadataController {
     }
 
     /**
-     * Add a file to a Zip-file
      * @param srcFiles The list of files
+     * @param targetPath Where to put the file
      * @return The updated zip-file
      */
-    private File addToZip(List<File> srcFiles, String targetPath)  {
-        try {
-            FileOutputStream fos = new FileOutputStream(targetPath + "/metadata" + ZIP);
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
+    private File addToZip(List<File> srcFiles, String targetPath) {
+        try (FileOutputStream fos = new FileOutputStream(targetPath + "/metadata" + ZIP);
+             ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
             for (File srcFile : srcFiles) {
-                FileInputStream fis = new FileInputStream(srcFile);
-                ZipEntry zipEntry = new ZipEntry(srcFile.getName());
-                zipOut.putNextEntry(zipEntry);
+                try( BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(srcFile.toPath()))) {
+                    ZipEntry zipEntry = new ZipEntry(srcFile.getName());
+                    zipOut.putNextEntry(zipEntry);
 
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
+                    byte[] bytes = new byte[8192];
+                    int length;
+                    while ((length = bis.read(bytes)) >= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                    zipOut.closeEntry();
+                } catch (IOException e) {
+                    log.debug("Error processing file: " + srcFile.getName());
+                    throw new IllegalStateException("Failed adding to zip", e);
                 }
-                fis.close();
             }
-            zipOut.close();
-            fos.close();
-
         } catch (IOException e) {
             throw new IllegalStateException("Failed adding to zip", e);
         }
-        return new File(targetPath + "/metadata" + ZIP);
+
+        return new File(Paths.get(targetPath, "metadata" + ZIP).toString());
     }
 
     /**

@@ -2,9 +2,9 @@ package dk.kb.ginnungagap.archive;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -83,21 +83,21 @@ public class WarcPacker implements Closeable {
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
             Digest digestor = new Digest(bitmagConf.getAlgorithm());
-            StringBuffer payload = new StringBuffer();
+            StringBuilder payload = new StringBuilder();
             payload.append(WarcInfoConstants.INFO_RECORD_HEADER);
 
             payload.append("\n");
             for(String key : WarcInfoConstants.SYSTEM_PROPERTIES) {
                 String value = System.getProperty(key);
                 if(value != null && !value.isEmpty()) {
-                    payload.append(key + ": " + value + "\n");
+                    payload.append(key).append(": ").append(value).append("\n");
                 }
             }
             payload.append("\n");
             for(String key : WarcInfoConstants.ENV_VARIABLES) {
                 String value = System.getenv().get(key);
                 if(value != null && !value.isEmpty()) {
-                    payload.append(key + ": " + value + "\n");
+                    payload.append(key).append(": ").append(value).append("\n");
                 }
             }
 
@@ -134,7 +134,7 @@ public class WarcPacker implements Closeable {
         }
         ArgumentCheck.checkTrue(!isClosed, "WarcPacker must not be closed");
         synchronized(warcWrapper) {
-            try (InputStream in = new FileInputStream(resourceFile)) {
+            try (InputStream in = Files.newInputStream(resourceFile.toPath())) {
                 Uri uri = warcWrapper.writeResourceRecord(in, resourceFile.length(), contentType, blockDigest, uuid);
                 log.debug("Packed file '" + resourceFile.getName() + "' for uuid '" + uuid + "', and the "
                         + "record received the URI:" + uri + "'");
@@ -161,7 +161,7 @@ public class WarcPacker implements Closeable {
         ArgumentCheck.checkNotNullOrEmpty(warcRecordId, "String warcRecordId");
         log.info("WarcRecordId: {}", warcRecordId);
         synchronized(warcWrapper) {
-            try (InputStream in = new FileInputStream(metadataFile)) {
+            try (InputStream in = Files.newInputStream(metadataFile.toPath())) {
                 String uuid = metadataFile.getName();
                 Digest digestor = new Digest(bitmagConf.getAlgorithm());
                 WarcDigest blockDigest = digestor.getDigestOfFile(metadataFile);

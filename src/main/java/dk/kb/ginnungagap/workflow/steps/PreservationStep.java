@@ -1,11 +1,10 @@
 package dk.kb.ginnungagap.workflow.steps;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -195,21 +194,21 @@ public class PreservationStep extends WorkflowStep {
         String representationMetadataGuid = record.getFieldValue(
                 Constants.FieldNames.REPRESENTATION_METADATA_GUID);
         File metadataFile = new File(conf.getMetadataTempDir(), representationMetadataGuid);
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File cumulusMetadataFile = new File(conf.getMetadataTempDir(), representationMetadataGuid 
                     + RAW_FILE_SUFFIX);
             MetadataTransformer transformer = transformationHandler.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_REPRESENTATION);
-            try (OutputStream metadataOutputStream = new FileOutputStream(cumulusMetadataFile)) {
+            try (OutputStream metadataOutputStream = Files.newOutputStream(cumulusMetadataFile.toPath())) {
                 record.writeFieldMetadata(metadataOutputStream);
             }
-            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(cumulusMetadataFile.toPath())) {
                 transformer.transformXmlMetadata(cumulusIn, os);
             }
             os.flush();
         }
 
-        try (InputStream is = new FileInputStream(metadataFile)) {
+        try (InputStream is = Files.newInputStream(metadataFile.toPath())) {
             transformationHandler.validate(is);
         }
         preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID),
@@ -239,15 +238,15 @@ public class PreservationStep extends WorkflowStep {
         File ieRawFile = new File(conf.getMetadataTempDir(), ieUUID + RAW_FILE_SUFFIX);
         CumulusPreservationUtils.createIErawFile(ieUUID, metadataUUID, fileUUID, ieRawFile);
         File metadataFile = new File(conf.getMetadataTempDir(), ieUUID);
-        try (OutputStream os = new FileOutputStream(metadataFile);
-                InputStream in = new FileInputStream(ieRawFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath());
+             InputStream in = Files.newInputStream(ieRawFile.toPath())) {
             MetadataTransformer transformer = transformationHandler.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_INTELLECTUEL_ENTITY);
             transformer.transformXmlMetadata(in, os);
             os.flush();
         }
 
-        try (InputStream is = new FileInputStream(metadataFile)) {
+        try (InputStream is = Files.newInputStream(metadataFile.toPath())) {
             transformationHandler.validate(is);
         }
         preserver.packRepresentationMetadata(metadataFile, record.getFieldValue(Constants.FieldNames.COLLECTION_ID), 
@@ -264,20 +263,20 @@ public class PreservationStep extends WorkflowStep {
     protected File transformAndValidateMetadata(CumulusRecord record) throws Exception {
         String metadataUUID = CumulusPreservationUtils.getMetadataUUID(record);
         File metadataFile = new File(conf.getMetadataTempDir(), metadataUUID);
-        try (OutputStream os = new FileOutputStream(metadataFile)) {
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
             File cumulusMetadataFile = new File(conf.getMetadataTempDir(), metadataUUID + RAW_FILE_SUFFIX);
             MetadataTransformer transformer = transformationHandler.getTransformer(
                     MetadataTransformationHandler.TRANSFORMATION_SCRIPT_FOR_METS);
-            try (OutputStream cumulusOut = new FileOutputStream(cumulusMetadataFile)) {
+            try (OutputStream cumulusOut = Files.newOutputStream(cumulusMetadataFile.toPath())) {
                 record.writeFieldMetadata(cumulusOut);
             }
-            try (InputStream cumulusIn = new FileInputStream(cumulusMetadataFile)) {
+            try (InputStream cumulusIn = Files.newInputStream(cumulusMetadataFile.toPath())) {
                 transformer.transformXmlMetadata(cumulusIn, os);
             }
             os.flush();
         }
 
-        try (InputStream is = new FileInputStream(metadataFile)) {
+        try (InputStream is = Files.newInputStream(metadataFile.toPath())) {
             transformationHandler.validate(is);
         }
 
@@ -292,7 +291,7 @@ public class PreservationStep extends WorkflowStep {
      * @throws IOException If it fails to read the metadata standards from the metadata file.
      */
     protected void setMetadataStandardsForRecord(CumulusRecord record, File metadataFile) throws IOException {
-        try (InputStream is = new FileInputStream(metadataFile)){
+        try (InputStream is = Files.newInputStream(metadataFile.toPath())){
             Collection<String> namespaces = transformationHandler.getMetadataStandards(is);
             StringBuilder value = new StringBuilder();
             for(String s : namespaces) {
