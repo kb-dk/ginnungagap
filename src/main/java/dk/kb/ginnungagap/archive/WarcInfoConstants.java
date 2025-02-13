@@ -12,10 +12,10 @@ import dk.kb.metadata.selector.AgentSelector;
 public class WarcInfoConstants {
     /** The header value for WARC info records.*/
     protected static final String INFO_RECORD_HEADER = 
-            "description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.html\n"
+            "description: http://id.kb.dk/authorities/agents/kbDkCumulusBevaringsService.xml\n"
                     + "version: " + AgentSelector.getApiAgentValue() + "\n"
-                    + "conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\n"
-                    + "revision: 1.0.0\n";
+                    + "conformsTo: ISO 28500\n"
+                    + "version: 1.0\n";
     
     /** The list of preservable system properties for the WarcInfo.*/
     public static final Collection<String> SYSTEM_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
